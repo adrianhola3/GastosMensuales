@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalAddBudget = document.getElementById('modalAddBudget');
   const modalAddMovement = document.getElementById('modalAddMovement');
   const modalNewMonth = document.getElementById('modalNewMonth');
-  const modalBackup = document.getElementById('modalBackup');
   const modalAdminAuth = document.getElementById('modalAdminAuth');
   const formAdminAuth = document.getElementById('formAdminAuth');
   const adminPinInput = document.getElementById('adminPinInput');
@@ -201,6 +200,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Notas del Mes
     const notesTextarea = document.getElementById('monthNotesTextarea');
     if (notesTextarea) notesTextarea.value = month.notas || '';
+
+    // 8. Aplicar vista del segmento activo (por defecto Servicios para evitar saturar la pantalla)
+    applyActiveSegment(currentActiveSegment);
   }
 
   // Función dedicada para actualizar métricas, subtotales y barras de progreso al instante SIN alterar el DOM de los gastos (sin salto de scroll)
@@ -260,19 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pctAvance = totals.porcentajeAvance.toFixed(1);
     const elCoverageTextInfo = document.getElementById('coverageTextInfo');
     if (elCoverageTextInfo) {
-      elCoverageTextInfo.innerHTML = `<span>📈</span> Cobertura de Ingresos: <strong>${window.formatCurrency(totals.totalIngresos)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
-    }
-    const elCoveragePercentBadge = document.getElementById('coveragePercentBadge');
-    if (elCoveragePercentBadge) {
-      elCoveragePercentBadge.textContent = `${pctAvance}% Cubierto`;
-    }
-    const elCoverageBarFill = document.getElementById('coverageBarFill');
-    if (elCoverageBarFill) {
-      elCoverageBarFill.style.width = `${Math.min(100, totals.porcentajeAvance)}%`;
-    }
-    const elCoverageBalanceFooter = document.getElementById('coverageBalanceFooter');
-    if (elCoverageBalanceFooter) {
-      elCoverageBalanceFooter.textContent = `Saldo: ${window.formatCurrency(totals.balanceNeto)}`;
+      elCoverageTextInfo.textContent = `📈 Cobertura: ${pctAvance}%`;
     }
 
     // Subtotales en las tarjetas
@@ -305,6 +295,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tagExt) tagExt.textContent = window.formatCurrency(totals.subtotalExtras);
     const tagFlujo = document.getElementById('summaryTagFlujo');
     if (tagFlujo) tagFlujo.textContent = `${movs.length} movs`;
+
+    // Badges en las píldoras de navegación de segmentos
+    const badgeServ = document.getElementById('badgeSegServicios');
+    if (badgeServ) badgeServ.textContent = window.formatCurrency(totals.subtotalServicios);
+    const badgePers = document.getElementById('badgeSegPersonales');
+    if (badgePers) badgePers.textContent = window.formatCurrency(totals.subtotalPersonales);
+    const badgeExt = document.getElementById('badgeSegExtras');
+    if (badgeExt) badgeExt.textContent = window.formatCurrency(totals.subtotalExtras);
+    const badgeFlujo = document.getElementById('badgeSegFlujo');
+    if (badgeFlujo) badgeFlujo.textContent = `${movs.length} movs`;
   }
 
   // Renderizador de filas amplias de gastos
@@ -558,23 +558,30 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- SELECTOR DE SEGMENTOS: NAVEGACIÓN LIMPIA SIN SATURAR LA PANTALLA ---
+  let currentActiveSegment = 'servicios';
+
+  function applyActiveSegment(segment) {
+    currentActiveSegment = segment || 'servicios';
+    document.querySelectorAll('.segment-pill-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-segment') === currentActiveSegment);
+    });
+
+    document.querySelectorAll('[data-segment-card]').forEach(card => {
+      const cardSegment = card.getAttribute('data-segment-card');
+      if (currentActiveSegment === 'all' || cardSegment === currentActiveSegment) {
+        card.style.display = 'block';
+        if (currentActiveSegment !== 'all') {
+          card.classList.remove('collapsed');
+        }
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
   document.querySelectorAll('.segment-pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.segment-pill-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const targetSegment = btn.getAttribute('data-segment');
-
-      document.querySelectorAll('[data-segment-card]').forEach(card => {
-        const cardSegment = card.getAttribute('data-segment-card');
-        if (targetSegment === 'all' || cardSegment === targetSegment) {
-          card.style.display = '';
-          if (targetSegment !== 'all') {
-            card.classList.remove('collapsed'); // Expandir automáticamente al enfocar este segmento
-          }
-        } else {
-          card.style.display = 'none';
-        }
-      });
+      applyActiveSegment(btn.getAttribute('data-segment'));
     });
   });
 
@@ -776,51 +783,6 @@ document.addEventListener('DOMContentLoaded', () => {
     modalNewMonth.classList.remove('active');
     switchView('mes', newId);
     showToast(`Nuevo mes "${nombre}" creado`, '🎉');
-  });
-
-  // --- MODAL: RESPALDO Y EXPORTACIÓN ---
-  document.getElementById('btnOpenBackupModal').addEventListener('click', () => {
-    modalBackup.classList.add('active');
-  });
-
-  document.getElementById('btnExportCSV').addEventListener('click', () => {
-    store.exportCSV();
-    showToast('Reporte CSV descargado con éxito', '📥');
-  });
-
-  document.getElementById('btnExportJSON').addEventListener('click', () => {
-    store.exportJSON();
-    showToast('Copia de seguridad (.json) descargada', '💾');
-  });
-
-  document.getElementById('btnImportJSON').addEventListener('click', () => {
-    document.getElementById('inputImportJSONFile').click();
-  });
-
-  document.getElementById('inputImportJSONFile').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const ok = store.importJSON(event.target.result);
-      if (ok) {
-        modalBackup.classList.remove('active');
-        switchView('mes');
-        showToast('¡Datos importados con éxito!', '📂');
-      } else {
-        alert('El archivo no tiene un formato válido de respaldo.');
-      }
-    };
-    reader.readAsText(file);
-  });
-
-  document.getElementById('btnResetAllData').addEventListener('click', () => {
-    if (confirm('¿Restablecer todos los datos a la plantilla original de tu Excel?')) {
-      store.resetToDefault();
-      modalBackup.classList.remove('active');
-      switchView('mes', 'agosto-2026');
-      showToast('Datos restablecidos al estado original', '✓');
-    }
   });
 
   // Cierre general de modales

@@ -616,16 +616,41 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
-  font-size: 0.88rem;
-  font-weight: 700;
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-pill);
+  padding: 0.55rem 1rem 0.5rem 1rem;
+  border-radius: var(--radius-lg);
   cursor: pointer;
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 145px;
   white-space: nowrap;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.pill-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.pill-minibar-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.pill-minibar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-emerald), #34d399);
+  border-radius: var(--radius-pill);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
 }
 
 .segment-pill-btn:hover {
@@ -636,10 +661,19 @@ body {
 }
 
 .segment-pill-btn.active {
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #4f46e5 100%);
+  background: rgba(99, 102, 241, 0.16);
   color: #ffffff;
   border-color: var(--accent-primary);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.25);
+}
+
+.segment-pill-btn.active .pill-top-row span {
+  color: #ffffff;
+}
+
+.segment-pill-btn.pill-btn-all {
+  min-width: 105px;
+  justify-content: center;
 }
 
 /* Acordeón para colapsar y expandir segmentos */
@@ -767,15 +801,51 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 /* ==========================================================
-   CONTENEDOR DE SEGMENTOS ENFOCADOS (SIN SATURACIÓN VISUAL)
+   CONTENEDOR DE SEGMENTOS ENFOCADOS (MULTI-SELECCIÓN)
    ========================================================== */
 .segments-workspace-container {
   max-width: 1040px;
   margin: 0 auto;
 }
 
-.segments-workspace-container .content-card-box {
-  animation: fadeIn 0.25s ease;
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes cardExit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+  }
+}
+
+.content-card-box.card-anim-in {
+  animation: cardEnter 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.content-card-box.card-anim-out {
+  animation: cardExit 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.empty-segments-notice {
+  background: var(--bg-card);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  animation: cardEnter 0.25s ease;
 }
 
 /* Tarjetas de Sección Grandes (Cards Modulares) */
@@ -1429,4 +1499,115 @@ body.read-only-mode #monthNotesTextarea {
   .quick-action-buttons-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================
+   ESTILOS DE MATRIZ Y GRÁFICOS (CONSOLIDADO GENERAL)
+   ========================================================== */
+.text-right {
+  text-align: right !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.matrix-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.25rem 0.5rem 1rem 0.5rem;
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.92rem;
+}
+
+.matrix-table th {
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 2px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+.matrix-table td {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.matrix-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.matrix-table tbody tr:hover {
+  background: var(--bg-card-hover);
+}
+
+.matrix-table tfoot tr td {
+  padding: 1.35rem 1.25rem;
+  background: rgba(11, 18, 32, 0.98);
+  border-top: 2px solid var(--border-hover);
+  border-bottom: none;
+  font-size: 0.96rem;
+}
+
+.matrix-month-btn {
+  background: var(--bg-card-inner);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.matrix-month-btn:hover {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.4);
+}
+
+.matrix-active-badge {
+  font-size: 0.7rem;
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  margin-left: 6px;
+  display: inline-block;
+}
+
+.charts-grid-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 1050px) {
+  .charts-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-canvas-container {
+  position: relative;
+  height: 320px;
+  width: 100%;
+  padding: 1.25rem;
 }

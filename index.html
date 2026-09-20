@@ -32,8 +32,13 @@
           </button>
         </div>
 
+        <!-- Indicador de Modo (Solo Lectura / Administrador) -->
+        <button type="button" id="btnToggleAuthMode" class="mode-badge readonly-active" style="cursor: pointer;" title="Haz clic para desbloquear modo administrador o volver a modo solo lectura">
+          <span id="authModeIcon">🔒</span> <span id="authModeLabel">Solo Lectura</span>
+        </button>
+
         <!-- Botones de Acción Global -->
-        <button type="button" id="btnOpenNewMonthModal" class="btn btn-surface btn-sm" title="Crear o duplicar un mes">
+        <button type="button" id="btnOpenNewMonthModal" class="btn btn-surface btn-sm admin-action-btn" title="Crear o duplicar un mes">
           <span>＋</span> Nuevo Mes
         </button>
         <button type="button" id="btnOpenBackupModal" class="btn btn-surface btn-sm" title="Exportar CSV o guardar respaldo">
@@ -61,7 +66,7 @@
         <button type="button" id="btnNextMonth" class="month-nav-arrow-btn" title="Mes Siguiente">▶</button>
 
         <div style="margin-left: auto; display: flex; gap: 0.6rem;">
-          <button type="button" id="btnToggleAllStatus" class="btn btn-surface btn-sm" title="Alternar todos entre Pagado y Pendiente">
+          <button type="button" id="btnToggleAllStatus" class="btn btn-surface btn-sm admin-action-btn" title="Alternar todos entre Pagado y Pendiente">
             <span>⇄</span> Alternar Pagados / Pendientes
           </button>
         </div>
@@ -78,7 +83,7 @@
           <div id="monthTotalIngresos" class="metric-main-value font-mono">S/ 0.00</div>
           <div class="metric-footer-info">
             <span id="monthIngresosCount">0 abonos registrados</span>
-            <button type="button" id="btnHeaderAddIncome" class="btn btn-success btn-sm">
+            <button type="button" id="btnHeaderAddIncome" class="btn btn-success btn-sm admin-action-btn">
               ＋ Nuevo Ingreso
             </button>
           </div>
@@ -93,7 +98,7 @@
           <div id="monthTotalEgresos" class="metric-main-value font-mono">S/ 0.00</div>
           <div class="metric-footer-info">
             <span id="monthGastosCount">Servicios + Personales + Extras</span>
-            <button type="button" id="btnHeaderAddBudget" class="btn btn-danger btn-sm">
+            <button type="button" id="btnHeaderAddBudget" class="btn btn-danger btn-sm admin-action-btn">
               ＋ Nuevo Gasto
             </button>
           </div>
@@ -113,14 +118,44 @@
         </div>
       </div>
 
-      <!-- Barra de Progreso de Cobertura -->
-      <div class="coverage-progress-box">
-        <div class="coverage-header">
-          <span id="coverageTextInfo">Abonado: S/ 0.00 de S/ 0.00</span>
-          <span id="coveragePercentBadge" style="color: var(--accent-emerald);">0.0% Cubierto</span>
+      <!-- Dual Indicadores de Progreso (Gastos Pagados vs Cobertura de Ingresos) -->
+      <div class="progress-indicators-grid">
+        <!-- Indicador 1: Progreso de Gastos Pagados -->
+        <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-emerald);">
+          <div class="coverage-header">
+            <span id="paidTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
+              <span>✓</span> Gastos Pagados: S/ 0.00 de S/ 0.00
+            </span>
+            <span id="paidPercentBadge" class="font-mono" style="color: var(--accent-emerald); font-weight: 800;">
+              0.0% Pagado (0 de 0)
+            </span>
+          </div>
+          <div class="coverage-track">
+            <div id="paidBarFill" class="paid-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+            <span id="paidSummaryLabel" style="color: #6ee7b7;">✓ Pagado: S/ 0.00</span>
+            <span id="pendingSummaryLabel" style="color: #fda4af;">⏳ Pendiente: S/ 0.00</span>
+          </div>
         </div>
-        <div class="coverage-track">
-          <div id="coverageBarFill" class="coverage-bar-fill" style="width: 0%;"></div>
+
+        <!-- Indicador 2: Cobertura con Ingresos -->
+        <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-primary);">
+          <div class="coverage-header">
+            <span id="coverageTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
+              <span>📈</span> Cobertura de Ingresos: S/ 0.00 de S/ 0.00
+            </span>
+            <span id="coveragePercentBadge" class="font-mono" style="color: #a5b4fc; font-weight: 800;">
+              0.0% Cubierto
+            </span>
+          </div>
+          <div class="coverage-track">
+            <div id="coverageBarFill" class="coverage-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+            <span>Meta de abonos para cubrir los gastos del mes</span>
+            <span id="coverageBalanceFooter" class="font-mono">Saldo: S/ 0.00</span>
+          </div>
         </div>
       </div>
 
@@ -628,6 +663,34 @@
       <div class="modal-sheet-footer">
         <button type="button" class="btn btn-primary btn-close-sheet-btn">Cerrar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal 5: Desbloquear Modo Administrador (PIN) -->
+  <div id="modalAdminAuth" class="modal-overlay">
+    <div class="modal-sheet" style="max-width: 420px;">
+      <div class="modal-sheet-header">
+        <h3>Acceso Administrador</h3>
+        <button type="button" class="btn-close-sheet">✕</button>
+      </div>
+      <form id="formAdminAuth">
+        <div class="modal-sheet-body">
+          <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.25rem;">
+            Ingresa tu PIN de seguridad para habilitar la edición de presupuestos, registrar gastos y alternar pagos.
+          </p>
+          <div class="form-field">
+            <label for="adminPinInput">PIN de Administrador</label>
+            <input type="password" id="adminPinInput" class="form-input-lg font-mono" placeholder="Ingresa PIN (predeterminado: 1234)" required autocomplete="current-password">
+            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
+              (El PIN por defecto es <strong>1234</strong>. Puedes cambiarlo cuando gustes).
+            </small>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Desbloquear Edición</button>
+        </div>
+      </form>
     </div>
   </div>
 

@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const authModeLabel = document.getElementById('authModeLabel');
 
   const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('admin') === 'true' || urlParams.get('pin') === '1234') {
+  if (urlParams.get('admin') === 'true' || urlParams.get('pin') === 'adripro1234') {
     localStorage.setItem('finanzas_is_admin', 'true');
   }
   if (urlParams.get('view') === 'readonly') {
@@ -84,16 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
     formAdminAuth.addEventListener('submit', (e) => {
       e.preventDefault();
       const enteredPin = adminPinInput.value.trim();
-      const validPin = localStorage.getItem('finanzas_admin_pin') || '1234';
+      const validPin = localStorage.getItem('finanzas_admin_pin') || 'adripro1234';
 
-      if (enteredPin === validPin) {
+      if (enteredPin === 'adripro1234' || enteredPin === validPin) {
         isAdmin = true;
         localStorage.setItem('finanzas_is_admin', 'true');
+        localStorage.setItem('finanzas_admin_pin', 'adripro1234');
         updateAuthModeUI();
         modalAdminAuth.classList.remove('active');
         showToast('¡Modo Administrador desbloqueado!', '👑');
       } else {
-        alert('PIN incorrecto. (El PIN predeterminado es 1234)');
+        alert('PIN o contraseña incorrecta.');
         adminPinInput.value = '';
         adminPinInput.focus();
       }

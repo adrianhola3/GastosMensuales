@@ -124,58 +124,16 @@ body {
   gap: 1.25rem;
 }
 
-.brand-section {
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-right {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-}
-
-.brand-logo-badge {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #4338ca 100%);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: #ffffff;
-  box-shadow: var(--shadow-glow-indigo);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.brand-info h1 {
-  font-size: 1.2rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.brand-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  background: var(--accent-primary-light);
-  color: #a5b4fc;
-  padding: 2px 8px;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-}
-
-.brand-info p {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-}
-
-.header-nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
 }
 
 /* ==========================================================
@@ -503,44 +461,143 @@ body {
 }
 
 /* ==========================================================
-   STICKY PROGRESS CONTAINER (LA BARRA BAJA CON EL SCROLL)
+   STICKY PROGRESS CONTAINER (HUD ESBELTO Y FLOTANTE)
    ========================================================== */
 .sticky-progress-container {
   position: sticky;
-  top: 68px; /* Queda fija justo debajo del navbar */
+  top: 64px; /* Queda fija justo debajo del navbar */
   z-index: 40;
   background: rgba(9, 13, 22, 0.94);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  padding: 0.85rem 0;
-  margin-bottom: 1.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6);
-}
-
-.progress-indicators-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  margin-bottom: 0;
-}
-
-@media (max-width: 900px) {
-  .progress-indicators-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.coverage-progress-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 0.65rem 1.25rem;
+  margin-bottom: 1.5rem;
   border-radius: var(--radius-lg);
-  padding: 0.95rem 1.4rem;
-  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.7);
+}
+
+.sticky-progress-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.sticky-progress-main {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.sticky-badge-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-emerald-light);
+  color: var(--accent-emerald);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 800;
+  border: 1px solid var(--accent-emerald-border);
+}
+
+.sticky-info-group {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sticky-info-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.sticky-text-title strong {
+  color: #ffffff;
+}
+
+.sticky-percent-badge {
+  color: var(--accent-emerald);
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.sticky-track {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-card-inner);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.paid-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-emerald), #34d399);
+  border-radius: var(--radius-pill);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+.sticky-pills-group {
+  display: flex;
+  align-items: center;
   gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.sticky-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  white-space: nowrap;
+}
+
+.pill-paid {
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.pill-pending {
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.3);
+  background: rgba(244, 63, 94, 0.1);
+}
+
+.pill-coverage {
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.segment-count-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  margin-left: 0.25rem;
+}
+
+.segment-pill-btn.active .segment-count-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 
 /* ==========================================================
@@ -710,19 +767,15 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 /* ==========================================================
-   GRID PRINCIPAL DE 2 COLUMNAS (ORGANIZADOR ESPACIOSO)
+   CONTENEDOR DE SEGMENTOS ENFOCADOS (SIN SATURACIÓN VISUAL)
    ========================================================== */
-.two-column-workspace {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 2rem;
-  align-items: start;
+.segments-workspace-container {
+  max-width: 1040px;
+  margin: 0 auto;
 }
 
-@media (max-width: 1150px) {
-  .two-column-workspace {
-    grid-template-columns: 1fr;
-  }
+.segments-workspace-container .content-card-box {
+  animation: fadeIn 0.25s ease;
 }
 
 /* Tarjetas de Sección Grandes (Cards Modulares) */

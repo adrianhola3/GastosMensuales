@@ -201,8 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const notesTextarea = document.getElementById('monthNotesTextarea');
     if (notesTextarea) notesTextarea.value = month.notas || '';
 
-    // 8. Aplicar vista del segmento activo (por defecto Servicios para evitar saturar la pantalla)
-    applyActiveSegment(currentActiveSegment);
+    // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
+    renderActiveSegments();
   }
 
   // Función dedicada para actualizar métricas, subtotales y barras de progreso al instante SIN alterar el DOM de los gastos (sin salto de scroll)
@@ -293,8 +293,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tagPers) tagPers.textContent = window.formatCurrency(totals.subtotalPersonales);
     const tagExt = document.getElementById('summaryTagExtras');
     if (tagExt) tagExt.textContent = window.formatCurrency(totals.subtotalExtras);
-    const tagFlujo = document.getElementById('summaryTagFlujo');
-    if (tagFlujo) tagFlujo.textContent = `${movs.length} movs`;
+    const tagMovs = document.getElementById('summaryTagMovimientos') || document.getElementById('summaryTagFlujo');
+    if (tagMovs) tagMovs.textContent = `${movs.length} movs`;
 
     // Badges en las píldoras de navegación de segmentos
     const badgeServ = document.getElementById('badgeSegServicios');
@@ -303,8 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (badgePers) badgePers.textContent = window.formatCurrency(totals.subtotalPersonales);
     const badgeExt = document.getElementById('badgeSegExtras');
     if (badgeExt) badgeExt.textContent = window.formatCurrency(totals.subtotalExtras);
-    const badgeFlujo = document.getElementById('badgeSegFlujo');
-    if (badgeFlujo) badgeFlujo.textContent = `${movs.length} movs`;
+    const badgeMovs = document.getElementById('badgeSegMovimientos') || document.getElementById('badgeSegFlujo');
+    if (badgeMovs) badgeMovs.textContent = `${movs.length} movs`;
+
+    // Minibarras de progreso por debajo de cada segmento
+    const miniServ = document.getElementById('miniBarServicios');
+    if (miniServ) miniServ.style.width = `${Math.min(100, totals.pctPagadoServicios || 0)}%`;
+    const miniPers = document.getElementById('miniBarPersonales');
+    if (miniPers) miniPers.style.width = `${Math.min(100, totals.pctPagadoPersonales || 0)}%`;
+    const miniExt = document.getElementById('miniBarExtras');
+    if (miniExt) miniExt.style.width = `${Math.min(100, totals.pctPagadoExtras || 0)}%`;
+    const miniMovs = document.getElementById('miniBarMovimientos');
+    if (miniMovs) miniMovs.style.width = `${Math.min(100, totals.pctPagadoMovimientos || 0)}%`;
   }
 
   // Renderizador de filas amplias de gastos
@@ -497,17 +507,17 @@ document.addEventListener('DOMContentLoaded', () => {
           </button>
           ${isCurrentActive ? '<span style="font-size:0.7rem; background:rgba(99,102,241,0.2); color:#a5b4fc; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:6px;">Activo</span>' : ''}
         </td>
-        <td class="font-mono">${window.formatCurrency(r.servicios)}</td>
-        <td class="font-mono">${window.formatCurrency(r.personales)}</td>
-        <td class="font-mono">${window.formatCurrency(r.extras)}</td>
-        <td class="font-mono" style="color: var(--accent-rose); font-weight:700;">${window.formatCurrency(r.totalEgresos)}</td>
-        <td class="font-mono" style="color: var(--accent-emerald); font-weight:700;">${window.formatCurrency(r.ingresos)}</td>
-        <td class="font-mono" style="font-weight:800; color:${r.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+        <td class="font-mono text-right">${window.formatCurrency(r.servicios)}</td>
+        <td class="font-mono text-right">${window.formatCurrency(r.personales)}</td>
+        <td class="font-mono text-right">${window.formatCurrency(r.extras)}</td>
+        <td class="font-mono text-right" style="color: var(--accent-rose); font-weight: 700;">${window.formatCurrency(r.totalEgresos)}</td>
+        <td class="font-mono text-right" style="color: var(--accent-emerald); font-weight: 700;">${window.formatCurrency(r.ingresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 800; color: ${r.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
           ${window.formatCurrency(r.balanceNeto)}
         </td>
-        <td class="font-mono" style="font-weight:700;">${pct.toFixed(1)}%</td>
-        <td style="min-width: 140px;">
-          <div style="height: 8px; background: var(--bg-card-inner); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle);">
+        <td class="font-mono text-center" style="font-weight: 700;">${pct.toFixed(1)}%</td>
+        <td style="min-width: 130px; text-align: center;">
+          <div style="height: 8px; background: var(--bg-card-inner); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle); margin: 0 auto;">
             <div style="width: ${Math.min(100, pct)}%; height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-emerald)); border-radius: 999px;"></div>
           </div>
         </td>
@@ -525,15 +535,15 @@ document.addEventListener('DOMContentLoaded', () => {
     tfoot.innerHTML = `
       <tr>
         <td style="font-weight: 800; color: #ffffff;">TOTAL AÑO</td>
-        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalServicios)}</td>
-        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalPersonales)}</td>
-        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalExtras)}</td>
-        <td class="font-mono" style="color: var(--accent-rose); font-weight: 800;">${window.formatCurrency(totals.globalEgresos)}</td>
-        <td class="font-mono" style="color: var(--accent-emerald); font-weight: 800;">${window.formatCurrency(totals.globalIngresos)}</td>
-        <td class="font-mono" style="font-weight: 800; color:${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalServicios)}</td>
+        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalPersonales)}</td>
+        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalExtras)}</td>
+        <td class="font-mono text-right" style="color: var(--accent-rose); font-weight: 800;">${window.formatCurrency(totals.globalEgresos)}</td>
+        <td class="font-mono text-right" style="color: var(--accent-emerald); font-weight: 800;">${window.formatCurrency(totals.globalIngresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 800; color: ${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
           ${window.formatCurrency(totals.globalBalanceNeto)}
         </td>
-        <td class="font-mono" style="font-weight: 800;">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
+        <td class="font-mono text-center" style="font-weight: 800;">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
         <td></td>
       </tr>
     `;
@@ -546,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 60);
   }
 
-  // --- FILTROS DE FEED DE FLUJO DE CAJA ---
+  // --- FILTROS DE FEED DE MOVIMIENTOS ---
   document.querySelectorAll('.feed-filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       document.querySelectorAll('.feed-filter-pill').forEach(p => p.classList.remove('active'));
@@ -557,31 +567,80 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- SELECTOR DE SEGMENTOS: NAVEGACIÓN LIMPIA SIN SATURAR LA PANTALLA ---
-  let currentActiveSegment = 'servicios';
+  // --- SELECTOR DE SEGMENTOS: MULTI-SELECCIÓN INTERACTIVA CON ANIMACIÓN ---
+  const activeSegments = new Set(['servicios']);
 
-  function applyActiveSegment(segment) {
-    currentActiveSegment = segment || 'servicios';
+  function renderActiveSegments() {
+    const allKeys = ['servicios', 'personales', 'extras', 'movimientos', 'notas'];
+    const isAllSelected = allKeys.every(k => activeSegments.has(k));
+
+    // Actualizar estado activo en botones
     document.querySelectorAll('.segment-pill-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-segment') === currentActiveSegment);
-    });
-
-    document.querySelectorAll('[data-segment-card]').forEach(card => {
-      const cardSegment = card.getAttribute('data-segment-card');
-      if (currentActiveSegment === 'all' || cardSegment === currentActiveSegment) {
-        card.style.display = 'block';
-        if (currentActiveSegment !== 'all') {
-          card.classList.remove('collapsed');
-        }
+      const seg = btn.getAttribute('data-segment');
+      if (seg === 'all') {
+        btn.classList.toggle('active', isAllSelected);
       } else {
-        card.style.display = 'none';
+        btn.classList.toggle('active', activeSegments.has(seg));
       }
     });
+
+    // Mostrar u ocultar tarjetas con animación
+    let visibleCount = 0;
+    document.querySelectorAll('[data-segment-card]').forEach(card => {
+      const seg = card.getAttribute('data-segment-card');
+      const isCardActive = activeSegments.has(seg) || (seg === 'flujo' && activeSegments.has('movimientos'));
+
+      if (isCardActive) {
+        visibleCount++;
+        if (card.style.display === 'none' || !card.style.display) {
+          card.style.display = 'block';
+          card.classList.remove('card-anim-out');
+          card.classList.add('card-anim-in');
+        }
+      } else {
+        if (card.style.display !== 'none') {
+          card.classList.remove('card-anim-in');
+          card.classList.add('card-anim-out');
+          setTimeout(() => {
+            const stillActive = activeSegments.has(seg) || (seg === 'flujo' && activeSegments.has('movimientos'));
+            if (!stillActive) {
+              card.style.display = 'none';
+              card.classList.remove('card-anim-out');
+            }
+          }, 180);
+        }
+      }
+    });
+
+    // Mensaje de estado vacío si no hay ningún segmento seleccionado
+    const emptyNotice = document.getElementById('noSegmentsSelectedNotice');
+    if (emptyNotice) {
+      emptyNotice.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
+
+  function toggleSegment(segment) {
+    const allKeys = ['servicios', 'personales', 'extras', 'movimientos', 'notas'];
+    if (segment === 'all') {
+      const isAllSelected = allKeys.every(k => activeSegments.has(k));
+      if (isAllSelected) {
+        activeSegments.clear();
+      } else {
+        allKeys.forEach(k => activeSegments.add(k));
+      }
+    } else {
+      if (activeSegments.has(segment)) {
+        activeSegments.delete(segment);
+      } else {
+        activeSegments.add(segment);
+      }
+    }
+    renderActiveSegments();
   }
 
   document.querySelectorAll('.segment-pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      applyActiveSegment(btn.getAttribute('data-segment'));
+      toggleSegment(btn.getAttribute('data-segment'));
     });
   });
 

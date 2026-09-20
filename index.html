@@ -64,12 +64,6 @@
         </div>
 
         <button type="button" id="btnNextMonth" class="month-nav-arrow-btn" title="Mes Siguiente">▶</button>
-
-        <div style="margin-left: auto; display: flex; gap: 0.6rem;">
-          <button type="button" id="btnToggleAllStatus" class="btn btn-surface btn-sm admin-action-btn" title="Alternar todos entre Pagado y Pendiente">
-            <span>⇄</span> Alternar Pagados / Pendientes
-          </button>
-        </div>
       </div>
 
       <!-- Tarjetas de Métricas Grandes del Mes -->
@@ -118,45 +112,69 @@
         </div>
       </div>
 
-      <!-- Dual Indicadores de Progreso (Gastos Pagados vs Cobertura de Ingresos) -->
-      <div class="progress-indicators-grid">
-        <!-- Indicador 1: Progreso de Gastos Pagados -->
-        <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-emerald);">
-          <div class="coverage-header">
-            <span id="paidTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>✓</span> Gastos Pagados: S/ 0.00 de S/ 0.00
-            </span>
-            <span id="paidPercentBadge" class="font-mono" style="color: var(--accent-emerald); font-weight: 800;">
-              0.0% Pagado (0 de 0)
-            </span>
+      <!-- Barra de Progreso Sticky (Flota y baja contigo mientras navegas por los gastos) -->
+      <div class="sticky-progress-container">
+        <div class="progress-indicators-grid">
+          <!-- Indicador 1: Progreso de Gastos Pagados -->
+          <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-emerald);">
+            <div class="coverage-header">
+              <span id="paidTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span>✓</span> Gastos Pagados: S/ 0.00 de S/ 0.00
+              </span>
+              <span id="paidPercentBadge" class="font-mono" style="color: var(--accent-emerald); font-weight: 800;">
+                0.0% Pagado (0 de 0)
+              </span>
+            </div>
+            <div class="coverage-track">
+              <div id="paidBarFill" class="paid-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+              <span id="paidSummaryLabel" style="color: #6ee7b7;">✓ Pagado: S/ 0.00</span>
+              <span id="pendingSummaryLabel" style="color: #fda4af;">⏳ Pendiente: S/ 0.00</span>
+            </div>
           </div>
-          <div class="coverage-track">
-            <div id="paidBarFill" class="paid-bar-fill" style="width: 0%;"></div>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
-            <span id="paidSummaryLabel" style="color: #6ee7b7;">✓ Pagado: S/ 0.00</span>
-            <span id="pendingSummaryLabel" style="color: #fda4af;">⏳ Pendiente: S/ 0.00</span>
-          </div>
-        </div>
 
-        <!-- Indicador 2: Cobertura con Ingresos -->
-        <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-primary);">
-          <div class="coverage-header">
-            <span id="coverageTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
-              <span>📈</span> Cobertura de Ingresos: S/ 0.00 de S/ 0.00
-            </span>
-            <span id="coveragePercentBadge" class="font-mono" style="color: #a5b4fc; font-weight: 800;">
-              0.0% Cubierto
-            </span>
-          </div>
-          <div class="coverage-track">
-            <div id="coverageBarFill" class="coverage-bar-fill" style="width: 0%;"></div>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
-            <span>Meta de abonos para cubrir los gastos del mes</span>
-            <span id="coverageBalanceFooter" class="font-mono">Saldo: S/ 0.00</span>
+          <!-- Indicador 2: Cobertura con Ingresos -->
+          <div class="coverage-progress-box" style="border-left: 4px solid var(--accent-primary);">
+            <div class="coverage-header">
+              <span id="coverageTextInfo" style="display: flex; align-items: center; gap: 0.4rem;">
+                <span>📈</span> Cobertura de Ingresos: S/ 0.00 de S/ 0.00
+              </span>
+              <span id="coveragePercentBadge" class="font-mono" style="color: #a5b4fc; font-weight: 800;">
+                0.0% Cubierto
+              </span>
+            </div>
+            <div class="coverage-track">
+              <div id="coverageBarFill" class="coverage-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-secondary);">
+              <span>Meta de abonos para cubrir los gastos</span>
+              <span id="coverageBalanceFooter" class="font-mono">Saldo: S/ 0.00</span>
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Selector Rápido de Segmentos (Para ver solo la sección deseada sin saturar la pantalla) -->
+      <div class="segments-navigation-bar">
+        <button type="button" class="segment-pill-btn active" data-segment="all">
+          <span>📋</span> Ver Todo
+        </button>
+        <button type="button" class="segment-pill-btn" data-segment="servicios">
+          <span>🏠</span> Servicios
+        </button>
+        <button type="button" class="segment-pill-btn" data-segment="personales">
+          <span>👤</span> Personales
+        </button>
+        <button type="button" class="segment-pill-btn" data-segment="extras">
+          <span>⚡</span> Extras
+        </button>
+        <button type="button" class="segment-pill-btn" data-segment="flujo">
+          <span>💳</span> Flujo de Caja
+        </button>
+        <button type="button" class="segment-pill-btn" data-segment="notas">
+          <span>📝</span> Notas
+        </button>
       </div>
 
       <!-- Layout Espacioso de 2 Columnas -->
@@ -166,121 +184,136 @@
         <div class="left-workspace-column">
 
           <!-- 1. GASTOS DE SERVICIOS -->
-          <div class="content-card-box">
-            <div class="content-card-header">
+          <div class="content-card-box" data-segment-card="servicios">
+            <div class="content-card-header accordion-header" data-accordion-target="servicios">
               <div class="card-header-left">
                 <div class="card-header-icon">🏠</div>
                 <div class="card-header-titles">
-                  <h3>Servicios del Hogar</h3>
+                  <h3>Servicios del Hogar <span class="accordion-chevron-icon">▼</span></h3>
                   <p>Luz, internet, telefonía, pasajes y necesidades del hogar</p>
                 </div>
               </div>
-              <button type="button" class="btn btn-surface btn-sm btn-quick-add-service">
-                ＋ Añadir Servicio
-              </button>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span id="summaryTagServicios" class="accordion-summary-tag font-mono">S/ 0.00</span>
+                <button type="button" class="btn btn-surface btn-sm btn-quick-add-service admin-action-btn" onclick="event.stopPropagation();">
+                  ＋ Añadir Servicio
+                </button>
+              </div>
             </div>
 
-            <!-- Fijos -->
-            <div class="category-subhead">
-              <span>Gastos Fijos</span>
-              <span>Estado / Monto</span>
-            </div>
-            <div id="listServiciosFijos">
-              <!-- Renderizado dinámico -->
-            </div>
-            <div class="subtotal-highlight-row">
-              <span>Subtotal Servicios Fijos</span>
-              <span id="subtotalServiciosFijos" class="font-mono">S/ 0.00</span>
-            </div>
+            <div class="accordion-collapsible-body">
+              <!-- Fijos -->
+              <div class="category-subhead">
+                <span>Gastos Fijos</span>
+                <span>Estado / Monto</span>
+              </div>
+              <div id="listServiciosFijos">
+                <!-- Renderizado dinámico -->
+              </div>
+              <div class="subtotal-highlight-row">
+                <span>Subtotal Servicios Fijos</span>
+                <span id="subtotalServiciosFijos" class="font-mono">S/ 0.00</span>
+              </div>
 
-            <!-- Variables -->
-            <div class="category-subhead">
-              <span>Gastos Variables (Estimados)</span>
-              <span>Rango sugerido</span>
-            </div>
-            <div id="listServiciosVariables">
-              <!-- Renderizado dinámico -->
-            </div>
-            <div class="subtotal-highlight-row">
-              <span>Subtotal Servicios Variables</span>
-              <span id="subtotalServiciosVariables" class="font-mono">S/ 0.00</span>
-            </div>
+              <!-- Variables -->
+              <div class="category-subhead">
+                <span>Gastos Variables (Estimados)</span>
+                <span>Rango sugerido</span>
+              </div>
+              <div id="listServiciosVariables">
+                <!-- Renderizado dinámico -->
+              </div>
+              <div class="subtotal-highlight-row">
+                <span>Subtotal Servicios Variables</span>
+                <span id="subtotalServiciosVariables" class="font-mono">S/ 0.00</span>
+              </div>
 
-            <!-- Subtotal General Servicios -->
-            <div class="subtotal-highlight-row main-subtotal">
-              <span>SUBTOTAL DE SERVICIOS:</span>
-              <span id="subtotalTotalServicios" class="font-mono" style="color: #38bdf8;">S/ 0.00</span>
+              <!-- Subtotal General Servicios -->
+              <div class="subtotal-highlight-row main-subtotal">
+                <span>SUBTOTAL DE SERVICIOS:</span>
+                <span id="subtotalTotalServicios" class="font-mono" style="color: #38bdf8;">S/ 0.00</span>
+              </div>
             </div>
           </div>
 
           <!-- 2. GASTOS PERSONALES -->
-          <div class="content-card-box">
-            <div class="content-card-header">
+          <div class="content-card-box" data-segment-card="personales">
+            <div class="content-card-header accordion-header" data-accordion-target="personales">
               <div class="card-header-left">
                 <div class="card-header-icon">👤</div>
                 <div class="card-header-titles">
-                  <h3>Gastos Personales</h3>
+                  <h3>Gastos Personales <span class="accordion-chevron-icon">▼</span></h3>
                   <p>Gimnasio, suscripciones, salud dermatológica y cuidado personal</p>
                 </div>
               </div>
-              <button type="button" class="btn btn-surface btn-sm btn-quick-add-personal">
-                ＋ Añadir Personal
-              </button>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span id="summaryTagPersonales" class="accordion-summary-tag font-mono">S/ 0.00</span>
+                <button type="button" class="btn btn-surface btn-sm btn-quick-add-personal admin-action-btn" onclick="event.stopPropagation();">
+                  ＋ Añadir Personal
+                </button>
+              </div>
             </div>
 
-            <!-- Fijos -->
-            <div class="category-subhead">
-              <span>Gastos Fijos</span>
-              <span>Estado / Monto</span>
-            </div>
-            <div id="listPersonalesFijos">
-              <!-- Renderizado dinámico -->
-            </div>
-            <div class="subtotal-highlight-row">
-              <span>Subtotal Personales Fijos</span>
-              <span id="subtotalPersonalesFijos" class="font-mono">S/ 0.00</span>
-            </div>
+            <div class="accordion-collapsible-body">
+              <!-- Fijos -->
+              <div class="category-subhead">
+                <span>Gastos Fijos</span>
+                <span>Estado / Monto</span>
+              </div>
+              <div id="listPersonalesFijos">
+                <!-- Renderizado dinámico -->
+              </div>
+              <div class="subtotal-highlight-row">
+                <span>Subtotal Personales Fijos</span>
+                <span id="subtotalPersonalesFijos" class="font-mono">S/ 0.00</span>
+              </div>
 
-            <!-- Variables -->
-            <div class="category-subhead">
-              <span>Gastos Variables</span>
-              <span>Rango sugerido</span>
-            </div>
-            <div id="listPersonalesVariables">
-              <!-- Renderizado dinámico -->
-            </div>
-            <div class="subtotal-highlight-row">
-              <span>Subtotal Personales Variables</span>
-              <span id="subtotalPersonalesVariables" class="font-mono">S/ 0.00</span>
-            </div>
+              <!-- Variables -->
+              <div class="category-subhead">
+                <span>Gastos Variables</span>
+                <span>Rango sugerido</span>
+              </div>
+              <div id="listPersonalesVariables">
+                <!-- Renderizado dinámico -->
+              </div>
+              <div class="subtotal-highlight-row">
+                <span>Subtotal Personales Variables</span>
+                <span id="subtotalPersonalesVariables" class="font-mono">S/ 0.00</span>
+              </div>
 
-            <!-- Subtotal General Personales -->
-            <div class="subtotal-highlight-row main-subtotal">
-              <span>SUBTOTAL PERSONALES:</span>
-              <span id="subtotalTotalPersonales" class="font-mono" style="color: #a78bfa;">S/ 0.00</span>
+              <!-- Subtotal General Personales -->
+              <div class="subtotal-highlight-row main-subtotal">
+                <span>SUBTOTAL PERSONALES:</span>
+                <span id="subtotalTotalPersonales" class="font-mono" style="color: #a78bfa;">S/ 0.00</span>
+              </div>
             </div>
           </div>
 
           <!-- 3. GASTOS EXTRAORDINARIOS -->
-          <div class="content-card-box">
-            <div class="content-card-header">
+          <div class="content-card-box" data-segment-card="extras">
+            <div class="content-card-header accordion-header" data-accordion-target="extras">
               <div class="card-header-left">
                 <div class="card-header-icon">⚡</div>
                 <div class="card-header-titles">
-                  <h3>Gastos Extraordinarios (Opcional)</h3>
+                  <h3>Gastos Extraordinarios (Opcional) <span class="accordion-chevron-icon">▼</span></h3>
                   <p>Gastos no recurrentes, matrículas o imprevistos del mes</p>
                 </div>
               </div>
-              <button type="button" class="btn btn-surface btn-sm btn-quick-add-extra">
-                ＋ Añadir Extra
-              </button>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span id="summaryTagExtras" class="accordion-summary-tag font-mono">S/ 0.00</span>
+                <button type="button" class="btn btn-surface btn-sm btn-quick-add-extra admin-action-btn" onclick="event.stopPropagation();">
+                  ＋ Añadir Extra
+                </button>
+              </div>
             </div>
-            <div id="listGastosExtra">
-              <!-- Renderizado dinámico -->
-            </div>
-            <div class="subtotal-highlight-row main-subtotal">
-              <span>SUBTOTAL GASTOS EXTRA:</span>
-              <span id="subtotalGastosExtra" class="font-mono" style="color: #fbbf24;">S/ 0.00</span>
+            <div class="accordion-collapsible-body">
+              <div id="listGastosExtra">
+                <!-- Renderizado dinámico -->
+              </div>
+              <div class="subtotal-highlight-row main-subtotal">
+                <span>SUBTOTAL GASTOS EXTRA:</span>
+                <span id="subtotalGastosExtra" class="font-mono" style="color: #fbbf24;">S/ 0.00</span>
+              </div>
             </div>
           </div>
 
@@ -299,60 +332,65 @@
         <div class="right-workspace-column">
 
           <!-- 4. FEED MODERNO DE TRANSACCIONES (FLUJO DE CAJA REAL) -->
-          <div class="content-card-box">
-            <div class="content-card-header">
+          <div class="content-card-box" data-segment-card="flujo">
+            <div class="content-card-header accordion-header" data-accordion-target="flujo">
               <div class="card-header-left">
                 <div class="card-header-icon">💳</div>
                 <div class="card-header-titles">
-                  <h3>Flujo de Caja Real</h3>
+                  <h3>Flujo de Caja Real <span class="accordion-chevron-icon">▼</span></h3>
                   <p>Abonos, Yapeos, transferencias y pagos ejecutados</p>
                 </div>
               </div>
+              <span id="summaryTagFlujo" class="accordion-summary-tag font-mono">0 movs</span>
             </div>
 
-            <!-- Dos Botones Grandes de Acción Rápida -->
-            <div class="quick-action-buttons-grid">
-              <button type="button" id="btnQuickActionIncome" class="btn btn-success btn-lg">
-                <span>↑</span> Registrar Ingreso
-              </button>
-              <button type="button" id="btnQuickActionExpense" class="btn btn-danger btn-lg">
-                <span>↓</span> Registrar Gasto Real
-              </button>
-            </div>
+            <div class="accordion-collapsible-body">
+              <!-- Dos Botones Grandes de Acción Rápida -->
+              <div class="quick-action-buttons-grid">
+                <button type="button" id="btnQuickActionIncome" class="btn btn-success btn-lg admin-action-btn">
+                  <span>↑</span> Registrar Ingreso
+                </button>
+                <button type="button" id="btnQuickActionExpense" class="btn btn-danger btn-lg admin-action-btn">
+                  <span>↓</span> Registrar Gasto Real
+                </button>
+              </div>
 
-            <!-- Barra de Filtros en Píldoras -->
-            <div class="filter-pills-bar">
-              <button type="button" class="feed-filter-pill active" data-filter="all">Todos</button>
-              <button type="button" class="feed-filter-pill" data-filter="ingreso">Ingresos</button>
-              <button type="button" class="feed-filter-pill" data-filter="gasto">Gastos</button>
-              <button type="button" class="feed-filter-pill" data-filter="pagado">Pagados</button>
-              <button type="button" class="feed-filter-pill" data-filter="pendiente">Pendientes</button>
-            </div>
+              <!-- Barra de Filtros en Píldoras -->
+              <div class="filter-pills-bar">
+                <button type="button" class="feed-filter-pill active" data-filter="all">Todos</button>
+                <button type="button" class="feed-filter-pill" data-filter="ingreso">Ingresos</button>
+                <button type="button" class="feed-filter-pill" data-filter="gasto">Gastos</button>
+                <button type="button" class="feed-filter-pill" data-filter="pagado">Pagados</button>
+                <button type="button" class="feed-filter-pill" data-filter="pendiente">Pendientes</button>
+              </div>
 
-            <!-- Feed de Transacciones -->
-            <div id="transactionsFeedList">
-              <!-- Items de transacción renderizados por app.js -->
+              <!-- Feed de Transacciones -->
+              <div id="transactionsFeedList">
+                <!-- Items de transacción renderizados por app.js -->
+              </div>
             </div>
           </div>
 
           <!-- 5. NOTAS Y OBSERVACIONES DEL MES -->
-          <div class="content-card-box">
-            <div class="content-card-header">
+          <div class="content-card-box" data-segment-card="notas">
+            <div class="content-card-header accordion-header" data-accordion-target="notas">
               <div class="card-header-left">
                 <div class="card-header-icon">📝</div>
                 <div class="card-header-titles">
-                  <h3>Notas & Acuerdos del Mes</h3>
+                  <h3>Notas & Acuerdos del Mes <span class="accordion-chevron-icon">▼</span></h3>
                   <p>Observaciones de compras, deudas pendientes o recordatorios</p>
                 </div>
               </div>
             </div>
-            <div class="notes-smart-box">
-              <textarea 
-                id="monthNotesTextarea" 
-                class="notes-smart-textarea" 
-                placeholder="Escribe aquí notas sobre los pagos del mes (ej. compras dermatológicas, acuerdos familiares, abonos pendientes)..."
-              ></textarea>
-              <div id="notesFeedback" class="notes-feedback-label">Guardado en tiempo real</div>
+            <div class="accordion-collapsible-body">
+              <div class="notes-smart-box">
+                <textarea 
+                  id="monthNotesTextarea" 
+                  class="notes-smart-textarea" 
+                  placeholder="Escribe aquí notas sobre los pagos del mes (ej. compras dermatológicas, acuerdos familiares, abonos pendientes)..."
+                ></textarea>
+                <div id="notesFeedback" class="notes-feedback-label">Guardado en tiempo real</div>
+              </div>
             </div>
           </div>
 

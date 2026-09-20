@@ -226,6 +226,25 @@ class FinancialStore {
     const porcentajePagado = totalEgresos > 0 ? (montoPagadoPresupuesto / totalEgresos) * 100 : 0;
     const pendientesCount = totalItemsPresupuesto - pagadosCount;
 
+    // Progreso individual por categoría (para las minibarras en los botones de segmentos)
+    const itemsServicios = [...(m.servicios.fijos || []), ...(m.servicios.variables || [])];
+    const pagadosServicios = itemsServicios.filter(i => i.estado === 'Pagado');
+    const montoPagadoServicios = pagadosServicios.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const pctPagadoServicios = subtotalServicios > 0 ? Math.min(100, (montoPagadoServicios / subtotalServicios) * 100) : 0;
+
+    const itemsPersonales = [...(m.personales.fijos || []), ...(m.personales.variables || [])];
+    const pagadosPersonales = itemsPersonales.filter(i => i.estado === 'Pagado');
+    const montoPagadoPersonales = pagadosPersonales.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const pctPagadoPersonales = subtotalPersonales > 0 ? Math.min(100, (montoPagadoPersonales / subtotalPersonales) * 100) : 0;
+
+    const itemsExtras = m.extras || [];
+    const pagadosExtras = itemsExtras.filter(i => i.estado === 'Pagado');
+    const montoPagadoExtras = pagadosExtras.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const pctPagadoExtras = subtotalExtras > 0 ? Math.min(100, (montoPagadoExtras / subtotalExtras) * 100) : 0;
+
+    const pagadosMovs = movs.filter(x => x.estado === 'Pagado');
+    const pctPagadoMovimientos = movs.length > 0 ? Math.min(100, (pagadosMovs.length / movs.length) * 100) : 0;
+
     return {
       subtotalServiciosFijos,
       subtotalServiciosVariables,
@@ -244,7 +263,14 @@ class FinancialStore {
       pendientesCount,
       montoPagadoPresupuesto,
       montoPendientePresupuesto,
-      porcentajePagado
+      porcentajePagado,
+      montoPagadoServicios,
+      pctPagadoServicios,
+      montoPagadoPersonales,
+      pctPagadoPersonales,
+      montoPagadoExtras,
+      pctPagadoExtras,
+      pctPagadoMovimientos
     };
   }
 

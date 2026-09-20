@@ -7,18 +7,26 @@ let donutChartInstance = null;
 
 function renderGlobalCharts() {
   if (typeof Chart === 'undefined') return;
+  if (!window.financialStore) return;
 
   const totals = window.financialStore.calculateGlobalTotals();
+  if (!totals || !totals.rows) return;
+
   const labels = totals.rows.map(r => r.corto || r.nombre);
   const egresosData = totals.rows.map(r => r.totalEgresos);
   const ingresosData = totals.rows.map(r => r.ingresos);
 
   // 1. Gráfico de Barras: Comparativa Egresos vs Ingresos
-  const barCtx = document.getElementById('globalBarChart');
-  if (barCtx) {
-    if (barChartInstance) barChartInstance.destroy();
+  const barCanvas = document.getElementById('chartTrendBar') || document.getElementById('globalBarChart');
+  if (barCanvas) {
+    if (barChartInstance) {
+      barChartInstance.destroy();
+      barChartInstance = null;
+    }
 
-    barChartInstance = new Chart(barCtx, {
+    const hasData = egresosData.some(v => v > 0) || ingresosData.some(v => v > 0);
+
+    barChartInstance = new Chart(barCanvas, {
       type: 'bar',
       data: {
         labels: labels,
@@ -27,14 +35,14 @@ function renderGlobalCharts() {
             label: 'Egresos Presupuestados',
             data: egresosData,
             backgroundColor: '#f43f5e', // Coral/Rose
-            borderRadius: 8,
+            borderRadius: 6,
             borderSkipped: false,
           },
           {
             label: 'Ingresos / Abonos',
             data: ingresosData,
             backgroundColor: '#10b981', // Neon Emerald
-            borderRadius: 8,
+            borderRadius: 6,
             borderSkipped: false,
           }
         ]
@@ -46,7 +54,7 @@ function renderGlobalCharts() {
           legend: {
             position: 'top',
             labels: {
-              boxWidth: 14,
+              boxWidth: 12,
               color: '#94a3b8',
               font: { family: 'Plus Jakarta Sans', weight: '600', size: 12 }
             }
@@ -57,7 +65,7 @@ function renderGlobalCharts() {
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
-            padding: 12,
+            padding: 10,
             callbacks: {
               label: function(context) {
                 return ` ${context.dataset.label}: ${window.formatCurrency(context.raw)}`;
@@ -94,36 +102,43 @@ function renderGlobalCharts() {
   }
 
   // 2. Gráfico Doughnut: Distribución acumulada por categorías
-  const donutCtx = document.getElementById('globalDonutChart');
-  if (donutCtx) {
-    if (donutChartInstance) donutChartInstance.destroy();
+  const donutCanvas = document.getElementById('chartCategoryDonut') || document.getElementById('globalDonutChart');
+  if (donutCanvas) {
+    if (donutChartInstance) {
+      donutChartInstance.destroy();
+      donutChartInstance = null;
+    }
 
-    const catLabels = ['Servicios', 'Personales', 'Gastos Extra'];
+    const catLabels = ['Servicios del Hogar', 'Gastos Personales', 'Gastos Extra'];
     const catData = [totals.globalServicios, totals.globalPersonales, totals.globalExtras];
+    const totalGastos = catData.reduce((a, b) => a + b, 0);
 
-    donutChartInstance = new Chart(donutCtx, {
+    donutChartInstance = new Chart(donutCanvas, {
       type: 'doughnut',
       data: {
         labels: catLabels,
         datasets: [{
-          data: catData,
-          backgroundColor: ['#6366f1', '#a855f7', '#f59e0b'],
+          data: totalGastos > 0 ? catData : [1, 1, 1],
+          backgroundColor: totalGastos > 0 
+            ? ['#38bdf8', '#a78bfa', '#fbbf24'] 
+            : ['#1e293b', '#334155', '#1e293b'],
           hoverOffset: 6,
-          borderWidth: 3,
+          borderWidth: 2,
           borderColor: '#131d33'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '72%',
+        cutout: '70%',
         plugins: {
           legend: {
             position: 'bottom',
             labels: {
               boxWidth: 12,
               color: '#94a3b8',
-              font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' }
+              font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+              padding: 14
             }
           },
           tooltip: {
@@ -132,12 +147,12 @@ function renderGlobalCharts() {
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
-            padding: 12,
+            padding: 10,
             callbacks: {
               label: function(context) {
-                const total = catData.reduce((a, b) => a + b, 0);
-                const percent = total > 0 ? ((context.raw / total) * 100).toFixed(1) : 0;
-                return ` ${context.label}: ${window.formatCurrency(context.raw)} (${percent}%)`;
+                if (totalGastos === 0) return ' Sin gastos registrados aún';
+                const percent = ((catData[context.dataIndex] / totalGastos) * 100).toFixed(1);
+                return ` ${context.label}: ${window.formatCurrency(catData[context.dataIndex])} (${percent}%)`;
               }
             }
           }

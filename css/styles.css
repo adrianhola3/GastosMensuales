@@ -502,13 +502,27 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Barra de progreso amplia */
+/* ==========================================================
+   PROGRESS INDICATORS GRID (PAGADOS VS COBERTURA)
+   ========================================================== */
+.progress-indicators-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.25rem;
+}
+
+@media (max-width: 900px) {
+  .progress-indicators-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .coverage-progress-box {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: 1.25rem 1.75rem;
-  margin-bottom: 2.25rem;
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
@@ -538,6 +552,72 @@ body {
   background: linear-gradient(90deg, var(--accent-primary), var(--accent-emerald));
   border-radius: var(--radius-pill);
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.paid-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-emerald), #34d399);
+  border-radius: var(--radius-pill);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-glow-emerald);
+}
+
+/* ==========================================================
+   MODO SOLO LECTURA (PROTECCIÓN PARA VISITAS / PADRE)
+   ========================================================== */
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card-inner);
+  color: var(--text-secondary);
+}
+
+.mode-badge.admin-active {
+  background: rgba(99, 102, 241, 0.18);
+  border-color: rgba(99, 102, 241, 0.4);
+  color: #c7d2fe;
+}
+
+.mode-badge.readonly-active {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+/* Cuando la app está en modo solo lectura, ocultar elementos administrativos */
+body.read-only-mode .admin-action-btn,
+body.read-only-mode .btn-quick-add-service,
+body.read-only-mode .btn-quick-add-personal,
+body.read-only-mode .btn-quick-add-extra,
+body.read-only-mode .btn-delete-expense,
+body.read-only-mode .btn-delete-tx,
+body.read-only-mode #btnHeaderAddIncome,
+body.read-only-mode #btnHeaderAddBudget,
+body.read-only-mode #btnQuickActionIncome,
+body.read-only-mode #btnQuickActionExpense,
+body.read-only-mode #btnToggleAllStatus,
+body.read-only-mode #btnOpenNewMonthModal,
+body.read-only-mode #btnResetAllData {
+  display: none !important;
+}
+
+body.read-only-mode .btn-status-toggle {
+  pointer-events: none;
+  cursor: default;
+  filter: saturate(0.9);
+}
+
+body.read-only-mode #monthNotesTextarea {
+  pointer-events: none;
+  background: var(--bg-card-inner);
+  border-color: transparent;
+  color: var(--text-secondary);
 }
 
 /* ==========================================================

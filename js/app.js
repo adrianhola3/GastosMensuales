@@ -21,6 +21,84 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalAddMovement = document.getElementById('modalAddMovement');
   const modalNewMonth = document.getElementById('modalNewMonth');
   const modalBackup = document.getElementById('modalBackup');
+  const modalAdminAuth = document.getElementById('modalAdminAuth');
+  const formAdminAuth = document.getElementById('formAdminAuth');
+  const adminPinInput = document.getElementById('adminPinInput');
+
+  // Modo de Seguridad (Solo Lectura vs Administrador)
+  const btnToggleAuthMode = document.getElementById('btnToggleAuthMode');
+  const authModeIcon = document.getElementById('authModeIcon');
+  const authModeLabel = document.getElementById('authModeLabel');
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('admin') === 'true' || urlParams.get('pin') === '1234') {
+    localStorage.setItem('finanzas_is_admin', 'true');
+  }
+  if (urlParams.get('view') === 'readonly') {
+    localStorage.setItem('finanzas_is_admin', 'false');
+  }
+
+  // Por defecto en nuevos navegadores (como el del padre), inicia en false (Solo Lectura)
+  let isAdmin = localStorage.getItem('finanzas_is_admin') === 'true';
+
+  function updateAuthModeUI() {
+    if (isAdmin) {
+      document.body.classList.remove('read-only-mode');
+      if (authModeIcon) authModeIcon.textContent = '👑';
+      if (authModeLabel) authModeLabel.textContent = 'Modo Administrador';
+      if (btnToggleAuthMode) {
+        btnToggleAuthMode.className = 'mode-badge admin-active';
+        btnToggleAuthMode.title = 'Haz clic para bloquear y volver al modo solo lectura';
+      }
+    } else {
+      document.body.classList.add('read-only-mode');
+      if (authModeIcon) authModeIcon.textContent = '🔒';
+      if (authModeLabel) authModeLabel.textContent = 'Solo Lectura';
+      if (btnToggleAuthMode) {
+        btnToggleAuthMode.className = 'mode-badge readonly-active';
+        btnToggleAuthMode.title = 'Haz clic para ingresar PIN y desbloquear edición';
+      }
+    }
+  }
+
+  updateAuthModeUI();
+
+  if (btnToggleAuthMode) {
+    btnToggleAuthMode.addEventListener('click', () => {
+      if (isAdmin) {
+        isAdmin = false;
+        localStorage.setItem('finanzas_is_admin', 'false');
+        updateAuthModeUI();
+        showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
+      } else {
+        if (modalAdminAuth) {
+          adminPinInput.value = '';
+          modalAdminAuth.classList.add('active');
+          setTimeout(() => adminPinInput.focus(), 150);
+        }
+      }
+    });
+  }
+
+  if (formAdminAuth) {
+    formAdminAuth.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredPin = adminPinInput.value.trim();
+      const validPin = localStorage.getItem('finanzas_admin_pin') || '1234';
+
+      if (enteredPin === validPin) {
+        isAdmin = true;
+        localStorage.setItem('finanzas_is_admin', 'true');
+        updateAuthModeUI();
+        modalAdminAuth.classList.remove('active');
+        showToast('¡Modo Administrador desbloqueado!', '👑');
+      } else {
+        alert('PIN incorrecto. (El PIN predeterminado es 1234)');
+        adminPinInput.value = '';
+        adminPinInput.focus();
+      }
+    });
+  }
 
   // --- ENRUTAMIENTO DE VISTAS ---
   function switchView(viewName, targetMonthId = null) {
@@ -103,10 +181,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const pctAvance = totals.porcentajeAvance.toFixed(1);
     document.getElementById('monthAbonoPercentLabel').textContent = `${pctAvance}%`;
 
-    // 2. Barra de Progreso de Cobertura
-    document.getElementById('coverageTextInfo').textContent = `Abonado: ${window.formatCurrency(totals.totalIngresos)} de ${window.formatCurrency(totals.totalEgresos)}`;
-    document.getElementById('coveragePercentBadge').textContent = `${pctAvance}% Cubierto`;
-    document.getElementById('coverageBarFill').style.width = `${Math.min(100, totals.porcentajeAvance)}%`;
+    // 2. Dual Indicadores de Progreso: Gastos Pagados vs Cobertura de Abonos
+    // A. Progreso de Gastos Pagados
+    const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
+    const elPaidTextInfo = document.getElementById('paidTextInfo');
+    if (elPaidTextInfo) {
+      elPaidTextInfo.innerHTML = `<span>✓</span> Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
+    }
+    const elPaidPercentBadge = document.getElementById('paidPercentBadge');
+    if (elPaidPercentBadge) {
+      elPaidPercentBadge.textContent = `${pctPagado}% Pagado (${totals.pagadosCount} de ${totals.totalItemsPresupuesto})`;
+    }
+    const elPaidBarFill = document.getElementById('paidBarFill');
+    if (elPaidBarFill) {
+      elPaidBarFill.style.width = `${Math.min(100, totals.porcentajePagado || 0)}%`;
+    }
+    const elPaidSummaryLabel = document.getElementById('paidSummaryLabel');
+    if (elPaidSummaryLabel) {
+      elPaidSummaryLabel.textContent = `✓ Pagado: ${window.formatCurrency(totals.montoPagadoPresupuesto)}`;
+    }
+    const elPendingSummaryLabel = document.getElementById('pendingSummaryLabel');
+    if (elPendingSummaryLabel) {
+      elPendingSummaryLabel.textContent = `⏳ Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
+    }
+
+    // B. Cobertura con Ingresos
+    const elCoverageTextInfo = document.getElementById('coverageTextInfo');
+    if (elCoverageTextInfo) {
+      elCoverageTextInfo.innerHTML = `<span>📈</span> Cobertura de Ingresos: <strong>${window.formatCurrency(totals.totalIngresos)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
+    }
+    const elCoveragePercentBadge = document.getElementById('coveragePercentBadge');
+    if (elCoveragePercentBadge) {
+      elCoveragePercentBadge.textContent = `${pctAvance}% Cubierto`;
+    }
+    const elCoverageBarFill = document.getElementById('coverageBarFill');
+    if (elCoverageBarFill) {
+      elCoverageBarFill.style.width = `${Math.min(100, totals.porcentajeAvance)}%`;
+    }
+    const elCoverageBalanceFooter = document.getElementById('coverageBalanceFooter');
+    if (elCoverageBalanceFooter) {
+      elCoverageBalanceFooter.textContent = `Saldo: ${window.formatCurrency(totals.balanceNeto)}`;
+    }
 
     // 3. Gastos de Servicios
     renderExpenseCategory('listServiciosFijos', month.servicios.fijos || [], month.id);

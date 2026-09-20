@@ -181,8 +181,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const pctAvance = totals.porcentajeAvance.toFixed(1);
     document.getElementById('monthAbonoPercentLabel').textContent = `${pctAvance}%`;
 
-    // 2. Dual Indicadores de Progreso: Gastos Pagados vs Cobertura de Abonos
-    // A. Progreso de Gastos Pagados
+    // 2. Dual Indicadores de Progreso y Métricas en Tiempo Real
+    updateLiveProgressAndTotals(month.id);
+
+    // 3. Gastos de Servicios
+    renderExpenseCategory('listServiciosFijos', month.servicios.fijos || [], month.id);
+
+    // 4. Gastos Personales
+    renderExpenseCategory('listPersonalesFijos', month.personales.fijos || [], month.id);
+    renderExpenseCategory('listPersonalesVariables', month.personales.variables || [], month.id);
+
+    // 5. Gastos Extraordinarios
+    renderExpenseCategory('listGastosExtra', month.extras || [], month.id);
+
+    // 6. Feed de Transacciones (Flujo de Caja Real)
+    renderTransactionFeed(month);
+
+    // 7. Notas del Mes
+    const notesTextarea = document.getElementById('monthNotesTextarea');
+    if (notesTextarea) notesTextarea.value = month.notas || '';
+  }
+
+  // Función dedicada para actualizar métricas, subtotales y barras de progreso al instante SIN alterar el DOM de los gastos (sin salto de scroll)
+  function updateLiveProgressAndTotals(monthId) {
+    const month = store.getMonth(monthId);
+    if (!month) return;
+    const totals = store.calculateMonthTotals(monthId);
+
+    // Valores en tarjetas principales
+    const elIngresos = document.getElementById('monthTotalIngresos');
+    if (elIngresos) elIngresos.textContent = window.formatCurrency(totals.totalIngresos);
+    const movs = month.movimientos || [];
+    const ingresosCount = movs.filter(x => x.flujo === 'Ingreso').length;
+    const elIngresosCount = document.getElementById('monthIngresosCount');
+    if (elIngresosCount) elIngresosCount.textContent = `${ingresosCount} abono${ingresosCount === 1 ? '' : 's'} registrado${ingresosCount === 1 ? '' : 's'}`;
+
+    const elEgresos = document.getElementById('monthTotalEgresos');
+    if (elEgresos) elEgresos.textContent = window.formatCurrency(totals.totalEgresos);
+    const elGastosCount = document.getElementById('monthGastosCount');
+    if (elGastosCount) elGastosCount.textContent = `${totals.pagadosCount} de ${totals.totalItemsPresupuesto} gastos pagados`;
+
+    const balanceEl = document.getElementById('monthBalanceNeto');
+    if (balanceEl) {
+      balanceEl.textContent = window.formatCurrency(totals.balanceNeto);
+      balanceEl.style.color = totals.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+    }
+    const elBalanceStatus = document.getElementById('monthBalanceStatusLabel');
+    if (elBalanceStatus) {
+      elBalanceStatus.textContent = totals.balanceNeto >= 0 ? 'Superávit / Saldo a favor' : 'Monto pendiente de cobertura';
+    }
+    const elAbonoPercent = document.getElementById('monthAbonoPercentLabel');
+    if (elAbonoPercent) elAbonoPercent.textContent = `${totals.porcentajeAvance.toFixed(1)}%`;
+
+    // Dual Barras de Progreso (Sticky)
     const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
     const elPaidTextInfo = document.getElementById('paidTextInfo');
     if (elPaidTextInfo) {
@@ -205,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elPendingSummaryLabel.textContent = `⏳ Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
     }
 
-    // B. Cobertura con Ingresos
+    const pctAvance = totals.porcentajeAvance.toFixed(1);
     const elCoverageTextInfo = document.getElementById('coverageTextInfo');
     if (elCoverageTextInfo) {
       elCoverageTextInfo.innerHTML = `<span>📈</span> Cobertura de Ingresos: <strong>${window.formatCurrency(totals.totalIngresos)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
@@ -223,35 +274,36 @@ document.addEventListener('DOMContentLoaded', () => {
       elCoverageBalanceFooter.textContent = `Saldo: ${window.formatCurrency(totals.balanceNeto)}`;
     }
 
-    // 3. Gastos de Servicios
-    renderExpenseCategory('listServiciosFijos', month.servicios.fijos || [], month.id);
-    document.getElementById('subtotalServiciosFijos').textContent = window.formatCurrency(totals.subtotalServiciosFijos);
+    // Subtotales en las tarjetas
+    const elSubServFijos = document.getElementById('subtotalServiciosFijos');
+    if (elSubServFijos) elSubServFijos.textContent = window.formatCurrency(totals.subtotalServiciosFijos);
+    const elSubServVar = document.getElementById('subtotalServiciosVariables');
+    if (elSubServVar) elSubServVar.textContent = window.formatCurrency(totals.subtotalServiciosVariables);
+    const elSubServTot = document.getElementById('subtotalTotalServicios');
+    if (elSubServTot) elSubServTot.textContent = window.formatCurrency(totals.subtotalServicios);
 
-    renderExpenseCategory('listServiciosVariables', month.servicios.variables || [], month.id);
-    document.getElementById('subtotalServiciosVariables').textContent = window.formatCurrency(totals.subtotalServiciosVariables);
-    document.getElementById('subtotalTotalServicios').textContent = window.formatCurrency(totals.subtotalServicios);
+    const elSubPersFijos = document.getElementById('subtotalPersonalesFijos');
+    if (elSubPersFijos) elSubPersFijos.textContent = window.formatCurrency(totals.subtotalPersonalesFijos);
+    const elSubPersVar = document.getElementById('subtotalPersonalesVariables');
+    if (elSubPersVar) elSubPersVar.textContent = window.formatCurrency(totals.subtotalPersonalesVariables);
+    const elSubPersTot = document.getElementById('subtotalTotalPersonales');
+    if (elSubPersTot) elSubPersTot.textContent = window.formatCurrency(totals.subtotalPersonales);
 
-    // 4. Gastos Personales
-    renderExpenseCategory('listPersonalesFijos', month.personales.fijos || [], month.id);
-    document.getElementById('subtotalPersonalesFijos').textContent = window.formatCurrency(totals.subtotalPersonalesFijos);
+    const elSubExtras = document.getElementById('subtotalGastosExtra');
+    if (elSubExtras) elSubExtras.textContent = window.formatCurrency(totals.subtotalExtras);
 
-    renderExpenseCategory('listPersonalesVariables', month.personales.variables || [], month.id);
-    document.getElementById('subtotalPersonalesVariables').textContent = window.formatCurrency(totals.subtotalPersonalesVariables);
-    document.getElementById('subtotalTotalPersonales').textContent = window.formatCurrency(totals.subtotalPersonales);
+    const elGrandTotal = document.getElementById('grandTotalAmount');
+    if (elGrandTotal) elGrandTotal.textContent = window.formatCurrency(totals.totalEgresos);
 
-    // 5. Gastos Extraordinarios
-    renderExpenseCategory('listGastosExtra', month.extras || [], month.id);
-    document.getElementById('subtotalGastosExtra').textContent = window.formatCurrency(totals.subtotalExtras);
-
-    // 6. Gran Total del Mes
-    document.getElementById('grandTotalAmount').textContent = window.formatCurrency(totals.totalEgresos);
-
-    // 7. Feed de Transacciones (Flujo de Caja Real)
-    renderTransactionFeed(month);
-
-    // 8. Notas del Mes
-    const notesTextarea = document.getElementById('monthNotesTextarea');
-    notesTextarea.value = month.notas || '';
+    // Tags de resumen en encabezados de acordeón
+    const tagServ = document.getElementById('summaryTagServicios');
+    if (tagServ) tagServ.textContent = window.formatCurrency(totals.subtotalServicios);
+    const tagPers = document.getElementById('summaryTagPersonales');
+    if (tagPers) tagPers.textContent = window.formatCurrency(totals.subtotalPersonales);
+    const tagExt = document.getElementById('summaryTagExtras');
+    if (tagExt) tagExt.textContent = window.formatCurrency(totals.subtotalExtras);
+    const tagFlujo = document.getElementById('summaryTagFlujo');
+    if (tagFlujo) tagFlujo.textContent = `${movs.length} movs`;
   }
 
   // Renderizador de filas amplias de gastos
@@ -296,27 +348,33 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div>
-          <button type="button" class="btn-ghost-rose btn-delete-expense" data-item-id="${item.id}" title="Eliminar gasto">
+          <button type="button" class="btn-ghost-rose btn-delete-expense admin-action-btn" data-item-id="${item.id}" title="Eliminar gasto">
             ✕
           </button>
         </div>
       `;
 
-      // Evento: Alternar estado con botón grande
-      row.querySelector('.btn-status-toggle').addEventListener('click', () => {
+      // Evento: Alternar estado en el lugar SIN salto de scroll ni recrear el DOM
+      const toggleBtn = row.querySelector('.btn-status-toggle');
+      toggleBtn.addEventListener('click', () => {
         const newState = store.toggleBudgetItemStatus(monthId, item.id);
-        renderMonthView();
+        toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
+        toggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
+        updateLiveProgressAndTotals(monthId);
         showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
       });
 
       // Evento: Eliminar gasto
-      row.querySelector('.btn-delete-expense').addEventListener('click', () => {
-        if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
-          store.deleteBudgetItem(monthId, item.id);
-          renderMonthView();
-          showToast(`Gasto "${item.concepto}" eliminado`, '🗑');
-        }
-      });
+      const deleteBtn = row.querySelector('.btn-delete-expense');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+          if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
+            store.deleteBudgetItem(monthId, item.id);
+            renderMonthView();
+            showToast(`Gasto "${item.concepto}" eliminado`, '🗑');
+          }
+        });
+      }
 
       container.appendChild(row);
     });
@@ -384,10 +442,13 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
       `;
 
-      // Alternar estado de la transacción
-      item.querySelector('.btn-status-toggle').addEventListener('click', () => {
+      // Alternar estado de la transacción en el lugar (sin saltos ni scroll)
+      const feedToggleBtn = item.querySelector('.btn-status-toggle');
+      feedToggleBtn.addEventListener('click', () => {
         const newState = store.toggleMovementStatus(month.id, m.id);
-        renderMonthView();
+        feedToggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
+        feedToggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
+        updateLiveProgressAndTotals(month.id);
         showToast(`Movimiento marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
       });
 
@@ -462,21 +523,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const tfoot = document.getElementById('globalMatrixFoot');
     tfoot.innerHTML = `
       <tr>
-        <td>TOTALES:</td>
-        <td class="font-mono">${window.formatCurrency(totals.globalServicios)}</td>
-        <td class="font-mono">${window.formatCurrency(totals.globalPersonales)}</td>
-        <td class="font-mono">${window.formatCurrency(totals.globalExtras)}</td>
-        <td class="font-mono" style="color: var(--accent-rose);">${window.formatCurrency(totals.globalEgresos)}</td>
-        <td class="font-mono" style="color: var(--accent-emerald);">${window.formatCurrency(totals.globalIngresos)}</td>
-        <td class="font-mono" style="color:${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+        <td style="font-weight: 800; color: #ffffff;">TOTAL AÑO</td>
+        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalServicios)}</td>
+        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalPersonales)}</td>
+        <td class="font-mono" style="font-weight: 700;">${window.formatCurrency(totals.globalExtras)}</td>
+        <td class="font-mono" style="color: var(--accent-rose); font-weight: 800;">${window.formatCurrency(totals.globalEgresos)}</td>
+        <td class="font-mono" style="color: var(--accent-emerald); font-weight: 800;">${window.formatCurrency(totals.globalIngresos)}</td>
+        <td class="font-mono" style="font-weight: 800; color:${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
           ${window.formatCurrency(totals.globalBalanceNeto)}
         </td>
-        <td class="font-mono">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
-        <td style="min-width: 140px;">
-          <div style="height: 8px; background: var(--bg-card-inner); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle);">
-            <div style="width: ${Math.min(100, totals.globalPorcentajeCumplimiento)}%; height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-emerald)); border-radius: 999px;"></div>
-          </div>
-        </td>
+        <td class="font-mono" style="font-weight: 800;">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
+        <td></td>
       </tr>
     `;
 
@@ -488,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 60);
   }
 
-  // --- FILTROS DE FEED ---
+  // --- FILTROS DE FEED DE FLUJO DE CAJA ---
   document.querySelectorAll('.feed-filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       document.querySelectorAll('.feed-filter-pill').forEach(p => p.classList.remove('active'));
@@ -499,12 +556,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- ALTERNAR TODOS PAGADOS / PENDIENTES ---
-  document.getElementById('btnToggleAllStatus').addEventListener('click', () => {
-    const monthId = store.data.activeMonthId;
-    const newState = store.toggleAllBudgetItems(monthId);
-    renderMonthView();
-    showToast(`Todos los gastos del mes cambiaron a: ${newState}`, newState === 'Pagado' ? '✓' : '⏳');
+  // --- SELECTOR DE SEGMENTOS: NAVEGACIÓN LIMPIA SIN SATURAR LA PANTALLA ---
+  document.querySelectorAll('.segment-pill-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.segment-pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const targetSegment = btn.getAttribute('data-segment');
+
+      document.querySelectorAll('[data-segment-card]').forEach(card => {
+        const cardSegment = card.getAttribute('data-segment-card');
+        if (targetSegment === 'all' || cardSegment === targetSegment) {
+          card.style.display = '';
+          if (targetSegment !== 'all') {
+            card.classList.remove('collapsed'); // Expandir automáticamente al enfocar este segmento
+          }
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // --- ACORDEÓN: COLAPSAR / EXPANDIR TARJETAS AL HACER CLIC EN SU ENCABEZADO ---
+  document.querySelectorAll('.accordion-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('button')) return; // No colapsar si se hace clic en botones de acción
+      const card = header.closest('.content-card-box');
+      if (card) {
+        card.classList.toggle('collapsed');
+      }
+    });
   });
 
   // --- NAVEGACIÓN SECUENCIAL DE MESES ---

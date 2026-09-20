@@ -222,6 +222,9 @@ class FinancialStore {
     const montoPagadoPresupuesto = allPresupuestoItems
       .filter(i => i.estado === 'Pagado')
       .reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const montoPendientePresupuesto = Math.max(0, totalEgresos - montoPagadoPresupuesto);
+    const porcentajePagado = totalEgresos > 0 ? (montoPagadoPresupuesto / totalEgresos) * 100 : 0;
+    const pendientesCount = totalItemsPresupuesto - pagadosCount;
 
     return {
       subtotalServiciosFijos,
@@ -238,7 +241,10 @@ class FinancialStore {
       porcentajeAvance,
       totalItemsPresupuesto,
       pagadosCount,
-      montoPagadoPresupuesto
+      pendientesCount,
+      montoPagadoPresupuesto,
+      montoPendientePresupuesto,
+      porcentajePagado
     };
   }
 

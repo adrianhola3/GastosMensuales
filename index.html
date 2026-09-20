@@ -126,30 +126,68 @@
         </div>
       </div>
 
-      <!-- Selector de Segmentos (Navegación limpia que muestra solo lo que necesitas) -->
+      <!-- Selector de Segmentos (Navegación limpia con previsualización de progreso) -->
       <div class="segments-navigation-bar">
-        <button type="button" class="segment-pill-btn active" data-segment="servicios">
-          <span>🏠</span> Servicios <span id="badgeSegServicios" class="segment-count-badge">S/ 0.00</span>
+        <button type="button" class="segment-pill-btn active" data-segment="servicios" title="Haz clic para activar/desactivar Servicios">
+          <div class="pill-top-row">
+            <span>🏠</span> Servicios <span id="badgeSegServicios" class="segment-count-badge font-mono">S/ 0.00</span>
+          </div>
+          <div class="pill-minibar-track" title="Progreso de pagos en Servicios">
+            <div id="miniBarServicios" class="pill-minibar-fill" style="width: 0%;"></div>
+          </div>
         </button>
-        <button type="button" class="segment-pill-btn" data-segment="personales">
-          <span>👤</span> Personales <span id="badgeSegPersonales" class="segment-count-badge">S/ 0.00</span>
+
+        <button type="button" class="segment-pill-btn" data-segment="personales" title="Haz clic para activar/desactivar Gastos Personales">
+          <div class="pill-top-row">
+            <span>👤</span> Personales <span id="badgeSegPersonales" class="segment-count-badge font-mono">S/ 0.00</span>
+          </div>
+          <div class="pill-minibar-track" title="Progreso de pagos en Personales">
+            <div id="miniBarPersonales" class="pill-minibar-fill" style="width: 0%;"></div>
+          </div>
         </button>
-        <button type="button" class="segment-pill-btn" data-segment="extras">
-          <span>⚡</span> Extras <span id="badgeSegExtras" class="segment-count-badge">S/ 0.00</span>
+
+        <button type="button" class="segment-pill-btn" data-segment="extras" title="Haz clic para activar/desactivar Gastos Extras">
+          <div class="pill-top-row">
+            <span>⚡</span> Extras <span id="badgeSegExtras" class="segment-count-badge font-mono">S/ 0.00</span>
+          </div>
+          <div class="pill-minibar-track" title="Progreso de pagos en Extras">
+            <div id="miniBarExtras" class="pill-minibar-fill" style="width: 0%;"></div>
+          </div>
         </button>
-        <button type="button" class="segment-pill-btn" data-segment="flujo">
-          <span>💳</span> Flujo de Caja <span id="badgeSegFlujo" class="segment-count-badge">0 movs</span>
+
+        <button type="button" class="segment-pill-btn" data-segment="movimientos" title="Haz clic para activar/desactivar Movimientos">
+          <div class="pill-top-row">
+            <span>💳</span> Movimientos <span id="badgeSegMovimientos" class="segment-count-badge font-mono">0 movs</span>
+          </div>
+          <div class="pill-minibar-track" title="Progreso de movimientos">
+            <div id="miniBarMovimientos" class="pill-minibar-fill" style="width: 0%;"></div>
+          </div>
         </button>
-        <button type="button" class="segment-pill-btn" data-segment="notas">
-          <span>📝</span> Notas
+
+        <button type="button" class="segment-pill-btn" data-segment="notas" title="Haz clic para activar/desactivar Notas">
+          <div class="pill-top-row">
+            <span>📝</span> Notas
+          </div>
         </button>
-        <button type="button" class="segment-pill-btn" data-segment="all">
-          <span>📋</span> Ver Todo
+
+        <button type="button" class="segment-pill-btn pill-btn-all" data-segment="all" title="Ver / Ocultar todas las categorías">
+          <div class="pill-top-row">
+            <span>📋</span> Ver Todo
+          </div>
         </button>
       </div>
 
-      <!-- Contenedor Enfocado de Segmentos (Sin saturación de pantalla al bajar) -->
+      <!-- Contenedor Enfocado de Segmentos (Multi-selección interactiva y reordenable) -->
       <div class="segments-workspace-container">
+
+        <!-- Mensaje cuando no hay segmentos seleccionados -->
+        <div id="noSegmentsSelectedNotice" class="empty-segments-notice" style="display: none;">
+          <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">👆</div>
+          <h4 style="font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.35rem;">Ninguna categoría seleccionada</h4>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">
+            Haz clic en uno o más botones arriba para desplegar las categorías deseadas de forma simultánea.
+          </p>
+        </div>
 
         <!-- 1. GASTOS DE SERVICIOS -->
         <div class="content-card-box" data-segment-card="servicios">
@@ -265,17 +303,17 @@
           </div>
         </div>
 
-        <!-- 4. FEED DE FLUJO DE CAJA REAL -->
-        <div class="content-card-box" data-segment-card="flujo" style="display: none;">
-          <div class="content-card-header accordion-header" data-accordion-target="flujo">
+        <!-- 4. FEED DE MOVIMIENTOS REALES -->
+        <div class="content-card-box" data-segment-card="movimientos" style="display: none;">
+          <div class="content-card-header accordion-header" data-accordion-target="movimientos">
             <div class="card-header-left">
               <div class="card-header-icon">💳</div>
               <div class="card-header-titles">
-                <h3>Flujo de Caja Real <span class="accordion-chevron-icon">▼</span></h3>
+                <h3>Movimientos del Mes <span class="accordion-chevron-icon">▼</span></h3>
                 <p>Abonos, transferencias bancarias y pagos ejecutados</p>
               </div>
             </div>
-            <span id="summaryTagFlujo" class="accordion-summary-tag font-mono">0 movs</span>
+            <span id="summaryTagMovimientos" class="accordion-summary-tag font-mono">0 movs</span>
           </div>
 
           <div class="accordion-collapsible-body">
@@ -396,15 +434,15 @@
           <table class="matrix-table">
             <thead>
               <tr>
-                <th>Período</th>
-                <th>Servicios</th>
-                <th>Personales</th>
-                <th>Extras</th>
-                <th>Total Egresos</th>
-                <th>Total Ingresos</th>
-                <th>Balance Neto</th>
-                <th>Cobertura</th>
-                <th>Progreso</th>
+                <th style="min-width: 170px;">Período</th>
+                <th style="min-width: 110px; text-align: right;">Servicios</th>
+                <th style="min-width: 110px; text-align: right;">Personales</th>
+                <th style="min-width: 100px; text-align: right;">Extras</th>
+                <th style="min-width: 120px; text-align: right;">Total Egresos</th>
+                <th style="min-width: 120px; text-align: right;">Total Ingresos</th>
+                <th style="min-width: 130px; text-align: right;">Balance Neto</th>
+                <th style="min-width: 95px; text-align: center;">Cobertura</th>
+                <th style="min-width: 130px; text-align: center;">Progreso</th>
               </tr>
             </thead>
             <tbody id="globalMatrixBody">

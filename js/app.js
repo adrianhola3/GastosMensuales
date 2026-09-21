@@ -1275,7 +1275,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal-overlay')) {
+      // Bloquear cierre al hacer clic fuera si es el modal de selección obligatoria de rol
+      if (e.target.id === 'modalSessionRoleSelect') {
+        const sheet = e.target.querySelector('.modal-sheet');
+        if (sheet) {
+          sheet.classList.remove('modal-shake');
+          void sheet.offsetWidth; // trigger reflow
+          sheet.classList.add('modal-shake');
+        }
+        return; // No permitir salir sin elegir una de las opciones
+      }
       e.target.classList.remove('active');
+    }
+  });
+
+  // Prevenir que Escape cierre el modal de selección obligatoria
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const roleModal = document.getElementById('modalSessionRoleSelect');
+      if (roleModal && roleModal.classList.contains('active')) {
+        const sheet = roleModal.querySelector('.modal-sheet');
+        if (sheet) {
+          sheet.classList.remove('modal-shake');
+          void sheet.offsetWidth;
+          sheet.classList.add('modal-shake');
+        }
+        e.preventDefault();
+        e.stopPropagation();
+      }
     }
   });
 

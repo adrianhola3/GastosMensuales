@@ -1866,6 +1866,110 @@ body.read-only-mode #monthNotesTextarea {
   to { opacity: 1; transform: scale(1); }
 }
 
+/* ==========================================================
+   MODAL DE SELECCIÓN DE ROL / BIENVENIDA
+   ========================================================== */
+.role-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+
+@media (max-width: 600px) {
+  .role-choice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.role-choice-card {
+  background: var(--bg-card-inner);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.15rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  text-align: left;
+  transition: all 0.22s var(--ease-spring);
+  color: var(--text-main);
+  position: relative;
+  user-select: none;
+}
+
+.role-choice-card:hover {
+  transform: translateY(-2px);
+}
+
+.role-choice-card.card-readonly:hover {
+  border-color: var(--accent-emerald);
+  background: rgba(16, 185, 129, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 16px rgba(16, 185, 129, 0.2);
+}
+
+.role-choice-card.card-admin:hover {
+  border-color: var(--accent-primary);
+  background: rgba(99, 102, 241, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 16px rgba(99, 102, 241, 0.25);
+}
+
+.role-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.role-card-titles h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.role-card-titles p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.role-card-action-btn {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.card-readonly .role-card-action-btn {
+  background: var(--accent-emerald-light);
+  color: var(--text-emerald);
+  border-color: var(--accent-emerald-border);
+}
+
+.card-readonly:hover .role-card-action-btn {
+  background: var(--accent-emerald);
+  color: #ffffff;
+}
+
+.card-admin .role-card-action-btn {
+  background: var(--accent-primary-light);
+  color: var(--accent-primary-text);
+  border-color: var(--accent-primary-border);
+}
+
+.card-admin:hover .role-card-action-btn {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
 .modal-sheet-header {
   padding: 1.5rem 1.75rem;
   border-bottom: 1px solid var(--border-subtle);
@@ -2230,16 +2334,20 @@ body.read-only-mode #monthNotesTextarea {
 /* ==========================================================
    RESPONSIVE DESIGN (SIDEBAR DRAWER & MOBILE ADAPTATIONS)
    ========================================================== */
+
+/* Tablets y pantallas medianas (<= 1024px) */
 @media (max-width: 1024px) {
   .app-sidebar {
     position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
+    width: 295px;
+    max-width: 86vw;
     transform: translateX(-100%);
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.6);
-    z-index: 100;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 12px 0 40px rgba(0, 0, 0, 0.7);
+    z-index: 1000;
   }
 
   .app-sidebar.sidebar-open {
@@ -2250,10 +2358,10 @@ body.read-only-mode #monthNotesTextarea {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    z-index: 95;
+    z-index: 995;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
@@ -2271,23 +2379,177 @@ body.read-only-mode #monthNotesTextarea {
   .sidebar-close-btn {
     display: flex;
   }
-}
 
-@media (max-width: 768px) {
   .segments-workspace-container {
     grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+}
+
+/* Pantallas móviles y tablets intermedias (<= 860px) */
+@media (max-width: 860px) {
+  .segments-navigation-bar {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 0.15rem 0 0.6rem 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .segments-navigation-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .segment-pill-btn {
+    flex: 0 0 auto;
+    min-width: 140px;
+  }
+  .segment-pill-btn.pill-btn-all {
+    min-width: 95px;
   }
 
   .main-content {
-    padding: 1rem 0.85rem;
+    padding: 1.1rem 1rem 4rem 1rem;
   }
+}
 
+/* Teléfonos y pantallas pequeñas (<= 768px) */
+@media (max-width: 768px) {
   .app-topbar {
-    padding: 0 1rem;
+    padding: 0 0.85rem;
+    height: 52px;
   }
 
   .topbar-quick-kpi {
     display: none;
+  }
+
+  .topbar-month-pill {
+    font-size: 0.8rem;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-topbar-notes {
+    font-size: 0.74rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .matrix-table-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .matrix-table-card table {
+    min-width: 680px;
+  }
+
+  .charts-grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-canvas-container {
+    height: 270px;
+    padding: 0.85rem;
+  }
+}
+
+/* Teléfonos móviles en formato vertical (<= 600px) */
+@media (max-width: 600px) {
+  .main-content {
+    padding: 0.85rem 0.65rem 4.5rem 0.65rem;
+  }
+
+  /* Modales como Bottom Sheets en móvil */
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-sheet {
+    width: 100%;
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 18px 18px 0 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    animation: sheetSlideUp 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes sheetSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-sheet-header {
+    padding: 1.15rem 1.25rem;
+  }
+  .modal-sheet-body {
+    padding: 1.15rem 1.25rem !important;
+  }
+  .modal-sheet-footer {
+    padding: 0.85rem 1.25rem;
+  }
+
+  .role-choice-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Teléfonos muy compactos (<= 480px) */
+@media (max-width: 480px) {
+  .content-card-header {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .card-title-row h3 {
+    font-size: 0.88rem;
+  }
+
+  .card-header-titles p {
+    display: none; /* Ocultar subtítulo largo en pantallas diminutas para limpieza */
+  }
+
+  .expense-card-item {
+    padding: 0.52rem 0.65rem;
+    gap: 0.45rem;
+  }
+
+  .expense-item-title {
+    font-size: 0.84rem;
+  }
+
+  .expense-item-amount {
+    font-size: 0.84rem;
+  }
+
+  .btn-status-toggle {
+    min-width: 78px;
+    font-size: 0.68rem;
+    padding: 0.22rem 0.48rem;
+  }
+
+  .btn-ghost-rose {
+    padding: 0.22rem 0.35rem;
+    font-size: 0.72rem;
+  }
+
+  .quick-action-buttons-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .grand-total-highlight-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .grand-total-highlight-card .grand-total-number {
+    font-size: 1.3rem;
   }
 }
 

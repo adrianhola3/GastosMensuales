@@ -457,7 +457,7 @@
           <div class="metric-footer-info">Ingresos menos egresos globales</div>
         </div>
 
-        <div class="hero-metric-card card-theme-indigo">
+        <div class="hero-metric-card card-theme-amber">
           <div class="metric-top-row">
             <span class="metric-label-title">Cumplimiento Global</span>
             <div class="metric-icon-box">%</div>
@@ -608,33 +608,26 @@
   <div id="modalAddMovement" class="modal-overlay">
     <div class="modal-sheet" style="max-width: 440px;">
       <div class="modal-sheet-header">
-        <h3 id="modalMovementTitle">Registrar Movimiento</h3>
+        <h3 id="modalMovementTitle">Registrar Ingreso</h3>
         <button type="button" class="btn-close-sheet">✕</button>
       </div>
       <form id="formAddMovement">
+        <input type="hidden" id="movFlujo" value="Ingreso">
         <div class="modal-sheet-body">
-          <div class="form-grid-2">
-            <div class="form-field">
-              <label for="movFlujo">Tipo de Flujo</label>
-              <select id="movFlujo" class="form-input-lg">
-                <option value="Ingreso">Ingreso</option>
-                <option value="Gasto">Gasto</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="movFecha">Fecha</label>
-              <input type="date" id="movFecha" class="form-input-lg font-mono">
-            </div>
-          </div>
-
           <div class="form-field">
             <label for="movConcepto">Concepto / Detalle</label>
             <input type="text" id="movConcepto" class="form-input-lg" placeholder="Ej. Abono Quincena 1, Pago Luz BBVA..." required>
           </div>
 
-          <div class="form-field">
-            <label for="movMonto">Monto (S/)</label>
-            <input type="number" step="0.01" min="0" id="movMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="movMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="movMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div class="form-field">
+              <label for="movFecha">Fecha</label>
+              <input type="date" id="movFecha" class="form-input-lg font-mono">
+            </div>
           </div>
         </div>
         <div class="modal-sheet-footer">

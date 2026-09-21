@@ -25,7 +25,6 @@ function getDefaultData() {
 
   const basePersonalesFijos = [
     { id: generateId(), concepto: 'Gimnasio', monto: 103.54, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'Spotify', monto: 11.90, tipo: 'Fijo', estado: 'Pendiente' },
     { id: generateId(), concepto: 'Consulta dermatólogo', monto: 50.00, tipo: 'Fijo', estado: 'Pendiente' }
   ];
 
@@ -125,6 +124,20 @@ class FinancialStore {
                     cleaned = true;
                   }
                 });
+              }
+            }
+
+            // Eliminar permanentemente Spotify de todos los meses
+            if (m && m.personales) {
+              if (m.personales.fijos) {
+                const prevLen = m.personales.fijos.length;
+                m.personales.fijos = m.personales.fijos.filter(item => !item.concepto.toLowerCase().includes('spotify'));
+                if (m.personales.fijos.length !== prevLen) cleaned = true;
+              }
+              if (m.personales.variables) {
+                const prevLen = m.personales.variables.length;
+                m.personales.variables = m.personales.variables.filter(item => !item.concepto.toLowerCase().includes('spotify'));
+                if (m.personales.variables.length !== prevLen) cleaned = true;
               }
             }
           });

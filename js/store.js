@@ -60,28 +60,7 @@ function getDefaultData() {
         { id: generateId(), concepto: 'Matrícula 2026-B de la universidad', monto: 83.00, tipo: 'Extra', estado: 'Pagado' }
       ];
       notas = 'Matrícula 2026-B universitaria pagada. Controlar compras dermatológicas del mes.';
-      movimientos = [
-        { 
-          id: generateId(), 
-          fecha: '2026-09-20', 
-          concepto: 'Yapeo de 559', 
-          flujo: 'Ingreso', 
-          categoria: 'Gastos Extra', 
-          retornable: 'No', 
-          estado: 'Pagado', 
-          monto: 559.00 
-        },
-        { 
-          id: generateId(), 
-          fecha: '2026-08-15', 
-          concepto: 'Matrícula 2026-B', 
-          flujo: 'Gasto', 
-          categoria: 'Gastos Extra', 
-          retornable: 'No', 
-          estado: 'Pagado', 
-          monto: 83.00 
-        }
-      ];
+      movimientos = [];
     }
 
     meses[m.id] = {
@@ -122,6 +101,19 @@ class FinancialStore {
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && parsed.meses && parsed.mesesOrden) {
+          // Asegurar que ningún mes tenga movimientos mock residuales para que empiece en cero por defecto
+          let cleaned = false;
+          Object.keys(parsed.meses).forEach(id => {
+            const m = parsed.meses[id];
+            if (m && m.movimientos && m.movimientos.length > 0) {
+              const prevLen = m.movimientos.length;
+              m.movimientos = m.movimientos.filter(item => item.concepto !== 'Yapeo de 559' && item.concepto !== 'Matrícula 2026-B');
+              if (m.movimientos.length !== prevLen) cleaned = true;
+            }
+          });
+          if (cleaned) {
+            this.save(parsed);
+          }
           return parsed;
         }
       }
@@ -193,21 +185,15 @@ class FinancialStore {
     // Total General Presupuestado (Egresos)
     const totalEgresos = subtotalServicios + subtotalPersonales + subtotalExtras;
 
-    // Movimientos (Administrador de Ingresos y Egresos)
+    // Movimientos (Administrador de Ingresos y Egresos del mes)
     const movs = m.movimientos || [];
     const totalIngresos = movs
-      .filter(x => x.flujo === 'Ingreso' && x.estado === 'Pagado')
+      .filter(x => x.flujo === 'Ingreso')
       .reduce((sum, x) => sum + (Number(x.monto) || 0), 0);
 
-    const totalEgresosEjecutados = movs
-      .filter(x => x.flujo === 'Gasto' && x.estado === 'Pagado')
+    const totalEgresosMovimientos = movs
+      .filter(x => x.flujo === 'Gasto')
       .reduce((sum, x) => sum + (Number(x.monto) || 0), 0);
-
-    // En el Excel: Balance del mes = Ingresos - Total Egresos (presupuestados)
-    const balanceNeto = totalIngresos - totalEgresos;
-
-    // Cumplimiento (% de abonos sobre total egresos)
-    const porcentajeAvance = totalEgresos > 0 ? Math.min(100, (totalIngresos / totalEgresos) * 100) : 0;
 
     // Conteo de ítems pagados vs pendientes en el presupuesto general
     const allPresupuestoItems = [
@@ -226,6 +212,15 @@ class FinancialStore {
     const porcentajePagado = totalEgresos > 0 ? (montoPagadoPresupuesto / totalEgresos) * 100 : 0;
     const pendientesCount = totalItemsPresupuesto - pagadosCount;
 
+    // Total gastado durante el mes: lo pagado del presupuesto + gastos registrados en movimientos
+    const totalGastadoReal = montoPagadoPresupuesto + totalEgresosMovimientos;
+
+    // Balance Neto = Total ingresado en el mes - Total efectivamente gastado durante el mes
+    const balanceNeto = totalIngresos - totalGastadoReal;
+
+    // Cumplimiento (% de abonos sobre total egresos presupuestados)
+    const porcentajeAvance = totalEgresos > 0 ? Math.min(100, (totalIngresos / totalEgresos) * 100) : 0;
+
     // Progreso individual por categoría (para las minibarras en los botones de segmentos)
     const itemsServicios = [...(m.servicios.fijos || []), ...(m.servicios.variables || [])];
     const pagadosServicios = itemsServicios.filter(i => i.estado === 'Pagado');
@@ -242,7 +237,7 @@ class FinancialStore {
     const montoPagadoExtras = pagadosExtras.reduce((s, i) => s + (Number(i.monto) || 0), 0);
     const pctPagadoExtras = subtotalExtras > 0 ? Math.min(100, (montoPagadoExtras / subtotalExtras) * 100) : 0;
 
-    const pagadosMovs = movs.filter(x => x.estado === 'Pagado');
+    const pagadosMovs = movs.filter(x => x.estado === 'Pagado' || x.flujo === 'Gasto');
     const pctPagadoMovimientos = movs.length > 0 ? Math.min(100, (pagadosMovs.length / movs.length) * 100) : 0;
 
     return {
@@ -255,7 +250,8 @@ class FinancialStore {
       subtotalExtras,
       totalEgresos,
       totalIngresos,
-      totalEgresosEjecutados,
+      totalEgresosMovimientos,
+      totalGastadoReal,
       balanceNeto,
       porcentajeAvance,
       totalItemsPresupuesto,
@@ -281,6 +277,7 @@ class FinancialStore {
     let globalServicios = 0;
     let globalPersonales = 0;
     let globalExtras = 0;
+    let globalGastadoReal = 0;
 
     const rows = this.data.mesesOrden.map(id => {
       const m = this.data.meses[id];
@@ -292,6 +289,7 @@ class FinancialStore {
       globalServicios += c.subtotalServicios;
       globalPersonales += c.subtotalPersonales;
       globalExtras += c.subtotalExtras;
+      globalGastadoReal += c.totalGastadoReal;
 
       return {
         monthId: id,
@@ -302,12 +300,13 @@ class FinancialStore {
         extras: c.subtotalExtras,
         totalEgresos: c.totalEgresos,
         ingresos: c.totalIngresos,
+        totalGastadoReal: c.totalGastadoReal,
         balanceNeto: c.balanceNeto,
         porcentajeAvance: c.porcentajeAvance
       };
     }).filter(Boolean);
 
-    const globalBalanceNeto = globalIngresos - globalEgresos;
+    const globalBalanceNeto = globalIngresos - globalGastadoReal;
     const globalPorcentajeCumplimiento = globalEgresos > 0 ? (globalIngresos / globalEgresos) * 100 : 0;
 
     return {
@@ -318,6 +317,7 @@ class FinancialStore {
       globalServicios,
       globalPersonales,
       globalExtras,
+      globalGastadoReal,
       rows
     };
   }

@@ -421,18 +421,14 @@ document.addEventListener('DOMContentLoaded', () => {
       filtered = movs.filter(m => m.flujo === 'Ingreso');
     } else if (activeFeedFilter === 'gasto') {
       filtered = movs.filter(m => m.flujo === 'Gasto');
-    } else if (activeFeedFilter === 'pagado') {
-      filtered = movs.filter(m => m.estado === 'Pagado');
-    } else if (activeFeedFilter === 'pendiente') {
-      filtered = movs.filter(m => m.estado === 'Pendiente');
     }
 
     if (filtered.length === 0) {
       feedContainer.innerHTML = `
         <div class="empty-feed-placeholder">
           <div style="font-size: 2rem; margin-bottom: 0.5rem;">💸</div>
-          <strong>No hay transacciones para este filtro</strong>
-          <p>Usa los botones superiores para registrar un nuevo abono o pago ejecutado.</p>
+          <strong>No hay movimientos registrados</strong>
+          <p>Usa los botones superiores para registrar un ingreso o gasto.</p>
         </div>
       `;
       return;
@@ -442,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const item = document.createElement('div');
       item.className = 'transaction-feed-item';
       const isIngreso = m.flujo === 'Ingreso';
-      const isPaid = m.estado === 'Pagado';
 
       item.innerHTML = `
         <div class="tx-left">
@@ -454,8 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>
               <span class="font-mono">${m.fecha || 'Sin fecha'}</span>
               <span>•</span>
-              <span>${m.categoria || 'General'}</span>
-              ${m.retornable === 'Sí' ? '<span style="color:#38bdf8; font-weight:700;">• Retornable</span>' : ''}
+              <span style="font-weight: 700; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${m.flujo || 'Movimiento'}</span>
             </p>
           </div>
         </div>
@@ -464,31 +458,21 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="tx-amount font-mono ${isIngreso ? 'tx-amount-ingreso' : 'tx-amount-gasto'}">
             ${isIngreso ? '+' : '-'} ${window.formatCurrency(m.monto)}
           </div>
-          <button type="button" class="btn-status-toggle ${isPaid ? 'status-pagado' : 'status-pendiente'}" style="min-width: 110px; padding: 0.45rem 0.9rem; font-size: 0.8rem;">
-            ${isPaid ? '✓ Pagado' : '⏳ Pendiente'}
-          </button>
-          <button type="button" class="btn-ghost-rose btn-delete-tx" title="Eliminar transacción">✕</button>
+          <button type="button" class="btn-ghost-rose btn-delete-tx admin-action-btn" title="Eliminar movimiento">✕</button>
         </div>
       `;
 
-      // Alternar estado de la transacción en el lugar (sin saltos ni scroll)
-      const feedToggleBtn = item.querySelector('.btn-status-toggle');
-      feedToggleBtn.addEventListener('click', () => {
-        const newState = store.toggleMovementStatus(month.id, m.id);
-        feedToggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
-        feedToggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
-        updateLiveProgressAndTotals(month.id);
-        showToast(`Movimiento marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
-      });
-
-      // Eliminar transacción
-      item.querySelector('.btn-delete-tx').addEventListener('click', () => {
-        if (confirm(`¿Eliminar transacción "${m.concepto}"?`)) {
-          store.deleteMovement(month.id, m.id);
-          renderMonthView();
-          showToast(`Transacción eliminada`, '🗑');
-        }
-      });
+      // Evento: Eliminar movimiento
+      const deleteBtn = item.querySelector('.btn-delete-tx');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', () => {
+          if (confirm(`¿Eliminar movimiento "${m.concepto}"?`)) {
+            store.deleteMovement(month.id, m.id);
+            renderMonthView();
+            showToast(`Movimiento eliminado`, '🗑');
+          }
+        });
+      }
 
       feedContainer.appendChild(item);
     });
@@ -823,19 +807,29 @@ document.addEventListener('DOMContentLoaded', () => {
     selectMovFlujo.value = tipoFlujo;
 
     if (tipoFlujo === 'Ingreso') {
-      modalMovementTitle.textContent = 'Registrar Ingreso / Abono';
+      modalMovementTitle.textContent = 'Registrar Ingreso';
       btnSubmitMovement.textContent = 'Registrar Ingreso';
       btnSubmitMovement.className = 'btn btn-success btn-lg';
-      document.getElementById('movCategoria').value = 'Ingreso / Sueldo';
     } else {
-      modalMovementTitle.textContent = 'Registrar Gasto Real Ejecutado';
+      modalMovementTitle.textContent = 'Registrar Gasto';
       btnSubmitMovement.textContent = 'Registrar Gasto';
       btnSubmitMovement.className = 'btn btn-danger btn-lg';
-      document.getElementById('movCategoria').value = 'Gastos Extra';
     }
 
     modalAddMovement.classList.add('active');
   }
+
+  selectMovFlujo.addEventListener('change', (e) => {
+    if (e.target.value === 'Ingreso') {
+      modalMovementTitle.textContent = 'Registrar Ingreso';
+      btnSubmitMovement.textContent = 'Registrar Ingreso';
+      btnSubmitMovement.className = 'btn btn-success btn-lg';
+    } else {
+      modalMovementTitle.textContent = 'Registrar Gasto';
+      btnSubmitMovement.textContent = 'Registrar Gasto';
+      btnSubmitMovement.className = 'btn btn-danger btn-lg';
+    }
+  });
 
   document.getElementById('btnHeaderAddIncome').addEventListener('click', () => openMovementModal('Ingreso'));
   document.getElementById('btnQuickActionIncome').addEventListener('click', () => openMovementModal('Ingreso'));
@@ -843,27 +837,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   formAddMovement.addEventListener('submit', (e) => {
     e.preventDefault();
-    const concepto = document.getElementById('movConcepto').value;
+    const concepto = document.getElementById('movConcepto').value.trim();
     const monto = parseFloat(document.getElementById('movMonto').value) || 0;
     const flujo = selectMovFlujo.value;
-    const categoria = document.getElementById('movCategoria').value;
-    const retornable = document.getElementById('movRetornable').value;
-    const estado = document.getElementById('movEstado').value;
     const fecha = inputMovFecha.value;
 
     store.addMovement(store.data.activeMonthId, {
       concepto,
       monto,
       flujo,
-      categoria,
-      retornable,
-      estado,
+      categoria: flujo === 'Ingreso' ? 'Ingreso' : 'Gasto',
+      retornable: 'No',
+      estado: 'Pagado',
       fecha
     });
 
     modalAddMovement.classList.remove('active');
     renderMonthView();
-    showToast(`Movimiento "${concepto}" registrado`, flujo === 'Ingreso' ? '↑' : '↓');
+    showToast(`${flujo} "${concepto}" registrado`, flujo === 'Ingreso' ? '↑' : '↓');
   });
 
   // --- MODAL: AGREGAR NUEVO MES ---

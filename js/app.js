@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnOpenNotes) {
       const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
       btnOpenNotes.classList.toggle('has-notes', hasNotes);
-      btnOpenNotes.innerHTML = hasNotes 
+      btnOpenNotes.innerHTML = hasNotes
         ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
         : `<span>📝</span> Notas`;
     }
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // KPIs Globales
     document.getElementById('kpiGlobalIngresos').textContent = window.formatCurrency(totals.globalIngresos);
     document.getElementById('kpiGlobalEgresos').textContent = window.formatCurrency(totals.globalEgresos);
-    
+
     const balanceEl = document.getElementById('kpiGlobalBalance');
     balanceEl.textContent = window.formatCurrency(totals.globalBalanceNeto);
     balanceEl.style.color = totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
@@ -600,10 +600,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --- SELECTOR DE SEGMENTOS: MULTI-SELECCIÓN INTERACTIVA CON ANIMACIÓN ---
-  const activeSegments = new Set(['servicios']);
+  const activeSegments = new Set(['servicios', 'personales', 'movimientos', 'extras']);
 
   function renderActiveSegments() {
-    const allKeys = ['servicios', 'personales', 'extras', 'movimientos'];
+    const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     const isAllSelected = allKeys.every(k => activeSegments.has(k));
 
     // Actualizar estado activo en botones
@@ -654,17 +654,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleSegment(segment) {
-    const allKeys = ['servicios', 'personales', 'extras', 'movimientos'];
+    const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     if (segment === 'all') {
-      const isAllSelected = allKeys.every(k => activeSegments.has(k));
-      if (isAllSelected) {
-        activeSegments.clear();
-      } else {
-        allKeys.forEach(k => {
-          activeSegments.add(k);
-          const c = document.querySelector(`[data-segment-card="${k}"]`);
-          if (c) c.classList.add('collapsed');
+      const allCards = document.querySelectorAll('[data-segment-card]');
+      const allActive = allKeys.every(k => activeSegments.has(k));
+      const allExpanded = Array.from(allCards).every(c => !c.classList.contains('collapsed'));
+
+      if (!allActive) {
+        // Si no estaban todas activas, activarlas y expandirlas
+        allKeys.forEach(k => activeSegments.add(k));
+        allCards.forEach(c => {
+          c.style.display = 'block';
+          c.classList.remove('card-anim-out', 'collapsed');
         });
+      } else {
+        // Si ya estaban todas visibles: alternar entre colapsar todas (resumen compacto) o expandir todas
+        if (allExpanded) {
+          allCards.forEach(c => c.classList.add('collapsed'));
+        } else {
+          allCards.forEach(c => c.classList.remove('collapsed'));
+        }
       }
     } else {
       if (activeSegments.has(segment)) {
@@ -683,6 +692,13 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleSegment(btn.getAttribute('data-segment'));
     });
   });
+
+  const btnRestoreAll = document.getElementById('btnRestoreAllSegments');
+  if (btnRestoreAll) {
+    btnRestoreAll.addEventListener('click', () => {
+      toggleSegment('all');
+    });
+  }
 
   // --- ACORDEÓN: COLAPSAR / EXPANDIR TARJETAS AL HACER CLIC EN SU ENCABEZADO ---
   document.querySelectorAll('.accordion-header').forEach(header => {
@@ -783,7 +799,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnOpenNotesModal && month) {
           const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
           btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
-          btnOpenNotesModal.innerHTML = hasNotes 
+          btnOpenNotesModal.innerHTML = hasNotes
             ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
             : `<span>📝</span> Notas`;
         }

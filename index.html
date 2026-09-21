@@ -7,7 +7,7 @@
   <title>Control de Gastos & Presupuesto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Chart.js para visualización de métricas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,7 +28,7 @@
       <!-- Brand & Header -->
       <div class="sidebar-brand">
         <div class="brand-left">
-          <div class="brand-logo-box">📊</div>
+          <div class="brand-logo-box"><img src="assets/icons/analitica.jpg" alt="Logo" class="ui-icon-img ui-icon-brand" /></div>
           <div class="brand-texts">
             <h1 class="brand-title">Gestor Financiero</h1>
             <span class="brand-sub">Presupuesto & Gastos</span>
@@ -41,11 +41,11 @@
       <div class="sidebar-section">
         <div class="sidebar-nav-tabs">
           <button type="button" id="btnNavMes" class="sidebar-nav-tab active">
-            <span class="nav-tab-icon">📅</span>
+            <span class="nav-tab-icon"><img src="assets/icons/calendario.jpg" alt="Mes" class="ui-icon-img ui-icon-nav" /></span>
             <span>Vista Mensual</span>
           </button>
           <button type="button" id="btnNavPanel" class="sidebar-nav-tab">
-            <span class="nav-tab-icon">📈</span>
+            <span class="nav-tab-icon"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-nav" /></span>
             <span>Consolidado</span>
           </button>
         </div>
@@ -181,7 +181,7 @@
             <span id="topbarBalanceValue" class="kpi-mini-val font-mono">S/ 0.00</span>
           </div>
           <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes">
-            <span>📝</span> Notas
+            <img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas
           </button>
         </div>
       </header>
@@ -199,10 +199,10 @@
             <button type="button" class="segment-pill-btn pill-btn-all" data-segment="all"
               title="Ver / Contraer todas las categorías simultáneamente">
               <div class="pill-top-row">
-                <span>📋</span> Ver Todo
+                <span class="pill-label-with-icon"><img src="assets/icons/vertodo.jpg" alt="Ver Todo" class="ui-icon-img ui-icon-pill" /> Ver Todo</span>
               </div>
               <div class="pill-minibar-track">
-                <div class="pill-minibar-fill" style="width: 100%; background: var(--accent-cyan);"></div>
+                <div class="pill-minibar-fill" style="width: 100%; background: var(--accent-primary);"></div>
               </div>
             </button>
 
@@ -210,8 +210,8 @@
             <button type="button" class="segment-pill-btn" data-segment="servicios"
               title="Haz clic para activar/desactivar Servicios">
               <div class="pill-top-row">
-                <span>🏠</span> Servicios <span id="badgeSegServicios" class="segment-count-badge font-mono">S/
-                  0.00</span>
+                <span class="pill-label-with-icon"><img src="assets/icons/servicios.jpg" alt="Servicios" class="ui-icon-img ui-icon-pill" /> Servicios</span>
+                <span id="badgeSegServicios" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Servicios">
                 <div id="miniBarServicios" class="pill-minibar-fill" style="width: 0%;"></div>
@@ -222,8 +222,8 @@
             <button type="button" class="segment-pill-btn" data-segment="personales"
               title="Haz clic para activar/desactivar Gastos Personales">
               <div class="pill-top-row">
-                <span>👤</span> Personales <span id="badgeSegPersonales" class="segment-count-badge font-mono">S/
-                  0.00</span>
+                <span class="pill-label-with-icon"><img src="assets/icons/personales.jpg" alt="Personales" class="ui-icon-img ui-icon-pill" /> Personales</span>
+                <span id="badgeSegPersonales" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Personales">
                 <div id="miniBarPersonales" class="pill-minibar-fill" style="width: 0%;"></div>
@@ -234,8 +234,8 @@
             <button type="button" class="segment-pill-btn" data-segment="movimientos"
               title="Haz clic para activar/desactivar Movimientos">
               <div class="pill-top-row">
-                <span>💳</span> Movimientos <span id="badgeSegMovimientos" class="segment-count-badge font-mono">0
-                  movs</span>
+                <span class="pill-label-with-icon"><img src="assets/icons/movimientos.jpg" alt="Movimientos" class="ui-icon-img ui-icon-pill" /> Movimientos</span>
+                <span id="badgeSegMovimientos" class="segment-count-badge font-mono">0 movs</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de movimientos">
                 <div id="miniBarMovimientos" class="pill-minibar-fill" style="width: 0%;"></div>
@@ -246,7 +246,8 @@
             <button type="button" class="segment-pill-btn" data-segment="extras"
               title="Haz clic para activar/desactivar Gastos Extras">
               <div class="pill-top-row">
-                <span>⚡</span> Extras <span id="badgeSegExtras" class="segment-count-badge font-mono">S/ 0.00</span>
+                <span class="pill-label-with-icon"><img src="assets/icons/extras.jpg" alt="Extras" class="ui-icon-img ui-icon-pill" /> Extras</span>
+                <span id="badgeSegExtras" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Extras">
                 <div id="miniBarExtras" class="pill-minibar-fill" style="width: 0%;"></div>
@@ -272,7 +273,7 @@
               <div class="content-card-header accordion-header" data-accordion-target="servicios"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon">🏠</div>
+                  <div class="card-header-icon"><img src="assets/icons/servicios.jpg" alt="Servicios" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Servicios del Hogar</h3>
@@ -329,7 +330,7 @@
               <div class="content-card-header accordion-header" data-accordion-target="personales"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon">👤</div>
+                  <div class="card-header-icon"><img src="assets/icons/personales.jpg" alt="Personales" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Gastos Personales</h3>
@@ -387,7 +388,7 @@
               <div class="content-card-header accordion-header" data-accordion-target="movimientos"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon">💳</div>
+                  <div class="card-header-icon"><img src="assets/icons/movimientos.jpg" alt="Movimientos" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Movimientos del Mes</h3>
@@ -429,7 +430,7 @@
               <div class="content-card-header accordion-header" data-accordion-target="extras"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon">⚡</div>
+                  <div class="card-header-icon"><img src="assets/icons/extras.jpg" alt="Extras" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Gastos Extraordinarios</h3>
@@ -467,7 +468,7 @@
 
           <!-- Encabezado de la Sección -->
           <div style="margin-bottom: 2rem;">
-            <h2 style="font-size: 1.6rem; font-weight: 800; color: #ffffff;">📊 Consolidado General Multimes</h2>
+            <h2 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 0.65rem;"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-card" /> Consolidado General Multimes</h2>
             <p style="color: var(--text-secondary); margin-top: 4px;">Seguimiento acumulado de todos los períodos del
               año</p>
           </div>
@@ -515,7 +516,7 @@
           <div class="content-card-box" style="margin-top: 2rem;">
             <div class="content-card-header">
               <div class="card-header-left">
-                <div class="card-header-icon">📑</div>
+                <div class="card-header-icon"><img src="assets/icons/vertodo.jpg" alt="Matriz" class="ui-icon-img ui-icon-card" /></div>
                 <div class="card-header-titles">
                   <h3>Matriz Comparativa Mensual</h3>
                   <p>Haz clic en cualquier mes para abrirlo inmediatamente</p>
@@ -552,7 +553,7 @@
             <div class="content-card-box">
               <div class="content-card-header">
                 <div class="card-header-left">
-                  <div class="card-header-icon">📈</div>
+                  <div class="card-header-icon"><img src="assets/icons/analitica.jpg" alt="Gráfico" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <h3>Tendencia: Ingresos vs Egresos</h3>
                     <p>Evolución mes a mes</p>
@@ -567,7 +568,7 @@
             <div class="content-card-box">
               <div class="content-card-header">
                 <div class="card-header-left">
-                  <div class="card-header-icon">🍩</div>
+                  <div class="card-header-icon"><img src="assets/icons/analitica.jpg" alt="Distribución" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
                     <h3>Distribución por Categorías</h3>
                     <p>Composición de gastos anuales</p>
@@ -815,7 +816,7 @@
     <div class="modal-sheet" style="max-width: 480px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.2rem;">📝</span>
+          <img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-card" />
           <div>
             <h3 style="font-size: 1.05rem;">Notas & Acuerdos</h3>
             <p id="modalNotesSubtitle" style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">

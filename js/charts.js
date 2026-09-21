@@ -34,14 +34,14 @@ function renderGlobalCharts() {
           {
             label: 'Egresos Presupuestados',
             data: egresosData,
-            backgroundColor: '#e11d48', // Terracotta Crimson
+            backgroundColor: '#f43f5e', // Vivid Coral Rose
             borderRadius: 6,
             borderSkipped: false,
           },
           {
             label: 'Ingresos / Abonos',
             data: ingresosData,
-            backgroundColor: '#10b981', // Sage / Alpine Mint
+            backgroundColor: '#10b981', // Cyber Emerald
             borderRadius: 6,
             borderSkipped: false,
           }
@@ -60,8 +60,8 @@ function renderGlobalCharts() {
             }
           },
           tooltip: {
-            backgroundColor: '#151821',
-            borderColor: 'rgba(255, 255, 255, 0.12)',
+            backgroundColor: '#121829',
+            borderColor: 'rgba(99, 102, 241, 0.35)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
@@ -85,7 +85,7 @@ function renderGlobalCharts() {
               }
             },
             grid: {
-              color: 'rgba(255, 255, 255, 0.05)'
+              color: 'rgba(255, 255, 255, 0.06)'
             }
           },
           x: {
@@ -121,11 +121,11 @@ function renderGlobalCharts() {
         datasets: [{
           data: totalGastos > 0 ? catData : [1, 1, 1],
           backgroundColor: totalGastos > 0 
-            ? ['#38bdf8', '#a78bfa', '#f59e0b'] 
-            : ['#1e222e', '#262c3b', '#1e222e'],
+            ? ['#0ea5e9', '#a855f7', '#f59e0b'] 
+            : ['#121829', '#172036', '#121829'],
           hoverOffset: 6,
           borderWidth: 2,
-          borderColor: '#171a23'
+          borderColor: '#0f1322'
         }]
       },
       options: {

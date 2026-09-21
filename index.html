@@ -151,6 +151,9 @@
             <span class="kpi-mini-label">Balance:</span>
             <span id="topbarBalanceValue" class="kpi-mini-val font-mono">S/ 0.00</span>
           </div>
+          <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes">
+            <span>📝</span> Notas
+          </button>
         </div>
       </header>
 
@@ -196,12 +199,6 @@
               </div>
               <div class="pill-minibar-track" title="Progreso de movimientos">
                 <div id="miniBarMovimientos" class="pill-minibar-fill" style="width: 0%;"></div>
-              </div>
-            </button>
-
-            <button type="button" class="segment-pill-btn" data-segment="notas" title="Haz clic para activar/desactivar Notas">
-              <div class="pill-top-row">
-                <span>📝</span> Notas
               </div>
             </button>
 
@@ -384,32 +381,6 @@
                 <!-- Feed de Transacciones -->
                 <div id="transactionsFeedList">
                   <!-- Items de transacción renderizados por app.js -->
-                </div>
-              </div>
-            </div>
-
-            <!-- 5. NOTAS Y OBSERVACIONES DEL MES (Inicia colapsado de forma compacta) -->
-            <div class="content-card-box collapsed" data-segment-card="notas" style="display: none;">
-              <div class="content-card-header accordion-header" data-accordion-target="notas" title="Haz clic en el encabezado para desplegar / contraer detalles">
-                <div class="card-header-left">
-                  <div class="card-header-icon">📝</div>
-                  <div class="card-header-titles">
-                    <div class="card-title-row">
-                      <h3>Notas & Acuerdos</h3>
-                      <span class="accordion-chevron-icon" title="Expandir / Contraer">▼</span>
-                    </div>
-                    <p>Observaciones de compras, deudas o acuerdos familiares</p>
-                  </div>
-                </div>
-              </div>
-              <div class="accordion-collapsible-body">
-                <div class="notes-smart-box">
-                  <textarea 
-                    id="monthNotesTextarea" 
-                    class="notes-smart-textarea" 
-                    placeholder="Escribe aquí notas sobre los pagos del mes (ej. compras dermatológicas, acuerdos familiares, abonos pendientes)..."
-                  ></textarea>
-                  <div id="notesFeedback" class="notes-feedback-label">Guardado en tiempo real</div>
                 </div>
               </div>
             </div>
@@ -638,7 +609,37 @@
     </div>
   </div>
 
-  <!-- Modal 3: Agregar / Clonar Nuevo Mes -->
+  <!-- Modal 3: Notas y Recordatorios del Mes -->
+  <div id="modalMonthNotes" class="modal-overlay">
+    <div class="modal-sheet" style="max-width: 480px;">
+      <div class="modal-sheet-header">
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.2rem;">📝</span>
+          <div>
+            <h3 style="font-size: 1.05rem;">Notas & Acuerdos</h3>
+            <p id="modalNotesSubtitle" style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">Recordatorios y observaciones del mes</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-sheet">✕</button>
+      </div>
+      <div class="modal-sheet-body" style="padding: 1.25rem 1.5rem;">
+        <div class="notes-smart-box" style="padding: 0;">
+          <textarea 
+            id="monthNotesTextarea" 
+            class="notes-smart-textarea" 
+            style="min-height: 180px; font-size: 0.88rem;"
+            placeholder="Escribe aquí notas sobre los pagos del mes (ej. compras dermatológicas, acuerdos familiares, abonos pendientes)..."
+          ></textarea>
+          <div id="notesFeedback" class="notes-feedback-label">Guardado automático en tiempo real</div>
+        </div>
+      </div>
+      <div class="modal-sheet-footer">
+        <button type="button" class="btn btn-primary btn-sm btn-close-sheet-btn">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Agregar / Clonar Nuevo Mes -->
   <div id="modalNewMonth" class="modal-overlay">
     <div class="modal-sheet">
       <div class="modal-sheet-header">

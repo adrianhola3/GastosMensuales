@@ -370,7 +370,7 @@
                     <span>↑</span> Registrar Ingreso
                   </button>
                   <button type="button" id="btnQuickActionExpense" class="btn btn-danger btn-lg admin-action-btn">
-                    <span>↓</span> Registrar Gasto Real
+                    <span>↓</span> Registrar Gasto
                   </button>
                 </div>
 
@@ -379,8 +379,6 @@
                   <button type="button" class="feed-filter-pill active" data-filter="all">Todos</button>
                   <button type="button" class="feed-filter-pill" data-filter="ingreso">Ingresos</button>
                   <button type="button" class="feed-filter-pill" data-filter="gasto">Gastos</button>
-                  <button type="button" class="feed-filter-pill" data-filter="pagado">Pagados</button>
-                  <button type="button" class="feed-filter-pill" data-filter="pendiente">Pendientes</button>
                 </div>
 
                 <!-- Feed de Transacciones -->
@@ -606,11 +604,11 @@
     </div>
   </div>
 
-  <!-- Modal 2: Registrar Movimiento en Flujo de Caja -->
+  <!-- Modal 2: Registrar Movimiento en Movimientos del Mes -->
   <div id="modalAddMovement" class="modal-overlay">
-    <div class="modal-sheet">
+    <div class="modal-sheet" style="max-width: 440px;">
       <div class="modal-sheet-header">
-        <h3 id="modalMovementTitle">Registrar Movimiento Bancario</h3>
+        <h3 id="modalMovementTitle">Registrar Movimiento</h3>
         <button type="button" class="btn-close-sheet">✕</button>
       </div>
       <form id="formAddMovement">
@@ -619,8 +617,8 @@
             <div class="form-field">
               <label for="movFlujo">Tipo de Flujo</label>
               <select id="movFlujo" class="form-input-lg">
-                <option value="Ingreso">↑ Ingreso / Abono</option>
-                <option value="Gasto">↓ Gasto Real Ejecutado</option>
+                <option value="Ingreso">Ingreso</option>
+                <option value="Gasto">Gasto</option>
               </select>
             </div>
             <div class="form-field">
@@ -634,32 +632,9 @@
             <input type="text" id="movConcepto" class="form-input-lg" placeholder="Ej. Abono Quincena 1, Pago Luz BBVA..." required>
           </div>
 
-          <div class="form-grid-2">
-            <div class="form-field">
-              <label for="movMonto">Monto Real (S/)</label>
-              <input type="number" step="0.01" min="0" id="movMonto" class="form-input-lg font-mono" placeholder="0.00" required>
-            </div>
-            <div class="form-field">
-              <label for="movCategoria">Categoría</label>
-              <input type="text" id="movCategoria" class="form-input-lg" placeholder="Ej. Gastos Extra, Servicios, Sueldo" value="Gastos Extra">
-            </div>
-          </div>
-
-          <div class="form-grid-2">
-            <div class="form-field">
-              <label for="movRetornable">¿Es Retornable?</label>
-              <select id="movRetornable" class="form-input-lg">
-                <option value="No">No</option>
-                <option value="Sí">Sí (Préstamo a devolver)</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label for="movEstado">Estado</label>
-              <select id="movEstado" class="form-input-lg">
-                <option value="Pagado">✓ Pagado / Recibido</option>
-                <option value="Pendiente">⏳ Pendiente</option>
-              </select>
-            </div>
+          <div class="form-field">
+            <label for="movMonto">Monto (S/)</label>
+            <input type="number" step="0.01" min="0" id="movMonto" class="form-input-lg font-mono" placeholder="0.00" required>
           </div>
         </div>
         <div class="modal-sheet-footer">

@@ -4,21 +4,21 @@
    Barra Lateral, Reorganización de Métricas & Grilla Multicolumna
    ========================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Tipografía Distintiva y Ejecutiva: Manrope & Inter */
-  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Tipografía Distintiva y Ejecutiva: Sora & Inter */
+  --font-display: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Paleta Ejecutiva Monocromática: Graphite, Titanium & Slate Greys */
-  --bg-app: #0a0b0e;
+  /* Paleta Ejecutiva Híbrida: Base Gris Institucional con Acentos de Color */
+  --bg-app: #090b10;
   --bg-sidebar: #0f1116;
-  --bg-surface: #13151c;
-  --bg-card: #161822;
-  --bg-card-hover: #1b1e2a;
-  --bg-card-inner: #0c0d12;
+  --bg-surface: #13161f;
+  --bg-card: #151824;
+  --bg-card-hover: #1c2030;
+  --bg-card-inner: #0b0d13;
 
   /* Bordes ultra-nítidos y separadores de alta precisión en tonos plata y grafito */
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -26,9 +26,9 @@
   --border-focus: rgba(255, 255, 255, 0.35);
 
   /* Tipografía equilibrada en tonos grises y neutros */
-  --text-main: #f4f4f5;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --text-main: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
 
   /* Acento de Identidad: Titanium Silver & Platinum */
   --accent-primary: #94a3b8;
@@ -51,15 +51,15 @@
   --accent-rose-border: rgba(244, 63, 94, 0.28);
   --text-rose: #fb7185;
 
-  /* Balance / Neutro: Cool Platinum Silver */
-  --accent-cyan: #94a3b8;
-  --accent-cyan-light: rgba(148, 163, 184, 0.12);
-  --text-cyan: #e2e8f0;
+  /* Balance / Neutro: Luminous Cyan */
+  --accent-cyan: #06b6d4;
+  --accent-cyan-light: rgba(6, 182, 212, 0.12);
+  --text-cyan: #22d3ee;
 
-  /* Acentos de Categorías: Refinados sobre base grafito */
-  --cat-servicios: #64748b;
-  --cat-personales: #78716c;
-  --cat-extras: #a1a1aa;
+  /* Acentos Cromáticos Vivos por Categoría */
+  --cat-servicios: #0ea5e9;
+  --cat-personales: #a855f7;
+  --cat-extras: #f59e0b;
   --cat-movimientos: #10b981;
 
   /* Sombras y elevaciones sutiles */
@@ -1015,6 +1015,30 @@ body {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
+.segment-pill-btn[data-segment="servicios"].active {
+  border-color: rgba(14, 165, 233, 0.55);
+  background: rgba(14, 165, 233, 0.12);
+  box-shadow: 0 0 14px rgba(14, 165, 233, 0.22);
+}
+
+.segment-pill-btn[data-segment="personales"].active {
+  border-color: rgba(168, 85, 247, 0.55);
+  background: rgba(168, 85, 247, 0.12);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.22);
+}
+
+.segment-pill-btn[data-segment="movimientos"].active {
+  border-color: rgba(16, 185, 129, 0.55);
+  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.22);
+}
+
+.segment-pill-btn[data-segment="extras"].active {
+  border-color: rgba(245, 158, 11, 0.55);
+  background: rgba(245, 158, 11, 0.12);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.22);
+}
+
 .segment-pill-btn.active .pill-top-row span {
   color: #ffffff;
 }
@@ -1288,16 +1312,62 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 .content-card-box[data-segment-card="servicios"] {
-  border-top: 2.5px solid var(--cat-servicios);
+  border-top: 3px solid var(--cat-servicios);
+}
+.content-card-box[data-segment-card="servicios"]:hover {
+  border-color: rgba(14, 165, 233, 0.4);
 }
 .content-card-box[data-segment-card="personales"] {
-  border-top: 2.5px solid var(--cat-personales);
+  border-top: 3px solid var(--cat-personales);
+}
+.content-card-box[data-segment-card="personales"]:hover {
+  border-color: rgba(168, 85, 247, 0.4);
 }
 .content-card-box[data-segment-card="extras"] {
-  border-top: 2.5px solid var(--cat-extras);
+  border-top: 3px solid var(--cat-extras);
+}
+.content-card-box[data-segment-card="extras"]:hover {
+  border-color: rgba(245, 158, 11, 0.4);
 }
 .content-card-box[data-segment-card="movimientos"] {
-  border-top: 2.5px solid var(--cat-movimientos);
+  border-top: 3px solid var(--cat-movimientos);
+}
+.content-card-box[data-segment-card="movimientos"]:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.content-card-box[data-segment-card="servicios"] .card-title-row h3 {
+  color: #38bdf8;
+}
+.content-card-box[data-segment-card="personales"] .card-title-row h3 {
+  color: #c084fc;
+}
+.content-card-box[data-segment-card="movimientos"] .card-title-row h3 {
+  color: #34d399;
+}
+.content-card-box[data-segment-card="extras"] .card-title-row h3 {
+  color: #fbbf24;
+}
+
+#summaryTagServicios {
+  color: #38bdf8;
+  background: rgba(14, 165, 233, 0.08);
+  border-color: rgba(14, 165, 233, 0.25);
+}
+#summaryTagPersonales {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.08);
+  border-color: rgba(168, 85, 247, 0.25);
+}
+#summaryTagMovimientos {
+  color: #34d399;
+  background: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+#summaryTagExtras {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.25);
 }
 
 .content-card-box.collapsed {

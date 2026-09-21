@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <span>🗓 ${r.nombre}</span>
             <span style="font-size: 0.8rem; opacity: 0.8;">→</span>
           </button>
-          ${isCurrentActive ? '<span style="font-size:0.7rem; background:rgba(99,102,241,0.2); color:#a5b4fc; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:6px;">Activo</span>' : ''}
+          ${isCurrentActive ? '<span class="matrix-active-badge">Activo</span>' : ''}
         </td>
         <td class="font-mono text-right">${window.formatCurrency(r.servicios)}</td>
         <td class="font-mono text-right">${window.formatCurrency(r.personales)}</td>
@@ -797,14 +797,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- MODAL: REGISTRAR MOVIMIENTO (FLUJO DE CAJA) ---
   const formAddMovement = document.getElementById('formAddMovement');
   const modalMovementTitle = document.getElementById('modalMovementTitle');
-  const selectMovFlujo = document.getElementById('movFlujo');
+  const inputMovFlujo = document.getElementById('movFlujo');
   const inputMovFecha = document.getElementById('movFecha');
   const btnSubmitMovement = document.getElementById('btnSubmitMovement');
 
   function openMovementModal(tipoFlujo = 'Ingreso') {
     formAddMovement.reset();
     inputMovFecha.value = new Date().toISOString().slice(0, 10);
-    selectMovFlujo.value = tipoFlujo;
+    if (inputMovFlujo) inputMovFlujo.value = tipoFlujo;
 
     if (tipoFlujo === 'Ingreso') {
       modalMovementTitle.textContent = 'Registrar Ingreso';
@@ -817,19 +817,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     modalAddMovement.classList.add('active');
+    setTimeout(() => {
+      const elConcepto = document.getElementById('movConcepto');
+      if (elConcepto) elConcepto.focus();
+    }, 120);
   }
-
-  selectMovFlujo.addEventListener('change', (e) => {
-    if (e.target.value === 'Ingreso') {
-      modalMovementTitle.textContent = 'Registrar Ingreso';
-      btnSubmitMovement.textContent = 'Registrar Ingreso';
-      btnSubmitMovement.className = 'btn btn-success btn-lg';
-    } else {
-      modalMovementTitle.textContent = 'Registrar Gasto';
-      btnSubmitMovement.textContent = 'Registrar Gasto';
-      btnSubmitMovement.className = 'btn btn-danger btn-lg';
-    }
-  });
 
   document.getElementById('btnHeaderAddIncome').addEventListener('click', () => openMovementModal('Ingreso'));
   document.getElementById('btnQuickActionIncome').addEventListener('click', () => openMovementModal('Ingreso'));
@@ -839,7 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const concepto = document.getElementById('movConcepto').value.trim();
     const monto = parseFloat(document.getElementById('movMonto').value) || 0;
-    const flujo = selectMovFlujo.value;
+    const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
     const fecha = inputMovFecha.value;
 
     store.addMovement(store.data.activeMonthId, {

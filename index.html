@@ -5,6 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Gastos & Presupuesto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Chart.js para visualización de métricas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,6 +48,26 @@
             <span class="nav-tab-icon">📈</span>
             <span>Consolidado</span>
           </button>
+        </div>
+      </div>
+
+      <!-- Barra de Búsqueda Ejecutiva en Columna Izquierda -->
+      <div class="sidebar-section sidebar-search-section">
+        <div class="sidebar-search-box">
+          <span class="search-box-icon">🔍</span>
+          <input 
+            type="text" 
+            id="sidebarSearchInput" 
+            class="sidebar-search-input" 
+            placeholder="Buscar gasto o abono..." 
+            autocomplete="off"
+            spellcheck="false"
+          >
+          <button type="button" id="btnClearSidebarSearch" class="btn-clear-search" title="Limpiar búsqueda" style="display: none;">✕</button>
+          <kbd class="search-shortcut-badge" title="Presiona '/' para buscar">/</kbd>
+        </div>
+        <div id="sidebarSearchResultsFeedback" class="search-results-feedback" style="display: none;">
+          <span id="searchResultsCountText">0 coincidencias</span>
         </div>
       </div>
 
@@ -244,8 +267,8 @@
               </p>
             </div>
 
-            <!-- 1. GASTOS DE SERVICIOS (Inicia colapsado de forma compacta) -->
-            <div class="content-card-box collapsed" data-segment-card="servicios">
+            <!-- 1. GASTOS DE SERVICIOS -->
+            <div class="content-card-box" data-segment-card="servicios">
               <div class="content-card-header accordion-header" data-accordion-target="servicios"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
@@ -301,8 +324,8 @@
               </div>
             </div>
 
-            <!-- 2. GASTOS PERSONALES (Inicia colapsado de forma compacta) -->
-            <div class="content-card-box collapsed" data-segment-card="personales" style="display: none;">
+            <!-- 2. GASTOS PERSONALES -->
+            <div class="content-card-box" data-segment-card="personales">
               <div class="content-card-header accordion-header" data-accordion-target="personales"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
@@ -359,8 +382,8 @@
               </div>
             </div>
 
-            <!-- 3. FEED DE MOVIMIENTOS REALES (Inicia colapsado de forma compacta) -->
-            <div class="content-card-box collapsed" data-segment-card="movimientos" style="display: none;">
+            <!-- 3. FEED DE MOVIMIENTOS REALES -->
+            <div class="content-card-box" data-segment-card="movimientos">
               <div class="content-card-header accordion-header" data-accordion-target="movimientos"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
@@ -401,8 +424,8 @@
               </div>
             </div>
 
-            <!-- 4. GASTOS EXTRAORDINARIOS (Inicia colapsado de forma compacta) -->
-            <div class="content-card-box collapsed" data-segment-card="extras" style="display: none;">
+            <!-- 4. GASTOS EXTRAORDINARIOS -->
+            <div class="content-card-box" data-segment-card="extras">
               <div class="content-card-header accordion-header" data-accordion-target="extras"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">

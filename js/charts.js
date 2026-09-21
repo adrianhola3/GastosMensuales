@@ -13,10 +13,22 @@ function renderGlobalCharts() {
   if (!totals || !totals.rows) return;
 
   const labels = totals.rows.map(r => r.corto || r.nombre);
-  const egresosData = totals.rows.map(r => r.totalEgresos);
-  const ingresosData = totals.rows.map(r => r.ingresos);
 
-  // 1. Gráfico de Barras: Comparativa Egresos vs Ingresos
+  // Calcular series acumulativas históricas período a período
+  let runningIngresos = 0;
+  let runningBalance = 0;
+  const ingresosAcumulados = [];
+  const balanceAcumulado = [];
+
+  totals.rows.forEach(r => {
+    runningIngresos += (r.ingresos || 0);
+    const mesBalance = (r.balanceNeto !== undefined) ? r.balanceNeto : ((r.ingresos || 0) - (r.totalEgresos || 0));
+    runningBalance += mesBalance;
+    ingresosAcumulados.push(runningIngresos);
+    balanceAcumulado.push(runningBalance);
+  });
+
+  // 1. Gráfico de Barras: Ingresos Acumulados vs Balance Neto Acumulado
   const barCanvas = document.getElementById('chartTrendBar') || document.getElementById('globalBarChart');
   if (barCanvas) {
     if (barChartInstance) {
@@ -24,24 +36,22 @@ function renderGlobalCharts() {
       barChartInstance = null;
     }
 
-    const hasData = egresosData.some(v => v > 0) || ingresosData.some(v => v > 0);
-
     barChartInstance = new Chart(barCanvas, {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [
           {
-            label: 'Egresos Presupuestados',
-            data: egresosData,
-            backgroundColor: '#f43f5e', // Vivid Coral Rose
+            label: 'Ingresos Acumulados',
+            data: ingresosAcumulados,
+            backgroundColor: '#10b981', // Cyber Emerald
             borderRadius: 6,
             borderSkipped: false,
           },
           {
-            label: 'Ingresos / Abonos',
-            data: ingresosData,
-            backgroundColor: '#10b981', // Cyber Emerald
+            label: 'Balance Neto Acumulado',
+            data: balanceAcumulado,
+            backgroundColor: '#38bdf8', // Luminous Sky Cyan
             borderRadius: 6,
             borderSkipped: false,
           }
@@ -55,13 +65,13 @@ function renderGlobalCharts() {
             position: 'top',
             labels: {
               boxWidth: 12,
-              color: '#94a3b8',
-              font: { family: 'Plus Jakarta Sans', weight: '600', size: 12 }
+              color: '#a1a1aa',
+              font: { family: 'Inter', weight: '600', size: 12 }
             }
           },
           tooltip: {
-            backgroundColor: '#121829',
-            borderColor: 'rgba(99, 102, 241, 0.35)',
+            backgroundColor: '#161822',
+            borderColor: 'rgba(255, 255, 255, 0.15)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
@@ -91,7 +101,7 @@ function renderGlobalCharts() {
           x: {
             ticks: {
               color: '#94a3b8',
-              font: { family: 'Plus Jakarta Sans', weight: '600' }
+              font: { family: 'Inter', weight: '600' }
             },
             grid: {
               display: false
@@ -121,11 +131,11 @@ function renderGlobalCharts() {
         datasets: [{
           data: totalGastos > 0 ? catData : [1, 1, 1],
           backgroundColor: totalGastos > 0 
-            ? ['#0ea5e9', '#a855f7', '#f59e0b'] 
-            : ['#121829', '#172036', '#121829'],
+            ? ['#0ea5e9', '#8b5cf6', '#f59e0b'] 
+            : ['#161822', '#1b1e2a', '#161822'],
           hoverOffset: 6,
           borderWidth: 2,
-          borderColor: '#0f1322'
+          borderColor: '#0f1116'
         }]
       },
       options: {
@@ -138,7 +148,7 @@ function renderGlobalCharts() {
             labels: {
               boxWidth: 12,
               color: '#94a3b8',
-              font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' },
+              font: { family: 'Inter', size: 12, weight: '600' },
               padding: 14
             }
           },

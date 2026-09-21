@@ -207,9 +207,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Feed de Transacciones (Flujo de Caja Real)
     renderTransactionFeed(month);
 
-    // 7. Notas del Mes
+    // 7. Notas del Mes (indicador en botón topbar)
     const notesTextarea = document.getElementById('monthNotesTextarea');
     if (notesTextarea) notesTextarea.value = month.notas || '';
+    const btnOpenNotes = document.getElementById('btnOpenNotesModal');
+    if (btnOpenNotes) {
+      const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
+      btnOpenNotes.classList.toggle('has-notes', hasNotes);
+      btnOpenNotes.innerHTML = hasNotes 
+        ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
+        : `<span>📝</span> Notas`;
+    }
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
     renderActiveSegments();
@@ -588,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const activeSegments = new Set(['servicios']);
 
   function renderActiveSegments() {
-    const allKeys = ['servicios', 'personales', 'extras', 'movimientos', 'notas'];
+    const allKeys = ['servicios', 'personales', 'extras', 'movimientos'];
     const isAllSelected = allKeys.every(k => activeSegments.has(k));
 
     // Actualizar estado activo en botones
@@ -639,7 +647,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function toggleSegment(segment) {
-    const allKeys = ['servicios', 'personales', 'extras', 'movimientos', 'notas'];
+    const allKeys = ['servicios', 'personales', 'extras', 'movimientos'];
     if (segment === 'all') {
       const isAllSelected = allKeys.every(k => activeSegments.has(k));
       if (isAllSelected) {
@@ -730,22 +738,51 @@ document.addEventListener('DOMContentLoaded', () => {
   btnNavMes.addEventListener('click', () => switchView('mes'));
   btnNavPanel.addEventListener('click', () => switchView('panel'));
 
-  // --- NOTAS AUTO-SAVE ---
-  let notesTimer = null;
+  // --- NOTAS MODAL & AUTO-SAVE ---
+  const modalMonthNotes = document.getElementById('modalMonthNotes');
+  const btnOpenNotesModal = document.getElementById('btnOpenNotesModal');
+  const modalNotesSubtitle = document.getElementById('modalNotesSubtitle');
   const notesTextarea = document.getElementById('monthNotesTextarea');
   const notesFeedback = document.getElementById('notesFeedback');
+  let notesTimer = null;
 
-  notesTextarea.addEventListener('input', () => {
-    notesFeedback.textContent = 'Guardando notas...';
-    clearTimeout(notesTimer);
-    notesTimer = setTimeout(() => {
-      store.updateNotes(store.data.activeMonthId, notesTextarea.value);
-      notesFeedback.textContent = '✓ Guardado automáticamente';
+  if (btnOpenNotesModal && modalMonthNotes) {
+    btnOpenNotesModal.addEventListener('click', () => {
+      const month = store.getActiveMonth();
+      if (notesTextarea) notesTextarea.value = month ? (month.notas || '') : '';
+      if (modalNotesSubtitle && month) {
+        modalNotesSubtitle.textContent = `Recordatorios y observaciones de ${month.nombre}`;
+      }
+      modalMonthNotes.classList.add('active');
       setTimeout(() => {
-        notesFeedback.textContent = 'Guardado en tiempo real';
-      }, 2000);
-    }, 500);
-  });
+        if (notesTextarea) notesTextarea.focus();
+      }, 120);
+    });
+  }
+
+  if (notesTextarea) {
+    notesTextarea.addEventListener('input', () => {
+      if (notesFeedback) notesFeedback.textContent = 'Guardando notas...';
+      clearTimeout(notesTimer);
+      notesTimer = setTimeout(() => {
+        store.updateNotes(store.data.activeMonthId, notesTextarea.value);
+        if (notesFeedback) {
+          notesFeedback.textContent = '✓ Guardado automáticamente';
+          setTimeout(() => {
+            notesFeedback.textContent = 'Guardado en tiempo real';
+          }, 2000);
+        }
+        const month = store.getActiveMonth();
+        if (btnOpenNotesModal && month) {
+          const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
+          btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
+          btnOpenNotesModal.innerHTML = hasNotes 
+            ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
+            : `<span>📝</span> Notas`;
+        }
+      }, 400);
+    });
+  }
 
   // --- MODAL: AGREGAR GASTO PRESUPUESTADO ---
   const formAddBudget = document.getElementById('formAddBudget');

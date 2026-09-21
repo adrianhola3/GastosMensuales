@@ -19,7 +19,9 @@ function getDefaultData() {
     { id: generateId(), concepto: 'Corte de cabello', monto: 25.00, tipo: 'Fijo', estado: 'Pendiente' }
   ];
 
-  const baseServiciosVariables = [];
+  const baseServiciosVariables = [
+    { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, papel...', monto: 30.00, tipo: 'Variable', rango: '20-40', estado: 'Pendiente' }
+  ];
 
   const basePersonalesFijos = [
     { id: generateId(), concepto: 'Gimnasio', monto: 103.54, tipo: 'Fijo', estado: 'Pendiente' },
@@ -108,16 +110,21 @@ class FinancialStore {
               m.movimientos = m.movimientos.filter(item => item.concepto !== 'Yapeo de 559' && item.concepto !== 'Matrícula 2026-B');
               if (m.movimientos.length !== prevLen) cleaned = true;
             }
-            // Eliminar gasto fantasma "Productos de casa" y limpiar servicios.variables
+            // Asegurar que servicios.variables tenga el gasto base de productos de casa como Pendiente
             if (m && m.servicios) {
-              if (m.servicios.variables && m.servicios.variables.length > 0) {
-                m.servicios.variables = [];
+              if (!m.servicios.variables || m.servicios.variables.length === 0) {
+                m.servicios.variables = [
+                  { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, papel...', monto: 30.00, tipo: 'Variable', rango: '20-40', estado: 'Pendiente' }
+                ];
                 cleaned = true;
-              }
-              if (m.servicios.fijos) {
-                const prevLen = m.servicios.fijos.length;
-                m.servicios.fijos = m.servicios.fijos.filter(item => !item.concepto.includes('Productos de casa'));
-                if (m.servicios.fijos.length !== prevLen) cleaned = true;
+              } else {
+                // Asegurarse de que esté en estado Pendiente
+                m.servicios.variables.forEach(v => {
+                  if (v.concepto.includes('Productos de casa') && v.estado === 'Pagado') {
+                    v.estado = 'Pendiente';
+                    cleaned = true;
+                  }
+                });
               }
             }
           });

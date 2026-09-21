@@ -7,7 +7,7 @@
   <title>Control de Gastos & Presupuesto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Chart.js para visualización de métricas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -473,7 +473,7 @@
               año</p>
           </div>
 
-          <!-- Tarjetas de Métricas Globales -->
+          <!-- Tarjetas de Métricas Globales (3 indicadores limpios) -->
           <div class="metrics-hero-grid">
             <div class="hero-metric-card card-theme-emerald">
               <div class="metric-top-row">
@@ -482,15 +482,6 @@
               </div>
               <div id="kpiGlobalIngresos" class="metric-main-value font-mono">S/ 0.00</div>
               <div class="metric-footer-info">Todos los abonos confirmados</div>
-            </div>
-
-            <div class="hero-metric-card card-theme-rose">
-              <div class="metric-top-row">
-                <span class="metric-label-title">Total Egresos Acumulados</span>
-                <div class="metric-icon-box">↓</div>
-              </div>
-              <div id="kpiGlobalEgresos" class="metric-main-value font-mono">S/ 0.00</div>
-              <div class="metric-footer-info">Presupuesto total multimes</div>
             </div>
 
             <div class="hero-metric-card card-theme-cyan">
@@ -555,8 +546,8 @@
                 <div class="card-header-left">
                   <div class="card-header-icon"><img src="assets/icons/analitica.jpg" alt="Gráfico" class="ui-icon-img ui-icon-card" /></div>
                   <div class="card-header-titles">
-                    <h3>Tendencia: Ingresos vs Egresos</h3>
-                    <p>Evolución mes a mes</p>
+                    <h3>Tendencia: Ingresos Acumulados vs Balance Neto Acumulado</h3>
+                    <p>Evolución acumulada período a período</p>
                   </div>
                 </div>
               </div>

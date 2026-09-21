@@ -122,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
       btnNavPanel.classList.remove('active');
       renderMonthView();
     }
+
+    if (window.innerWidth <= 1024) {
+      toggleSidebar(false);
+    }
   }
 
   // --- RENDERIZADO DEL SELECTOR DE MESES (HORIZONTAL PILLS) ---
@@ -134,10 +138,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `month-pill-btn ${m.id === activeId ? 'active' : ''}`;
-      btn.innerHTML = `<span>🗓</span> ${m.nombre}`;
+      btn.innerHTML = `<span>🗓 ${m.nombre}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
 
       btn.addEventListener('click', () => {
         switchView('mes', m.id);
+        if (window.innerWidth <= 1024) {
+          toggleSidebar(false);
+        }
       });
 
       monthPillsContainer.appendChild(btn);
@@ -146,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-scroll para centrar la píldora activa
     const activePill = monthPillsContainer.querySelector('.month-pill-btn.active');
     if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }
 
@@ -263,6 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const elCoverageTextInfo = document.getElementById('coverageTextInfo');
     if (elCoverageTextInfo) {
       elCoverageTextInfo.textContent = `📈 Cobertura: ${pctAvance}%`;
+    }
+
+    // Actualizar indicador en topbar
+    const elTopbarBalance = document.getElementById('topbarBalanceValue');
+    if (elTopbarBalance) {
+      elTopbarBalance.textContent = window.formatCurrency(totals.balanceNeto);
+      elTopbarBalance.style.color = totals.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+    }
+    const elHeaderMonthBadge = document.getElementById('activeMonthHeaderBadge');
+    if (elHeaderMonthBadge) {
+      elHeaderMonthBadge.textContent = '🗓 ' + month.nombre;
     }
 
     // Subtotales en las tarjetas
@@ -594,6 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
         visibleCount++;
         if (card.style.display === 'none' || !card.style.display) {
           card.style.display = 'block';
+          // Siempre inicia colapsado (compacto) para no ocupar espacio innecesario
+          card.classList.add('collapsed');
           card.classList.remove('card-anim-out');
           card.classList.add('card-anim-in');
         }
@@ -607,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
               card.style.display = 'none';
               card.classList.remove('card-anim-out');
             }
-          }, 180);
+          }, 160);
         }
       }
     });
@@ -626,13 +646,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isAllSelected) {
         activeSegments.clear();
       } else {
-        allKeys.forEach(k => activeSegments.add(k));
+        allKeys.forEach(k => {
+          activeSegments.add(k);
+          const c = document.querySelector(`[data-segment-card="${k}"]`);
+          if (c) c.classList.add('collapsed');
+        });
       }
     } else {
       if (activeSegments.has(segment)) {
         activeSegments.delete(segment);
       } else {
         activeSegments.add(segment);
+        const c = document.querySelector(`[data-segment-card="${segment}"]`);
+        if (c) c.classList.add('collapsed'); // Inicia colapsada
       }
     }
     renderActiveSegments();
@@ -654,6 +680,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // --- CONTROL DE SIDEBAR RESPONSIVE (DRAWER MÓVIL) ---
+  const btnToggleMobileSidebar = document.getElementById('btnToggleMobileSidebar');
+  const btnCloseSidebar = document.getElementById('btnCloseSidebar');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const appSidebar = document.getElementById('appSidebar');
+
+  function toggleSidebar(open) {
+    if (!appSidebar) return;
+    const shouldOpen = open !== undefined ? open : !appSidebar.classList.contains('sidebar-open');
+    appSidebar.classList.toggle('sidebar-open', shouldOpen);
+    if (sidebarBackdrop) {
+      sidebarBackdrop.classList.toggle('active', shouldOpen);
+    }
+  }
+
+  if (btnToggleMobileSidebar) {
+    btnToggleMobileSidebar.addEventListener('click', () => toggleSidebar(true));
+  }
+  if (btnCloseSidebar) {
+    btnCloseSidebar.addEventListener('click', () => toggleSidebar(false));
+  }
+  if (sidebarBackdrop) {
+    sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
+  }
 
   // --- NAVEGACIÓN SECUENCIAL DE MESES ---
   document.getElementById('btnPrevMonth').addEventListener('click', () => {

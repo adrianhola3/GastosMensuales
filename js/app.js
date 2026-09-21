@@ -20,6 +20,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalAddBudget = document.getElementById('modalAddBudget');
   const modalAddMovement = document.getElementById('modalAddMovement');
   const modalNewMonth = document.getElementById('modalNewMonth');
+  // Modales de Seguridad y Selección Inicial
+  const modalSessionRoleSelect = document.getElementById('modalSessionRoleSelect');
+  const roleSelectStepChoices = document.getElementById('roleSelectStepChoices');
+  const roleSelectStepPin = document.getElementById('roleSelectStepPin');
+  const btnChooseReadOnly = document.getElementById('btnChooseReadOnly');
+  const btnChooseAdmin = document.getElementById('btnChooseAdmin');
+  const btnBackToRoleChoices = document.getElementById('btnBackToRoleChoices');
+  const formEntryAdminAuth = document.getElementById('formEntryAdminAuth');
+  const entryAdminPinInput = document.getElementById('entryAdminPinInput');
+  const entryPinErrorFeedback = document.getElementById('entryPinErrorFeedback');
+
   const modalAdminAuth = document.getElementById('modalAdminAuth');
   const formAdminAuth = document.getElementById('formAdminAuth');
   const adminPinInput = document.getElementById('adminPinInput');
@@ -31,18 +42,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const urlParams = new URLSearchParams(window.location.search);
   
-  // Limpiar cualquier flag heredado de localStorage para evitar que usuarios no autorizados queden en modo admin
+  // Limpiar cualquier flag persistente antiguo en localStorage
   localStorage.removeItem('finanzas_is_admin');
 
-  // Si se pasa el parámetro seguro en la URL, permitir activación en esta sesión específica
+  // Si se pasa parámetro seguro en la URL, pre-autenticar sesión
   if (urlParams.get('admin') === 'true' || urlParams.get('pin') === 'adripro1234') {
     sessionStorage.setItem('finanzas_is_admin', 'true');
-  }
-  if (urlParams.get('view') === 'readonly') {
+    sessionStorage.setItem('finanzas_session_role_chosen', 'admin');
+  } else if (urlParams.get('view') === 'readonly') {
     sessionStorage.setItem('finanzas_is_admin', 'false');
+    sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
   }
 
-  // Por defecto, TODAS las nuevas sesiones inician en modo 'Solo Lectura' (false)
+  // Estado activo en la sesión (por defecto false hasta elegir)
   let isAdmin = sessionStorage.getItem('finanzas_is_admin') === 'true';
 
   function updateAuthModeUI() {
@@ -67,20 +79,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateAuthModeUI();
 
+  function openRoleSelectModal(startAtPin = false) {
+    if (!modalSessionRoleSelect) return;
+    if (startAtPin) {
+      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'none';
+      if (roleSelectStepPin) roleSelectStepPin.style.display = 'block';
+      if (entryAdminPinInput) {
+        entryAdminPinInput.value = '';
+        setTimeout(() => entryAdminPinInput.focus(), 150);
+      }
+    } else {
+      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'block';
+      if (roleSelectStepPin) roleSelectStepPin.style.display = 'none';
+    }
+    if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'none';
+    modalSessionRoleSelect.classList.add('active');
+  }
+
+  function setRoleReadOnly() {
+    isAdmin = false;
+    sessionStorage.setItem('finanzas_is_admin', 'false');
+    sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
+    updateAuthModeUI();
+    if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+    showToast('Ingresaste en Modo Solo Lectura', '🔒');
+  }
+
+  function setRoleAdmin() {
+    isAdmin = true;
+    sessionStorage.setItem('finanzas_is_admin', 'true');
+    sessionStorage.setItem('finanzas_session_role_chosen', 'admin');
+    updateAuthModeUI();
+    if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+    showToast('¡Modo Administrador desbloqueado!', '👑');
+  }
+
+  // AL ENTRAR A LA PÁGINA: Salta inmediatamente la opción a elegir si no se ha elegido aún en esta sesión
+  const hasChosenRole = sessionStorage.getItem('finanzas_session_role_chosen');
+  if (!hasChosenRole) {
+    setTimeout(() => {
+      openRoleSelectModal(false);
+    }, 60);
+  }
+
+  // Eventos de selección de rol
+  if (btnChooseReadOnly) {
+    btnChooseReadOnly.addEventListener('click', () => {
+      setRoleReadOnly();
+    });
+  }
+
+  if (btnChooseAdmin) {
+    btnChooseAdmin.addEventListener('click', () => {
+      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'none';
+      if (roleSelectStepPin) roleSelectStepPin.style.display = 'block';
+      if (entryAdminPinInput) {
+        entryAdminPinInput.value = '';
+        setTimeout(() => entryAdminPinInput.focus(), 120);
+      }
+    });
+  }
+
+  if (btnBackToRoleChoices) {
+    btnBackToRoleChoices.addEventListener('click', () => {
+      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'block';
+      if (roleSelectStepPin) roleSelectStepPin.style.display = 'none';
+      if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'none';
+    });
+  }
+
+  if (formEntryAdminAuth) {
+    formEntryAdminAuth.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const enteredPin = (entryAdminPinInput ? entryAdminPinInput.value : '').trim();
+      const validPin = localStorage.getItem('finanzas_admin_pin') || 'adripro1234';
+
+      if (enteredPin === 'adripro1234' || enteredPin === validPin) {
+        setRoleAdmin();
+      } else {
+        if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'block';
+        if (entryAdminPinInput) {
+          entryAdminPinInput.value = '';
+          entryAdminPinInput.focus();
+        }
+      }
+    });
+  }
+
+  // Botón del pie del Sidebar para alternar modo en cualquier momento
   if (btnToggleAuthMode) {
     btnToggleAuthMode.addEventListener('click', () => {
       if (isAdmin) {
         isAdmin = false;
         sessionStorage.setItem('finanzas_is_admin', 'false');
-        localStorage.removeItem('finanzas_is_admin');
+        sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
         updateAuthModeUI();
         showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
       } else {
-        if (modalAdminAuth) {
-          adminPinInput.value = '';
-          modalAdminAuth.classList.add('active');
-          setTimeout(() => adminPinInput.focus(), 150);
-        }
+        openRoleSelectModal(true);
       }
     });
   }
@@ -92,12 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const validPin = localStorage.getItem('finanzas_admin_pin') || 'adripro1234';
 
       if (enteredPin === 'adripro1234' || enteredPin === validPin) {
-        isAdmin = true;
-        sessionStorage.setItem('finanzas_is_admin', 'true');
-        sessionStorage.setItem('finanzas_admin_pin', 'adripro1234');
-        updateAuthModeUI();
-        modalAdminAuth.classList.remove('active');
-        showToast('¡Modo Administrador desbloqueado!', '👑');
+        setRoleAdmin();
+        if (modalAdminAuth) modalAdminAuth.classList.remove('active');
       } else {
         alert('PIN o contraseña incorrecta.');
         adminPinInput.value = '';
@@ -857,9 +949,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Switch de vistas de navegación principal
-  btnNavMes.addEventListener('click', () => switchView('mes'));
-  btnNavPanel.addEventListener('click', () => switchView('panel'));
+  // Switch de vistas de navegación principal con auto-cierre en móvil
+  btnNavMes.addEventListener('click', () => {
+    switchView('mes');
+    if (window.innerWidth <= 1024) toggleSidebar(false);
+  });
+  btnNavPanel.addEventListener('click', () => {
+    switchView('panel');
+    if (window.innerWidth <= 1024) toggleSidebar(false);
+  });
 
   // --- NOTAS MODAL & AUTO-SAVE ---
   const modalMonthNotes = document.getElementById('modalMonthNotes');

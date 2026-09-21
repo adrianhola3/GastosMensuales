@@ -30,15 +30,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const authModeLabel = document.getElementById('authModeLabel');
 
   const urlParams = new URLSearchParams(window.location.search);
+  
+  // Limpiar cualquier flag heredado de localStorage para evitar que usuarios no autorizados queden en modo admin
+  localStorage.removeItem('finanzas_is_admin');
+
+  // Si se pasa el parámetro seguro en la URL, permitir activación en esta sesión específica
   if (urlParams.get('admin') === 'true' || urlParams.get('pin') === 'adripro1234') {
-    localStorage.setItem('finanzas_is_admin', 'true');
+    sessionStorage.setItem('finanzas_is_admin', 'true');
   }
   if (urlParams.get('view') === 'readonly') {
-    localStorage.setItem('finanzas_is_admin', 'false');
+    sessionStorage.setItem('finanzas_is_admin', 'false');
   }
 
-  // Por defecto, habilitar administración para que todos los botones de la interfaz funcionen directamente
-  let isAdmin = localStorage.getItem('finanzas_is_admin') !== 'false';
+  // Por defecto, TODAS las nuevas sesiones inician en modo 'Solo Lectura' (false)
+  let isAdmin = sessionStorage.getItem('finanzas_is_admin') === 'true';
 
   function updateAuthModeUI() {
     if (isAdmin) {
@@ -66,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
     btnToggleAuthMode.addEventListener('click', () => {
       if (isAdmin) {
         isAdmin = false;
-        localStorage.setItem('finanzas_is_admin', 'false');
+        sessionStorage.setItem('finanzas_is_admin', 'false');
+        localStorage.removeItem('finanzas_is_admin');
         updateAuthModeUI();
         showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
       } else {
@@ -87,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (enteredPin === 'adripro1234' || enteredPin === validPin) {
         isAdmin = true;
-        localStorage.setItem('finanzas_is_admin', 'true');
-        localStorage.setItem('finanzas_admin_pin', 'adripro1234');
+        sessionStorage.setItem('finanzas_is_admin', 'true');
+        sessionStorage.setItem('finanzas_admin_pin', 'adripro1234');
         updateAuthModeUI();
         modalAdminAuth.classList.remove('active');
         showToast('¡Modo Administrador desbloqueado!', '👑');

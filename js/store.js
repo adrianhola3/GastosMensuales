@@ -19,9 +19,7 @@ function getDefaultData() {
     { id: generateId(), concepto: 'Corte de cabello', monto: 25.00, tipo: 'Fijo', estado: 'Pendiente' }
   ];
 
-  const baseServiciosVariables = [
-    { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, pap...', monto: 30.00, tipo: 'Variable', rango: '20-40', estado: 'Pendiente' }
-  ];
+  const baseServiciosVariables = [];
 
   const basePersonalesFijos = [
     { id: generateId(), concepto: 'Gimnasio', monto: 103.54, tipo: 'Fijo', estado: 'Pendiente' },
@@ -109,6 +107,18 @@ class FinancialStore {
               const prevLen = m.movimientos.length;
               m.movimientos = m.movimientos.filter(item => item.concepto !== 'Yapeo de 559' && item.concepto !== 'Matrícula 2026-B');
               if (m.movimientos.length !== prevLen) cleaned = true;
+            }
+            // Eliminar gasto fantasma "Productos de casa" y limpiar servicios.variables
+            if (m && m.servicios) {
+              if (m.servicios.variables && m.servicios.variables.length > 0) {
+                m.servicios.variables = [];
+                cleaned = true;
+              }
+              if (m.servicios.fijos) {
+                const prevLen = m.servicios.fijos.length;
+                m.servicios.fijos = m.servicios.fijos.filter(item => !item.concepto.includes('Productos de casa'));
+                if (m.servicios.fijos.length !== prevLen) cleaned = true;
+              }
             }
           });
           if (cleaned) {

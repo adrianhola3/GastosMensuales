@@ -4,9 +4,14 @@
    Barra Lateral, Reorganización de Métricas & Grilla Multicolumna
    ========================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
+  /* Tipografía Distintiva y Ejecutiva */
+  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
   /* Paleta Ejecutiva: Warm Obsidian, Charcoal Graphite & Cashmere (Inspirado en Mercury y Linear) */
   --bg-app: #0b0c10;
   --bg-sidebar: #101217;
@@ -185,16 +190,21 @@ body {
 }
 
 .brand-title {
-  font-size: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
   font-weight: 800;
-  color: #ffffff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.15;
+  background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .brand-sub {
   font-size: 0.72rem;
-  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--accent-primary-text);
   display: block;
 }
 
@@ -210,7 +220,7 @@ body {
 
 /* Secciones del Sidebar */
 .sidebar-section {
-  padding: 1rem 1.15rem;
+  padding: 0.9rem 1.15rem;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -222,9 +232,10 @@ body {
 }
 
 .sidebar-section-label {
-  font-size: 0.7rem;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -245,7 +256,7 @@ body {
   border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  font-family: inherit;
+  font-family: var(--font-display);
   font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
@@ -269,6 +280,113 @@ body {
 
 .sidebar-nav-tab.active .nav-tab-icon {
   transform: scale(1.1);
+}
+
+/* ==========================================================
+   BARRA DE BÚSQUEDA ESPECÍFICA (COLUMNA IZQUIERDA)
+   ========================================================== */
+.sidebar-search-section {
+  padding: 0.75rem 1.15rem;
+  background: rgba(14, 16, 22, 0.4);
+}
+
+.sidebar-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #090a0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md);
+  padding: 0.42rem 0.65rem 0.42rem 0.75rem;
+  gap: 0.5rem;
+  transition: all 0.2s var(--ease-spring);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-search-box:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #0d0f15;
+}
+
+.sidebar-search-box:focus-within {
+  border-color: rgba(217, 119, 6, 0.55);
+  background: #0d0f15;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.14), inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.search-box-icon {
+  font-size: 0.82rem;
+  opacity: 0.6;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar-search-box:focus-within .search-box-icon {
+  opacity: 1;
+}
+
+.sidebar-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  min-width: 0;
+}
+
+.sidebar-search-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.76rem;
+}
+
+.search-shortcut-badge {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 1px 5px;
+  line-height: 1.2;
+  user-select: none;
+}
+
+.btn-clear-search {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.68rem;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.btn-clear-search:hover {
+  background: var(--accent-rose-light);
+  color: var(--accent-rose);
+}
+
+.search-results-feedback {
+  margin-top: 0.4rem;
+  font-size: 0.72rem;
+  color: var(--accent-primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.22rem 0.5rem;
+  background: var(--accent-primary-light);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-primary-border);
+  animation: fadeIn 0.2s ease;
 }
 
 /* Selector de Meses en Sidebar */
@@ -387,14 +505,18 @@ body {
 }
 
 .metric-card-title {
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
   color: var(--text-secondary);
 }
 
 .metric-card-number {
+  font-family: var(--font-mono);
   font-size: 1.25rem;
   font-weight: 800;
+  letter-spacing: -0.02em;
   line-height: 1.15;
   margin-bottom: 0.15rem;
 }
@@ -710,8 +832,11 @@ body {
    ========================================================== */
 .main-content {
   flex: 1;
-  padding: 1.5rem 1.75rem 3rem 1.75rem;
+  padding: 1.25rem 1.75rem 4.5rem 1.75rem;
   width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .view-container {
@@ -719,7 +844,9 @@ body {
   animation: fadeIn 0.28s var(--ease-spring);
 }
 .view-container.active {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 @keyframes fadeIn {
@@ -1011,14 +1138,21 @@ body.read-only-mode #monthNotesTextarea {
 
 /* ==========================================================
    CONTENEDOR DE SEGMENTOS ENFOCADOS (GRILLA DINÁMICA COMPACTA)
-   Aprovecha el ancho de pantalla sin dejar huecos vacíos
+   Aprovecha todo el ancho y alto sin dejar huecos vacíos
    ========================================================== */
 .segments-workspace-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1rem;
-  align-items: stretch;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-items: start;
   width: 100%;
+  flex: 1;
+}
+
+@media (max-width: 1100px) {
+  .segments-workspace-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 @keyframes cardEnter {
@@ -1154,10 +1288,11 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 .card-title-row h3 {
-  font-size: 0.92rem;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.01em;
+  color: #f8fafc;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1171,8 +1306,9 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 .card-header-titles p {
-  font-size: 0.68rem;
-  color: var(--text-secondary);
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1188,13 +1324,14 @@ body.read-only-mode #monthNotesTextarea {
 
 /* Subencabezados de categoría (Fijos / Variables) */
 .category-subhead {
-  padding: 0.35rem 0.95rem;
+  padding: 0.38rem 0.95rem;
   background: var(--bg-card-inner);
   border-bottom: 1px solid var(--border-subtle);
   border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-display);
   font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
   display: flex;
@@ -1206,7 +1343,7 @@ body.read-only-mode #monthNotesTextarea {
    FILAS DE GASTOS COMPACTAS Y ERGONÓMICAS (CERO ESPACIOS MUERTOS)
    ========================================================== */
 .expense-card-item {
-  padding: 0.52rem 0.95rem;
+  padding: 0.55rem 0.95rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   display: grid;
   grid-template-columns: 1fr auto auto auto;
@@ -1227,9 +1364,11 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 .expense-item-title {
-  font-size: 0.88rem;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
   font-weight: 600;
   color: #ffffff;
+  letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1323,6 +1462,7 @@ body.read-only-mode #monthNotesTextarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.78rem;
   color: var(--text-secondary);
@@ -1333,8 +1473,11 @@ body.read-only-mode #monthNotesTextarea {
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
   color: #ffffff;
-  font-size: 0.84rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
   font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   padding: 0.55rem 0.95rem;
 }
 

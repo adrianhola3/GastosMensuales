@@ -222,6 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
     renderActiveSegments();
+
+    if (sidebarSearchInput && sidebarSearchInput.value.trim().length > 0) {
+      performSidebarSearch(sidebarSearchInput.value);
+    }
   }
 
   // Función dedicada para actualizar métricas, subtotales y barras de progreso al instante SIN alterar el DOM de los gastos (sin salto de scroll)
@@ -616,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Mostrar u ocultar tarjetas con animación
+    // Mostrar u ocultar tarjetas con animación sin forzar colapso
     let visibleCount = 0;
     document.querySelectorAll('[data-segment-card]').forEach(card => {
       const seg = card.getAttribute('data-segment-card');
@@ -626,8 +630,6 @@ document.addEventListener('DOMContentLoaded', () => {
         visibleCount++;
         if (card.style.display === 'none' || !card.style.display) {
           card.style.display = 'block';
-          // Siempre inicia colapsado (compacto) para no ocupar espacio innecesario
-          card.classList.add('collapsed');
           card.classList.remove('card-anim-out');
           card.classList.add('card-anim-in');
         }
@@ -655,25 +657,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function toggleSegment(segment) {
     const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
+    const allCards = document.querySelectorAll('[data-segment-card]');
+
     if (segment === 'all') {
-      const allCards = document.querySelectorAll('[data-segment-card]');
       const allActive = allKeys.every(k => activeSegments.has(k));
       const allExpanded = Array.from(allCards).every(c => !c.classList.contains('collapsed'));
 
-      if (!allActive) {
-        // Si no estaban todas activas, activarlas y expandirlas
+      if (!allActive || !allExpanded) {
+        // Si no estaban todas visibles y expandidas, activarlas y expandirlas
         allKeys.forEach(k => activeSegments.add(k));
         allCards.forEach(c => {
           c.style.display = 'block';
           c.classList.remove('card-anim-out', 'collapsed');
         });
       } else {
-        // Si ya estaban todas visibles: alternar entre colapsar todas (resumen compacto) o expandir todas
-        if (allExpanded) {
-          allCards.forEach(c => c.classList.add('collapsed'));
-        } else {
-          allCards.forEach(c => c.classList.remove('collapsed'));
-        }
+        // Si ya estaban todas expandidas, alternar a contraerlas
+        allCards.forEach(c => c.classList.add('collapsed'));
       }
     } else {
       if (activeSegments.has(segment)) {
@@ -681,7 +680,9 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         activeSegments.add(segment);
         const c = document.querySelector(`[data-segment-card="${segment}"]`);
-        if (c) c.classList.add('collapsed'); // Inicia colapsada
+        if (c) {
+          c.classList.remove('collapsed'); // Inicia expandida
+        }
       }
     }
     renderActiveSegments();
@@ -709,6 +710,99 @@ document.addEventListener('DOMContentLoaded', () => {
         card.classList.toggle('collapsed');
       }
     });
+  });
+
+  // --- BARRA DE BÚSQUEDA ESPECÍFICA EN COLUMNA IZQUIERDA ---
+  const sidebarSearchInput = document.getElementById('sidebarSearchInput');
+  const btnClearSidebarSearch = document.getElementById('btnClearSidebarSearch');
+  const sidebarSearchResultsFeedback = document.getElementById('sidebarSearchResultsFeedback');
+  const searchResultsCountText = document.getElementById('searchResultsCountText');
+
+  function performSidebarSearch(rawQuery) {
+    const query = (rawQuery || '').trim().toLowerCase();
+
+    if (!query) {
+      if (btnClearSidebarSearch) btnClearSidebarSearch.style.display = 'none';
+      if (sidebarSearchResultsFeedback) sidebarSearchResultsFeedback.style.display = 'none';
+
+      // Restaurar visibilidad de todos los elementos
+      document.querySelectorAll('.expense-card-item').forEach(item => {
+        item.style.display = '';
+      });
+      document.querySelectorAll('.transaction-feed-item').forEach(item => {
+        item.style.display = '';
+      });
+      return;
+    }
+
+    if (btnClearSidebarSearch) btnClearSidebarSearch.style.display = 'flex';
+    if (sidebarSearchResultsFeedback) sidebarSearchResultsFeedback.style.display = 'flex';
+
+    // Desplegar todas las categorías para ver resultados completos
+    const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
+    allKeys.forEach(k => activeSegments.add(k));
+    document.querySelectorAll('[data-segment-card]').forEach(card => {
+      card.style.display = 'block';
+      card.classList.remove('collapsed');
+    });
+    renderActiveSegments();
+
+    let matchCount = 0;
+
+    // 1. Filtrar filas de gastos
+    document.querySelectorAll('.expense-card-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      const matches = text.includes(query);
+      item.style.display = matches ? '' : 'none';
+      if (matches) matchCount++;
+    });
+
+    // 2. Filtrar transacciones del feed
+    document.querySelectorAll('.transaction-feed-item').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      const matches = text.includes(query);
+      item.style.display = matches ? '' : 'none';
+      if (matches) matchCount++;
+    });
+
+    if (searchResultsCountText) {
+      searchResultsCountText.textContent = `${matchCount} resultado${matchCount === 1 ? '' : 's'} encontrado${matchCount === 1 ? '' : 's'}`;
+    }
+  }
+
+  if (sidebarSearchInput) {
+    sidebarSearchInput.addEventListener('input', (e) => {
+      performSidebarSearch(e.target.value);
+    });
+
+    sidebarSearchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        sidebarSearchInput.value = '';
+        performSidebarSearch('');
+        sidebarSearchInput.blur();
+      }
+    });
+  }
+
+  if (btnClearSidebarSearch) {
+    btnClearSidebarSearch.addEventListener('click', () => {
+      if (sidebarSearchInput) {
+        sidebarSearchInput.value = '';
+        sidebarSearchInput.focus();
+      }
+      performSidebarSearch('');
+    });
+  }
+
+  // Atajo de teclado: presionar "/" para enfocar la búsqueda
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+      e.preventDefault();
+      if (sidebarSearchInput) {
+        sidebarSearchInput.focus();
+        sidebarSearchInput.select();
+      }
+    }
   });
 
   // --- CONTROL DE SIDEBAR RESPONSIVE (DRAWER MÓVIL) ---

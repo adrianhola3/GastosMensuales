@@ -34,14 +34,14 @@ function renderGlobalCharts() {
           {
             label: 'Egresos Presupuestados',
             data: egresosData,
-            backgroundColor: '#f43f5e', // Coral/Rose
+            backgroundColor: '#e11d48', // Terracotta Crimson
             borderRadius: 6,
             borderSkipped: false,
           },
           {
             label: 'Ingresos / Abonos',
             data: ingresosData,
-            backgroundColor: '#10b981', // Neon Emerald
+            backgroundColor: '#10b981', // Sage / Alpine Mint
             borderRadius: 6,
             borderSkipped: false,
           }
@@ -60,12 +60,13 @@ function renderGlobalCharts() {
             }
           },
           tooltip: {
-            backgroundColor: '#0f172a',
-            borderColor: '#334155',
+            backgroundColor: '#151821',
+            borderColor: 'rgba(255, 255, 255, 0.12)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
-            padding: 10,
+            padding: 12,
+            cornerRadius: 8,
             callbacks: {
               label: function(context) {
                 return ` ${context.dataset.label}: ${window.formatCurrency(context.raw)}`;
@@ -84,7 +85,7 @@ function renderGlobalCharts() {
               }
             },
             grid: {
-              color: 'rgba(30, 41, 59, 0.6)'
+              color: 'rgba(255, 255, 255, 0.05)'
             }
           },
           x: {
@@ -120,11 +121,11 @@ function renderGlobalCharts() {
         datasets: [{
           data: totalGastos > 0 ? catData : [1, 1, 1],
           backgroundColor: totalGastos > 0 
-            ? ['#38bdf8', '#a78bfa', '#fbbf24'] 
-            : ['#1e293b', '#334155', '#1e293b'],
+            ? ['#38bdf8', '#a78bfa', '#f59e0b'] 
+            : ['#1e222e', '#262c3b', '#1e222e'],
           hoverOffset: 6,
           borderWidth: 2,
-          borderColor: '#131d33'
+          borderColor: '#171a23'
         }]
       },
       options: {
@@ -142,12 +143,13 @@ function renderGlobalCharts() {
             }
           },
           tooltip: {
-            backgroundColor: '#0f172a',
-            borderColor: '#334155',
+            backgroundColor: '#151821',
+            borderColor: 'rgba(255, 255, 255, 0.12)',
             borderWidth: 1,
             titleColor: '#ffffff',
             bodyColor: '#f8fafc',
-            padding: 10,
+            padding: 12,
+            cornerRadius: 8,
             callbacks: {
               label: function(context) {
                 if (totalGastos === 0) return ' Sin gastos registrados aún';

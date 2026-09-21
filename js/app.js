@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `month-pill-btn ${m.id === activeId ? 'active' : ''}`;
-      btn.innerHTML = `<span>🗓 ${m.nombre}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
+      btn.innerHTML = `<span>${m.nombre}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
 
       btn.addEventListener('click', () => {
         switchView('mes', m.id);
@@ -314,8 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
       btnOpenNotes.classList.toggle('has-notes', hasNotes);
       btnOpenNotes.innerHTML = hasNotes
-        ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
-        : `<span>📝</span> Notas`;
+        ? `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas <span class="notes-dot-badge">●</span>`
+        : `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas`;
     }
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elHeaderMonthBadge = document.getElementById('activeMonthHeaderBadge');
     if (elHeaderMonthBadge) {
-      elHeaderMonthBadge.textContent = '🗓 ' + month.nombre;
+      elHeaderMonthBadge.textContent = month.nombre;
     }
 
     // Subtotales en las tarjetas
@@ -998,8 +998,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
           btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
           btnOpenNotesModal.innerHTML = hasNotes
-            ? `<span>📝</span> Notas <span class="notes-dot-badge">●</span>`
-            : `<span>📝</span> Notas`;
+            ? `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas <span class="notes-dot-badge">●</span>`
+            : `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas`;
         }
       }, 400);
     });

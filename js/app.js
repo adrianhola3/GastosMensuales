@@ -196,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. Gastos de Servicios
     renderExpenseCategory('listServiciosFijos', month.servicios.fijos || [], month.id);
+    renderExpenseCategory('listServiciosVariables', month.servicios.variables || [], month.id);
 
     // 4. Gastos Personales
     renderExpenseCategory('listPersonalesFijos', month.personales.fijos || [], month.id);
@@ -409,11 +410,17 @@ document.addEventListener('DOMContentLoaded', () => {
       // Evento: Alternar estado en el lugar SIN salto de scroll ni recrear el DOM
       const toggleBtn = row.querySelector('.btn-status-toggle');
       toggleBtn.addEventListener('click', () => {
-        const newState = store.toggleBudgetItemStatus(monthId, item.id);
-        toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
-        toggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
-        updateLiveProgressAndTotals(monthId);
-        showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
+        if (item.tipo === 'Variable' && item.estado !== 'Pagado') {
+          // Si es gasto variable y está pendiente, solicitar el monto efectivamente gastado
+          openPayVariableModal(monthId, item, row);
+        } else {
+          const newState = store.toggleBudgetItemStatus(monthId, item.id);
+          item.estado = newState;
+          toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
+          toggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
+          updateLiveProgressAndTotals(monthId);
+          showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
+        }
       });
 
       // Evento: Eliminar gasto
@@ -845,6 +852,89 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMonthView();
     showToast(`Gasto "${concepto}" agregado`, '✓');
   });
+
+  // --- MODAL: CONFIRMAR PAGO DE GASTO VARIABLE CON MONTO REAL ---
+  let currentVariableRowTarget = null;
+  let currentVariableItemTarget = null;
+
+  function openPayVariableModal(monthId, item, row) {
+    const modal = document.getElementById('modalPayVariableExpense');
+    if (!modal) return;
+
+    document.getElementById('payVarMonthId').value = monthId;
+    document.getElementById('payVarItemId').value = item.id;
+    document.getElementById('payVarItemTitle').textContent = item.concepto;
+    document.getElementById('payVarItemEstimated').innerHTML = `Presupuestado: <strong class="font-mono" style="color: var(--accent-cyan); font-size: 0.84rem;">${window.formatCurrency(item.monto)}</strong>`;
+
+    const rangeBadge = document.getElementById('payVarItemRangeBadge');
+    if (rangeBadge) {
+      if (item.rango) {
+        rangeBadge.textContent = `Rango sugerido: ${item.rango}`;
+        rangeBadge.style.display = 'inline-block';
+      } else {
+        rangeBadge.style.display = 'none';
+      }
+    }
+
+    const inputAmount = document.getElementById('payVarActualAmount');
+    inputAmount.value = Number(item.monto).toFixed(2);
+
+    currentVariableRowTarget = row;
+    currentVariableItemTarget = item;
+
+    modal.classList.add('active');
+    setTimeout(() => {
+      inputAmount.focus();
+      inputAmount.select();
+    }, 80);
+  }
+
+  const formPayVar = document.getElementById('formPayVariableExpense');
+  if (formPayVar) {
+    formPayVar.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const monthId = document.getElementById('payVarMonthId').value;
+      const itemId = document.getElementById('payVarItemId').value;
+      const inputAmount = document.getElementById('payVarActualAmount');
+      const realAmount = parseFloat(inputAmount.value);
+
+      if (isNaN(realAmount) || realAmount < 0) {
+        alert('Por favor ingresa un monto válido.');
+        return;
+      }
+
+      // Actualizar monto real y estado Pagado en la base de datos
+      store.updateBudgetItem(monthId, itemId, { monto: realAmount, estado: 'Pagado' });
+
+      // Actualizar el estado del ítem en memoria local
+      if (currentVariableItemTarget) {
+        currentVariableItemTarget.monto = realAmount;
+        currentVariableItemTarget.estado = 'Pagado';
+      }
+
+      // Actualizar visualmente la fila en el DOM inmediatamente
+      if (currentVariableRowTarget) {
+        const toggleBtn = currentVariableRowTarget.querySelector('.btn-status-toggle');
+        if (toggleBtn) {
+          toggleBtn.className = 'btn-status-toggle status-pagado';
+          toggleBtn.textContent = '✓ Pagado';
+        }
+        const amountEl = currentVariableRowTarget.querySelector('.expense-item-amount');
+        if (amountEl) {
+          amountEl.textContent = window.formatCurrency(realAmount);
+        }
+      }
+
+      // Actualizar métricas vivas y subtotales
+      updateLiveProgressAndTotals(monthId);
+
+      // Cerrar modal
+      const modal = document.getElementById('modalPayVariableExpense');
+      if (modal) modal.classList.remove('active');
+
+      showToast(`Gasto pagado por ${window.formatCurrency(realAmount)}`, '✓');
+    });
+  }
 
   // --- MODAL: REGISTRAR MOVIMIENTO (FLUJO DE CAJA) ---
   const formAddMovement = document.getElementById('formAddMovement');

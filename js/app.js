@@ -177,12 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const balanceEl = document.getElementById('monthBalanceNeto');
     balanceEl.textContent = window.formatCurrency(totals.balanceNeto);
-    if (totals.balanceNeto >= 0) {
-      balanceEl.style.color = 'var(--accent-emerald)';
-      document.getElementById('monthBalanceStatusLabel').textContent = 'Superávit / Saldo a favor';
+    if (totals.balanceNeto > 0) {
+      balanceEl.style.color = 'var(--text-emerald)';
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Saldo a favor disponible';
+    } else if (totals.balanceNeto < 0) {
+      balanceEl.style.color = 'var(--text-rose)';
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Déficit (gastos superan ingresos)';
     } else {
-      balanceEl.style.color = 'var(--accent-rose)';
-      document.getElementById('monthBalanceStatusLabel').textContent = 'Monto pendiente de cobertura';
+      balanceEl.style.color = 'var(--text-cyan)';
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Equilibrado (S/ 0.00)';
     }
 
     const pctAvance = totals.porcentajeAvance.toFixed(1);
@@ -234,11 +237,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const balanceEl = document.getElementById('monthBalanceNeto');
     if (balanceEl) {
       balanceEl.textContent = window.formatCurrency(totals.balanceNeto);
-      balanceEl.style.color = totals.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)';
+      if (totals.balanceNeto > 0) {
+        balanceEl.style.color = 'var(--text-emerald)';
+      } else if (totals.balanceNeto < 0) {
+        balanceEl.style.color = 'var(--text-rose)';
+      } else {
+        balanceEl.style.color = 'var(--text-cyan)';
+      }
     }
     const elBalanceStatus = document.getElementById('monthBalanceStatusLabel');
     if (elBalanceStatus) {
-      elBalanceStatus.textContent = totals.balanceNeto >= 0 ? 'Superávit / Saldo a favor' : 'Monto pendiente de cobertura';
+      if (totals.balanceNeto > 0) {
+        elBalanceStatus.textContent = 'Saldo a favor disponible';
+      } else if (totals.balanceNeto < 0) {
+        elBalanceStatus.textContent = 'Déficit (gastos superan ingresos)';
+      } else {
+        elBalanceStatus.textContent = 'Equilibrado (S/ 0.00)';
+      }
     }
     const elAbonoPercent = document.getElementById('monthAbonoPercentLabel');
     if (elAbonoPercent) elAbonoPercent.textContent = `${totals.porcentajeAvance.toFixed(1)}%`;

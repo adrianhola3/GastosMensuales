@@ -590,6 +590,81 @@
        MODALES DE GESTIÓN (ADMINISTRATIVOS)
        ========================================================== -->
 
+  <!-- Modal 0: Selector de Modo Inicial (Solo Lectura vs Administrador) -->
+  <div id="modalSessionRoleSelect" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-sheet" style="max-width: 540px;">
+      <div class="modal-sheet-header">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div style="font-size: 1.6rem;">🔐</div>
+          <div>
+            <h3 style="font-size: 1.15rem; font-family: var(--font-display);">Acceso al Gestor Financiero</h3>
+            <p style="font-size: 0.76rem; color: var(--text-secondary); margin-top: 2px;">
+              Selecciona cómo deseas ingresar en esta sesión
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-sheet-body" style="padding: 1.25rem 1.5rem 1.5rem 1.5rem;">
+        <!-- Vista 1: Elegir entre los dos roles -->
+        <div id="roleSelectStepChoices">
+          <div class="role-choice-grid">
+            <!-- Opción A: Modo Solo Lectura -->
+            <div id="btnChooseReadOnly" class="role-choice-card card-readonly" role="button" tabindex="0">
+              <div>
+                <div class="role-card-icon">👁️</div>
+                <div class="role-card-titles" style="margin-top: 0.65rem;">
+                  <h4>Modo Lectura</h4>
+                  <p>Consulta balances, desglose de servicios, gastos personales y movimientos sin permisos de edición.</p>
+                </div>
+              </div>
+              <div class="role-card-action-btn">
+                <span>Ingresar como Lector</span>
+                <span>→</span>
+              </div>
+            </div>
+
+            <!-- Opción B: Modo Administrador -->
+            <div id="btnChooseAdmin" class="role-choice-card card-admin" role="button" tabindex="0">
+              <div>
+                <div class="role-card-icon">👑</div>
+                <div class="role-card-titles" style="margin-top: 0.65rem;">
+                  <h4>Administrador</h4>
+                  <p>Acceso completo con PIN de seguridad para registrar gastos, abonos, crear meses y editar datos.</p>
+                </div>
+              </div>
+              <div class="role-card-action-btn">
+                <span>Desbloquear con PIN</span>
+                <span>→</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vista 2: Ingresar PIN de Administrador -->
+        <div id="roleSelectStepPin" style="display: none;">
+          <form id="formEntryAdminAuth">
+            <p style="color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 1rem;">
+              Ingresa tu PIN de seguridad para habilitar la edición completa del sistema:
+            </p>
+            <div class="form-field">
+              <label for="entryAdminPinInput" style="font-size: 0.82rem; font-weight: 700;">PIN / Contraseña de Administrador</label>
+              <input type="password" id="entryAdminPinInput" class="form-input-lg font-mono"
+                placeholder="Ingresa PIN de Administrador" required autocomplete="current-password">
+              <div id="entryPinErrorFeedback" style="color: var(--text-rose); font-size: 0.78rem; margin-top: 6px; display: none;">
+                ⚠️ PIN o contraseña incorrecta. Inténtalo nuevamente.
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.65rem; margin-top: 1.25rem; justify-content: flex-end;">
+              <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">← Volver</button>
+              <button type="submit" class="btn btn-primary btn-lg">Acceder como Administrador</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal 1: Agregar Gasto Presupuestado -->
   <div id="modalAddBudget" class="modal-overlay">
     <div class="modal-sheet">

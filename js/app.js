@@ -614,9 +614,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderPanelView() {
     const totals = store.calculateGlobalTotals();
 
-    // KPIs Globales
-    document.getElementById('kpiGlobalIngresos').textContent = window.formatCurrency(totals.globalIngresos);
-    document.getElementById('kpiGlobalEgresos').textContent = window.formatCurrency(totals.globalEgresos);
+    const elKpiIngresos = document.getElementById('kpiGlobalIngresos');
+    if (elKpiIngresos) elKpiIngresos.textContent = window.formatCurrency(totals.globalIngresos);
+
+    const elKpiEgresos = document.getElementById('kpiGlobalEgresos');
+    if (elKpiEgresos) elKpiEgresos.textContent = window.formatCurrency(totals.globalEgresos);
 
     const balanceEl = document.getElementById('kpiGlobalBalance');
     balanceEl.textContent = window.formatCurrency(totals.globalBalanceNeto);

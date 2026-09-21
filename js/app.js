@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('finanzas_is_admin', 'false');
   }
 
-  // Por defecto en nuevos navegadores (como el del padre), inicia en false (Solo Lectura)
-  let isAdmin = localStorage.getItem('finanzas_is_admin') === 'true';
+  // Por defecto, habilitar administración para que todos los botones de la interfaz funcionen directamente
+  let isAdmin = localStorage.getItem('finanzas_is_admin') !== 'false';
 
   function updateAuthModeUI() {
     if (isAdmin) {
@@ -794,64 +794,88 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- MODAL: AGREGAR GASTO PRESUPUESTADO ---
   const formAddBudget = document.getElementById('formAddBudget');
   const selectBudgetSection = document.getElementById('budgetSection');
-  const selectBudgetSubsectionField = document.getElementById('budgetSubsectionField');
-  const inputBudgetRangeField = document.getElementById('budgetRangeField');
+  const selectBudgetSubsectionField = document.getElementById('selectBudgetSubsectionField') || document.getElementById('budgetSubsectionField');
+  const inputBudgetRangeField = document.getElementById('inputBudgetRangeField') || document.getElementById('budgetRangeField');
 
   function openAddBudgetModal(defaultSection = 'servicios', defaultSubsection = 'fijos') {
-    formAddBudget.reset();
-    selectBudgetSection.value = defaultSection;
+    if (formAddBudget) formAddBudget.reset();
+    if (selectBudgetSection) selectBudgetSection.value = defaultSection;
     if (defaultSection === 'extras') {
-      selectBudgetSubsectionField.style.display = 'none';
-      inputBudgetRangeField.style.display = 'none';
+      if (selectBudgetSubsectionField) selectBudgetSubsectionField.style.display = 'none';
+      if (inputBudgetRangeField) inputBudgetRangeField.style.display = 'none';
     } else {
-      selectBudgetSubsectionField.style.display = 'block';
-      document.getElementById('budgetSubsection').value = defaultSubsection;
-      inputBudgetRangeField.style.display = defaultSubsection === 'variables' ? 'block' : 'none';
+      if (selectBudgetSubsectionField) selectBudgetSubsectionField.style.display = 'block';
+      const elSub = document.getElementById('budgetSubsection');
+      if (elSub) elSub.value = defaultSubsection;
+      if (inputBudgetRangeField) inputBudgetRangeField.style.display = defaultSubsection === 'variables' ? 'block' : 'none';
     }
-    modalAddBudget.classList.add('active');
+    const modal = document.getElementById('modalAddBudget');
+    if (modal) modal.classList.add('active');
+    setTimeout(() => {
+      const elConcepto = document.getElementById('budgetConcepto');
+      if (elConcepto) elConcepto.focus();
+    }, 100);
   }
 
-  selectBudgetSection.addEventListener('change', (e) => {
-    if (e.target.value === 'extras') {
-      selectBudgetSubsectionField.style.display = 'none';
-      inputBudgetRangeField.style.display = 'none';
-    } else {
-      selectBudgetSubsectionField.style.display = 'block';
-    }
-  });
+  if (selectBudgetSection) {
+    selectBudgetSection.addEventListener('change', (e) => {
+      if (e.target.value === 'extras') {
+        if (selectBudgetSubsectionField) selectBudgetSubsectionField.style.display = 'none';
+        if (inputBudgetRangeField) inputBudgetRangeField.style.display = 'none';
+      } else {
+        if (selectBudgetSubsectionField) selectBudgetSubsectionField.style.display = 'block';
+      }
+    });
+  }
 
-  document.getElementById('budgetSubsection').addEventListener('change', (e) => {
-    inputBudgetRangeField.style.display = e.target.value === 'variables' ? 'block' : 'none';
-  });
+  const elBudgetSubsection = document.getElementById('budgetSubsection');
+  if (elBudgetSubsection) {
+    elBudgetSubsection.addEventListener('change', (e) => {
+      if (inputBudgetRangeField) inputBudgetRangeField.style.display = e.target.value === 'variables' ? 'block' : 'none';
+    });
+  }
 
   // Botones para abrir modal de presupuesto
-  document.getElementById('btnHeaderAddBudget').addEventListener('click', () => openAddBudgetModal());
-  document.querySelector('.btn-quick-add-service').addEventListener('click', () => openAddBudgetModal('servicios', 'fijos'));
-  document.querySelector('.btn-quick-add-personal').addEventListener('click', () => openAddBudgetModal('personales', 'fijos'));
-  document.querySelector('.btn-quick-add-extra').addEventListener('click', () => openAddBudgetModal('extras'));
+  const btnHeaderAddBudget = document.getElementById('btnHeaderAddBudget');
+  if (btnHeaderAddBudget) btnHeaderAddBudget.addEventListener('click', () => openAddBudgetModal());
 
-  formAddBudget.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const section = selectBudgetSection.value;
-    const subsection = document.getElementById('budgetSubsection').value;
-    const concepto = document.getElementById('budgetConcepto').value;
-    const monto = parseFloat(document.getElementById('budgetMonto').value) || 0;
-    const rango = document.getElementById('budgetRango').value;
-    const estado = document.getElementById('budgetEstado').value;
-    const tipo = section === 'extras' ? 'Extra' : (subsection === 'variables' ? 'Variable' : 'Fijo');
+  const btnAddServ = document.querySelector('.btn-quick-add-service');
+  if (btnAddServ) btnAddServ.addEventListener('click', () => openAddBudgetModal('servicios', 'fijos'));
 
-    store.addBudgetItem(store.data.activeMonthId, section, subsection, {
-      concepto,
-      monto,
-      tipo,
-      rango,
-      estado
+  const btnAddPers = document.querySelector('.btn-quick-add-personal');
+  if (btnAddPers) btnAddPers.addEventListener('click', () => openAddBudgetModal('personales', 'fijos'));
+
+  const btnAddExt = document.querySelector('.btn-quick-add-extra');
+  if (btnAddExt) btnAddExt.addEventListener('click', () => openAddBudgetModal('extras'));
+
+  if (formAddBudget) {
+    formAddBudget.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const section = selectBudgetSection ? selectBudgetSection.value : 'servicios';
+      const elSub = document.getElementById('budgetSubsection');
+      const subsection = elSub ? elSub.value : 'fijos';
+      const concepto = document.getElementById('budgetConcepto').value.trim();
+      const monto = parseFloat(document.getElementById('budgetMonto').value) || 0;
+      const elRango = document.getElementById('budgetRango');
+      const rango = elRango ? elRango.value.trim() : '';
+      const elEstado = document.getElementById('budgetEstado');
+      const estado = elEstado ? elEstado.value : 'Pendiente';
+      const tipo = section === 'extras' ? 'Extra' : (subsection === 'variables' ? 'Variable' : 'Fijo');
+
+      store.addBudgetItem(store.data.activeMonthId, section, subsection, {
+        concepto,
+        monto,
+        tipo,
+        rango,
+        estado
+      });
+
+      const modal = document.getElementById('modalAddBudget');
+      if (modal) modal.classList.remove('active');
+      renderMonthView();
+      showToast(`Gasto "${concepto}" agregado`, '✓');
     });
-
-    modalAddBudget.classList.remove('active');
-    renderMonthView();
-    showToast(`Gasto "${concepto}" agregado`, '✓');
-  });
+  }
 
   // --- MODAL: CONFIRMAR PAGO DE GASTO VARIABLE CON MONTO REAL ---
   let currentVariableRowTarget = null;
@@ -965,48 +989,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 120);
   }
 
-  document.getElementById('btnHeaderAddIncome').addEventListener('click', () => openMovementModal('Ingreso'));
-  document.getElementById('btnQuickActionIncome').addEventListener('click', () => openMovementModal('Ingreso'));
-  document.getElementById('btnQuickActionExpense').addEventListener('click', () => openMovementModal('Gasto'));
+  const btnHAddIncome = document.getElementById('btnHeaderAddIncome');
+  if (btnHAddIncome) btnHAddIncome.addEventListener('click', () => openMovementModal('Ingreso'));
+  const btnQAIncome = document.getElementById('btnQuickActionIncome');
+  if (btnQAIncome) btnQAIncome.addEventListener('click', () => openMovementModal('Ingreso'));
+  const btnQAExpense = document.getElementById('btnQuickActionExpense');
+  if (btnQAExpense) btnQAExpense.addEventListener('click', () => openMovementModal('Gasto'));
 
-  formAddMovement.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const concepto = document.getElementById('movConcepto').value.trim();
-    const monto = parseFloat(document.getElementById('movMonto').value) || 0;
-    const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
-    const fecha = inputMovFecha.value;
+  if (formAddMovement) {
+    formAddMovement.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const concepto = document.getElementById('movConcepto').value.trim();
+      const monto = parseFloat(document.getElementById('movMonto').value) || 0;
+      const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
+      const fecha = inputMovFecha.value;
 
-    store.addMovement(store.data.activeMonthId, {
-      concepto,
-      monto,
-      flujo,
-      categoria: flujo === 'Ingreso' ? 'Ingreso' : 'Gasto',
-      retornable: 'No',
-      estado: 'Pagado',
-      fecha
+      store.addMovement(store.data.activeMonthId, {
+        concepto,
+        monto,
+        flujo,
+        categoria: flujo === 'Ingreso' ? 'Ingreso' : 'Gasto',
+        retornable: 'No',
+        estado: 'Pagado',
+        fecha
+      });
+
+      modalAddMovement.classList.remove('active');
+      renderMonthView();
+      showToast(`${flujo} "${concepto}" registrado`, flujo === 'Ingreso' ? '↑' : '↓');
     });
-
-    modalAddMovement.classList.remove('active');
-    renderMonthView();
-    showToast(`${flujo} "${concepto}" registrado`, flujo === 'Ingreso' ? '↑' : '↓');
-  });
+  }
 
   // --- MODAL: AGREGAR NUEVO MES ---
   const formNewMonth = document.getElementById('formNewMonth');
   const selectCloneFrom = document.getElementById('newMonthCloneSelect');
+  const btnOpenNM = document.getElementById('btnOpenNewMonthModal');
 
-  document.getElementById('btnOpenNewMonthModal').addEventListener('click', () => {
-    formNewMonth.reset();
-    selectCloneFrom.innerHTML = '<option value="">-- No clonar (mes vacío) --</option>';
-    store.getAllMonthsList().forEach(m => {
-      const opt = document.createElement('option');
-      opt.value = m.id;
-      opt.textContent = `Clonar gastos recurrentes de ${m.nombre}`;
-      if (m.id === store.data.activeMonthId) opt.selected = true;
-      selectCloneFrom.appendChild(opt);
+  if (btnOpenNM && formNewMonth && selectCloneFrom) {
+    btnOpenNM.addEventListener('click', () => {
+      formNewMonth.reset();
+      selectCloneFrom.innerHTML = '<option value="">-- No clonar (mes vacío) --</option>';
+      store.getAllMonthsList().forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = `Clonar gastos recurrentes de ${m.nombre}`;
+        if (m.id === store.data.activeMonthId) opt.selected = true;
+        selectCloneFrom.appendChild(opt);
+      });
+      modalNewMonth.classList.add('active');
     });
-    modalNewMonth.classList.add('active');
-  });
+  }
 
   formNewMonth.addEventListener('submit', (e) => {
     e.preventDefault();

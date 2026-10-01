@@ -1143,6 +1143,72 @@ body {
   color: var(--text-emerald);
 }
 
+/* ==========================================================
+   INDICADOR DE CONEXIÓN (LOCALSTORAGE vs NUBE)
+   Usa las mismas variables del tema para no inventar un diseño nuevo.
+   ========================================================== */
+.conn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card-inner);
+  color: var(--text-muted);
+  transition: all 0.2s var(--ease-spring);
+}
+
+.conn-badge .conn-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.conn-badge.conn-offline {
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+}
+
+/* Cuando está en línea, el punto late apenas para indicar actividad. */
+.conn-badge.conn-online {
+  color: var(--text-emerald);
+  border-color: var(--accent-emerald-border);
+  background: var(--accent-emerald-light);
+}
+
+.conn-badge.conn-online .conn-dot {
+  box-shadow: 0 0 0 0 var(--accent-emerald);
+  animation: conn-pulse 2.4s var(--ease-spring) infinite;
+}
+
+@keyframes conn-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); }
+  70%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .conn-badge.conn-online .conn-dot { animation: none; }
+}
+
+/* Mensaje de error del formulario de acceso */
+.login-error-msg {
+  margin-top: 0.85rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-rose);
+  background: var(--accent-rose-light);
+  border: 1px solid var(--accent-rose-border);
+}
+
 /* Cuando la app está en modo solo lectura, ocultar elementos administrativos */
 body.read-only-mode .admin-action-btn,
 body.read-only-mode .btn-quick-add-service,

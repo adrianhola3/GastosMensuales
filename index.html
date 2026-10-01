@@ -146,8 +146,13 @@
 
       <!-- Footer del Sidebar: Seguridad y Nuevo Mes -->
       <div class="sidebar-footer">
+        <div id="indicadorConexion" class="conn-badge conn-offline"
+          title="Los datos se guardan solo en este navegador">
+          <span class="conn-dot"></span> <span id="indicadorConexionTexto">Sin conexión</span>
+        </div>
+
         <button type="button" id="btnToggleAuthMode" class="mode-badge readonly-active"
-          title="Haz clic para ingresar PIN y desbloquear edición">
+          title="Haz clic para ingresar y desbloquear la edición">
           <span id="authModeIcon">🔒</span> <span id="authModeLabel">Solo Lectura</span>
         </button>
 
@@ -616,42 +621,44 @@
               </div>
             </div>
 
-            <!-- Opción B: Modo Administrador -->
+            <!-- Opción B: Modo Administrador (aún no disponible) -->
             <div id="btnChooseAdmin" class="role-choice-card card-admin" role="button" tabindex="0">
               <div>
                 <div class="role-card-icon">👑</div>
                 <div class="role-card-titles" style="margin-top: 0.65rem;">
                   <h4>Administrador</h4>
-                  <p>Acceso completo con PIN de seguridad para registrar gastos, abonos, crear meses y editar datos.</p>
+                  <p>Acceso completo para registrar gastos, abonos, crear meses y editar datos. Se habilita al conectar la autenticación con el servidor.</p>
                 </div>
               </div>
               <div class="role-card-action-btn">
-                <span>Desbloquear con PIN</span>
+                <span>Ver disponibilidad</span>
                 <span>→</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Vista 2: Ingresar PIN de Administrador -->
-        <div id="roleSelectStepPin" style="display: none;">
-          <form id="formEntryAdminAuth">
-            <p style="color: var(--text-secondary); font-size: 0.86rem; margin-bottom: 1rem;">
-              Ingresa tu PIN de seguridad para habilitar la edición completa del sistema:
+        <!-- Vista 2: Aviso de función pendiente de backend (ya no se pide PIN) -->
+        <div id="roleSelectStepPending" style="display: none;">
+          <div style="text-align: center; padding: 0.5rem 0 0.25rem 0;">
+            <div style="font-size: 2.2rem; margin-bottom: 0.65rem;">🚧</div>
+            <h4 style="font-size: 1.05rem; font-family: var(--font-display); margin-bottom: 0.5rem;">
+              Modo Administrador en desarrollo
+            </h4>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5;">
+              La edición completa todavía no está disponible. El desbloqueo se conectará al
+              servidor para que nadie pueda activarlo desde el navegador.
             </p>
-            <div class="form-field">
-              <label for="entryAdminPinInput" style="font-size: 0.82rem; font-weight: 700;">PIN / Contraseña de Administrador</label>
-              <input type="password" id="entryAdminPinInput" class="form-input-lg font-mono"
-                placeholder="Ingresa PIN de Administrador" required autocomplete="current-password">
-              <div id="entryPinErrorFeedback" style="color: var(--text-rose); font-size: 0.78rem; margin-top: 6px; display: none;">
-                ⚠️ PIN o contraseña incorrecta. Inténtalo nuevamente.
-              </div>
-            </div>
-            <div style="display: flex; gap: 0.65rem; margin-top: 1.25rem; justify-content: flex-end;">
-              <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">← Volver</button>
-              <button type="submit" class="btn btn-primary btn-lg">Acceder como Administrador</button>
-            </div>
-          </form>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.75rem;">
+              Mientras tanto podés consultar todos los gastos en modo Solo Lectura.
+            </p>
+          </div>
+          <div style="display: flex; gap: 0.65rem; margin-top: 1.25rem; justify-content: flex-end;">
+            <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">← Volver</button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('modalSessionRoleSelect').classList.remove('active')">
+              Entrar como Lector
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -862,30 +869,57 @@
     </div>
   </div>
 
-  <!-- Modal 4: Desbloquear Modo Administrador (PIN) -->
+  <!-- Modal 4: Desbloquear Modo Administrador -->
+  <!-- Sin backend configurado: se muestra el aviso de "en desarrollo" (comportamiento actual).
+       Con backend configurado: se muestra el formulario real de correo y contraseña. -->
   <div id="modalAdminAuth" class="modal-overlay">
     <div class="modal-sheet" style="max-width: 420px;">
       <div class="modal-sheet-header">
         <h3>Acceso Administrador</h3>
         <button type="button" class="btn-close-sheet">✕</button>
       </div>
-      <form id="formAdminAuth">
+
+      <!-- Aviso actual: se usa cuando Supabase no está configurado -->
+      <div id="adminAuthAviso" class="modal-sheet-body" style="text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 0.65rem;">🚧</div>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5;">
+          La edición de presupuestos y el registro de gastos están <strong>en desarrollo</strong>.
+          El desbloqueo se conectará al servidor; por ahora no se pide ninguna contraseña.
+        </p>
+      </div>
+
+      <!-- Formulario real: se usa cuando Supabase está configurado -->
+      <form id="formAdminLogin" style="display: none;">
         <div class="modal-sheet-body">
-          <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1.25rem;">
-            Ingresa tu PIN de seguridad para habilitar la edición de presupuestos, registrar gastos y alternar pagos.
+          <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; margin-bottom: 1rem;">
+            Iniciá sesión con tu correo y contraseña para poder editar los presupuestos.
           </p>
           <div class="form-field">
-            <label for="adminPinInput">PIN / Contraseña de Administrador</label>
-            <input type="password" id="adminPinInput" class="form-input-lg font-mono"
-              placeholder="Ingresa PIN de Administrador" required autocomplete="current-password">
-            <small style="color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block;">
-              Acceso restringido para edición de presupuesto y flujo de caja.
-            </small>
+            <label for="adminLoginEmail">Correo electrónico</label>
+            <input type="email" id="adminLoginEmail" class="form-input-lg"
+              placeholder="tucorreo@ejemplo.com" autocomplete="username" required>
+          </div>
+          <div class="form-field">
+            <label for="adminLoginPassword">Contraseña</label>
+            <input type="password" id="adminLoginPassword" class="form-input-lg"
+              placeholder="••••••••" autocomplete="current-password" required>
+          </div>
+          <p id="adminLoginError" class="login-error-msg" style="display: none;"></p>
+
+          <!-- Acceso con GitHub (OAuth de Supabase). type="button" a propósito:
+               no debe disparar el submit del formulario de correo y contraseña. -->
+          <div class="form-field" style="margin-top: 1.25rem;">
+            <button type="button" id="btnAdminLoginGithub" class="btn btn-surface btn-lg"
+              style="width: 100%;"
+              onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGithub!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGithub().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con GitHub.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con GitHub</button>
+            <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 6px; text-align: center;">
+              Te lleva a GitHub para confirmar tu identidad. Regresas automáticamente a esta página.
+            </p>
           </div>
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
-          <button type="submit" class="btn btn-primary btn-lg">Desbloquear Edición</button>
+          <button type="submit" id="btnAdminLoginSubmit" class="btn btn-primary btn-lg">Entrar</button>
         </div>
       </form>
     </div>
@@ -898,6 +932,11 @@
   </div>
 
   <!-- Scripts -->
+  <!-- El orden importa: config y supabase-store deben existir ANTES que store.js,
+       porque el store busca window.gastosRemoto apenas se instancia. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-store.js"></script>
   <script src="js/store.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/app.js"></script>

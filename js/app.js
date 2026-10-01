@@ -2,6 +2,61 @@
  * APP.JS - Controlador moderno de interfaz de usuario (Neo-Fintech Redesign)
  */
 
+/**
+ * ÚNICO lugar del cliente donde se decide el rol de la sesión.
+ * El resto de la app solo consulta lo que aquí se devuelve.
+ *
+ * Antes el rol se decidía con ?admin=true y con un PIN escrito en este mismo archivo.
+ * Eso no era seguridad: cualquiera que abriera el link podía leer el PIN en el código
+ * fuente o simplemente agregar ?admin=true a la URL. Un secreto que viaja en el bundle
+ * no es un secreto, así que ya no hay ni PIN ni parámetros que otorguen admin.
+ *
+ * Ahora el rol sale de la sesión REAL de Supabase: si el usuario se autenticó,
+ * es administrador; si no, es lector. Sin backend configurado no hay sesión que
+ * consultar, así que todos quedan en lector y se mantiene el aviso de
+ * "funcionalidad en desarrollo" como antes.
+ *
+ * POR QUÉ SIGUE SIENDO SINCRÓNICA: hay varios lugares que la llaman sin esperarla
+ * (updateAuthModeUI, setRoleReadOnly, el arranque). Consultar la sesión de
+ * supabase-js es asíncrono, así que en vez de romper esos llamados se mantiene
+ * una copia en memoria que refresca refrescarSesion(). El valor por defecto es
+ * 'lector': ante cualquier duda, menos permisos.
+ */
+let sesionActual = { rol: 'lector', configurado: false };
+
+function obtenerSesion() {
+  return sesionActual;
+}
+
+/**
+ * Consulta la sesión real de Supabase y actualiza la copia en memoria.
+ * @returns {Promise<object>} la sesión ya actualizada.
+ */
+function refrescarSesion() {
+  const remoto = window.gastosRemoto;
+  if (!remoto || !remoto.estaConfigurado()) {
+    sesionActual = { rol: 'lector', configurado: false };
+    return Promise.resolve(sesionActual);
+  }
+
+  return Promise.resolve()
+    .then(() => (typeof remoto.esperarSesion === 'function' ? remoto.esperarSesion() : remoto.haySesion()))
+    .catch(() => false)
+    .then((hay) => {
+      sesionActual = { rol: hay ? 'admin' : 'lector', configurado: true };
+      return sesionActual;
+    });
+}
+
+/**
+ * Escapa texto antes de interpolarlo dentro de innerHTML.
+ * Sin esto, un concepto como `<img src=x onerror=alert(1)>` se ejecutaría como HTML.
+ * Se aplica a TODO dato que venga del usuario (o de un JSON importado).
+ */
+function escaparHTML(texto) {
+  return String(texto ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const store = window.financialStore;
   let activeFeedFilter = 'all'; // 'all', 'ingreso', 'gasto', 'pagado', 'pendiente'
@@ -23,48 +78,53 @@ document.addEventListener('DOMContentLoaded', () => {
   // Modales de Seguridad y Selección Inicial
   const modalSessionRoleSelect = document.getElementById('modalSessionRoleSelect');
   const roleSelectStepChoices = document.getElementById('roleSelectStepChoices');
-  const roleSelectStepPin = document.getElementById('roleSelectStepPin');
+  const roleSelectStepPending = document.getElementById('roleSelectStepPending');
   const btnChooseReadOnly = document.getElementById('btnChooseReadOnly');
   const btnChooseAdmin = document.getElementById('btnChooseAdmin');
   const btnBackToRoleChoices = document.getElementById('btnBackToRoleChoices');
-  const formEntryAdminAuth = document.getElementById('formEntryAdminAuth');
-  const entryAdminPinInput = document.getElementById('entryAdminPinInput');
-  const entryPinErrorFeedback = document.getElementById('entryPinErrorFeedback');
-
-  const modalAdminAuth = document.getElementById('modalAdminAuth');
-  const formAdminAuth = document.getElementById('formAdminAuth');
-  const adminPinInput = document.getElementById('adminPinInput');
 
   // Modo de Seguridad (Solo Lectura vs Administrador)
   const btnToggleAuthMode = document.getElementById('btnToggleAuthMode');
   const authModeIcon = document.getElementById('authModeIcon');
   const authModeLabel = document.getElementById('authModeLabel');
 
-  const urlParams = new URLSearchParams(window.location.search);
-  
-  // Limpiar cualquier flag persistente antiguo en localStorage
-  localStorage.removeItem('finanzas_is_admin');
+  // Indicador de modo de conexión (localStorage vs nube)
+  const indicadorConexion = document.getElementById('indicadorConexion');
+  const indicadorConexionTexto = document.getElementById('indicadorConexionTexto');
 
-  // Si se pasa parámetro seguro en la URL, pre-autenticar sesión
-  if (urlParams.get('admin') === 'true' || urlParams.get('pin') === 'adripro1234') {
-    sessionStorage.setItem('finanzas_is_admin', 'true');
-    sessionStorage.setItem('finanzas_session_role_chosen', 'admin');
-  } else if (urlParams.get('view') === 'readonly') {
-    sessionStorage.setItem('finanzas_is_admin', 'false');
-    sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
-  }
+  // Modal de acceso: aviso de "en desarrollo" o formulario real de login
+  const modalAdminAuth = document.getElementById('modalAdminAuth');
+  const adminAuthAviso = document.getElementById('adminAuthAviso');
+  const formAdminLogin = document.getElementById('formAdminLogin');
+  const adminLoginEmail = document.getElementById('adminLoginEmail');
+  const adminLoginPassword = document.getElementById('adminLoginPassword');
+  const adminLoginError = document.getElementById('adminLoginError');
+  const btnAdminLoginSubmit = document.getElementById('btnAdminLoginSubmit');
 
-  // Estado activo en la sesión (por defecto false hasta elegir)
-  let isAdmin = sessionStorage.getItem('finanzas_is_admin') === 'true';
+  // --- SESIÓN Y ROL ---
+  // El rol NO se decide acá: sale de obtenerSesion(), la única fuente de verdad.
+  // Se eliminó la lectura de query params (?admin=true / ?pin=...), que permitía
+  // obtener admin solo agregando un parámetro a la URL.
+  const sesion = obtenerSesion();
+  let isAdmin = sesion.rol === 'admin';
+
+  // Solo estado de interfaz: recuerda si en esta pestaña el usuario ya eligió
+  // cómo entrar. No concede ningún privilegio por sí mismo.
+  const ELECCION_ROL_KEY = 'finanzas_session_role_chosen';
 
   function updateAuthModeUI() {
+    const conNube = sesionActual.configurado;
     if (isAdmin) {
       document.body.classList.remove('read-only-mode');
       if (authModeIcon) authModeIcon.textContent = '👑';
       if (authModeLabel) authModeLabel.textContent = 'Modo Administrador';
       if (btnToggleAuthMode) {
         btnToggleAuthMode.className = 'mode-badge admin-active';
-        btnToggleAuthMode.title = 'Haz clic para bloquear y volver al modo solo lectura';
+        // Con backend conectado, este botón deja de ser un simple interruptor
+        // de interfaz y pasa a ser el cierre de sesión real.
+        btnToggleAuthMode.title = conNube
+          ? 'Haz clic para cerrar sesión y volver al modo solo lectura'
+          : 'Haz clic para bloquear y volver al modo solo lectura';
       }
     } else {
       document.body.classList.add('read-only-mode');
@@ -72,50 +132,103 @@ document.addEventListener('DOMContentLoaded', () => {
       if (authModeLabel) authModeLabel.textContent = 'Solo Lectura';
       if (btnToggleAuthMode) {
         btnToggleAuthMode.className = 'mode-badge readonly-active';
-        btnToggleAuthMode.title = 'Haz clic para ingresar PIN y desbloquear edición';
+        btnToggleAuthMode.title = conNube
+          ? 'Haz clic para iniciar sesión y desbloquear la edición'
+          : 'El desbloqueo de edición se activará al conectar el backend';
       }
+    }
+  }
+
+  // --- INDICADOR DE CONEXIÓN (T6) ---
+  // Mínimo y con las mismas variables del tema, para que no desentone.
+  function updateIndicadorConexion() {
+    if (!indicadorConexion) return;
+    const enLinea = sesionActual.configurado;
+    indicadorConexion.className = enLinea ? 'conn-badge conn-online' : 'conn-badge conn-offline';
+    if (indicadorConexionTexto) {
+      indicadorConexionTexto.textContent = enLinea ? 'En línea' : 'Sin conexión';
+    }
+    indicadorConexion.title = enLinea
+      ? 'Los datos se guardan en Supabase y también en este navegador'
+      : 'Los datos se guardan solo en este navegador';
+  }
+
+  // Aplica una sesión nueva a toda la interfaz. Se llama al arranque, después
+  // de iniciar/cerrar sesión y cuando Supabase avisa que cambió la sesión.
+  function aplicarSesion() {
+    const nueva = obtenerSesion();
+    isAdmin = nueva.rol === 'admin';
+    updateIndicadorConexion();
+    updateAuthModeUI();
+
+    // Si hay sesión válida, no tiene sentido seguir pidiendo elegir rol.
+    if (isAdmin) {
+      if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+      if (modalAdminAuth) modalAdminAuth.classList.remove('active');
+      if (adminLoginPassword) adminLoginPassword.value = '';
+      if (adminLoginError) adminLoginError.style.display = 'none';
     }
   }
 
   updateAuthModeUI();
+  updateIndicadorConexion();
 
-  function openRoleSelectModal(startAtPin = false) {
+  // mostrarAviso = true lleva directo al aviso de "pendiente de backend",
+  // que es lo que se ve al intentar editar sin tener rol de administrador.
+  function openRoleSelectModal(mostrarAviso = false) {
     if (!modalSessionRoleSelect) return;
-    if (startAtPin) {
-      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'none';
-      if (roleSelectStepPin) roleSelectStepPin.style.display = 'block';
-      if (entryAdminPinInput) {
-        entryAdminPinInput.value = '';
-        setTimeout(() => entryAdminPinInput.focus(), 150);
-      }
-    } else {
-      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'block';
-      if (roleSelectStepPin) roleSelectStepPin.style.display = 'none';
-    }
-    if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'none';
+    if (roleSelectStepChoices) roleSelectStepChoices.style.display = mostrarAviso ? 'none' : 'block';
+    if (roleSelectStepPending) roleSelectStepPending.style.display = mostrarAviso ? 'block' : 'none';
     modalSessionRoleSelect.classList.add('active');
   }
 
   function setRoleReadOnly() {
-    isAdmin = false;
-    sessionStorage.setItem('finanzas_is_admin', 'false');
-    sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
+    // Se vuelve a consultar obtenerSesion(): es el único lugar que decide el rol.
+    // La elección explícita de "lector" en esta pestaña solo puede RESTRINGIR el
+    // acceso, nunca ampliarlo: si hay sesión real pero el usuario pidió ver en
+    // modo lectura, se respeta su elección hasta que recargue o cierre sesión.
+    isAdmin = obtenerSesion().rol === 'admin' &&
+      sessionStorage.getItem(ELECCION_ROL_KEY) !== 'lector';
+    sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
     updateAuthModeUI();
     if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
     showToast('Ingresaste en Modo Solo Lectura', '🔒');
   }
 
-  function setRoleAdmin() {
-    isAdmin = true;
-    sessionStorage.setItem('finanzas_is_admin', 'true');
-    sessionStorage.setItem('finanzas_session_role_chosen', 'admin');
-    updateAuthModeUI();
-    if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
-    showToast('¡Modo Administrador desbloqueado!', '👑');
+  /**
+   * Abre el modal de acceso al administrador.
+   * Sin backend configurado se muestra el aviso de "en desarrollo" (igual que
+   * antes). Con backend configurado se muestra el formulario de correo y
+   * contraseña, que es lo único que puede dar acceso de verdad.
+   */
+  function openAdminAuthModal() {
+    if (!modalAdminAuth) return;
+    const conNube = sesionActual.configurado;
+
+    if (adminAuthAviso) adminAuthAviso.style.display = conNube ? 'none' : 'block';
+    if (formAdminLogin) formAdminLogin.style.display = conNube ? 'block' : 'none';
+    if (adminLoginError) {
+      adminLoginError.style.display = 'none';
+      adminLoginError.textContent = '';
+    }
+
+    modalAdminAuth.classList.add('active');
+
+    if (conNube && adminLoginEmail) {
+      setTimeout(() => adminLoginEmail.focus(), 80);
+    }
   }
 
-  // AL ENTRAR A LA PÁGINA: Salta inmediatamente la opción a elegir si no se ha elegido aún en esta sesión
-  const hasChosenRole = sessionStorage.getItem('finanzas_session_role_chosen');
+  function mostrarErrorLogin(mensaje) {
+    if (!adminLoginError) return;
+    adminLoginError.textContent = mensaje;
+    adminLoginError.style.display = 'block';
+  }
+
+  // AL ENTRAR A LA PÁGINA: muestra la selección si no se eligió en esta pestaña.
+  // Se espera a resolver la sesión de Supabase: si el usuario ya tiene la sesión
+  // abierta, hay que entrar directo como administrador y no preguntarle nada.
+  const hasChosenRole = sessionStorage.getItem(ELECCION_ROL_KEY);
   if (!hasChosenRole) {
     setTimeout(() => {
       openRoleSelectModal(false);
@@ -131,69 +244,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnChooseAdmin) {
     btnChooseAdmin.addEventListener('click', () => {
-      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'none';
-      if (roleSelectStepPin) roleSelectStepPin.style.display = 'block';
-      if (entryAdminPinInput) {
-        entryAdminPinInput.value = '';
-        setTimeout(() => entryAdminPinInput.focus(), 120);
-      }
+      // Antes este botón pedía un PIN. Ese PIN estaba escrito en el código fuente,
+      // así que no protegía nada. Ahora el desbloqueo depende del backend y se
+      // informa con claridad, en vez de simular una contraseña falsa.
+      if (sesionActual.configurado) openAdminAuthModal();
+      else openRoleSelectModal(true);
     });
   }
 
   if (btnBackToRoleChoices) {
     btnBackToRoleChoices.addEventListener('click', () => {
-      if (roleSelectStepChoices) roleSelectStepChoices.style.display = 'block';
-      if (roleSelectStepPin) roleSelectStepPin.style.display = 'none';
-      if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'none';
+      openRoleSelectModal(false);
     });
   }
 
-  if (formEntryAdminAuth) {
-    formEntryAdminAuth.addEventListener('submit', (e) => {
+  // Envío del login real
+  if (formAdminLogin) {
+    formAdminLogin.addEventListener('submit', (e) => {
       e.preventDefault();
-      const enteredPin = (entryAdminPinInput ? entryAdminPinInput.value : '').trim();
-      const validPin = localStorage.getItem('finanzas_admin_pin') || 'adripro1234';
-
-      if (enteredPin === 'adripro1234' || enteredPin === validPin) {
-        setRoleAdmin();
-      } else {
-        if (entryPinErrorFeedback) entryPinErrorFeedback.style.display = 'block';
-        if (entryAdminPinInput) {
-          entryAdminPinInput.value = '';
-          entryAdminPinInput.focus();
-        }
+      const remoto = window.gastosRemoto;
+      if (!remoto || !remoto.estaConfigurado()) {
+        mostrarErrorLogin('La nube no está configurada. Completá los datos en js/config.js.');
+        return;
       }
+
+      const email = adminLoginEmail ? adminLoginEmail.value : '';
+      const password = adminLoginPassword ? adminLoginPassword.value : '';
+
+      if (!email || !password) {
+        mostrarErrorLogin('Escribí tu correo y tu contraseña.');
+        return;
+      }
+
+      if (btnAdminLoginSubmit) {
+        btnAdminLoginSubmit.disabled = true;
+        btnAdminLoginSubmit.textContent = 'Entrando…';
+      }
+
+      remoto.iniciarSesion(email, password)
+        .then(resultado => {
+          if (resultado && resultado.ok) {
+            sesionActual = { rol: 'admin', configurado: true };
+            sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+            aplicarSesion();
+            showToast('Sesión iniciada. Modo Administrador activo.', '👑');
+          } else {
+            // Se muestra el mensaje real de Supabase, ya traducido al español.
+            mostrarErrorLogin(resultado && resultado.error
+              ? resultado.error
+              : 'No se pudo iniciar sesión.');
+          }
+        })
+        .catch(err => {
+          console.error('Error inesperado en el login:', err);
+          mostrarErrorLogin('Ocurrió un error inesperado. Intentá de nuevo.');
+        })
+        .then(() => {
+          if (btnAdminLoginSubmit) {
+            btnAdminLoginSubmit.disabled = false;
+            btnAdminLoginSubmit.textContent = 'Entrar';
+          }
+        });
     });
   }
 
-  // Botón del pie del Sidebar para alternar modo en cualquier momento
+  // Botón del pie del Sidebar: con backend conectado hace de cierre de sesión.
   if (btnToggleAuthMode) {
     btnToggleAuthMode.addEventListener('click', () => {
+      const remoto = window.gastosRemoto;
+
       if (isAdmin) {
-        isAdmin = false;
-        sessionStorage.setItem('finanzas_is_admin', 'false');
-        sessionStorage.setItem('finanzas_session_role_chosen', 'readonly');
-        updateAuthModeUI();
-        showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
+        if (remoto && sesionActual.configurado) {
+          // Cierre de sesión real: corta la sesión en el servidor.
+          Promise.resolve(remoto.salirDeSesion())
+            .catch(() => {})
+            .then(() => {
+              sesionActual = { rol: 'lector', configurado: true };
+              sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
+              aplicarSesion();
+              showToast('Sesión cerrada. Modo Solo Lectura.', '🔒');
+            });
+        } else {
+          sesionActual = { rol: 'lector', configurado: sesionActual.configurado };
+          sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
+          aplicarSesion();
+          showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
+        }
       } else {
-        openRoleSelectModal(true);
-      }
-    });
-  }
-
-  if (formAdminAuth) {
-    formAdminAuth.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const enteredPin = adminPinInput.value.trim();
-      const validPin = localStorage.getItem('finanzas_admin_pin') || 'adripro1234';
-
-      if (enteredPin === 'adripro1234' || enteredPin === validPin) {
-        setRoleAdmin();
-        if (modalAdminAuth) modalAdminAuth.classList.remove('active');
-      } else {
-        alert('PIN o contraseña incorrecta.');
-        adminPinInput.value = '';
-        adminPinInput.focus();
+        if (sesionActual.configurado) openAdminAuthModal();
+        else openRoleSelectModal(true);
       }
     });
   }
@@ -236,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `month-pill-btn ${m.id === activeId ? 'active' : ''}`;
-      btn.innerHTML = `<span>${m.nombre}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
+      btn.innerHTML = `<span>${escaparHTML(m.nombre)}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
 
       btn.addEventListener('click', () => {
         switchView('mes', m.id);
@@ -483,12 +622,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
       row.innerHTML = `
         <div class="expense-item-info">
-          <div class="expense-item-title">${item.concepto}</div>
+          <div class="expense-item-title">${escaparHTML(item.concepto)}</div>
           <div class="expense-item-tags">
             <span class="tag-badge ${item.tipo === 'Variable' ? 'tag-variable' : ''}">
-              ${item.tipo || 'Fijo'}
+              ${escaparHTML(item.tipo || 'Fijo')}
             </span>
-            ${item.rango ? `<span class="tag-badge font-mono">Rango: ${item.rango}</span>` : ''}
+            ${item.rango ? `<span class="tag-badge font-mono">Rango: ${escaparHTML(item.rango)}</span>` : ''}
           </div>
         </div>
 
@@ -497,13 +636,13 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div>
-          <button type="button" class="btn-status-toggle ${isPaid ? 'status-pagado' : 'status-pendiente'}" data-item-id="${item.id}" title="Presiona para cambiar estado">
+          <button type="button" class="btn-status-toggle ${isPaid ? 'status-pagado' : 'status-pendiente'}" data-item-id="${escaparHTML(item.id)}" title="Presiona para cambiar estado">
             ${isPaid ? '✓ Pagado' : '⏳ Pendiente'}
           </button>
         </div>
 
         <div>
-          <button type="button" class="btn-ghost-rose btn-delete-expense admin-action-btn" data-item-id="${item.id}" title="Eliminar gasto">
+          <button type="button" class="btn-ghost-rose btn-delete-expense admin-action-btn" data-item-id="${escaparHTML(item.id)}" title="Eliminar gasto">
             ✕
           </button>
         </div>
@@ -577,11 +716,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ${isIngreso ? '↑' : '↓'}
           </div>
           <div class="tx-details">
-            <h4>${m.concepto}</h4>
+            <h4>${escaparHTML(m.concepto)}</h4>
             <p>
-              <span class="font-mono">${m.fecha || 'Sin fecha'}</span>
+              <span class="font-mono">${escaparHTML(m.fecha || 'Sin fecha')}</span>
               <span>•</span>
-              <span style="font-weight: 700; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${m.flujo || 'Movimiento'}</span>
+              <span style="font-weight: 700; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${escaparHTML(m.flujo || 'Movimiento')}</span>
             </p>
           </div>
         </div>
@@ -637,8 +776,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       tr.innerHTML = `
         <td>
-          <button type="button" class="matrix-month-btn" data-month-id="${r.monthId}">
-            <span>🗓 ${r.nombre}</span>
+          <button type="button" class="matrix-month-btn" data-month-id="${escaparHTML(r.monthId)}">
+            <span>🗓 ${escaparHTML(r.nombre)}</span>
             <span style="font-size: 0.8rem; opacity: 0.8;">→</span>
           </button>
           ${isCurrentActive ? '<span class="matrix-active-badge">Activo</span>' : ''}
@@ -1321,6 +1460,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2600);
   }
 
-  // Inicialización
+  // Inicialización: se dibuja ya con la copia local para que la app abra
+  // instantánea, sin esperar a la red.
   switchView(store.data.currentView || 'mes');
+
+  // --- ARRANQUE ASÍNCRONO: nube y sesión ---
+  // 1) Cuando la carga remota termine y traiga datos distintos, se redibuja.
+  if (typeof store.alCambiarEstado === 'function') {
+    store.alCambiarEstado(() => {
+      switchView(store.data.currentView || 'mes');
+    });
+  }
+
+  // 2) Se resuelve la sesión real de Supabase y se refleja en toda la interfaz.
+  const remoto = window.gastosRemoto;
+  if (remoto && typeof remoto.alCambiarSesion === 'function') {
+    remoto.alCambiarSesion(() => {
+      // Un cambio de sesión fuera de este flujo (por ejemplo, cerrar sesión en
+      // otra pestaña) se respeta igual.
+      if (remoto.haySesion()) {
+        sesionActual = { rol: 'admin', configurado: true };
+        sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+      } else {
+        sesionActual = { rol: 'lector', configurado: remoto.estaConfigurado() };
+        sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
+      }
+      aplicarSesion();
+    });
+  }
+
+  refrescarSesion()
+    .then(() => {
+      aplicarSesion();
+      // Si la sesión ya estaba activa, el aviso de "en desarrollo" y la
+      // selección de rol sobran: se ocultan y se entra directo a editar.
+      if (obtenerSesion().rol === 'admin') {
+        if (modalAdminAuth) modalAdminAuth.classList.remove('active');
+        if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+        showToast('Sesión activa. Modo Administrador.', '👑');
+      }
+    })
+    .catch(e => {
+      console.warn('No se pudo resolver la sesión inicial:', e);
+    });
 });

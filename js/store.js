@@ -91,57 +91,30 @@ function getDefaultData() {
 
 class FinancialStore {
   constructor() {
-    this.data = this.load();
+    // this.data tiene que ser SIEMPRE un objeto válido de forma síncrona: el
+    // resto de la app (y los getters) lo leen apenas se instancia el store.
+    // Por eso la copia local se lee de inmediato y la nube se resuelve después,
+    // sin bloquear el arranque.
+    this.oyentes = [];
+    this.remotoListo = false; // evita subir a la nube antes de leer lo que hay arriba
+    this.data = this.leerLocal() || getDefaultData();
+    this.pendienteCarga = this.load();
   }
 
-  load() {
+  /**
+   * Lee SOLO la copia local. Es sincrónico y es el que garantiza que la app
+   * abra al instante, aunque no haya red.
+   *
+   * No borra ni filtra datos del usuario: si el archivo está estructuralmente
+   * roto, sanear() lo repara y recién ahí se vuelve a persistir.
+   */
+  leerLocal() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (parsed && parsed.meses && parsed.mesesOrden) {
-          // Asegurar que ningún mes tenga movimientos mock residuales para que empiece en cero por defecto
-          let cleaned = false;
-          Object.keys(parsed.meses).forEach(id => {
-            const m = parsed.meses[id];
-            if (m && m.movimientos && m.movimientos.length > 0) {
-              const prevLen = m.movimientos.length;
-              m.movimientos = m.movimientos.filter(item => item.concepto !== 'Yapeo de 559' && item.concepto !== 'Matrícula 2026-B');
-              if (m.movimientos.length !== prevLen) cleaned = true;
-            }
-            // Asegurar que servicios.variables tenga el gasto base de productos de casa como Pendiente
-            if (m && m.servicios) {
-              if (!m.servicios.variables || m.servicios.variables.length === 0) {
-                m.servicios.variables = [
-                  { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, papel...', monto: 30.00, tipo: 'Variable', rango: '20-40', estado: 'Pendiente' }
-                ];
-                cleaned = true;
-              } else {
-                // Asegurarse de que esté en estado Pendiente
-                m.servicios.variables.forEach(v => {
-                  if (v.concepto.includes('Productos de casa') && v.estado === 'Pagado') {
-                    v.estado = 'Pendiente';
-                    cleaned = true;
-                  }
-                });
-              }
-            }
-
-            // Eliminar permanentemente Spotify de todos los meses
-            if (m && m.personales) {
-              if (m.personales.fijos) {
-                const prevLen = m.personales.fijos.length;
-                m.personales.fijos = m.personales.fijos.filter(item => !item.concepto.toLowerCase().includes('spotify'));
-                if (m.personales.fijos.length !== prevLen) cleaned = true;
-              }
-              if (m.personales.variables) {
-                const prevLen = m.personales.variables.length;
-                m.personales.variables = m.personales.variables.filter(item => !item.concepto.toLowerCase().includes('spotify'));
-                if (m.personales.variables.length !== prevLen) cleaned = true;
-              }
-            }
-          });
-          if (cleaned) {
+          if (this.sanear(parsed)) {
             this.save(parsed);
           }
           return parsed;
@@ -155,14 +128,177 @@ class FinancialStore {
     return initial;
   }
 
-  save(dataToSave = null) {
+  /**
+   * Carga el estado. Ahora es asíncrono porque la fuente de verdad puede ser
+   * Supabase, pero el resultado nunca rompe a quien lo llama: si la nube no está
+   * configurada o no responde, sigue con la copia local.
+   *
+   * Orden de resolución:
+   *   1) Si hay datos en la nube, esos mandan.
+   *   2) Si no hay fila en la nube, se sube la copia local (migración) y se usa.
+   *   3) Si no hay nube configurada, es el comportamiento local de siempre.
+   *
+   * @returns {Promise<object>} el estado ya cargado
+   */
+  async load() {
+    let remoto = null;
+    let hayFilaRemota = false;
+
+    if (window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
+      try {
+        remoto = await window.gastosRemoto.cargar();
+        hayFilaRemota = !!remoto;
+      } catch (e) {
+        console.warn('No se pudo leer de Supabase, se usa la copia local:', e);
+      }
+    }
+
+    // Recién ahora se permite escribir en la nube. Antes de este punto está
+    // prohibido: si se subiera la copia local antes de leer la nube, se
+    // pisarían los datos que ya estaban guardados en el servidor.
+    this.remotoListo = true;
+
+    let estado;
+    if (hayFilaRemota) {
+      if (this.sanear(remoto)) {
+        this.save(remoto);
+      }
+      estado = remoto;
+    } else {
+      // Sin fila en la nube: la copia local pasa a ser la fuente y se sube.
+      estado = this.leerLocal();
+      if (estado && window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
+        try {
+          await window.gastosRemoto.guardar(estado);
+        } catch (e) {
+          console.warn('No se pudo subir la copia local a Supabase:', e);
+        }
+      }
+    }
+
+    // Solo se avisa a la interfaz si el contenido cambió de verdad.
+    const cambio = JSON.stringify(estado) !== JSON.stringify(this.data);
+    this.data = estado;
+    if (cambio) this.notificar();
+
+    return estado;
+  }
+
+  /** Suscribe un callback que se dispara cuando el estado cambia de origen. */
+  alCambiarEstado(cb) {
+    if (typeof cb === 'function') this.oyentes.push(cb);
+  }
+
+  notificar() {
+    this.oyentes.forEach(cb => {
+      try { cb(this.data); } catch (e) { console.error('Error al notificar cambio de estado:', e); }
+    });
+  }
+
+  /**
+   * Corrige SOLO la estructura: crea los contenedores que falten para que la app
+   * no reviente al calcular, y normaliza los tipos que los cálculos asumen.
+   *
+   * POR QUÉ SE QUITÓ EL FILTRADO POR TEXTO DE CONCEPTO (estaba aquí antes):
+   * load() borraba en cada carga todo concepto que contuviera 'spotify', reinyectaba
+   * 'Productos de casa' y revolvía a 'Pendiente' cualquier gasto que el usuario acababa
+   * de marcar como pagado. Consecuencias: un gasto de Spotify se perdía para siempre
+   * y marcar un ítem como pagado se revertía al recargar. El archivo de datos no tiene
+   * autoridad para decidir qué contiene: los datos del usuario son intocables.
+   *
+   * Este método es idempotente: solo vuelve a persistir si de verdad faltaba algo,
+   * así que en la práctica escribe una sola vez por sesión.
+   *
+   * @returns {boolean} true si corrigió algo (para decidir si hay que guardar)
+   */
+  sanear(data) {
+    let cambios = false;
+
+    if (!data.meses) data.meses = {};
+    if (!Array.isArray(data.mesesOrden)) {
+      data.mesesOrden = Object.keys(data.meses);
+      cambios = true;
+    }
+    if (typeof data.activeMonthId !== 'string' || !data.meses[data.activeMonthId]) {
+      data.activeMonthId = data.mesesOrden.find(id => data.meses[id]) || null;
+      cambios = true;
+    }
+
+    Object.keys(data.meses).forEach(id => {
+      const m = data.meses[id];
+      if (!m || typeof m !== 'object') return;
+
+      // Las listas que faltan se crean VACÍAS. Antes se rellenaban con un gasto
+      // inventado, lo que además de falsear totales metía datos que el usuario
+      // nunca registró.
+      if (!Array.isArray(m.movimientos)) { m.movimientos = []; cambios = true; }
+      if (!Array.isArray(m.extras)) { m.extras = []; cambios = true; }
+      if (typeof m.notas !== 'string') { m.notas = ''; cambios = true; }
+
+      ['servicios', 'personales'].forEach(seccion => {
+        if (!m[seccion] || typeof m[seccion] !== 'object') { m[seccion] = {}; cambios = true; }
+        ['fijos', 'variables'].forEach(sub => {
+          if (!Array.isArray(m[seccion][sub])) { m[seccion][sub] = []; cambios = true; }
+        });
+      });
+
+      // Tipos mínimos que asertan los cálculos: sin esto un import corrupto
+      // rompe el .reduce() de montos y deja la pantalla en blanco.
+      const listas = [
+        ...Object.values(m.servicios),
+        ...Object.values(m.personales),
+        m.extras,
+        m.movimientos
+      ].filter(Array.isArray);
+
+      listas.forEach(lista => {
+        lista.forEach(item => {
+          if (!item || typeof item !== 'object') return;
+          if (typeof item.concepto !== 'string') { item.concepto = ''; cambios = true; }
+          if (item.monto === undefined || item.monto === null || item.monto === '') {
+            item.monto = 0;
+            cambios = true;
+          }
+          if (typeof item.estado !== 'string' || !item.estado) {
+            item.estado = 'Pendiente';
+            cambios = true;
+          }
+        });
+      });
+    });
+
+    return cambios;
+  }
+
+  /**
+   * Guarda el estado.
+   *
+   * localStorage se escribe SIEMPRE y de forma sincrónica: es la caché offline y,
+   * cuando Supabase no está configurado, es la única copia que existe. Por eso
+   * la función no espera a nada antes de escribir y los mutadores siguen
+   * llamándola sin esperarla, exactamente como antes.
+   *
+   * La nube se actualiza en segundo plano y con un instantánea (copia profunda)
+   * del estado: si se pasara la referencia, un cambio posterior del usuario
+   * llegaría al servidor en un guardado más viejo.
+   */
+  async save(dataToSave = null) {
     if (dataToSave) {
       this.data = dataToSave;
     }
+
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
     } catch (e) {
       console.error('Error al guardar datos en LocalStorage:', e);
+    }
+
+    if (this.remotoListo && window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
+      try {
+        await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(this.data)));
+      } catch (e) {
+        console.warn('No se pudo sincronizar con Supabase:', e);
+      }
     }
   }
 
@@ -242,11 +378,30 @@ class FinancialStore {
     const porcentajePagado = totalEgresos > 0 ? (montoPagadoPresupuesto / totalEgresos) * 100 : 0;
     const pendientesCount = totalItemsPresupuesto - pagadosCount;
 
-    // Total gastado durante el mes: lo pagado del presupuesto + gastos registrados en movimientos
-    const totalGastadoReal = montoPagadoPresupuesto + totalEgresosMovimientos;
+    // --- Fuentes de egresos: SON INDEPENDIENTES entre sí, no son el mismo dato ---
+    // 1) montoPagadoPresupuesto: ítems del PRESUPUESTO PLANEADO marcados como Pagado.
+    // 2) totalEgresosMovimientos: gastos sueltos anotados en el FLUJO DE CAJA (el feed).
+    //
+    // Evidencia de que no hay doble conteo estructural:
+    //  · Un movimiento se crea con su propio id y NO guarda ninguna referencia al ítem
+    //    de presupuesto (ver addMovement: no escribe presupuestoId ni nada equivalente).
+    //  · Los esquemas son disjuntos: el ítem tiene tipo/rango, el movimiento tiene
+    //    fecha/flujo/categoria/retornable.
+    //  · El presupuesto solo modela egres. Los INGRESOS existen únicamente en los
+    //    movimientos, así que el feed no puede ser un duplicado del presupuesto: sin él
+    //    no habría forma de registrar un abono en toda la app.
+    //
+    // Ojo con el uso: si el usuario marca "Celular" como Pagado en el presupuesto Y
+    // además anota un Gasto "Celular" en el feed, ahí sí se cuenta dos veces. Eso es
+    // una duplicación manual del usuario, no un defecto de la fórmula, y la app no
+    // enlaza ambos registros. Se documenta para no confundirlo con un bug.
+    //
+    // La suma es correcta; lo engañoso era el nombre "totalGastadoReal", que sugería
+    // que una sola cifra reflejaba "lo real". Se renombra a totalDesembolsado.
+    const totalDesembolsado = montoPagadoPresupuesto + totalEgresosMovimientos;
 
-    // Balance Neto = Total ingresado en el mes - Total efectivamente gastado durante el mes
-    const balanceNeto = totalIngresos - totalGastadoReal;
+    // Balance Neto = ingresos del feed - todo lo desembolsado (presupuesto pagado + gastos del feed)
+    const balanceNeto = totalIngresos - totalDesembolsado;
 
     // Cumplimiento (% de abonos sobre total egresos presupuestados)
     const porcentajeAvance = totalEgresos > 0 ? Math.min(100, (totalIngresos / totalEgresos) * 100) : 0;
@@ -281,7 +436,7 @@ class FinancialStore {
       totalEgresos,
       totalIngresos,
       totalEgresosMovimientos,
-      totalGastadoReal,
+      totalDesembolsado,
       balanceNeto,
       porcentajeAvance,
       totalItemsPresupuesto,
@@ -307,7 +462,7 @@ class FinancialStore {
     let globalServicios = 0;
     let globalPersonales = 0;
     let globalExtras = 0;
-    let globalGastadoReal = 0;
+    let globalDesembolsado = 0;
 
     const rows = this.data.mesesOrden.map(id => {
       const m = this.data.meses[id];
@@ -319,7 +474,7 @@ class FinancialStore {
       globalServicios += c.subtotalServicios;
       globalPersonales += c.subtotalPersonales;
       globalExtras += c.subtotalExtras;
-      globalGastadoReal += c.totalGastadoReal;
+      globalDesembolsado += c.totalDesembolsado;
 
       return {
         monthId: id,
@@ -330,13 +485,13 @@ class FinancialStore {
         extras: c.subtotalExtras,
         totalEgresos: c.totalEgresos,
         ingresos: c.totalIngresos,
-        totalGastadoReal: c.totalGastadoReal,
+        totalDesembolsado: c.totalDesembolsado,
         balanceNeto: c.balanceNeto,
         porcentajeAvance: c.porcentajeAvance
       };
     }).filter(Boolean);
 
-    const globalBalanceNeto = globalIngresos - globalGastadoReal;
+    const globalBalanceNeto = globalIngresos - globalDesembolsado;
     const globalPorcentajeCumplimiento = globalEgresos > 0 ? (globalIngresos / globalEgresos) * 100 : 0;
 
     return {
@@ -347,7 +502,7 @@ class FinancialStore {
       globalServicios,
       globalPersonales,
       globalExtras,
-      globalGastadoReal,
+      globalDesembolsado,
       rows
     };
   }

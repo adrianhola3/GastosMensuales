@@ -132,6 +132,19 @@
       typeof window.supabase.createClient === 'function';
   }
 
+  /**
+   * URL de la página sin query ni fragmento, para usarla como destino de retorno.
+   *
+   * Importante: la app usa '#' para navegar, así que window.location.href puede
+   * terminar en '#' o traer parámetros de la redirección anterior. Si se pasa tal
+   * cual a Supabase, al volver se arma una URL con doble '#' ('##access_token=...')
+   * y el SDK no reconoce el token: la sesión nunca se abre y el usuario queda
+   * como visitante sin ninguna pista de por qué.
+   */
+  function urlDeRetornoLimpia() {
+    return window.location.origin + window.location.pathname;
+  }
+
   function notificarSesion() {
     oyentesSesion.forEach(cb => {
       try { cb(haySesion()); } catch (e) { console.error('Error en listener de sesión:', e); }
@@ -151,10 +164,22 @@
 
     try {
       const { url, key } = credenciales();
-      cliente = window.supabase.createClient(url, key);
 
-      // Supabase emite INITIAL_SESSION al recuperar la sesión guardada.
-      // A partir de ahí ya se puede levantar el estado de "hay sesión".
+      // detectSessionInUrl: Supabase lee el token que vuelve en el fragmento de
+      // la URL, lo intercambia por una sesión y lo limpia de la barra de
+      // direcciones. Sin esto, un login exitoso deja al usuario fuera.
+      // flowType 'pkce' evita además que el token de acceso viaje en la URL.
+      cliente = window.supabase.createClient(url, key, {
+        auth: {
+          detectSessionInUrl: true,
+          flowType: 'pkce',
+          persistSession: true,
+          autoRefreshToken: true
+        }
+      });
+
+      // Supabase emite INITIAL_SESSION al recuperar la sesión guardada, y
+      // PASSWORD_RECOVERY / SIGNED_IN al volver del proveedor OAuth.
       cliente.auth.onAuthStateChange((evento, sesion) => {
         if (resolverSesionInicial) {
           resolverSesionInicial(sesion);
@@ -264,7 +289,7 @@
     return cli.auth
       .signInWithOAuth({
         provider: PROVEEDOR_OAUTH,
-        options: { redirectTo: window.location.href }
+        options: { redirectTo: urlDeRetornoLimpia() }
       })
       .then(({ data, error }) => {
         if (error) return { ok: false, error: traducirError(error) };
@@ -327,6 +352,13 @@
 
       const temporizador = setTimeout(() => terminar(haySesion()), SESION_INICIAL_TIMEOUT_MS);
       resolverSesionInicial = (sesion) => terminar(!!sesion);
+
+      // getSession() resuelve de forma asíncrona y es más fiable que la caché
+      // en memoria: al volver del proveedor OAuth el token todavía se está
+      // intercambiando por una sesión, y este await espera a que termine.
+      Promise.resolve(cli.auth.getSession())
+        .then(({ data }) => terminar(!!(data && data.session)))
+        .catch(() => terminar(haySesion()));
     });
   }
 

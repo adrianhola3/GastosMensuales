@@ -5,9 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Gastos & Presupuesto</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <!-- Chart.js para visualización de métricas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -198,6 +195,13 @@
              ========================================================== -->
         <section id="viewMes" class="view-container active">
 
+          <!-- Encabezado de la vista. Existe también como h2 (no h3) para no
+               saltar de h1 a h3 dentro de la vista mensual. -->
+          <div class="view-header">
+            <h2 class="view-heading">Detalle Mensual</h2>
+            <p class="view-subheading">Activa las categorías que quieras revisar en paralelo.</p>
+          </div>
+
           <!-- Selector de Segmentos (Píldoras con minibarras interactivas ocupando todo el ancho) -->
           <div class="segments-navigation-bar">
             <!-- 1. Ver Todo a la izquierda -->
@@ -265,10 +269,9 @@
 
             <!-- Mensaje cuando no hay segmentos seleccionados -->
             <div id="noSegmentsSelectedNotice" class="empty-segments-notice" style="display: none;">
-              <div style="font-size: 2.2rem; margin-bottom: 0.6rem;">👆</div>
-              <h4 style="font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 0.35rem;">Ninguna
-                categoría seleccionada</h4>
-              <p style="color: var(--text-secondary); font-size: 0.9rem;">
+              <div class="empty-notice-glyph">👆</div>
+              <h4>Ninguna categoría seleccionada</h4>
+              <p>
                 Haz clic en uno o más botones arriba para desplegar las categorías deseadas de forma simultánea.
               </p>
             </div>
@@ -472,10 +475,9 @@
         <section id="viewPanel" class="view-container">
 
           <!-- Encabezado de la Sección -->
-          <div style="margin-bottom: 2rem;">
-            <h2 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 0.65rem;"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-card" /> Consolidado General Multimes</h2>
-            <p style="color: var(--text-secondary); margin-top: 4px;">Seguimiento acumulado de todos los períodos del
-              año</p>
+          <div class="view-header">
+            <h2 class="view-heading"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-card" /> Consolidado General Multimes</h2>
+            <p class="view-subheading">Seguimiento acumulado de todos los períodos del año</p>
           </div>
 
           <!-- Tarjetas de Métricas Globales (3 indicadores limpios) -->
@@ -592,7 +594,7 @@
     <div class="modal-sheet" style="max-width: 540px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <div style="font-size: 1.6rem;">🔐</div>
+          <div class="modal-glyph">🔐</div>
           <div>
             <h3 style="font-size: 1.15rem; font-family: var(--font-display);">Acceso al Gestor Financiero</h3>
             <p style="font-size: 0.76rem; color: var(--text-secondary); margin-top: 2px;">
@@ -641,7 +643,7 @@
         <!-- Vista 2: Aviso de función pendiente de backend (ya no se pide PIN) -->
         <div id="roleSelectStepPending" style="display: none;">
           <div style="text-align: center; padding: 0.5rem 0 0.25rem 0;">
-            <div style="font-size: 2.2rem; margin-bottom: 0.65rem;">🚧</div>
+            <div class="modal-glyph" style="margin-bottom: 0.65rem;">🚧</div>
             <h4 style="font-size: 1.05rem; font-family: var(--font-display); margin-bottom: 0.5rem;">
               Modo Administrador en desarrollo
             </h4>
@@ -765,7 +767,7 @@
     <div class="modal-sheet" style="max-width: 440px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span style="font-size: 1.2rem;">💰</span>
+          <span class="modal-glyph">💰</span>
           <div>
             <h3 style="font-size: 1.05rem;">Confirmar Pago Variable</h3>
             <p id="modalPayVarSubtitle" style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">
@@ -881,7 +883,7 @@
 
       <!-- Aviso actual: se usa cuando Supabase no está configurado -->
       <div id="adminAuthAviso" class="modal-sheet-body" style="text-align: center;">
-        <div style="font-size: 2.2rem; margin-bottom: 0.65rem;">🚧</div>
+        <div class="modal-glyph" style="margin-bottom: 0.65rem;">🚧</div>
         <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5;">
           La edición de presupuestos y el registro de gastos están <strong>en desarrollo</strong>.
           El desbloqueo se conectará al servidor; por ahora no se pide ninguna contraseña.

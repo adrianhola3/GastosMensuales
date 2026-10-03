@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const conNube = sesionActual.configurado;
     if (isAdmin) {
       document.body.classList.remove('read-only-mode');
-      if (authModeIcon) authModeIcon.textContent = '👑';
+      if (authModeIcon) authModeIcon.textContent = '';
       if (authModeLabel) authModeLabel.textContent = 'Modo Administrador';
       if (btnToggleAuthMode) {
         btnToggleAuthMode.className = 'mode-badge admin-active';
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       document.body.classList.add('read-only-mode');
-      if (authModeIcon) authModeIcon.textContent = '🔒';
+      if (authModeIcon) authModeIcon.textContent = '';
       if (authModeLabel) authModeLabel.textContent = 'Solo Lectura';
       if (btnToggleAuthMode) {
         btnToggleAuthMode.className = 'mode-badge readonly-active';
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
     updateAuthModeUI();
     if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
-    showToast('Ingresaste en Modo Solo Lectura', '🔒');
+    showToast('Ingresaste en Modo Solo Lectura', '');
   }
 
   /**
@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sesionActual = { rol: 'admin', configurado: true };
             sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
             aplicarSesion();
-            showToast('Sesión iniciada. Modo Administrador activo.', '👑');
+            showToast('Sesión iniciada. Modo Administrador activo.', '');
           } else {
             // Se muestra el mensaje real de Supabase, ya traducido al español.
             mostrarErrorLogin(resultado && resultado.error
@@ -322,13 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
               sesionActual = { rol: 'lector', configurado: true };
               sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
               aplicarSesion();
-              showToast('Sesión cerrada. Modo Solo Lectura.', '🔒');
+              showToast('Sesión cerrada. Modo Solo Lectura.', '');
             });
         } else {
           sesionActual = { rol: 'lector', configurado: sesionActual.configurado };
           sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
           aplicarSesion();
-          showToast('Modo Solo Lectura activado. Edición bloqueada.', '🔒');
+          showToast('Modo Solo Lectura activado. Edición bloqueada.', '');
         }
       } else {
         if (sesionActual.configurado) openAdminAuthModal();
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = `month-pill-btn ${m.id === activeId ? 'active' : ''}`;
-      btn.innerHTML = `<span>${escaparHTML(m.nombre)}</span> <span style="opacity:0.6; font-size:0.75rem;">${m.id === activeId ? '●' : '›'}</span>`;
+      btn.innerHTML = `<span>${escaparHTML(m.nombre)}</span> <span style="font-size: var(--text-xs);">${m.id === activeId ? '' : ''}</span>`;
 
       btn.addEventListener('click', () => {
         switchView('mes', m.id);
@@ -453,8 +453,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
       btnOpenNotes.classList.toggle('has-notes', hasNotes);
       btnOpenNotes.innerHTML = hasNotes
-        ? `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas <span class="notes-dot-badge">●</span>`
-        : `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas`;
+        ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
+        : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
     }
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
     const elPaidTextInfo = document.getElementById('paidTextInfo');
     if (elPaidTextInfo) {
-      elPaidTextInfo.innerHTML = `<span>✓</span> Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
+      elPaidTextInfo.innerHTML = ` Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
     }
     const elPaidPercentBadge = document.getElementById('paidPercentBadge');
     if (elPaidPercentBadge) {
@@ -524,17 +524,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elPaidSummaryLabel = document.getElementById('paidSummaryLabel');
     if (elPaidSummaryLabel) {
-      elPaidSummaryLabel.textContent = `✓ Pagado: ${window.formatCurrency(totals.montoPagadoPresupuesto)}`;
+      elPaidSummaryLabel.textContent = `Pagado: ${window.formatCurrency(totals.montoPagadoPresupuesto)}`;
     }
     const elPendingSummaryLabel = document.getElementById('pendingSummaryLabel');
     if (elPendingSummaryLabel) {
-      elPendingSummaryLabel.textContent = `⏳ Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
+      elPendingSummaryLabel.textContent = `Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
     }
 
     const pctAvance = totals.porcentajeAvance.toFixed(1);
     const elCoverageTextInfo = document.getElementById('coverageTextInfo');
     if (elCoverageTextInfo) {
-      elCoverageTextInfo.textContent = `📈 Cobertura: ${pctAvance}%`;
+      elCoverageTextInfo.textContent = `Cobertura: ${pctAvance}%`;
     }
 
     // Actualizar indicador en topbar
@@ -608,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (items.length === 0) {
       container.innerHTML = `
-        <div style="padding: 1.25rem 1.75rem; color: var(--text-muted); font-size: 0.88rem; font-style: italic;">
+        <div style="padding: var(--space-3) var(--space-3); color: var(--text-muted); font-size: var(--text-md);">
           Sin gastos registrados en esta categoría.
         </div>
       `;
@@ -637,13 +637,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         <div>
           <button type="button" class="btn-status-toggle ${isPaid ? 'status-pagado' : 'status-pendiente'}" data-item-id="${escaparHTML(item.id)}" title="Presiona para cambiar estado">
-            ${isPaid ? '✓ Pagado' : '⏳ Pendiente'}
+            ${isPaid ? 'Pagado' : 'Pendiente'}
           </button>
         </div>
 
         <div>
           <button type="button" class="btn-ghost-rose btn-delete-expense admin-action-btn" data-item-id="${escaparHTML(item.id)}" title="Eliminar gasto">
-            ✕
+            <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg>
           </button>
         </div>
       `;
@@ -658,9 +658,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const newState = store.toggleBudgetItemStatus(monthId, item.id);
           item.estado = newState;
           toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
-          toggleBtn.textContent = newState === 'Pagado' ? '✓ Pagado' : '⏳ Pendiente';
+          toggleBtn.textContent = newState === 'Pagado' ? 'Pagado' : 'Pendiente';
           updateLiveProgressAndTotals(monthId);
-          showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '✓' : '⏳');
+          showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '' : '');
         }
       });
 
@@ -671,7 +671,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
             store.deleteBudgetItem(monthId, item.id);
             renderMonthView();
-            showToast(`Gasto "${item.concepto}" eliminado`, '🗑');
+            showToast(`Gasto "${item.concepto}" eliminado`, '');
           }
         });
       }
@@ -697,7 +697,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (filtered.length === 0) {
       feedContainer.innerHTML = `
         <div class="empty-feed-placeholder">
-          <div style="font-size: 2rem; margin-bottom: 0.5rem;">💸</div>
           <strong>No hay movimientos registrados</strong>
           <p>Usa los botones superiores para registrar un ingreso o gasto.</p>
         </div>
@@ -713,14 +712,14 @@ document.addEventListener('DOMContentLoaded', () => {
       item.innerHTML = `
         <div class="tx-left">
           <div class="tx-icon-circle ${isIngreso ? 'tx-icon-ingreso' : 'tx-icon-gasto'}">
-            ${isIngreso ? '↑' : '↓'}
+            ${isIngreso ? '<svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 10l4.5-4.5L12.5 10"/></svg>' : '<svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 6l4.5 4.5L12.5 6"/></svg>'}
           </div>
           <div class="tx-details">
             <h4>${escaparHTML(m.concepto)}</h4>
             <p>
               <span class="font-mono">${escaparHTML(m.fecha || 'Sin fecha')}</span>
               <span>•</span>
-              <span style="font-weight: 700; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${escaparHTML(m.flujo || 'Movimiento')}</span>
+              <span style="font-weight: 600; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${escaparHTML(m.flujo || 'Movimiento')}</span>
             </p>
           </div>
         </div>
@@ -729,7 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="tx-amount font-mono ${isIngreso ? 'tx-amount-ingreso' : 'tx-amount-gasto'}">
             ${isIngreso ? '+' : '-'} ${window.formatCurrency(m.monto)}
           </div>
-          <button type="button" class="btn-ghost-rose btn-delete-tx admin-action-btn" title="Eliminar movimiento">✕</button>
+          <button type="button" class="btn-ghost-rose btn-delete-tx admin-action-btn" title="Eliminar movimiento"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
         </div>
       `;
 
@@ -740,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (confirm(`¿Eliminar movimiento "${m.concepto}"?`)) {
             store.deleteMovement(month.id, m.id);
             renderMonthView();
-            showToast(`Movimiento eliminado`, '🗑');
+            showToast(`Movimiento eliminado`, '');
           }
         });
       }
@@ -774,26 +773,32 @@ document.addEventListener('DOMContentLoaded', () => {
       const pct = r.porcentajeAvance;
       const isCurrentActive = r.monthId === store.data.activeMonthId;
 
-      tr.innerHTML = `
+      // DIRECTIVA 6 (color = estado o accion, nunca identidad repetida): en la
+// matriz, "Total Egresos" iba en rose y "Total Ingresos" en emerald en las 6
+// filas, o sea 12 celdas de color repetido que no comunicaban nada nuevo: el
+// signo y el encabezado ya dicen cual es cual. Se van a neutro.
+// El unico color por fila queda en "Balance Neto", que SI cambia de signo y es
+// el unico dato de la fila cuyo estado es variable. Eso es color con
+// significado, no decoracion.
+tr.innerHTML = `
         <td>
           <button type="button" class="matrix-month-btn" data-month-id="${escaparHTML(r.monthId)}">
-            <span>🗓 ${escaparHTML(r.nombre)}</span>
-            <span style="font-size: 0.8rem; opacity: 0.8;">→</span>
+            <span>${escaparHTML(r.nombre)}</span>
           </button>
           ${isCurrentActive ? '<span class="matrix-active-badge">Activo</span>' : ''}
         </td>
         <td class="font-mono text-right">${window.formatCurrency(r.servicios)}</td>
         <td class="font-mono text-right">${window.formatCurrency(r.personales)}</td>
         <td class="font-mono text-right">${window.formatCurrency(r.extras)}</td>
-        <td class="font-mono text-right" style="color: var(--accent-rose); font-weight: 700;">${window.formatCurrency(r.totalEgresos)}</td>
-        <td class="font-mono text-right" style="color: var(--accent-emerald); font-weight: 700;">${window.formatCurrency(r.ingresos)}</td>
-        <td class="font-mono text-right" style="font-weight: 800; color: ${r.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(r.totalEgresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(r.ingresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 600; color: ${r.balanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
           ${window.formatCurrency(r.balanceNeto)}
         </td>
-        <td class="font-mono text-center" style="font-weight: 700;">${pct.toFixed(1)}%</td>
+        <td class="font-mono text-center" style="font-weight: 600;">${pct.toFixed(1)}%</td>
         <td style="min-width: 130px; text-align: center;">
-          <div style="height: 8px; background: var(--bg-card-inner); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle); margin: 0 auto;">
-            <div style="width: ${Math.min(100, pct)}%; height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-emerald)); border-radius: 999px;"></div>
+          <div style="height: 6px; background: var(--bg-inset); border-radius: var(--radius-pill); overflow: hidden; margin: 0 auto;">
+            <div style="width: ${Math.min(100, pct)}%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-pill);"></div>
           </div>
         </td>
       `;
@@ -807,18 +812,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fila de Totales
     const tfoot = document.getElementById('globalMatrixFoot');
+    // Fila de Totales. DIRECTIVA 5: "TOTAL AÑO" pasa a sentence case, y el
+    // color se queda solo en el balance (el unico que cambia de signo).
     tfoot.innerHTML = `
       <tr>
-        <td style="font-weight: 800; color: #ffffff;">TOTAL AÑO</td>
-        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalServicios)}</td>
-        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalPersonales)}</td>
-        <td class="font-mono text-right" style="font-weight: 700;">${window.formatCurrency(totals.globalExtras)}</td>
-        <td class="font-mono text-right" style="color: var(--accent-rose); font-weight: 800;">${window.formatCurrency(totals.globalEgresos)}</td>
-        <td class="font-mono text-right" style="color: var(--accent-emerald); font-weight: 800;">${window.formatCurrency(totals.globalIngresos)}</td>
-        <td class="font-mono text-right" style="font-weight: 800; color: ${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+        <td style="font-weight: 600; color: var(--text-main);">Total del año</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(totals.globalServicios)}</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(totals.globalPersonales)}</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(totals.globalExtras)}</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(totals.globalEgresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 600;">${window.formatCurrency(totals.globalIngresos)}</td>
+        <td class="font-mono text-right" style="font-weight: 600; color: ${totals.globalBalanceNeto >= 0 ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
           ${window.formatCurrency(totals.globalBalanceNeto)}
         </td>
-        <td class="font-mono text-center" style="font-weight: 800;">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
+        <td class="font-mono text-center" style="font-weight: 600;">${totals.globalPorcentajeCumplimiento.toFixed(1)}%</td>
         <td></td>
       </tr>
     `;
@@ -1076,7 +1083,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currIdx > 0) {
       switchView('mes', order[currIdx - 1]);
     } else {
-      showToast('Estás en el primer mes registrado', 'ℹ');
+      showToast('Estás en el primer mes registrado', '');
     }
   });
 
@@ -1086,7 +1093,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currIdx < order.length - 1) {
       switchView('mes', order[currIdx + 1]);
     } else {
-      showToast('Estás en el último mes registrado', 'ℹ');
+      showToast('Estás en el último mes registrado', '');
     }
   });
 
@@ -1129,7 +1136,7 @@ document.addEventListener('DOMContentLoaded', () => {
       notesTimer = setTimeout(() => {
         store.updateNotes(store.data.activeMonthId, notesTextarea.value);
         if (notesFeedback) {
-          notesFeedback.textContent = '✓ Guardado automáticamente';
+          notesFeedback.textContent = 'Guardado automáticamente';
           setTimeout(() => {
             notesFeedback.textContent = 'Guardado en tiempo real';
           }, 2000);
@@ -1139,8 +1146,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
           btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
           btnOpenNotesModal.innerHTML = hasNotes
-            ? `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas <span class="notes-dot-badge">●</span>`
-            : `<img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas`;
+            ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
+            : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
         }
       }, 400);
     });
@@ -1228,7 +1235,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('modalAddBudget');
       if (modal) modal.classList.remove('active');
       renderMonthView();
-      showToast(`Gasto "${concepto}" agregado`, '✓');
+      showToast(`Gasto "${concepto}" agregado`, '');
     });
   }
 
@@ -1296,7 +1303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const toggleBtn = currentVariableRowTarget.querySelector('.btn-status-toggle');
         if (toggleBtn) {
           toggleBtn.className = 'btn-status-toggle status-pagado';
-          toggleBtn.textContent = '✓ Pagado';
+          toggleBtn.textContent = 'Pagado';
         }
         const amountEl = currentVariableRowTarget.querySelector('.expense-item-amount');
         if (amountEl) {
@@ -1311,7 +1318,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('modalPayVariableExpense');
       if (modal) modal.classList.remove('active');
 
-      showToast(`Gasto pagado por ${window.formatCurrency(realAmount)}`, '✓');
+      showToast(`Gasto pagado por ${window.formatCurrency(realAmount)}`, '');
     });
   }
 
@@ -1371,7 +1378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       modalAddMovement.classList.remove('active');
       renderMonthView();
-      showToast(`${flujo} "${concepto}" registrado`, flujo === 'Ingreso' ? '↑' : '↓');
+      showToast(`${flujo} "${concepto}" registrado`, flujo === 'Ingreso' ? '' : '');
     });
   }
 
@@ -1404,7 +1411,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newId = store.addNewMonth(nombre, cloneId);
     modalNewMonth.classList.remove('active');
     switchView('mes', newId);
-    showToast(`Nuevo mes "${nombre}" creado`, '🎉');
+    showToast(`Nuevo mes "${nombre}" creado`, '');
   });
 
   // Cierre general de modales
@@ -1449,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- TOAST NOTIFICATIONS ---
   let toastTimer = null;
-  function showToast(message, icon = '✓') {
+  function showToast(message, icon = '') {
     if (!toastEl) return;
     toastIcon.textContent = icon;
     toastText.textContent = message;
@@ -1497,7 +1504,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (obtenerSesion().rol === 'admin') {
         if (modalAdminAuth) modalAdminAuth.classList.remove('active');
         if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
-        showToast('Sesión activa. Modo Administrador.', '👑');
+        showToast('Sesión activa. Modo Administrador.', '');
       }
     })
     .catch(e => {

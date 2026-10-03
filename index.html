@@ -25,24 +25,24 @@
       <!-- Brand & Header -->
       <div class="sidebar-brand">
         <div class="brand-left">
-          <div class="brand-logo-box"><img src="assets/icons/analitica.jpg" alt="Logo" class="ui-icon-img ui-icon-brand" /></div>
+          <div class="brand-logo-box"><svg class="ui-icon-img ui-icon-brand ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></div>
           <div class="brand-texts">
             <h1 class="brand-title">Gestor Financiero</h1>
             <span class="brand-sub">Presupuesto & Gastos</span>
           </div>
         </div>
-        <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="Cerrar panel">✕</button>
+        <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="Cerrar panel"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
 
       <!-- Switcher de Vistas -->
       <div class="sidebar-section">
         <div class="sidebar-nav-tabs">
           <button type="button" id="btnNavMes" class="sidebar-nav-tab active">
-            <span class="nav-tab-icon"><img src="assets/icons/calendario.jpg" alt="Mes" class="ui-icon-img ui-icon-nav" /></span>
+            <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"/></svg></span>
             <span>Vista Mensual</span>
           </button>
           <button type="button" id="btnNavPanel" class="sidebar-nav-tab">
-            <span class="nav-tab-icon"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-nav" /></span>
+            <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></span>
             <span>Consolidado</span>
           </button>
         </div>
@@ -51,7 +51,7 @@
       <!-- Barra de Búsqueda Ejecutiva en Columna Izquierda -->
       <div class="sidebar-section sidebar-search-section">
         <div class="sidebar-search-box">
-          <span class="search-box-icon">🔍</span>
+          <span class="search-box-icon"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="6.8" cy="6.8" r="4.3"/><path d="M10 10l3.4 3.4"/></svg></span>
           <input 
             type="text" 
             id="sidebarSearchInput" 
@@ -60,7 +60,7 @@
             autocomplete="off"
             spellcheck="false"
           >
-          <button type="button" id="btnClearSidebarSearch" class="btn-clear-search" title="Limpiar búsqueda" style="display: none;">✕</button>
+          <button type="button" id="btnClearSidebarSearch" class="btn-clear-search" title="Limpiar búsqueda" style="display: none;"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
           <kbd class="search-shortcut-badge" title="Presiona '/' para buscar">/</kbd>
         </div>
         <div id="sidebarSearchResultsFeedback" class="search-results-feedback" style="display: none;">
@@ -71,10 +71,10 @@
       <!-- Selector de Período / Meses -->
       <div class="sidebar-section">
         <div class="sidebar-section-header">
-          <span class="sidebar-section-label">PERÍODO ACTIVO</span>
+          <span class="sidebar-section-label">Período activo</span>
           <div class="sidebar-nav-arrows">
-            <button type="button" id="btnPrevMonth" class="mini-nav-arrow" title="Mes Anterior">◀</button>
-            <button type="button" id="btnNextMonth" class="mini-nav-arrow" title="Mes Siguiente">▶</button>
+            <button type="button" id="btnPrevMonth" class="mini-nav-arrow" title="Mes Anterior"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></button>
+            <button type="button" id="btnNextMonth" class="mini-nav-arrow" title="Mes Siguiente"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.5L10.5 8 6 12.5"/></svg></button>
           </div>
         </div>
         <div id="monthPillsContainer" class="sidebar-month-pills-list">
@@ -85,17 +85,17 @@
       <!-- Resumen Financiero Ejecutivo (Métricas Reorganizadas y Compactas) -->
       <div class="sidebar-section sidebar-metrics-section">
         <div class="sidebar-section-header">
-          <span class="sidebar-section-label">RESUMEN DEL MES</span>
+          <span class="sidebar-section-label">Resumen del mes</span>
           <span id="monthAbonoPercentLabel" class="sidebar-coverage-badge font-mono">0.0%</span>
         </div>
 
         <!-- 1. Ingresos & Abonos -->
         <div class="sidebar-metric-card border-emerald">
           <div class="metric-card-top">
-            <span class="metric-card-title">↑ Ingresos & Abonos</span>
+            <span class="metric-card-title">Ingresos &amp; Abonos</span>
             <button type="button" id="btnHeaderAddIncome"
               class="btn-sidebar-quick-action action-income admin-action-btn" title="Registrar nuevo abono">
-              ＋ Abono
+              Abono
             </button>
           </div>
           <div id="monthTotalIngresos" class="metric-card-number font-mono text-emerald">S/ 0.00</div>
@@ -105,10 +105,10 @@
         <!-- 2. Gastos Presupuestados -->
         <div class="sidebar-metric-card border-rose">
           <div class="metric-card-top">
-            <span class="metric-card-title">↓ Presupuesto Gastos</span>
+            <span class="metric-card-title">Presupuesto Gastos</span>
             <button type="button" id="btnHeaderAddBudget"
               class="btn-sidebar-quick-action action-expense admin-action-btn" title="Añadir nuevo gasto presupuestado">
-              ＋ Gasto
+              Gasto
             </button>
           </div>
           <div id="monthTotalEgresos" class="metric-card-number font-mono text-rose">S/ 0.00</div>
@@ -118,7 +118,7 @@
         <!-- 3. Balance Neto -->
         <div class="sidebar-metric-card border-cyan">
           <div class="metric-card-top">
-            <span class="metric-card-title">⇄ Balance Neto</span>
+            <span class="metric-card-title">Balance Neto</span>
           </div>
           <div id="monthBalanceNeto" class="metric-card-number font-mono text-cyan">S/ 0.00</div>
           <div id="monthBalanceStatusLabel" class="metric-card-detail">Ingresos menos gastos</div>
@@ -134,9 +134,9 @@
             <div id="paidBarFill" class="paid-bar-fill" style="width: 0%;"></div>
           </div>
           <div class="sidebar-progress-chips">
-            <span id="paidSummaryLabel" class="mini-chip chip-paid">✓ S/ 0.00</span>
-            <span id="pendingSummaryLabel" class="mini-chip chip-pending">⏳ S/ 0.00</span>
-            <span id="coverageTextInfo" class="mini-chip chip-coverage">📈 0.0%</span>
+            <span id="paidSummaryLabel" class="mini-chip chip-paid">S/ 0.00</span>
+            <span id="pendingSummaryLabel" class="mini-chip chip-pending">S/ 0.00</span>
+            <span id="coverageTextInfo" class="mini-chip chip-coverage">0.0%</span>
           </div>
         </div>
       </div>
@@ -150,12 +150,12 @@
 
         <button type="button" id="btnToggleAuthMode" class="mode-badge readonly-active"
           title="Haz clic para ingresar y desbloquear la edición">
-          <span id="authModeIcon">🔒</span> <span id="authModeLabel">Solo Lectura</span>
+          <span id="authModeIcon"></span> <span id="authModeLabel">Solo Lectura</span>
         </button>
 
         <button type="button" id="btnOpenNewMonthModal" class="btn btn-surface btn-sm admin-action-btn"
           title="Crear o duplicar un mes">
-          <span>＋</span> Nuevo Mes
+          Nuevo Mes
         </button>
       </div>
     </aside>
@@ -174,7 +174,7 @@
             <span class="hamburger-bar"></span>
           </button>
           <div class="topbar-month-pill">
-            <span id="activeMonthHeaderBadge" class="font-mono">🗓 Período Actual</span>
+            <span id="activeMonthHeaderBadge" class="font-mono">Período Actual</span>
           </div>
         </div>
         <div class="topbar-right">
@@ -183,7 +183,7 @@
             <span id="topbarBalanceValue" class="kpi-mini-val font-mono">S/ 0.00</span>
           </div>
           <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes">
-            <img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-xs" /> Notas
+            <svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas
           </button>
         </div>
       </header>
@@ -208,7 +208,7 @@
             <button type="button" class="segment-pill-btn pill-btn-all" data-segment="all"
               title="Ver / Contraer todas las categorías simultáneamente">
               <div class="pill-top-row">
-                <span class="pill-label-with-icon"><img src="assets/icons/vertodo.jpg" alt="Ver Todo" class="ui-icon-img ui-icon-pill" /> Ver Todo</span>
+                <span class="pill-label-with-icon"><svg class="ui-icon-img ui-icon-pill ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5L14 5.5 8 8.5 2 5.5 8 2.5z"/><path d="M2.75 9.5L8 11.75l5.25-2.25"/></svg> Ver Todo</span>
               </div>
               <div class="pill-minibar-track">
                 <div class="pill-minibar-fill" style="width: 100%; background: var(--accent-primary);"></div>
@@ -219,7 +219,7 @@
             <button type="button" class="segment-pill-btn" data-segment="servicios"
               title="Haz clic para activar/desactivar Servicios">
               <div class="pill-top-row">
-                <span class="pill-label-with-icon"><img src="assets/icons/servicios.jpg" alt="Servicios" class="ui-icon-img ui-icon-pill" /> Servicios</span>
+                <span class="pill-label-with-icon"><svg class="ui-icon-img ui-icon-pill ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 7.25L8 2.75l5.5 4.5"/><path d="M4.25 6.25v6.75a1 1 0 0 0 1 1h5.5a1 1 0 0 0 1-1V6.25"/></svg> Servicios</span>
                 <span id="badgeSegServicios" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Servicios">
@@ -231,7 +231,7 @@
             <button type="button" class="segment-pill-btn" data-segment="personales"
               title="Haz clic para activar/desactivar Gastos Personales">
               <div class="pill-top-row">
-                <span class="pill-label-with-icon"><img src="assets/icons/personales.jpg" alt="Personales" class="ui-icon-img ui-icon-pill" /> Personales</span>
+                <span class="pill-label-with-icon"><svg class="ui-icon-img ui-icon-pill ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="2.25"/><path d="M3.5 13.75a4.5 4.5 0 0 1 9 0"/></svg> Personales</span>
                 <span id="badgeSegPersonales" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Personales">
@@ -243,7 +243,7 @@
             <button type="button" class="segment-pill-btn" data-segment="movimientos"
               title="Haz clic para activar/desactivar Movimientos">
               <div class="pill-top-row">
-                <span class="pill-label-with-icon"><img src="assets/icons/movimientos.jpg" alt="Movimientos" class="ui-icon-img ui-icon-pill" /> Movimientos</span>
+                <span class="pill-label-with-icon"><svg class="ui-icon-img ui-icon-pill ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 5.5h10M10 2.75L12.75 5.5 10 8.25M13.5 10.5h-10M6 7.75L3.25 10.5 6 13.25"/></svg> Movimientos</span>
                 <span id="badgeSegMovimientos" class="segment-count-badge font-mono">0 movs</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de movimientos">
@@ -255,7 +255,7 @@
             <button type="button" class="segment-pill-btn" data-segment="extras"
               title="Haz clic para activar/desactivar Gastos Extras">
               <div class="pill-top-row">
-                <span class="pill-label-with-icon"><img src="assets/icons/extras.jpg" alt="Extras" class="ui-icon-img ui-icon-pill" /> Extras</span>
+                <span class="pill-label-with-icon"><svg class="ui-icon-img ui-icon-pill ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.8L9.38 6.5L13.33 6.67L10.24 7.67L11.29 12.93L9.38 10.3L4.71 12.93L6.62 10.3L2.67 6.67L5.76 7.67Z"/></svg> Extras</span>
                 <span id="badgeSegExtras" class="segment-count-badge font-mono">S/ 0.00</span>
               </div>
               <div class="pill-minibar-track" title="Progreso de pagos en Extras">
@@ -269,7 +269,6 @@
 
             <!-- Mensaje cuando no hay segmentos seleccionados -->
             <div id="noSegmentsSelectedNotice" class="empty-segments-notice" style="display: none;">
-              <div class="empty-notice-glyph">👆</div>
               <h4>Ninguna categoría seleccionada</h4>
               <p>
                 Haz clic en uno o más botones arriba para desplegar las categorías deseadas de forma simultánea.
@@ -281,11 +280,11 @@
               <div class="content-card-header accordion-header" data-accordion-target="servicios"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/servicios.jpg" alt="Servicios" class="ui-icon-img ui-icon-card" /></div>
+                  <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 7.25L8 2.75l5.5 4.5"/><path d="M4.25 6.25v6.75a1 1 0 0 0 1 1h5.5a1 1 0 0 0 1-1V6.25"/></svg></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Servicios del Hogar</h3>
-                      <span class="accordion-chevron-icon" title="Expandir / Contraer">▼</span>
+                      <span class="accordion-chevron-icon" title="Expandir / Contraer"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg></span>
                     </div>
                     <p>Luz, internet, telefonía, pasajes y necesidades del hogar</p>
                   </div>
@@ -294,7 +293,7 @@
                   <span id="summaryTagServicios" class="accordion-summary-tag font-mono">S/ 0.00</span>
                   <button type="button" class="btn btn-surface btn-sm btn-quick-add-service admin-action-btn"
                     onclick="event.stopPropagation();">
-                    ＋ Añadir
+                    Añadir
                   </button>
                 </div>
               </div>
@@ -302,8 +301,7 @@
               <div class="accordion-collapsible-body">
                 <!-- Fijos -->
                 <div class="category-subhead">
-                  <span>Gastos Fijos</span>
-                  <span>Estado / Monto</span>
+                  <span>Gastos fijos</span>
                 </div>
                 <div id="listServiciosFijos">
                   <!-- Renderizado dinámico -->
@@ -315,8 +313,7 @@
 
                 <!-- Variables -->
                 <div class="category-subhead">
-                  <span>Gastos Variables</span>
-                  <span>Rango Sugerido</span>
+                  <span>Gastos variables</span>
                 </div>
                 <div id="listServiciosVariables">
                   <!-- Renderizado dinámico -->
@@ -327,8 +324,8 @@
                 </div>
 
                 <div class="subtotal-highlight-row main-subtotal">
-                  <span>TOTAL SERVICIOS DEL HOGAR:</span>
-                  <span id="subtotalTotalServicios" class="font-mono" style="color: var(--cat-servicios);">S/ 0.00</span>
+                  <span>Total servicios del hogar</span>
+                  <span id="subtotalTotalServicios" class="font-mono">S/ 0.00</span>
                 </div>
               </div>
             </div>
@@ -338,11 +335,11 @@
               <div class="content-card-header accordion-header" data-accordion-target="personales"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/personales.jpg" alt="Personales" class="ui-icon-img ui-icon-card" /></div>
+                  <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="2.25"/><path d="M3.5 13.75a4.5 4.5 0 0 1 9 0"/></svg></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Gastos Personales</h3>
-                      <span class="accordion-chevron-icon" title="Expandir / Contraer">▼</span>
+                      <span class="accordion-chevron-icon" title="Expandir / Contraer"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg></span>
                     </div>
                     <p>Gimnasio, suscripciones, salud dermatológica y cuidado personal</p>
                   </div>
@@ -351,7 +348,7 @@
                   <span id="summaryTagPersonales" class="accordion-summary-tag font-mono">S/ 0.00</span>
                   <button type="button" class="btn btn-surface btn-sm btn-quick-add-personal admin-action-btn"
                     onclick="event.stopPropagation();">
-                    ＋ Añadir
+                    Añadir
                   </button>
                 </div>
               </div>
@@ -359,8 +356,7 @@
               <div class="accordion-collapsible-body">
                 <!-- Fijos -->
                 <div class="category-subhead">
-                  <span>Gastos Fijos</span>
-                  <span>Estado / Monto</span>
+                  <span>Gastos fijos</span>
                 </div>
                 <div id="listPersonalesFijos">
                   <!-- Renderizado dinámico -->
@@ -372,8 +368,7 @@
 
                 <!-- Variables -->
                 <div class="category-subhead">
-                  <span>Gastos Variables</span>
-                  <span>Rango sugerido</span>
+                  <span>Gastos variables</span>
                 </div>
                 <div id="listPersonalesVariables">
                   <!-- Renderizado dinámico -->
@@ -385,8 +380,8 @@
 
                 <!-- Subtotal General Personales -->
                 <div class="subtotal-highlight-row main-subtotal">
-                  <span>TOTAL GASTOS PERSONALES:</span>
-                  <span id="subtotalTotalPersonales" class="font-mono" style="color: var(--cat-personales);">S/ 0.00</span>
+                  <span>Total gastos personales</span>
+                  <span id="subtotalTotalPersonales" class="font-mono">S/ 0.00</span>
                 </div>
               </div>
             </div>
@@ -396,11 +391,11 @@
               <div class="content-card-header accordion-header" data-accordion-target="movimientos"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/movimientos.jpg" alt="Movimientos" class="ui-icon-img ui-icon-card" /></div>
+                  <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 5.5h10M10 2.75L12.75 5.5 10 8.25M13.5 10.5h-10M6 7.75L3.25 10.5 6 13.25"/></svg></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Movimientos del Mes</h3>
-                      <span class="accordion-chevron-icon" title="Expandir / Contraer">▼</span>
+                      <span class="accordion-chevron-icon" title="Expandir / Contraer"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg></span>
                     </div>
                     <p>Abonos, transferencias bancarias y pagos ejecutados</p>
                   </div>
@@ -412,10 +407,10 @@
                 <!-- Dos Botones Grandes de Acción Rápida -->
                 <div class="quick-action-buttons-grid">
                   <button type="button" id="btnQuickActionIncome" class="btn btn-success btn-lg admin-action-btn">
-                    <span>↑</span> Registrar Ingreso
+                    Registrar Ingreso
                   </button>
                   <button type="button" id="btnQuickActionExpense" class="btn btn-danger btn-lg admin-action-btn">
-                    <span>↓</span> Registrar Gasto
+                    Registrar Gasto
                   </button>
                 </div>
 
@@ -438,11 +433,11 @@
               <div class="content-card-header accordion-header" data-accordion-target="extras"
                 title="Haz clic en el encabezado para desplegar / contraer detalles">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/extras.jpg" alt="Extras" class="ui-icon-img ui-icon-card" /></div>
+                  <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.8L9.38 6.5L13.33 6.67L10.24 7.67L11.29 12.93L9.38 10.3L4.71 12.93L6.62 10.3L2.67 6.67L5.76 7.67Z"/></svg></div>
                   <div class="card-header-titles">
                     <div class="card-title-row">
                       <h3>Gastos Extraordinarios</h3>
-                      <span class="accordion-chevron-icon" title="Expandir / Contraer">▼</span>
+                      <span class="accordion-chevron-icon" title="Expandir / Contraer"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg></span>
                     </div>
                     <p>Gastos no recurrentes, matrículas o imprevistos del mes</p>
                   </div>
@@ -451,7 +446,7 @@
                   <span id="summaryTagExtras" class="accordion-summary-tag font-mono">S/ 0.00</span>
                   <button type="button" class="btn btn-surface btn-sm btn-quick-add-extra admin-action-btn"
                     onclick="event.stopPropagation();">
-                    ＋ Añadir
+                    Añadir
                   </button>
                 </div>
               </div>
@@ -460,8 +455,8 @@
                   <!-- Renderizado dinámico -->
                 </div>
                 <div class="subtotal-highlight-row main-subtotal">
-                  <span>TOTAL GASTOS EXTRA:</span>
-                  <span id="subtotalGastosExtra" class="font-mono" style="color: var(--cat-extras);">S/ 0.00</span>
+                  <span>Total gastos extra</span>
+                  <span id="subtotalGastosExtra" class="font-mono">S/ 0.00</span>
                 </div>
               </div>
             </div>
@@ -476,7 +471,7 @@
 
           <!-- Encabezado de la Sección -->
           <div class="view-header">
-            <h2 class="view-heading"><img src="assets/icons/analitica.jpg" alt="Consolidado" class="ui-icon-img ui-icon-card" /> Consolidado General Multimes</h2>
+            <h2 class="view-heading">Consolidado multimes</h2>
             <p class="view-subheading">Seguimiento acumulado de todos los períodos del año</p>
           </div>
 
@@ -484,8 +479,8 @@
           <div class="metrics-hero-grid">
             <div class="hero-metric-card card-theme-emerald">
               <div class="metric-top-row">
-                <span class="metric-label-title">Total Ingresos Acumulados</span>
-                <div class="metric-icon-box">↑</div>
+                <span class="metric-label-title">Ingresos acumulados</span>
+                <div class="metric-icon-box"></div>
               </div>
               <div id="kpiGlobalIngresos" class="metric-main-value font-mono">S/ 0.00</div>
               <div class="metric-footer-info">Todos los abonos confirmados</div>
@@ -493,8 +488,8 @@
 
             <div class="hero-metric-card card-theme-cyan">
               <div class="metric-top-row">
-                <span class="metric-label-title">Balance Neto Acumulado</span>
-                <div class="metric-icon-box">⇄</div>
+                <span class="metric-label-title">Balance acumulado</span>
+                <div class="metric-icon-box"></div>
               </div>
               <div id="kpiGlobalBalance" class="metric-main-value font-mono">S/ 0.00</div>
               <div class="metric-footer-info">Ingresos menos gastos realizados</div>
@@ -502,7 +497,7 @@
 
             <div class="hero-metric-card card-theme-amber">
               <div class="metric-top-row">
-                <span class="metric-label-title">Cumplimiento Global</span>
+                <span class="metric-label-title">Cumplimiento</span>
                 <div class="metric-icon-box">%</div>
               </div>
               <div id="kpiGlobalCumplimiento" class="metric-main-value font-mono">0.0%</div>
@@ -514,9 +509,9 @@
           <div class="content-card-box" style="margin-top: 2rem;">
             <div class="content-card-header">
               <div class="card-header-left">
-                <div class="card-header-icon"><img src="assets/icons/vertodo.jpg" alt="Matriz" class="ui-icon-img ui-icon-card" /></div>
+                <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5L14 5.5 8 8.5 2 5.5 8 2.5z"/><path d="M2.75 9.5L8 11.75l5.25-2.25"/></svg></div>
                 <div class="card-header-titles">
-                  <h3>Matriz Comparativa Mensual</h3>
+                  <h3>Matriz mensual</h3>
                   <p>Haz clic en cualquier mes para abrirlo inmediatamente</p>
                 </div>
               </div>
@@ -551,9 +546,9 @@
             <div class="content-card-box">
               <div class="content-card-header">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/analitica.jpg" alt="Gráfico" class="ui-icon-img ui-icon-card" /></div>
+                  <div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></div>
                   <div class="card-header-titles">
-                    <h3>Tendencia: Ingresos Acumulados vs Balance Neto Acumulado</h3>
+                    <h3>Tendencia: ingresos acumulados vs balance acumulado</h3>
                     <p>Evolución acumulada período a período</p>
                   </div>
                 </div>
@@ -566,9 +561,9 @@
             <div class="content-card-box">
               <div class="content-card-header">
                 <div class="card-header-left">
-                  <div class="card-header-icon"><img src="assets/icons/analitica.jpg" alt="Distribución" class="ui-icon-img ui-icon-card" /></div>
-                  <div class="card-header-titles">
-                    <h3>Distribución por Categorías</h3>
+<div class="card-header-icon"><svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></div>
+                <div class="card-header-titles">
+                  <h3>Distribución por categoría</h3>
                     <p>Composición de gastos anuales</p>
                   </div>
                 </div>
@@ -594,7 +589,7 @@
     <div class="modal-sheet" style="max-width: 540px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <div class="modal-glyph">🔐</div>
+          <div class="modal-glyph"></div>
           <div>
             <h3 style="font-size: 1.15rem; font-family: var(--font-display);">Acceso al Gestor Financiero</h3>
             <p style="font-size: 0.76rem; color: var(--text-secondary); margin-top: 2px;">
@@ -611,7 +606,7 @@
             <!-- Opción A: Modo Solo Lectura -->
             <div id="btnChooseReadOnly" class="role-choice-card card-readonly" role="button" tabindex="0">
               <div>
-                <div class="role-card-icon">👁️</div>
+                <div class="role-card-icon"></div>
                 <div class="role-card-titles" style="margin-top: 0.65rem;">
                   <h4>Modo Lectura</h4>
                   <p>Consulta balances, desglose de servicios, gastos personales y movimientos sin permisos de edición.</p>
@@ -619,14 +614,13 @@
               </div>
               <div class="role-card-action-btn">
                 <span>Ingresar como Lector</span>
-                <span>→</span>
               </div>
             </div>
 
             <!-- Opción B: Modo Administrador (aún no disponible) -->
             <div id="btnChooseAdmin" class="role-choice-card card-admin" role="button" tabindex="0">
               <div>
-                <div class="role-card-icon">👑</div>
+                <div class="role-card-icon"></div>
                 <div class="role-card-titles" style="margin-top: 0.65rem;">
                   <h4>Administrador</h4>
                   <p>Acceso completo para registrar gastos, abonos, crear meses y editar datos. Se habilita al conectar la autenticación con el servidor.</p>
@@ -634,7 +628,6 @@
               </div>
               <div class="role-card-action-btn">
                 <span>Ver disponibilidad</span>
-                <span>→</span>
               </div>
             </div>
           </div>
@@ -643,7 +636,7 @@
         <!-- Vista 2: Aviso de función pendiente de backend (ya no se pide PIN) -->
         <div id="roleSelectStepPending" style="display: none;">
           <div style="text-align: center; padding: 0.5rem 0 0.25rem 0;">
-            <div class="modal-glyph" style="margin-bottom: 0.65rem;">🚧</div>
+            <div class="modal-glyph" style="margin-bottom: 0.65rem;"></div>
             <h4 style="font-size: 1.05rem; font-family: var(--font-display); margin-bottom: 0.5rem;">
               Modo Administrador en desarrollo
             </h4>
@@ -656,7 +649,7 @@
             </p>
           </div>
           <div style="display: flex; gap: 0.65rem; margin-top: 1.25rem; justify-content: flex-end;">
-            <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">← Volver</button>
+            <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">Volver</button>
             <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('modalSessionRoleSelect').classList.remove('active')">
               Entrar como Lector
             </button>
@@ -671,7 +664,7 @@
     <div class="modal-sheet">
       <div class="modal-sheet-header">
         <h3 id="modalBudgetTitle">Añadir Gasto al Presupuesto</h3>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <form id="formAddBudget">
         <div class="modal-sheet-body">
@@ -707,8 +700,8 @@
             <div class="form-field">
               <label for="budgetEstado">Estado Inicial</label>
               <select id="budgetEstado" class="form-input-lg">
-                <option value="Pendiente">⏳ Pendiente</option>
-                <option value="Pagado">✓ Pagado</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Pagado">Pagado</option>
               </select>
             </div>
           </div>
@@ -731,7 +724,7 @@
     <div class="modal-sheet" style="max-width: 440px;">
       <div class="modal-sheet-header">
         <h3 id="modalMovementTitle">Registrar Ingreso</h3>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <form id="formAddMovement">
         <input type="hidden" id="movFlujo" value="Ingreso">
@@ -767,14 +760,14 @@
     <div class="modal-sheet" style="max-width: 440px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <span class="modal-glyph">💰</span>
+          <span class="modal-glyph"></span>
           <div>
             <h3 style="font-size: 1.05rem;">Confirmar Pago Variable</h3>
             <p id="modalPayVarSubtitle" style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">
               Ingresa el monto efectivamente gastado</p>
           </div>
         </div>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <form id="formPayVariableExpense">
         <input type="hidden" id="payVarItemId" value="">
@@ -799,13 +792,13 @@
             <input type="number" step="0.01" min="0" id="payVarActualAmount" class="form-input-lg font-mono"
               placeholder="0.00" required style="font-size: 1.2rem; font-weight: 700; color: var(--accent-emerald);">
             <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 5px;">
-              💡 El monto del gasto y el balance mensual se actualizarán con este valor real pagado.
+              El monto del gasto y el balance mensual se actualizarán con este valor real pagado.
             </p>
           </div>
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
-          <button type="submit" class="btn btn-success btn-lg">✓ Confirmar y Marcar Pagado</button>
+          <button type="submit" class="btn btn-success btn-lg">Confirmar y Marcar Pagado</button>
         </div>
       </form>
     </div>
@@ -816,14 +809,14 @@
     <div class="modal-sheet" style="max-width: 480px;">
       <div class="modal-sheet-header">
         <div style="display: flex; align-items: center; gap: 0.6rem;">
-          <img src="assets/icons/notas.jpg" alt="Notas" class="ui-icon-img ui-icon-card" />
+          <svg class="ui-icon-img ui-icon-card ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg>
           <div>
             <h3 style="font-size: 1.05rem;">Notas & Acuerdos</h3>
             <p id="modalNotesSubtitle" style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 2px;">
               Recordatorios y observaciones del mes</p>
           </div>
         </div>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <div class="modal-sheet-body" style="padding: 1.25rem 1.5rem;">
         <div class="notes-smart-box" style="padding: 0;">
@@ -843,7 +836,7 @@
     <div class="modal-sheet">
       <div class="modal-sheet-header">
         <h3>Crear o Duplicar Nuevo Mes</h3>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <form id="formNewMonth">
         <div class="modal-sheet-body">
@@ -858,7 +851,7 @@
               <!-- Opciones dinámicas -->
             </select>
             <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px;">
-              💡 Al clonar, se copiarán automáticamente todos los gastos fijos y variables recurrentes del mes
+              Al clonar, se copiarán automáticamente todos los gastos fijos y variables recurrentes del mes
               seleccionado marcados como 'Pendientes'.
             </p>
           </div>
@@ -878,12 +871,12 @@
     <div class="modal-sheet" style="max-width: 420px;">
       <div class="modal-sheet-header">
         <h3>Acceso Administrador</h3>
-        <button type="button" class="btn-close-sheet">✕</button>
+        <button type="button" class="btn-close-sheet"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
 
       <!-- Aviso actual: se usa cuando Supabase no está configurado -->
       <div id="adminAuthAviso" class="modal-sheet-body" style="text-align: center;">
-        <div class="modal-glyph" style="margin-bottom: 0.65rem;">🚧</div>
+        <div class="modal-glyph" style="margin-bottom: 0.65rem;"></div>
         <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5;">
           La edición de presupuestos y el registro de gastos están <strong>en desarrollo</strong>.
           El desbloqueo se conectará al servidor; por ahora no se pide ninguna contraseña.
@@ -929,7 +922,7 @@
 
   <!-- Toast Notification Flotante -->
   <div id="neoToast" class="neo-toast">
-    <span id="toastIcon">✓</span>
+    <span id="toastIcon"></span>
     <span id="toastText">Operación realizada con éxito</span>
   </div>
 

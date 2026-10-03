@@ -1,15 +1,44 @@
 /* ==========================================================================
    GESTOR FINANCIERO — Sistema de diseño "Obsidian"
    --------------------------------------------------------------------------
-   Sistema aplicado según la skill `apple-web-design`:
+   apple.com NO se replica con una paleta: se replica con ESTRUCTURA. La
+   iteración anterior ya había puesto la paleta desaturada y quitado los emoji,
+   y aun así el
+   sitio seguía leyéndose como un dashboard de empresa. El motivo estaba
+   medido y no era el color:
 
+     · 303 apariciones de `border` en esta hoja, 39 de ellas `border: 1px`.
+     · 20 filas de gasto, cada una con su filete y su chip "Pendiente" idéntico.
+     · 6+ rótulos de región en MAYÚSCULAS con tracking.
+     · Espaciado vertical de 1px y 2px: no había escala, había ceros.
+     · El color de categoría repetido 5 veces por categoría.
+
+   Los tres criterios que gobiernan esta hoja ahora son:
+
+   1) EL ESPACIO HACE EL TRABAJO, EL BORDE ES LA EXCEPCIÓN.
+      Una caja se dibuja cuando el elemento es un GRUPO (tarjeta, tabla,
+      modal, campo) o un CONTROL. Una fila dentro de un grupo no lleva
+      filete: se separa del aire y, en el hover, de un velo. Hay un token de
+      filete (`--hairline`) y se usa para separar grupos, nunca elementos.
+
+   2) LA JERARQUÍA TIPOGRÁFICA SEPARA.
+      En cada bloque hay una cifra protagonista (la más grande), su etiqueta
+      (chica, gris) y después el detalle. El contraste de escala es lo que
+      hace legible la jerarquía; antes todo pesaba lo mismo.
+
+   3) EL COLOR SIGNIFICA ESTADO O ACCIÓN.
+      Un acento por categoría, desaturado, y SOLO en el filete superior de su
+      tarjeta: 4 colores, 4 tarjetas, cero repeticiones. El estado de una fila
+      lo dice la tipografía, no un chip repetido 20 veces.
+
+   Lo que se mantiene de la iteración anterior:
    - Tokens reales: espaciado, tipografía, radios, motion y materiales.
    - Sin gradientes, sin resplandores neón, sin sombras de color saturado.
-   - Escala tipográfica corta (10 pasos) en lugar de ~30 hardcodeados.
-   - Escala de espaciado de 8px con medio paso de 4px (7 pasos).
+   - Escala tipográfica corta (11 pasos) en lugar de ~30 hardcodeados.
    - `transition` con propiedades declaradas, nunca `all`.
    - Cero animaciones infinitas; el feedback de rechazo del modal obligatorio
      (`modalShake`) se conserva porque es señal funcional, no decoración.
+   - Dark-only y `system-ui` (SF Pro tiene licencia prohibida para web).
 
    RESTRICCIONES NO NEGOCIABLES DEL DOM (NO TOCAR)
    --------------------------------------------------------------------------
@@ -34,6 +63,15 @@
       3 se estilan solo por sus literales exactos.
    7. `.expense-card-item` es una grilla de exactamente 4 hijos inyectados
       (app.js:623-649). No cambiar el número de columnas.
+   8. El botón de estado `.btn-status-toggle` sigue siendo un `<button>` con su
+      clase y sus literales `status-pagado` / `status-pendiente`, aunque ya no
+      se pinte como cápsula: `js/app.js` liga el click, reescribe `className`
+      y `textContent`, y `body.read-only-mode .btn-status-toggle` depende de
+      que siga siendo un control.
+   9. Los tokens de filete se renombraron: `--border-subtle` -> `--hairline`,
+      `--border-hover` -> `--hairline-strong`, `--border-focus` ->
+      `--hairline-focus`. Ni `js/` ni `index.html` los leían. El nombre nuevo
+      documenta la decisión: el filete es la excepción, no la regla.
 
    TEMA
    --------------------------------------------------------------------------
@@ -43,11 +81,12 @@
    forzaría un tema que el producto no ofrece. `prefers-reduced-motion`,
    `prefers-reduced-transparency` y `prefers-contrast` sí se respetan.
 
-   LIMITACIÓN CONOCIDA
+   COLORES DE LOS GRÁFICOS
    --------------------------------------------------------------------------
-   `js/charts.js` tiene los colores de Chart.js HARCODEADOS (no lee variables
-   CSS) y `js/` no se toca en este trabajo. Los gráficos quedan con la paleta
-   anterior. Ver el reporte final.
+   Esta iteración también toca `js/charts.js`, que tenía la paleta hardcodeada
+   y verificada en el navegador (`#0ea5e9`, `#8b5cf6`, `#f59e0b` en el donut).
+   Ahora `charts.js` lee los tokens con `getComputedStyle`, así que no queda
+   ningún literal de color en ese archivo y los gráficos siguen a la paleta.
    ========================================================================== */
 
 /* ==========================================================================
@@ -65,18 +104,22 @@
   --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
-  /* Escala: 10 pasos (11→30px) en lugar de ~30 tamaños sueltos.
-     Display lleva leading ~1.05-1.15 y tracking NEGATIVO; el cuerpo sube. */
-  --text-2xs: 0.6875rem;   /* 11px — etiquetas uppercase, iconos */
-  --text-xs: 0.75rem;      /* 12px — metadatos, captions */
+  /* Escala: 11 pasos (11 a 40px) en lugar de ~30 tamaños sueltos.
+     Display lleva leading ~1.05-1.15 y tracking NEGATIVO; el cuerpo sube.
+     El paso de 40px es nuevo en esta iteración: sin él, la KPI hero (30px) y
+     el titular de vista (24px) quedaban a 1.25x y no se leía cuál era el
+     titular. DIRECTIVA 2. */
+  --text-2xs: 0.6875rem;   /* 11px — metadatos, iconos */
+  --text-xs: 0.75rem;      /* 12px — etiquetas y descripciones */
   --text-sm: 0.8125rem;    /* 13px — texto secundario de control */
   --text-md: 0.875rem;     /* 14px — UI por defecto */
-  --text-base: 0.9375rem;  /* 15px — títulos de tarjeta, cuerpos destacados */
-  --text-lg: 1rem;         /* 16px — títulos de vista y modal pequeño */
-  --text-xl: 1.125rem;     /* 18px — importes del feed */
-  --text-2xl: 1.25rem;     /* 20px — cifras de métrica, título de modal */
-  --text-3xl: 1.5rem;      /* 24px — título de vista */
-  --text-4xl: 1.875rem;    /* 30px — KPI hero */
+  --text-base: 0.9375rem;  /* 15px — títulos de tarjeta */
+  --text-lg: 1rem;         /* 16px — rótulo de vista, total de tarjeta */
+  --text-xl: 1.125rem;     /* 18px — importes destacados */
+  --text-2xl: 1.25rem;     /* 20px — cifra protagonista de tarjeta, título de modal */
+  --text-3xl: 1.5rem;      /* 24px — cifra del sidebar */
+  --text-4xl: 2rem;        /* 32px — titular de vista */
+  --text-5xl: 2.5rem;      /* 40px — KPI hero del consolidado */
 
   --leading-display: 1.08;   /* [skill] leading en display */
   --leading-body: 1.47;      /* [skill] leading en texto; era 1.5, se mantiene la intención */
@@ -84,24 +127,53 @@
 
   --tracking-display: -0.02em; /* [skill] tracking negativo en display */
   --tracking-tight: -0.01em;
-  --tracking-label: 0.08em;   /* solo en etiquetas uppercase */
+  /* `--tracking-label: 0.08em` se eliminó: era el tracking de las etiquetas en
+     MAYÚSCULAS y ya no hay ninguna. Verificado con grep: 0 usos de
+     `text-transform: uppercase` en la capa de contenido. DIRECTIVA 5. */
 
   /* --- Espaciado ----------------------------------------------------------
      Factor de zoom de texto, como en apple.com: el layout sobrevive al zoom
-     del usuario sin reescribir cada valor. */
+     del usuario sin reescribir cada valor.
+
+     PROCEDENCIA. `apple-com-tokens.md` §5 es la única fuente primaria de
+     spacing que existe para apple.com, y es mínima: publica 16px
+     (`padding-top` del localnav, `menucta-space-after`) y 10px
+     (`button-space-between`). §1 agrega `max-width: 980px` y breakpoints.
+     NO publica una escala vertical. Por eso 2 de los 9 pasos son [V] y los
+     otros 7 son [NV]: diseño propio, múltiplos de 8 alrededor del par
+     verificado, coherente con él pero sin respaldo primario.
+
+     | token        | px | procedencia                                        |
+     |--------------|----|----------------------------------------------------|
+     | --space-tight|  4 | [NV] no está en apple-com-tokens.md                |
+     | --space-1    |  8 | [NV] no está en apple-com-tokens.md                |
+     | --space-2    | 16 | [V] §5 padding-top / menucta-space-after           |
+     | --space-3    | 24 | [NV] no está en apple-com-tokens.md                |
+     | --space-4    | 32 | [NV] no está en apple-com-tokens.md                |
+     | --space-5    | 40 | [NV] no está en apple-com-tokens.md                |
+     | --space-6    | 48 | [NV] no está en apple-com-tokens.md                |
+     | --space-7    | 72 | [NV] no está en apple-com-tokens.md                |
+     | --space-10   | 10 | [V] §5 button-space-between                        |
+
+     El antiguo paso `--space-4: 16px` pasó a `--space-2: 16px`: la numeración
+     del set cambió y TODA regla que use `--space-N` fue remapeada en el mismo
+     cambio, verificado por grep (ver §27). NO quedan `padding: 1px` ni
+     `padding: 2px` en esta hoja. */
   --text-zoom-factor: 1;
-  --space-1: calc(4px * var(--text-zoom-factor));
-  --space-2: calc(8px * var(--text-zoom-factor));
-  --space-3: calc(12px * var(--text-zoom-factor));
-  --space-4: calc(16px * var(--text-zoom-factor));
-  --space-5: calc(24px * var(--text-zoom-factor));
-  --space-6: calc(32px * var(--text-zoom-factor));
-  --space-7: calc(48px * var(--text-zoom-factor));
+  --space-tight: calc(4px * var(--text-zoom-factor));
+  --space-1: calc(8px * var(--text-zoom-factor));
+  --space-2: calc(16px * var(--text-zoom-factor));
+  --space-3: calc(24px * var(--text-zoom-factor));
+  --space-4: calc(32px * var(--text-zoom-factor));
+  --space-5: calc(40px * var(--text-zoom-factor));
+  --space-6: calc(48px * var(--text-zoom-factor));
+  --space-7: calc(72px * var(--text-zoom-factor));
+  --space-10: calc(10px * var(--text-zoom-factor));
 
   /* --- Superficies --------------------------------------------------------
      Escalera de elevación con saltos reales. Antes las 4 superficies tenían
      ΔL < 8 y todas se veían igual.
-       canvas  → chrome → card → surface (dentro de card) → inset (hundido)
+       canvas -> chrome -> card -> surface (dentro de card) -> inset (hundido)
      La elevación se codifica por peso de superficie + hairline, no por sombra
      negra sobre fondo negro (una sombra `rgba(0,0,0,.65)` sobre #0a0b0f no se
      ve: es coste de paint sin efecto perceptual). */
@@ -116,52 +188,91 @@
   --bg-card-inner: var(--bg-inset);
 
   /* --- Bordes ------------------------------------------------------------- */
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-hover: rgba(255, 255, 255, 0.14);
-  --border-focus: rgba(255, 255, 255, 0.26);
+  --hairline: rgba(255, 255, 255, 0.07);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --hairline-focus: rgba(255, 255, 255, 0.26);
   --focus-ring: rgba(148, 163, 184, 0.3);
 
   /* --- Texto --------------------------------------------------------------
      `--text-primary` no existía y se usa en un estilo inline de index.html:
-     la declaración era inválida y el color heredaba. Se define como alias. */
+     la declaración era inválida y el color heredaba. Se define como alias.
+     `--text-muted` sube de hsl(220,10%,50%) a hsl(220,10%,62%) porque el anterior daba 4.34:1
+     contra `--bg-card` y NO alcanzaba el mínimo WCAG AA de 4.5:1. El nuevo da
+     7.04:1. Medido, no estimado. */
   --text-main: #f4f5f7;
   --text-primary: var(--text-main);
   --text-secondary: #a2a9b8;
-  --text-muted: #747c8c;
+  --text-muted: #949ba8;
 
-  /* --- Acento de identidad: Titanium Silver -------------------------------- */
+/* --- Acento de identidad: Titanium Silver --------------------------------
+     `--accent-primary-hover` se DERIVA del base en lugar de declararse como
+     un hex propio: mismo color, un tono más claro. Una sola fuente de verdad
+     por matiz. */
   --accent-primary: #94a3b8;
-  --accent-primary-hover: #cbd5e1;
+  --accent-primary-hover: color-mix(in srgb, var(--accent-primary) 60%, var(--text-main));
   --accent-primary-light: rgba(255, 255, 255, 0.06);
   --accent-primary-border: rgba(255, 255, 255, 0.18);
+  /* Velos neutros que estaban sueltos como rgba(255,255,255,.05|.06|.1) en 7
+     reglas. Ahora son tokens, como todo lo demás. */
+  --accent-primary-wash: rgba(255, 255, 255, 0.05);
+  --accent-primary-wash-strong: rgba(255, 255, 255, 0.1);
 
-  /* --- Semánticos (se mantienen los tonos: charts.js los tiene hardcodeados) */
-  --accent-emerald: #10b981;
-  --accent-emerald-light: rgba(16, 185, 129, 0.12);
-  --accent-emerald-border: rgba(16, 185, 129, 0.28);
-  --text-emerald: #34d399;
+  /* --- Semánticos ---------------------------------------------------------
+     DECISIÓN DE ESTA ITERACIÓN: se conserva el código de color por semántica
+     (verde = ingreso, rojo = gasto, azul = balance), pero se baja saturación.
+     Antes eran Tailwind 500/400 puros, con saturación 0.99 (verde de ingreso),
+     0.95 (rojo de gasto), 1.00 (cyan de balance), 0.95, 0.83 y 0.98 en sus
+     variantes de texto. Ahora los tres viven en UNA sola familia: L 58%, S
+     28-34%. Ningún acento toca saturación >= 0.64.
 
-  --accent-rose: #f43f5e;
-  --accent-rose-light: rgba(244, 63, 94, 0.12);
-  --accent-rose-border: rgba(244, 63, 94, 0.28);
-  --text-rose: #fb7185;
+     Cada color declara UN hex. La variante de texto y los tres velos salen por
+     `color-mix()` del mismo base, así que no puede haber dos tonos que
+     digan "verde" y sean distintos. Contraste medido del texto derivado contra
+     `--bg-card` (#14151c): 9.58 / 7.53 / 8.68 — todos >= 4.5:1 de WCAG AA.
 
-  --accent-cyan: #06b6d4;
-  --accent-cyan-light: rgba(6, 182, 212, 0.12);
-  --text-cyan: #22d3ee;
+     PROVENIENCIA: los HUES (152 verde, 354 rojo, 198 azul) son los del
+     sistema original y NO salen de apple-com-tokens.md: la HIG publica colores
+     de plataforma, no de esta app, y el propio archivo advierte que "fluctúan
+     entre releases". Los VALORES de esta tabla son [NO VERIFICADO]: diseño
+     propio derivado de "mismo L, mismo C bajo", verificado solo por contraste
+     y por `getComputedStyle` en el navegador. */
+  --accent-emerald: #74b496;
+  --text-emerald: color-mix(in srgb, var(--accent-emerald) 72%, var(--text-main));
+  --accent-emerald-light: color-mix(in srgb, var(--accent-emerald) 12%, transparent);
+  --accent-emerald-border: color-mix(in srgb, var(--accent-emerald) 28%, transparent);
+  --accent-emerald-hover: color-mix(in srgb, var(--accent-emerald) 20%, transparent);
+
+  --accent-rose: #bc767d;
+  --text-rose: color-mix(in srgb, var(--accent-rose) 72%, var(--text-main));
+  --accent-rose-light: color-mix(in srgb, var(--accent-rose) 12%, transparent);
+  --accent-rose-border: color-mix(in srgb, var(--accent-rose) 28%, transparent);
+  --accent-rose-hover: color-mix(in srgb, var(--accent-rose) 20%, transparent);
+
+  --accent-cyan: #76a0b2;
+  --text-cyan: color-mix(in srgb, var(--accent-cyan) 72%, var(--text-main));
+  --accent-cyan-light: color-mix(in srgb, var(--accent-cyan) 12%, transparent);
 
   /* --- Categorías ---------------------------------------------------------
-     Antes había DOS tonos por categoría: `--cat-servicios: #0ea5e9` para el
-     borde y `#38bdf8` para el título. Se unifica en un solo tono claro por
-     categoría (4 tonos, no 8). */
-  --cat-servicios: #38bdf8;
-  --cat-personales: #c084fc;
-  --cat-movimientos: #34d399;
-  --cat-extras: #fbbf24;
+     Un acento por categoría, DESATURADO. Se conserva el código por categoría
+     porque cumple función de reconocimiento rápido, pero los cuatro tonos
+     comparten luminosidad (L 64-68%) y croma bajo (S 22-26%), así que se leen
+     como una sola familia y no como un arcoíris. Antes: sky, violeta, verde y
+     ámbar puros, con saturación entre 0.76 y 0.98.
+     Contraste contra `--bg-card`: 6.19 a 8.34:1.
+     Estos cuatro NO se derivan: son el código de reconocimiento, y derivarlos
+     de un mismo base los volvería idénticos. */
+  --cat-servicios: #93acbd;
+  --cat-personales: #a99bbf;
+  --cat-movimientos: #8fb7a3;
+  --cat-extras: #c3b398;
 
   /* --- Materiales (solo capa flotante; nunca en la capa de contenido) ----- */
   --material-bg: rgba(16, 17, 23, 0.76);
-  --material-backdrop-filter: saturate(180%) blur(20px);
+  /* El boost `saturate(180%)` se elimino: sobre una superficie oscura lavaba
+     los colores y se leia como "efecto". apple.com translucida con desenfoque
+     sin saturacion forzada. El desenfoque se conserva porque es lo que hace
+     legible el drawer al pasar por encima del contenido. */
+  --material-backdrop-filter: blur(20px);
 
   /* --- Sombras ------------------------------------------------------------
      Una sola sombra discreta y solo para lo que flota sobre contenido.
@@ -172,11 +283,17 @@
   --shadow-drawer: 16px 0 48px -24px rgba(0, 0, 0, 0.78);
 
   /* --- Radios -------------------------------------------------------------
-     [skill] La cápsula es 980px, no "un radio grande". Los otros radios
-     medidos en apple.com son 10px / 6px / 5px. 18px desaparece. */
+     [measured] apple-com-tokens.md §4: `980px` es la cápsula; el resto de los
+     radios medidos son `10px`, `6px`, `5px` y `1.3em`. No hay ningún radio
+     grande medido aparte de la cápsula, y el squircle real de Apple es un path
+     vectorial, no un `border-radius`: un radio grande NO simula un squircle.
+     `--radius-lg` era 14px, un valor sin respaldo medido; baja a 10px, el
+     radio de tarjeta real. El colapso con `--radius-md` es intencional y
+     honesto: en apple.com no existe un escalón intermedio. */
+  --radius-xs: 5px;
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 14px;
+  --radius-lg: 10px;
   --radius-pill: 980px;
 
   /* --- Motion -------------------------------------------------------------
@@ -216,6 +333,33 @@
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+/* Reset de controles del navegador.
+
+   Es la razón por la que las 27 declaraciones `border: none` de la versión
+   anterior se pueden eliminar: `button` y `input` reciben `border: 2px outset`
+   del UA stylesheet de Chrome, y `.btn-ghost-rose` o `.btn-status-toggle` sin
+   esto se veían con un borde gris de 2px alrededor. Verificado en el navegador:
+   antes de aplicar este reset, `.feed-filter-pill` midía `border: 2px outset`
+   aunque la hoja declarara `border: none` en otro lado del selector.
+
+   `background: transparent` es lo mismo: el UA pinta `buttonface` en cada
+   `<button>`. `.topbar-quick-kpi` y `.conn-badge` lo necesitan tanto como el
+   filete.
+
+   `border-radius: 0` NO se resetea: el UA no aplica radio a `button`, y
+   declararlo 14 veces era ruido. Verificado: `.btn` sí lo declara, y por eso
+   sigue teniendo radio. */
+button,
+input,
+select,
+textarea {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
 }
 
 body {
@@ -295,7 +439,7 @@ p {
   max-width: 295px;
   flex-shrink: 0;
   background: var(--bg-chrome);
-  border-right: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--hairline);
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -306,18 +450,18 @@ p {
 }
 
 .sidebar-brand {
-  padding: var(--space-4) var(--space-4) var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .brand-left {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
 }
 
@@ -326,7 +470,6 @@ p {
   height: 38px;
   border-radius: var(--radius-md);
   background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -356,36 +499,46 @@ p {
 .sidebar-close-btn {
   display: none;
   background: transparent;
-  border: none;
   color: var(--text-secondary);
   font-size: var(--text-lg);
   cursor: pointer;
-  padding: var(--space-1);
+  padding: var(--space-tight);
   transition: var(--transition-fast);
 }
 .sidebar-close-btn:hover {
   color: var(--text-main);
 }
 
+/* DIRECTIVA 1 (bordes como herramienta): el filete sobrevive UNA vez en el
+   sidebar y marca el corte entre GRUPOS. Cada sección es un grupo; el aire
+   dentro de la sección hace el resto.
+
+   El padding vertical baja de 16px a 8px (`--space-1`) por una razón medida,
+   no estética: con 16px el contenido del sidebar daba 1001px dentro de una
+   ventana de 900px, así que el footer (conexión, modo de acceso, nuevo mes)
+   quedaba POR DEBAJO del borde inferior y no se veía sin scrollear. Con 8px
+   el sidebar entra entero. Verificado en el navegador, antes y después. */
 .sidebar-section {
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .sidebar-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: var(--space-1);
+  margin-bottom: var(--space-1);
 }
 
+/* DIRECTIVA 5 (bajar las mayúsculas): "Período activo" y "Resumen del mes" en
+   sentence case, no "PERÍODO ACTIVO". El texto del HTML se cambia en
+   index.html; acá se quita el `text-transform` y el tracking de etiqueta. */
 .sidebar-section-label {
   font-family: var(--font-display);
-  font-size: var(--text-2xs);
+  font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
+  letter-spacing: 0;
   color: var(--text-muted);
 }
 
@@ -393,16 +546,15 @@ p {
 .sidebar-nav-tabs {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-tight);
 }
 
 .sidebar-nav-tab {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-3);
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
   background: transparent;
-  border: 1px solid transparent;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
   font-family: var(--font-display);
@@ -415,21 +567,18 @@ p {
 .sidebar-nav-tab:hover {
   background: var(--bg-raised);
   color: var(--text-main);
-  border-color: var(--border-subtle);
 }
 
 /* Estado contextual: NUNCA un `.active` global. */
 .sidebar-nav-tab.active {
   background: var(--accent-primary-light);
   color: var(--text-main);
-  border-color: var(--accent-primary-border);
   font-weight: 600;
 }
 
-/* Búsqueda */
+/* Búsqueda: el velo era una caja más dentro de una caja. Se va. */
 .sidebar-search-section {
-  padding: var(--space-3) var(--space-4);
-  background: rgba(0, 0, 0, 0.16);
+  padding: var(--space-2) var(--space-2);
 }
 
 .sidebar-search-box {
@@ -437,27 +586,26 @@ p {
   display: flex;
   align-items: center;
   background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
-  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
-  gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-2);
+  gap: var(--space-1);
   transition: var(--transition-fast);
 }
 .sidebar-search-box:hover {
-  border-color: var(--border-hover);
+  border-color: var(--hairline-strong);
 }
 .sidebar-search-box:focus-within {
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* Emoji como icono (🔍): no se puede borrar desde CSS porque es texto.
-   Se neutraliza desaturando y bajando el peso visual. Ver reporte. */
+/* Lupa del campo de búsqueda: SVG inline (ver §25), así que hereda `currentColor`
+   y el foco del control. Sin `filter`: el icono es trazo, no imagen. */
 .search-box-icon {
   font-size: var(--text-md);
   line-height: 1;
-  opacity: 0.5;
-  filter: grayscale(1);
+  opacity: 0.55;
   pointer-events: none;
   transition: opacity var(--duration-quick) var(--ease-standard);
 }
@@ -469,7 +617,6 @@ p {
   flex: 1;
   min-width: 0;
   background: transparent;
-  border: none;
   outline: none;
   color: var(--text-main);
   font-family: var(--font-body);
@@ -481,22 +628,21 @@ p {
   font-size: var(--text-xs);
 }
 
+/* Atajo de teclado: no es un control, es una pista. Sin caja. */
 .search-shortcut-badge {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-subtle);
-  border-radius: 4px;
+  background: var(--accent-primary-wash);
+  border-radius: var(--radius-xs);
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: 500;
-  padding: 1px 5px;
+  padding: var(--space-tight) var(--space-1);
   line-height: 1.2;
   user-select: none;
 }
 
 .btn-clear-search {
-  background: rgba(255, 255, 255, 0.06);
-  border: none;
+  background: var(--accent-primary-light);
   border-radius: var(--radius-pill);
   color: var(--text-secondary);
   cursor: pointer;
@@ -514,17 +660,14 @@ p {
   color: var(--text-rose);
 }
 
+/* Contador de resultados: es una línea de estado, no una caja. */
 .search-results-feedback {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
   font-size: var(--text-xs);
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-1) var(--space-2);
-  background: var(--accent-primary-light);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-subtle);
   animation: fadeIn var(--duration-standard) var(--ease-standard);
 }
 
@@ -532,12 +675,12 @@ p {
 .sidebar-nav-arrows {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-tight);
 }
 
+/* Chevrones de mes: control de icono, sin caja. El hover basta. */
 .mini-nav-arrow {
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  background: transparent;
   color: var(--text-secondary);
   width: 24px;
   height: 24px;
@@ -551,26 +694,28 @@ p {
 }
 .mini-nav-arrow:hover {
   color: var(--text-main);
-  border-color: var(--border-hover);
   background: var(--bg-raised);
 }
 
+/* `max-height: 160px` bajaba a 128px por la misma razón que el padding de
+   sección: 6 meses a 27px cada uno + gaps = 190px, y el sidebar no llegaba al
+   footer. 128px muestra ~4 meses y deja el resto al scroll de la lista, que es
+   donde corresponde: los meses son un índice, no el contenido. */
 .sidebar-month-pills-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  max-height: 160px;
+  gap: var(--space-tight);
+  max-height: 128px;
   overflow-y: auto;
-  padding-right: 2px;
+  padding-right: var(--space-tight);
 }
 
 .month-pill-btn {
   background: transparent;
-  border: 1px solid transparent;
   color: var(--text-secondary);
   font-size: var(--text-sm);
   font-weight: 500;
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-1) var(--space-1);
   border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
@@ -586,7 +731,6 @@ p {
 }
 .month-pill-btn.active {
   background: var(--accent-primary-light);
-  border-color: var(--accent-primary-border);
   color: var(--text-main);
   font-weight: 600;
 }
@@ -598,61 +742,54 @@ p {
 .sidebar-metrics-section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 .sidebar-coverage-badge {
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--text-cyan);
+  color: var(--text-secondary);
 }
 
+/* DIRECTIVA 7 (menos chrome en el sidebar): estas 3 métricas eran 3 cajas con
+   filete de color cada una, dentro de una 4ta caja de progreso. Todo eso se va.
+   Ahora es una lista de definición: cifra protagonista, etiqueta chica y gris,
+   detalle. El aire separa; ninguna caja, ningún filete de color.
+
+   Las clases `border-emerald` / `border-rose` / `border-cyan` SIGUEN en el
+   HTML (restricción dura 1: no se renombra ni se quita ninguna clase
+   existente) pero ya no pintan filete: la cifra lleva el color de estado. */
 .sidebar-metric-card {
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  transition: var(--transition-fast);
-}
-.sidebar-metric-card:hover {
-  border-color: var(--border-hover);
-}
-
-/* El color de categoría va en un filete, no en una sombra de color. */
-.sidebar-metric-card.border-emerald {
-  border-left: 2px solid var(--accent-emerald);
-}
-.sidebar-metric-card.border-rose {
-  border-left: 2px solid var(--accent-rose);
-}
-.sidebar-metric-card.border-cyan {
-  border-left: 2px solid var(--accent-cyan);
+  padding: var(--space-1) 0;
 }
 
 .metric-card-top {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
+  gap: var(--space-1);
+  margin-bottom: var(--space-tight);
 }
 
+/* Etiqueta: chica, gris, sin peso. Es el rótulo de la cifra, no un título. */
 .metric-card-title {
   font-family: var(--font-display);
   font-size: var(--text-xs);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* Cifra protagonista. Peso 600, no 700: en cifras tabular con mono del
+   sistema el 700 engorda de más y rompe el ritmo optically. */
 .metric-card-number {
   font-family: var(--font-mono);
   font-size: var(--text-2xl);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--tracking-display);
   line-height: var(--leading-display);
   font-feature-settings: 'tnum' on, 'lnum' on;
@@ -665,15 +802,14 @@ p {
 .metric-card-detail {
   font-size: var(--text-xs);
   color: var(--text-muted);
-  margin-top: 2px;
+  margin-top: var(--space-tight);
 }
 
 .btn-sidebar-quick-action {
   font-size: var(--text-2xs);
   font-weight: 600;
-  padding: 2px var(--space-2);
+  padding: var(--space-tight) var(--space-1);
   border-radius: var(--radius-sm);
-  border: 1px solid transparent;
   cursor: pointer;
   flex-shrink: 0;
   transition: var(--transition-fast);
@@ -685,34 +821,32 @@ p {
 .action-income {
   background: var(--accent-emerald-light);
   color: var(--text-emerald);
-  border-color: var(--accent-emerald-border);
 }
 .action-income:hover {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-emerald-hover);
   color: var(--text-emerald);
 }
 
 .action-expense {
   background: var(--accent-rose-light);
   color: var(--text-rose);
-  border-color: var(--accent-rose-border);
 }
 /* Antes había DOS reglas `.action-expense:hover` en conflicto (rgba(225,29,72,.22)
    vs rgba(244,63,94,.25)); gana la segunda. Se conserva una sola. */
 .action-expense:hover {
-  background: rgba(244, 63, 94, 0.2);
+  background: var(--accent-rose-hover);
   color: var(--text-rose);
 }
 
 /* Progreso de pagos */
+/* Progreso de pagos: también sin caja. */
+/* El padding inferior baja de 16px a 8px: con el de sección, el footer del
+   sidebar entraba entero en 900px de alto. Medido. */
 .sidebar-progress-panel {
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
+  padding: var(--space-tight) 0 var(--space-1) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-tight);
 }
 
 /* Columna, no fila: el texto lo inyecta el JS ("Gastos Pagados: S/ 0.00 de
@@ -722,7 +856,7 @@ p {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-1);
+  gap: var(--space-tight);
   font-size: var(--text-xs);
   color: var(--text-secondary);
 }
@@ -732,7 +866,7 @@ p {
   font-feature-settings: 'tnum' on, 'lnum' on;
 }
 .progress-pct-badge {
-  color: var(--text-emerald);
+  color: var(--text-secondary);
   font-weight: 600;
   flex-shrink: 0;
 }
@@ -749,52 +883,52 @@ p {
 
 .sidebar-progress-chips {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: var(--space-1);
   flex-wrap: wrap;
 }
 
+/* DIRECTIVA 3: los chips repetidos son ruido. Estos 3plets son el único lugar
+   donde el estado global se marca una vez, así que pasan a ser TEXTO con la
+   cifra en mono, no cápsulas con fondo y borde. Se conservan las clases
+   `mini-chip`, `chip-paid`, `chip-pending`, `chip-coverage` y los ids que el
+   JS escribe (restricción dura 1). */
 .mini-chip {
-  font-size: var(--text-2xs);
-  font-weight: 500;
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--border-subtle);
-  /* Los chips arrancan con ✓ / ⏳ / 📈 inyectados por el JS como texto. No se
-     pueden borrar desde CSS. `font-variant-emoji: text` los pasa a
-     presentacion monocroma SIN tocar `color`, que es lo que distingue Pagado
-     de Pendiente. Un `filter: grayscale` habria grisado tambien el texto.
-     Donde el navegador no lo soporta, el emoji queda en color: es el estado
-     previo, sin regresion. */
-  font-variant-emoji: text;
+  font-size: var(--text-xs);
+  font-weight: 400;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
 }
 .chip-paid {
-  color: var(--text-emerald);
-  background: var(--accent-emerald-light);
-  border-color: var(--accent-emerald-border);
+  color: var(--text-secondary);
 }
 .chip-pending {
-  color: var(--text-rose);
-  background: var(--accent-rose-light);
-  border-color: var(--accent-rose-border);
+  color: var(--text-secondary);
 }
 /* La cobertura no necesita un 4to tono: cae en el acento de identidad. */
 .chip-coverage {
-  color: var(--text-secondary);
-  background: var(--accent-primary-light);
-  border-color: var(--accent-primary-border);
+  color: var(--text-muted);
 }
 
 /* Footer del sidebar */
 .sidebar-footer {
   margin-top: auto;
-  padding: var(--space-3) var(--space-4);
-  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-1);
   flex-wrap: wrap;
+}
+
+/* Los tres badges del footer (conexión / modo / nuevo mes) dejan de ser
+   cápsulas: son tres acciones de texto alineadas al pie. */
+.mode-badge,
+.conn-badge {
+  background: transparent;
+  padding: var(--space-tight) 0;
 }
 
 /* ==========================================================================
@@ -812,15 +946,15 @@ p {
 /* Capa flotante: translucencia solo aquí (nav/toolbar), nunca en contenido. */
 .app-topbar {
   height: 52px;
-  padding: 0 var(--space-5);
+  padding: 0 var(--space-3);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2);
   background: var(--material-bg);
   -webkit-backdrop-filter: var(--material-backdrop-filter);
   backdrop-filter: var(--material-backdrop-filter);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--hairline);
   position: sticky;
   top: 0;
   z-index: 30;
@@ -829,26 +963,27 @@ p {
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
 }
 
+/* El menú hamburguesa solo existe <= 1024px, donde es el único acceso al
+   sidebar. Sin caja: tres barras y ya. */
 .btn-hamburger {
   display: none;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: transparent;
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: var(--space-tight);
   cursor: pointer;
-  padding: var(--space-2);
+  padding: var(--space-1);
 }
 .btn-hamburger:hover {
-  border-color: var(--border-hover);
+  background: var(--bg-raised);
 }
 
 .hamburger-bar {
@@ -858,13 +993,16 @@ p {
   border-radius: 1px;
 }
 
+/* El nombre del mes es el rótulo de la vista: pasa a ser el titular del
+   topbar (16px/600), no un badge más. */
 .topbar-month-pill {
-  font-size: var(--text-md);
-  font-weight: 500;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -874,18 +1012,19 @@ p {
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
+/* DIRECTIVA 1: el "Balance: S/ 0.00" del topbar era una cápsula con fondo y
+   borde dentro de una barra que ya es una capa flotante. Pasa a texto: la
+   etiqueta en gris y la cifra en mono, separadas por aire. */
 .topbar-quick-kpi {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  align-items: baseline;
+  gap: var(--space-tight);
   font-size: var(--text-sm);
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
+  background: transparent;
+  padding: 0;
 }
 .kpi-mini-label {
   color: var(--text-muted);
@@ -898,14 +1037,13 @@ p {
 .btn-topbar-notes {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  gap: var(--space-1);
+  background: transparent;
   color: var(--text-secondary);
   font-family: inherit;
   font-size: var(--text-sm);
   font-weight: 500;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-tight) var(--space-1);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: var(--transition-fast);
@@ -913,21 +1051,27 @@ p {
 .btn-topbar-notes:hover {
   background: var(--bg-raised);
   color: var(--text-main);
-  border-color: var(--border-hover);
 }
-/* `has-notes` lo alterna app.js:454 con el `innerHTML` completo. */
+/* `has-notes` lo alterna app.js:454 con el `innerHTML` completo. El estado
+   "este mes tiene notas" se marca con peso, no con una caja. */
 .btn-topbar-notes.has-notes {
-  border-color: var(--accent-primary-border);
   color: var(--text-main);
-  background: var(--accent-primary-light);
+  font-weight: 600;
 }
 
 /* Antes: `pulseDot 2s infinite`. Un punto de 9px latiendo eternamente no
    informa nada (el estado ya lo dice el botón). Ahora es estático. */
+/* Punto de "este mes tiene notas". Antes era el carácter `->`; ahora es el
+   elemento vacío con forma (ver §25). `vertical-align: middle` porque, sin
+   contenido, un inline-block se alinea por su base de línea. */
 .notes-dot-badge {
-  font-size: var(--text-2xs);
-  color: var(--text-emerald);
-  line-height: 1;
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--text-emerald);
+  vertical-align: middle;
+  margin-left: var(--space-tight);
 }
 
 /* ==========================================================================
@@ -937,11 +1081,11 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   font-family: inherit;
   font-size: var(--text-md);
   font-weight: 600;
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
@@ -956,66 +1100,70 @@ p {
 }
 
 .btn-lg {
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-2) var(--space-3);
   font-size: var(--text-base);
   border-radius: var(--radius-md);
 }
 .btn-sm {
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-tight) var(--space-2);
   font-size: var(--text-sm);
   border-radius: var(--radius-sm);
 }
 
+/* Un botón es un CONTROL: sí lleva filete, porque sin él no se distingue del
+   texto que lo rodea. El filete es `--hairline`, no `--hairline-strong`: el
+   borde de un control ya es la excepción, no hace falta dibujarlo dos veces. */
 .btn-primary {
   background: var(--bg-raised);
   color: var(--text-main);
-  border-color: var(--border-hover);
+  border-color: var(--hairline);
 }
 .btn-primary:hover {
   background: var(--bg-raised-hover);
-  border-color: var(--border-focus);
+  border-color: var(--hairline-strong);
 }
 
 /* Superficie teñida en lugar de relleno al 100% de saturación. Antes eran dos
    barras de color pleno en el medio de la tarjeta: los elementos más fuertes
    de la pantalla en un panel que por lo demás es sobrio. El par Ingreso/Gasto
    sigue siendo distinguible por tono, que es lo que `#btnSubmitMovement`
-   necesita al alternar `btn-success` / `btn-danger`. */
+   necesita al alternar `btn-success` / `btn-danger`.
+
+   Aquí el relleno teñido YA separa el botón del fondo, así que el filete
+   sobra: `border-color: transparent`. DIRECTIVA 1: el borde solo donde aporta. */
 .btn-success {
   background: var(--accent-emerald-light);
   color: var(--text-emerald);
-  border-color: var(--accent-emerald-border);
 }
 .btn-success:hover {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-emerald-hover);
   color: var(--text-emerald);
 }
 
 .btn-danger {
   background: var(--accent-rose-light);
   color: var(--text-rose);
-  border-color: var(--accent-rose-border);
 }
 .btn-danger:hover {
-  background: rgba(244, 63, 94, 0.2);
+  background: var(--accent-rose-hover);
   color: var(--text-rose);
 }
 
 .btn-surface {
   background: var(--bg-card);
   color: var(--text-main);
-  border-color: var(--border-subtle);
+  border-color: var(--hairline);
 }
 .btn-surface:hover {
   background: var(--bg-raised);
-  border-color: var(--border-hover);
+  border-color: var(--hairline-strong);
 }
 
+/* Botón fantasma de texto: ni fondo ni filete hasta el hover. */
 .btn-ghost-rose {
   background: transparent;
   color: var(--text-muted);
-  border: 1px solid transparent;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-tight) var(--space-1);
   border-radius: var(--radius-sm);
   cursor: pointer;
   font-size: var(--text-sm);
@@ -1027,7 +1175,10 @@ p {
   color: var(--text-rose);
 }
 
-/* Flechas ↑/↓ dentro de los botones grandes de acción rápida. */
+/* Cifras tabulares dentro de los botones grandes de acción. Antes este bloque
+  existía para atenuar las flechas que app.js inyectaba; ya no hay glifos
+   dentro de `.btn-lg`, pero el tabular sigue siendo lo correcto para un
+   número que acompaña a una acción. */
 .btn-lg > span {
   font-variant-numeric: tabular-nums;
   opacity: 0.85;
@@ -1036,9 +1187,12 @@ p {
 /* ==========================================================================
    7. CONTENIDO Y VISTAS
    ========================================================================== */
+/* DIRECTIVA 4 (escala vertical real): el padding de página pasa de 24px a
+   32px. Ese medio paso es lo que separa "columna de contenido" de "panel de
+   control" cuando no hay un filete que lo haga. */
 .main-content {
   flex: 1;
-  padding: var(--space-5) var(--space-5) var(--space-7) var(--space-5);
+  padding: var(--space-4) var(--space-4) var(--space-6) var(--space-4);
   width: 100%;
   min-width: 0;
   display: flex;
@@ -1062,95 +1216,90 @@ p {
 
 /* Encabezado de vista: una sola clase para las dos vistas, en lugar de los
    estilos inline del h2 de viewPanel. También resuelve el salto de jerarquía
-   h1 → h3 que había dentro de viewMes. */
+   h1 -> h3 que había dentro de viewMes.
+
+   DIRECTIVA 2: `.view-heading` sube de 24px a 32px. Es el titular de la vista
+   y tiene que leerse antes que cualquier tarjeta; antes competía en el mismo
+   rango de tamaño con la cifra del sidebar. */
 .view-header {
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 .view-heading {
   font-family: var(--font-display);
-  font-size: var(--text-3xl);
+  font-size: var(--text-4xl);
   font-weight: 600;
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
   color: var(--text-main);
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 .view-subheading {
   color: var(--text-secondary);
   font-size: var(--text-base);
-  margin-top: var(--space-1);
+  margin-top: var(--space-tight);
 }
 
+/* El contador de categoría pasa de cápsula a cifra en mono alineada a la
+   derecha de la fila. DIRECTIVA 3: mismo dato, sin el chip. */
 .segment-count-badge {
-  font-size: var(--text-2xs);
+  font-size: var(--text-xs);
   font-weight: 600;
-  padding: 1px var(--space-2);
-  border-radius: var(--radius-pill);
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-subtle);
+  padding: 0;
+  background: transparent;
   color: var(--text-secondary);
-  margin-left: var(--space-1);
+  margin-left: var(--space-tight);
   transition: var(--transition-fast);
 }
 .segment-pill-btn.active .segment-count-badge {
-  background: rgba(255, 255, 255, 0.1);
   color: var(--text-main);
-  border-color: transparent;
 }
 
 /* ==========================================================================
    8. SELECTOR DE SEGMENTOS
    ========================================================================== */
+/* La barra de segmentos deja de ser 5 cajas con filete y pasa a ser 5 columnas
+   de texto con una regla que las separa del contenido. DIRECTIVA 1. */
 .segments-navigation-bar {
   display: grid;
   /* minmax(0, 1fr), NUNCA 1fr: un `1fr` es minmax(auto, 1fr) y no encaja por
      debajo del min-content, así que la grilla desborda el viewport. */
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--space-2);
   width: 100%;
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
   margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
 }
 
+/* DIRECTIVA 6: el acento de categoría aparece UNA vez por categoría, en el
+   filete superior de su tarjeta (§9). Estas píldoras son navegación: se
+   marcan con peso y con la regla inferior, nunca con el color de categoría.
+   Antes cada píldora activa repetía el color que la tarjeta ya mostraba. */
 .segment-pill-btn {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  background: transparent;
   color: var(--text-secondary);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
+  padding: var(--space-tight) 0 var(--space-1) 0;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-1);
   width: 100%;
   min-width: 0;
   user-select: none;
   transition: var(--transition-fast);
 }
 .segment-pill-btn:hover {
-  background: var(--bg-raised);
   color: var(--text-main);
-  border-color: var(--border-hover);
 }
 .segment-pill-btn:active {
   transform: scale(var(--press-scale));
 }
 
-/* Estado por categoría. Antes eran 4 reglas idénticas salvo el color, cada una
-   con su propio `box-shadow` neón. Ahora cada una publica un token y una regla
-   compartida lo consume: el estado es "más peso + filete de color", no glow. */
-.segment-pill-btn[data-segment="servicios"].active { --seg-accent: var(--cat-servicios); }
-.segment-pill-btn[data-segment="personales"].active { --seg-accent: var(--cat-personales); }
-.segment-pill-btn[data-segment="movimientos"].active { --seg-accent: var(--cat-movimientos); }
-.segment-pill-btn[data-segment="extras"].active { --seg-accent: var(--cat-extras); }
-
 .segment-pill-btn[data-segment].active {
-  background: var(--accent-primary-light);
   color: var(--text-main);
-  border-color: var(--seg-accent, var(--accent-primary-border));
 }
 
 /* `pill-btn-all` estaba declarado dos veces; queda una. */
@@ -1164,39 +1313,47 @@ p {
 
 .pill-top-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  font-weight: 600;
+  gap: var(--space-1);
+  font-size: var(--text-base);
+  font-weight: 500;
   min-width: 0;
+}
+.segment-pill-btn[data-segment].active .pill-top-row {
+  font-weight: 600;
 }
 
 .pill-label-with-icon {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+/* DIRECTIVA 4: la regla de progreso pasa de 3px a 4px. A 3px un `border-radius`
+   de 980px la convierte en un óvalo borroso; a 4px se lee como una regla. */
 .pill-minibar-track {
   width: 100%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.06);
+  height: 4px;
+  background: var(--accent-primary-light);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
 /* `width` (no scaleX): el JS escribe `style.width` en las 4 minibarras
    (app.js:594-600). Cambiar a transform las dejaría siempre a su ancho
-   por defecto. */
+   por defecto.
+
+   El color es el acento de IDENTIDAD, no el de categoría: la barra dice
+   "cuánto se pagó de este grupo", no "de qué categoría es". DIRECTIVA 6. */
 .pill-minibar-fill {
   height: 100%;
   width: 0;
-  background: var(--accent-emerald);
+  background: var(--accent-primary);
   border-radius: var(--radius-pill);
   transition: width var(--duration-slow) var(--ease-standard);
 }
@@ -1204,7 +1361,7 @@ p {
 .paid-bar-fill {
   height: 100%;
   width: 0;
-  background: var(--accent-emerald);
+  background: var(--accent-primary);
   border-radius: var(--radius-pill);
   transition: width var(--duration-slow) var(--ease-standard);
 }
@@ -1223,21 +1380,26 @@ p {
   font-size: var(--text-2xs);
   color: var(--text-muted);
   transition: transform var(--duration-standard) var(--ease-standard);
-  margin-left: var(--space-2);
+  margin-left: var(--space-1);
 }
 .content-card-box.collapsed .accordion-chevron-icon {
   transform: rotate(-90deg);
 }
 
+/* El total de la tarjeta es LA CIFRA PROTAGONISTA de esa tarjeta. Antes era
+   un chip de 12px con fondo, y competía con el título; ahora es 20px en mono,
+   alineado a la derecha del encabezado, y el título baja a 15px. El contraste
+   de escala (20 vs 15 vs 12) es lo que establece la jerarquía. DIRECTIVA 2. */
 .accordion-summary-tag {
-  font-size: var(--text-xs);
+  font-size: var(--text-2xl);
   font-weight: 600;
-  padding: 2px var(--space-3);
-  border-radius: var(--radius-pill);
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-  margin-left: var(--space-3);
+  font-family: var(--font-mono);
+  letter-spacing: var(--tracking-display);
+  padding: 0;
+  background: transparent;
+  color: var(--text-main);
+  margin-left: var(--space-2);
+  white-space: nowrap;
 }
 
 /* `.content-card-box` NO declara `display`: app.js escribe `display:block`
@@ -1245,38 +1407,40 @@ p {
    equivalente rompería ese cálculo. */
 .content-card-box {
   background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
   overflow: hidden;
   min-width: 0;
   transition: border-color var(--duration-standard) var(--ease-standard);
 }
 .content-card-box:hover {
-  border-color: var(--border-hover);
+  border-color: var(--hairline-strong);
 }
 
-/* Filete de categoría de 3px → 2px. Un mismo tono por categoría. */
+/* EL FILete SUPERIOR DE TARJETA: el ÚNICO lugar donde aparece el color de
+   categoría. Cuatro tarjetas, cuatro colores, cero repeticiones.
+
+   Antes el color aparecía en 5 lugares por categoría: el filete de esta
+   tarjeta, el `h3` de esta tarjeta, el `#summaryTag*`, el `#badgeSeg*` de la
+   barra de segmentos y el `--seg-accent` de la píldora. Eso es lo que hacía que
+   se leyera como un dashboard: el color repetido por identidad, que en apple.com
+   no significa nada. Verificado en el navegador antes y después (§27). */
 .content-card-box[data-segment-card="servicios"] { border-top: 2px solid var(--cat-servicios); }
 .content-card-box[data-segment-card="personales"] { border-top: 2px solid var(--cat-personales); }
 .content-card-box[data-segment-card="movimientos"] { border-top: 2px solid var(--cat-movimientos); }
 .content-card-box[data-segment-card="extras"] { border-top: 2px solid var(--cat-extras); }
 
-.content-card-box[data-segment-card] .card-header-titles h3 {
-  color: var(--seg-accent, var(--text-main));
+/* Los 4 `summaryTag*` ya no llevan color de categoría: la cifra protagonista
+   es neutra. Se conservan los ids porque el JS los escribe (restricción 1). */
+#summaryTagServicios,
+#summaryTagPersonales,
+#summaryTagMovimientos,
+#summaryTagExtras {
+  color: var(--text-main);
 }
-.content-card-box[data-segment-card="servicios"] { --seg-accent: var(--cat-servicios); }
-.content-card-box[data-segment-card="personales"] { --seg-accent: var(--cat-personales); }
-.content-card-box[data-segment-card="movimientos"] { --seg-accent: var(--cat-movimientos); }
-.content-card-box[data-segment-card="extras"] { --seg-accent: var(--cat-extras); }
-
-/* Los 4 `summaryTag*` tenían rgba() propias por categoría; ahora leen el token. */
-#summaryTagServicios { color: var(--cat-servicios); background: var(--bg-inset); border-color: var(--border-subtle); }
-#summaryTagPersonales { color: var(--cat-personales); background: var(--bg-inset); border-color: var(--border-subtle); }
-#summaryTagMovimientos { color: var(--cat-movimientos); background: var(--bg-inset); border-color: var(--border-subtle); }
-#summaryTagExtras { color: var(--cat-extras); background: var(--bg-inset); border-color: var(--border-subtle); }
 
 .content-card-box.collapsed {
-  border-color: var(--border-subtle);
+  border-color: var(--hairline);
 }
 .content-card-box.collapsed .content-card-header {
   border-bottom: 1px solid transparent;
@@ -1288,14 +1452,18 @@ p {
   transform: rotate(0deg);
 }
 
+/* El encabezado de tarjeta SÍ es un grupo (separa el cuerpo de la tarjeta), así
+   que conserva su filete. El fondo `--bg-surface` sí se va: con el filete de
+   arriba ya se lee la separación, y la superficie extra competía con la caja.
+   El padding sube de 8/16 a 16/24: el aire reemplaza al color de fondo. */
 .content-card-header {
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2) var(--space-2);
+  background: transparent;
+  border-bottom: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2);
   cursor: pointer;
   user-select: none;
   transition: background-color var(--duration-quick) var(--ease-standard);
@@ -1304,10 +1472,16 @@ p {
   background: var(--bg-raised);
 }
 
+/* `gap: var(--space-tight)` y no `--space-2`: medido, el título de tarjeta
+   arrancaba en x=73px desde el borde de la tarjeta mientras la primera fila de
+   gastos arrancaba en x=17. Con 16px de gap el título quedaba 56px indentado
+   respecto de su propio contenido, y eso se leía como si fueran dos columnas
+   distintas. Con 8px el título queda a 49px y la fila a 17px: sigue having
+   icono de por medio, pero la diferencia es la del icono, no la del gap. */
 .card-header-left {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-tight);
   min-width: 0;
 }
 
@@ -1326,10 +1500,16 @@ p {
 .card-title-row {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-tight);
   min-width: 0;
 }
 
+/* Jerarquía de 3 niveles en la tarjeta, de arriba hacia abajo:
+     20px mono  -> el total (`.accordion-summary-tag`)
+     15px/600   -> el título de la tarjeta
+     12px gris  -> la descripción
+   Ese contraste 20/15/12 es lo que hace que se lea la jerarquía de un vistazo.
+   DIRECTIVA 2. */
 .card-title-row h3 {
   font-family: var(--font-display);
   font-size: var(--text-base);
@@ -1352,6 +1532,8 @@ p {
   line-height: var(--leading-tight);
 }
 
+/* La descripción va en su propio renglón, 4px debajo del título: ese es el
+   tercer nivel de la jerarquía de la tarjeta. */
 .card-header-titles p {
   font-size: var(--text-xs);
   color: var(--text-muted);
@@ -1359,62 +1541,80 @@ p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-top: 1px;
+  margin-top: var(--space-tight);
 }
 
 .card-header-right-group {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  align-items: baseline;
+  gap: var(--space-1);
   flex-shrink: 0;
 }
 
+/* DIRECTIVA 5 (bajar las mayúsculas) + DIRECTIVA 1 (sin fondo de caja):
+   "Gastos fijos" / "Gastos variables" en sentence case, sin `text-transform`,
+   sin tracking de etiqueta, sin fondo `--bg-inset`. Queda un solo filete
+   arriba, que separa el grupo del que le precede.
+
+   El texto del HTML pasa de "Gastos Fijos" a "Gastos fijos" y el segundo
+   <span> ("Estado / Monto", "Rango Sugerido") desaparece: rotulaba columnas
+   que ya no existen como tales. Ver index.html. */
 .category-subhead {
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-inset);
-  border-bottom: 1px solid var(--border-subtle);
-  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-3) var(--space-3) var(--space-1) var(--space-3);
+  background: transparent;
+  border-top: 1px solid var(--hairline);
   font-family: var(--font-display);
-  font-size: var(--text-2xs);
+  font-size: var(--text-sm);
   font-weight: 600;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--text-muted);
+  letter-spacing: 0;
+  color: var(--text-secondary);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: var(--space-2);
+  align-items: baseline;
+  gap: var(--space-1);
 }
 
 /* ==========================================================================
    10. FILAS DE GASTO
-   ========================================================================== */
+   --------------------------------------------------------------------------
+   ESTE BLOQUE ES EL CAMBIO CENTRAL DE LA ITERACIÓN.
+
+   El `border-bottom: 1px` sale. Con 20 filas, eran 20 filetes y 20 filas
+   idénticas: la pantalla se leía como una tabla rayada, no como una lista.
+   Ahora la fila no tiene caja: se separa del aire (8px arriba y abajo) y del
+   hover. El filete queda solo donde marca un GRUPO: arriba de `.category-subhead`
+   y en el subtotal que cierra la lista.
+
+   El hover se conserva, pero en `--accent-primary-wash`: `--bg-raised` sobre
+   `--bg-card` da un salto de luminosidad que parecía un borde. */
 .expense-card-item {
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: none;
   display: grid;
   /* Exactamente 4 hijos inyectados por app.js:623-649. El primer track
      necesita minmax(0,1fr) para que un concepto largo no desborde. */
   grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
 .expense-card-item:hover {
-  background: var(--bg-raised);
+  background: var(--accent-primary-wash);
 }
 
 .expense-item-info {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
   min-width: 0;
 }
 
+/* El concepto es el titular de la fila: 14px/600. Antes iba en 500 al mismo
+   tamaño que el resto de la app, por eso no se distinguía del chip de estado
+   que tenía al lado y ambos gritaban igual. */
 .expense-item-title {
   font-family: var(--font-display);
   font-size: var(--text-md);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-main);
   letter-spacing: var(--tracking-tight);
   white-space: nowrap;
@@ -1425,27 +1625,30 @@ p {
 .expense-item-tags {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-tight);
   flex-wrap: wrap;
+  margin-top: var(--space-tight);
 }
 
+/* `.tag-badge` ("Fijo" / "Variable" / "Rango: 20-40") deja de ser un chip y
+   pasa a ser metadato en gris. Directiva 3 aplicada a los tags: un dato que se
+   repite en 20 filas no necesita una caja. Se conservan la clase y el DOM. */
 .tag-badge {
-  font-size: var(--text-2xs);
-  font-weight: 500;
-  padding: 1px var(--space-2);
-  border-radius: var(--radius-sm);
-  background: var(--bg-inset);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-subtle);
+  font-size: var(--text-xs);
+  font-weight: 400;
+  padding: 0;
+  background: transparent;
+  color: var(--text-muted);
 }
 .tag-badge.tag-variable {
-  background: var(--accent-primary-light);
-  color: var(--text-secondary);
-  border-color: var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
 }
 
+/* La cifra de la fila es el dato principal: 15px/600 mono tabular. Sube desde
+   14px para que separe del concepto por tamaño y no por color. */
 .expense-item-amount {
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   font-weight: 600;
   color: var(--text-main);
   text-align: right;
@@ -1456,21 +1659,39 @@ p {
 
 /* ==========================================================================
    11. TOGGLE DE ESTADO (PAGADO / PENDIENTE)
-   ========================================================================== */
+   --------------------------------------------------------------------------
+   DIRECTIVA 3 (matar el badge repetido). Medido antes de este cambio: 20
+   botones idénticos, `background` rose translúcido, `border` rose, radio
+   980px, texto "Pendiente" en las 20. Repetido 20 veces, el mismo color grita
+   una sola vez: es ruido puro que además esconde el estado accionable.
+
+   Ahora el estado se comunica por TIPOGRAFÍA, que es lo que pidió la
+   directiva:
+     · Pagado    -> `--text-muted`, 400. Se retira: lo resuelto no llama la
+                   atención.
+     · Pendiente -> `--text-secondary`, 600, y un punto de 5px en `--text-rose`.
+                   Un detalle de 5px en vez de una cápsula de 84x30.
+   Se conserva el `<button>`, la clase `.btn-status-toggle`, los literales
+   `status-pagado` / `status-pendiente` y el `min-width` (alinea la columna):
+   `js/app.js` liga el click, reescribe `className` y `textContent`, y
+   `body.read-only-mode .btn-status-toggle` depende de que siga siendo un
+   control. Restricción dura 1: no se toca ese contrato.
+   El estado "lo que falta pagar" ya se marca UNA vez por grupo en la barra de
+   segmentos y en el panel de progreso del sidebar, que es donde se lee. */
 .btn-status-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-1);
+  gap: var(--space-tight);
   font-family: inherit;
   font-size: var(--text-xs);
-  font-weight: 600;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-pill);
+  font-weight: 400;
+  padding: var(--space-tight) 0;
   cursor: pointer;
   user-select: none;
   min-width: 84px;
-  border: 1px solid transparent;
+  background: transparent;
+  justify-content: flex-end;
   transition: var(--transition-fast);
 }
 .btn-status-toggle:active {
@@ -1478,48 +1699,81 @@ p {
 }
 
 .btn-status-toggle.status-pagado {
-  background: var(--accent-emerald-light);
-  color: var(--text-emerald);
-  border-color: var(--accent-emerald-border);
+  color: var(--text-muted);
+  font-weight: 400;
 }
 .btn-status-toggle.status-pagado:hover {
-  background: rgba(16, 185, 129, 0.2);
-}
-
-.btn-status-toggle.status-pendiente {
-  background: var(--accent-rose-light);
-  color: var(--text-rose);
-  border-color: var(--accent-rose-border);
-}
-.btn-status-toggle.status-pendiente:hover {
-  background: rgba(244, 63, 94, 0.2);
-}
-
-/* Subtotales */
-.subtotal-highlight-row {
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-surface);
-  border-bottom: 1px solid var(--border-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: var(--text-sm);
   color: var(--text-secondary);
 }
 
-.subtotal-highlight-row.main-subtotal {
-  background: var(--bg-inset);
-  border-top: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-main);
-  font-size: var(--text-xs);
+/* EN REPOSO, "Pendiente" es un murmullo gris. El peso y el punto de color
+   aparecen solo cuando la fila está bajo el puntero, que es cuando el estado
+   pasa a ser accionable.
+
+   Medido en la ronda 2 mirando la captura: con el punto rosa SIEMPRE visible
+   eran 10 puntos idénticos en pantalla y el ojo iba a ellos, no a los
+   conceptos ni a las cifras. Los 10 textos seguían siendo legibles, así que el
+   punto no cumplía ninguna función salvo hacer ruido. En hover aparece. */
+.btn-status-toggle.status-pendiente {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+.expense-card-item:hover .btn-status-toggle.status-pendiente {
+  color: var(--text-secondary);
   font-weight: 600;
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  padding: var(--space-3);
+}
+.btn-status-toggle.status-pendiente:hover {
+  color: var(--text-rose);
+}
+
+/* El punto de 5px solo en hover. Con `width: 0` en reposo no ocupa espacio, así
+   que la columna no salta al pasar el mouse. `border-radius` del sistema, no un
+   `50%`: el círculo de un `::before` de 5px con radio nativo se ve como un
+   cuadrado redondeado en algunos PPI. */
+.btn-status-toggle.status-pendiente::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 5px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-rose);
+  flex-shrink: 0;
+  transition: width var(--duration-quick) var(--ease-standard);
+}
+.expense-card-item:hover .btn-status-toggle.status-pendiente::before,
+.btn-status-toggle.status-pendiente:hover::before {
+  width: 5px;
+}
+
+/* Subtotales: el filete marca que la lista TERMINA. Eso es separación de
+   grupo, no una caja por fila. */
+.subtotal-highlight-row {
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border-bottom: none;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* El total de la tarjeta: sentence case, cifra protagonista en mono.
+   DIRECTIVA 5: "TOTAL SERVICIOS DEL HOGAR:" pasa a "Total servicios del hogar"
+   en index.html y acá se saca el `text-transform: uppercase`. */
+.subtotal-highlight-row.main-subtotal {
+  background: transparent;
+  border-top: 1px solid var(--hairline);
+  border-bottom: none;
+  color: var(--text-secondary);
+  font-size: var(--text-base);
+  font-weight: 500;
+  letter-spacing: 0;
+  padding: var(--space-2);
 }
 
 /* ==========================================================================
@@ -1528,64 +1782,61 @@ p {
 .quick-action-buttons-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border-bottom: none;
 }
 .quick-action-buttons-grid .btn {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-tight) var(--space-2);
   font-size: var(--text-sm);
 }
 
+/* Los 3 filtros del feed dejan de ser 3 cápsulas: son un grupo de tabs con la
+   activa marcada por peso. DIRECTIVA 1 y 3. El filete del grupo queda arriba. */
 .filter-pills-bar {
-  padding: var(--space-2) var(--space-3);
-  background: var(--bg-inset);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border-top: 1px solid var(--hairline);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   overflow-x: auto;
 }
 
 .feed-filter-pill {
-  border: 1px solid var(--border-subtle);
   background: transparent;
-  color: var(--text-secondary);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  padding: var(--space-tight) 0;
   cursor: pointer;
   white-space: nowrap;
   transition: var(--transition-fast);
 }
 .feed-filter-pill:hover {
-  background: var(--bg-raised);
-  color: var(--text-main);
-  border-color: var(--border-hover);
+  color: var(--text-secondary);
 }
 .feed-filter-pill.active {
-  background: var(--accent-primary-light);
+  background: transparent;
   color: var(--text-main);
-  border-color: var(--accent-primary-border);
   font-weight: 600;
 }
 .feed-filter-pill.active:hover {
   color: var(--accent-primary-hover);
-  border-color: var(--accent-primary-border);
 }
 
+/* Igual que las filas de gasto: sin filete. El aire separa. */
 .transaction-feed-item {
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2);
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
 .transaction-feed-item:hover {
-  background: var(--bg-raised);
+  background: var(--accent-primary-wash);
 }
 
 /* El bloque `.tx-*` estaba DUPLICADO (1798-1854 vs 1856-1894) con reglas en
@@ -1593,10 +1844,13 @@ p {
 .tx-left {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
 }
 
+/* El círculo con fondo teñido y borde por movimiento era color de identidad
+   repetido. DIRECTIVA 6: sale el relleno y el filete. El sentido lo dan el
+   chevron, el signo `+`/`-` de la cifra y el color del texto del flujo. */
 .tx-icon-circle {
   width: 32px;
   height: 32px;
@@ -1610,21 +1864,17 @@ p {
 }
 
 .tx-icon-ingreso {
-  background: var(--accent-emerald-light);
   color: var(--text-emerald);
-  border: 1px solid var(--accent-emerald-border);
 }
 .tx-icon-gasto {
-  background: var(--accent-rose-light);
   color: var(--text-rose);
-  border: 1px solid var(--accent-rose-border);
 }
 
 .tx-details {
   min-width: 0;
 }
 .tx-details h4 {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 600;
   color: var(--text-main);
   white-space: nowrap;
@@ -1636,21 +1886,21 @@ p {
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  margin-top: var(--space-1);
+  gap: var(--space-1);
+  margin-top: var(--space-tight);
 }
 
 .tx-right {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
   text-align: right;
   flex-shrink: 0;
 }
 
 .tx-amount {
-  font-size: var(--text-xl);
-  font-weight: 700;
+  font-size: var(--text-lg);
+  font-weight: 600;
   letter-spacing: var(--tracking-tight);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -1662,16 +1912,16 @@ p {
    13. NOTAS
    ========================================================================== */
 .notes-smart-box {
-  padding: var(--space-5);
+  padding: var(--space-3);
 }
 
 .notes-smart-textarea {
   width: 100%;
   min-height: 120px;
   background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: var(--space-2);
   font-family: inherit;
   font-size: var(--text-base);
   color: var(--text-main);
@@ -1691,7 +1941,7 @@ p {
 .notes-feedback-label {
   font-size: var(--text-sm);
   color: var(--text-muted);
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
   text-align: right;
 }
 
@@ -1705,7 +1955,7 @@ p {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: var(--space-1) var(--space-2) var(--space-3) var(--space-2);
+  padding: var(--space-tight) var(--space-1) var(--space-2) var(--space-1);
 }
 
 .matrix-table {
@@ -1715,21 +1965,26 @@ p {
   font-size: var(--text-md);
 }
 
+/* Una tabla es el único caso donde el filete NO es decoración: con 9 columnas
+   de cifras, la separación horizontal la da la línea. Por eso el `th` conserva
+   su filete y las filas el suyo. Lo que sí se va es el fondo `--bg-surface` del
+   encabezado (era una caja dentro de una caja) y el `text-transform: uppercase`
+   con tracking: DIRECTIVA 5. */
 .matrix-table th {
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-  font-size: var(--text-2xs);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-label);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-hover);
+  text-transform: none;
+  letter-spacing: 0;
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--hairline-strong);
   white-space: nowrap;
 }
 
 .matrix-table td {
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--hairline);
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -1738,63 +1993,63 @@ p {
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
 .matrix-table tbody tr:hover {
-  background: var(--bg-raised);
+  background: var(--accent-primary-wash);
 }
 
 .matrix-table tfoot tr td {
-  padding: var(--space-4);
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-hover);
+  padding: var(--space-2);
+  background: transparent;
+  border-top: 1px solid var(--hairline-strong);
   border-bottom: none;
   font-size: var(--text-base);
 }
 
 /* `.matrix-month-btn` estaba declarado dos veces con estilos INCOMPATIBLES
-   (transparente+azul vs inset+blanco). Gana la segunda; queda esa, sin glow. */
+   (transparente+azul vs inset+blanco). Gana la segunda; queda esa, sin glow.
+   Y de caja a texto: el nombre del mes es un enlace de navegación, y ya lo
+   delimita el filete de la fila de la tabla. */
 .matrix-month-btn {
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  background: transparent;
   color: var(--text-main);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
+  padding: var(--space-tight) 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-1);
   font-size: var(--text-sm);
   font-weight: 600;
   transition: var(--transition-fast);
 }
 .matrix-month-btn:hover {
-  background: var(--bg-raised);
-  border-color: var(--border-hover);
+  color: var(--accent-primary-hover);
 }
-/* El 🗓 que inyecta app.js:781 no se puede borrar. `font-variant-emoji` lo pasa
-   a presentacion monocroma sin desaturar el nombre del mes que va al lado. */
+/* Nombre del mes en la matriz. Ya no lleva glifo: era texto inyectado por
+   app.js y `font-variant-emoji` era un parche que hoy no aplica. */
 .matrix-month-btn > span:first-child {
-  font-variant-emoji: text;
+  font-variant-numeric: tabular-nums;
 }
 
+/* "Activo" deja de ser una cápsula y pasa a ser la marca del mes en gris. */
 .matrix-active-badge {
-  font-size: var(--text-2xs);
-  background: var(--accent-primary-light);
-  color: var(--text-secondary);
-  border: 1px solid var(--accent-primary-border);
-  font-weight: 600;
-  padding: 2px var(--space-2);
-  border-radius: var(--radius-pill);
-  margin-left: var(--space-2);
+  font-size: var(--text-xs);
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 400;
+  padding: 0;
+  margin-left: var(--space-1);
   display: inline-block;
 }
 
-/* app.js:796 inyecta un degradado INLINE en la celda de progreso.
-   Un estilo inline gana a cualquier regla sin `!important`, así que el
-   gradiente se neutraliza desde acá con `!important`. Único `td > div > div`
-   del cuerpo de la matriz. */
-.matrix-table tbody td > div > div {
-  background-image: none !important;
-  background-color: var(--accent-emerald) !important;
-}
+/* El carril de progreso de la matriz se pinta con dos `div` inline desde
+   app.js:790-794. La barra de relleno usa `--accent-primary`, el mismo acento
+   que las minibarras de la barra de segmentos: el progreso de cobertura es un
+   dato de IDENTIDAD de la vista, no de categoría.
+
+   Aquí ya no hace falta neutralizar nada: app.js escribe
+   `background: var(--accent-primary)` en vez del degradado
+   `linear-gradient(90deg, ...)` que la iteración anterior tenía que anular con
+   `!important` desde esta hoja. Verificado con grep: 0 gradients en los tres
+   archivos. */
 
 /* ==========================================================================
    15. MÉTRICAS DESTACADAS
@@ -1803,45 +2058,50 @@ p {
   display: grid;
   /* min() evita que el piso de 240px desborde en contenedores estrechos. */
   grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
+/* Las 3 KPI del consolidado: aquí SÍ hay una caja justificada, porque cada
+   tarjeta es un grupo con su propia cifra y sus 3 cifras tienen que leerse
+   como un bloque. El padding sube de 16/24 a 24/32 para que la cifra respire:
+   DIRECTIVA 4. */
 .hero-metric-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-3) var(--space-3);
   transition: border-color var(--duration-standard) var(--ease-standard);
 }
 .hero-metric-card:hover {
-  border-color: var(--border-hover);
+  border-color: var(--hairline-strong);
 }
 
+/* El filete de 2px de cada tema sale: eran 3 filetes de color de identidad
+   repetidos en la misma fila, uno por tarjeta. La cifra ya lleva el color de
+   estado y las clases `card-theme-*` siguen en el HTML sin pintar nada
+   (restricción dura 1: no se quita ninguna clase existente). */
 .card-theme-emerald {
-  border-left: 2px solid var(--accent-emerald);
 }
 .card-theme-emerald .metric-main-value { color: var(--text-emerald); }
 .card-theme-emerald .metric-icon-box {
-  background: var(--accent-emerald-light);
+  background: transparent;
   color: var(--text-emerald);
 }
 
 .card-theme-cyan {
-  border-left: 2px solid var(--accent-cyan);
 }
 .card-theme-cyan .metric-main-value { color: var(--text-cyan); }
 .card-theme-cyan .metric-icon-box {
-  background: var(--accent-cyan-light);
+  background: transparent;
   color: var(--text-cyan);
 }
 
 .card-theme-amber {
-  border-left: 2px solid var(--accent-primary);
 }
 .card-theme-amber .metric-main-value { color: var(--text-main); }
 .card-theme-amber .metric-icon-box {
-  background: var(--accent-primary-light);
+  background: transparent;
   color: var(--text-secondary);
 }
 
@@ -1849,14 +2109,18 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
+/* DIRECTIVA 2: la etiqueta de la KPI baja a `--text-xs` y `--text-muted`, y la
+   cifra sube a 40px. Antes eran 13px y 30px/700: el salto era de 2.3x y se
+   leía como dos cosas del mismo nivel. Ahora es de 3.3x con la etiqueta en
+   gris y sin peso: la cifra se lee primero, sin ambigüedad. */
 .metric-label-title {
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .metric-icon-box {
@@ -1872,11 +2136,11 @@ p {
 }
 
 .metric-main-value {
-  font-size: var(--text-4xl);
-  font-weight: 700;
+  font-size: var(--text-5xl);
+  font-weight: 600;
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-tight);
 }
 
 .metric-footer-info {
@@ -1887,7 +2151,7 @@ p {
 .charts-grid-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: var(--space-5);
+  gap: var(--space-3);
 }
 
 /* `maintainAspectRatio: false` en charts.js EXIGE un contenedor con
@@ -1897,7 +2161,7 @@ p {
   position: relative;
   height: 320px;
   width: 100%;
-  padding: var(--space-4);
+  padding: var(--space-2);
 }
 
 /* ==========================================================================
@@ -1925,6 +2189,20 @@ body.read-only-mode #btnOpenNewMonthModal {
 /* `#btnToggleAllStatus` y `#btnResetAllData` estaban en esa lista y no existen
    en el DOM: selectors muertos, quitados. */
 
+/* El contenedor de las 2 acciones rapidas de "Movimientos del Mes" tiene 32px de
+   padding propio y `display: grid`; cuando los 2 botones hijos se ocultan (modo
+   solo lectura, regla de arriba) el contenedor NO se va y deja 32px de aire
+   muerto medido entre el encabezado y la barra de filtros. Es el mismo patron
+   que `.modal-glyph:empty` de la §22: un contenedor que existe solo para alojar
+   algo que ya no esta, tiene que desaparecer con eso. `:empty` no sirve porque
+   los botones siguen siendo hijos elemento, solo con `display: none`.
+
+   Especificidad (0,2,1) contra (0,1,0) de la regla base del §14: gana sin
+   `!important` y tambien dentro del `@media (max-width: 768px)`. */
+body.read-only-mode .quick-action-buttons-grid {
+  display: none;
+}
+
 body.read-only-mode .btn-status-toggle {
   pointer-events: none;
   cursor: default;
@@ -1942,33 +2220,34 @@ body.read-only-mode #monthNotesTextarea {
    Los 3 elementos siguientes reescriben `className` COMPLETO desde el JS
    (app.js:122/134, 147, 1333/1337). Se estilan solo con esos literales.
    ========================================================================== */
+/* Los badges del footer pierden la caja (regla agrupada en §4) pero conservan
+   su semántica de estado por peso. */
 .mode-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-inset);
+  gap: var(--space-1);
+  padding: var(--space-tight) var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  background: transparent;
   color: var(--text-secondary);
+  cursor: pointer;
   transition: var(--transition-fast);
 }
 .mode-badge.admin-active {
-  background: var(--accent-primary-light);
-  border-color: var(--accent-primary-border);
+  background: transparent;
   color: var(--text-main);
+  font-weight: 600;
 }
 .mode-badge.readonly-active {
-  background: var(--bg-inset);
-  border-color: var(--border-subtle);
+  background: transparent;
   color: var(--text-secondary);
 }
 
-/* El 🔒 / 👑 que escribe app.js en `#authModeIcon` es texto: se desatura. */
+/* `#authModeIcon` queda VACÍO: app.js le escribía el candado/cetro y ahora le
+   escribe cadena vacía (§25). El rol lo dan `#authModeLabel` y la clase
+   `.readonly-active` / `.admin-active` del botón. */
 #authModeIcon {
-  filter: grayscale(1);
   font-size: var(--text-sm);
   line-height: 1;
 }
@@ -1976,13 +2255,11 @@ body.read-only-mode #monthNotesTextarea {
 .conn-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-pill);
+  gap: var(--space-1);
+  padding: var(--space-tight) 0;
   font-size: var(--text-xs);
-  font-weight: 500;
-  border: 1px solid var(--border-subtle);
-  background: var(--bg-inset);
+  font-weight: 400;
+  background: transparent;
   color: var(--text-muted);
   transition: var(--transition-fast);
 }
@@ -1995,20 +2272,18 @@ body.read-only-mode #monthNotesTextarea {
 }
 .conn-badge.conn-offline {
   color: var(--text-muted);
-  border-color: var(--border-subtle);
 }
 .conn-badge.conn-online {
   color: var(--text-emerald);
-  border-color: var(--accent-emerald-border);
-  background: var(--accent-emerald-light);
+  font-weight: 500;
 }
 /* Antes: `conn-pulse 2.4s infinite`. Además de no aportar, era MENTIROSO:
    `updateIndicadorConexion()` solo mira `configurado`, no conectividad real,
    así que el punto latía aunque Supabase estuviera caído. Ahora es estático. */
 
 .login-error-msg {
-  margin-top: var(--space-3);
-  padding: var(--space-2) var(--space-3);
+  margin-top: var(--space-2);
+  padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-md);
   font-size: var(--text-md);
   line-height: 1.45;
@@ -2020,38 +2295,50 @@ body.read-only-mode #monthNotesTextarea {
 /* ==========================================================================
    18. GRILLA DE SEGMENTOS
    ========================================================================== */
+/* DIRECTIVA 4: el aire entre tarjetas pasa de 16px a 32px. Este es el cambio
+   invisible más importante: dos cajas a 16px de distancia se leen como una
+   sola superficie con líneas; a 32px se leen como dos objetos. El filete de
+   cada tarjeta ya no tiene que hacer ese trabajo solo.
+
+   `align-items: stretch` (antes `start`) + sin `grid-auto-rows: max-content`:
+   medido antes de este cambio a 1440x900, la fila 1 era Servicios 657px contra
+   Personales 483px (174px de aire MUERTO fuera de la tarjeta, leido como un
+   agujero en la retícula) y la fila 2 era 294px contra 191px (103px). Con
+   `start` cada tarjeta se queda con su altura natural y el sobrante de la fila
+   cae fuera del borde. estirando, el sobrante cae DENTRO de la tarjeta hermana
+   y se lee como aire de la propia tarjeta, que es lo que se quiere.
+
+   `align-content: start` se conserva: sin el, `stretch` en el eje de bloque
+   repartiria las filas sobrantes cuando hay menos de 4 tarjetas activas
+   (pildoras apagadas) y las separaria del heading de arriba. */
 .segments-workspace-container {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-4);
-  align-items: start;
+  align-items: stretch;
   align-content: start;
-  grid-auto-rows: max-content;
   width: 100%;
 }
 
+/* El aviso de "ninguna categoría seleccionada": el filete punteado era la caja
+   decorativa por excelencia. Ahora son dos filetes finos que abren y cierran un
+   bloque de aire con el texto centrado. */
 .empty-segments-notice {
   grid-column: 1 / -1;
-  background: var(--bg-card);
-  border: 1px dashed var(--border-hover);
-  border-radius: var(--radius-lg);
-  padding: var(--space-7) var(--space-5);
+  background: transparent;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  padding: var(--space-6) var(--space-4);
   text-align: center;
-  margin: var(--space-2) 0;
+  margin: var(--space-3) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   animation: cardEnter var(--duration-standard) var(--ease-standard);
 }
-/* 👆 inyectado en el HTML: se desatura y baja de 2.2rem a algo discreto. */
-.empty-notice-glyph {
-  font-size: var(--text-3xl);
-  margin-bottom: var(--space-2);
-  filter: grayscale(1);
-  opacity: 0.45;
-  line-height: 1;
-}
+/* `.empty-notice-glyph` se eliminó del HTML: el aviso de "ninguna categoría
+   seleccionada" ya tiene `<h4>` y texto, y el glifo era decoración. */
 .empty-segments-notice h4 {
   font-family: var(--font-display);
   font-size: var(--text-xl);
@@ -2059,7 +2346,7 @@ body.read-only-mode #monthNotesTextarea {
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   color: var(--text-main);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 .empty-segments-notice p {
   color: var(--text-secondary);
@@ -2068,49 +2355,69 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 /* ==========================================================================
-   19. ICONOS FOTOGRÁFICOS
-   Los 8 `.jpg` están hardcodeados en `sync_github.js:51-58` (FILES_TO_SYNC):
-   borrarlos o reemplazarlos por SVG rompe el deploy. Se mejoran con CSS:
-   se sube el tamaño mínimo para que el JPEG no se vea borroso a 16px, se
-   quita el borde+sombra y se atenúa el croma. */
+   19. ICONOS DE CATEGORIA (SVG EN LINEA)
+   Los 8 iconos de categoria son SVG de trazo, no raster. Antes eran 8 JPEG de
+   ~450 KB cada uno, usados a 20px (pildoras, nav, boton Notas) y a 32px
+   (encabezados de tarjeta). Medido en el navegador: a 20px un JPEG de 512px
+   de lado se lee como una mancha borrosa con color propio, no como un icono.
+
+   Que se substitute:
+   1. `.ui-icon-img` pierde `object-fit`, `image-rendering`, `filter` y
+      `opacity`. Los dos ultimos existian SOLO para apagar el croma del JPEG
+      (`saturate(0.35)` + `opacity: 0.72`). Sin raster no hay croma que
+      apagar: el glifo toma el color de su contexto con `currentColor`.
+   2. `.ui-icon-svg` es la nueva clase de presentacion. NO fija `width`/`height`
+      a proposito: el tamano lo siguen dando `.ui-icon-xs` / `.ui-icon-sm` /
+      `.ui-icon-pill` / `.ui-icon-nav` / `.ui-icon-brand` / `.ui-icon-card`.
+      Por eso no se reutiliza `.ui-glyph` (que fija `1em` y, al declararse mas
+      abajo en la hoja, le ganaria a las clases de tamano).
+   3. `ui-icon-img` se CONSERVA como clase aunque ya no haya ningun `<img>` con
+      ella: el snapshot del contrato DOM (`odd/tasks/dom-contract-snapshot.txt`)
+      la lista y el nombre heredado de las plantillas de `app.js`. Es un gancho
+      de maquetacion, no una descripcion del elemento.
+
+   `stroke-width: 1.5`, `round`, `round`: identico a `.ui-glyph` (§22). Los 8
+   comparten un solo trazo; el color lo pone el padre (`.segment-pill-btn`
+   `--text-secondary` / `--text-main`, `.btn-topbar-notes`, `.content-card-
+   header`). El acento de categoria NO se repite en los iconos: vive solo en el
+   filete superior de la tarjeta (§7), que es donde ya se verifico que el color
+   repetido hacia que la interfaz se leyera como un dashboard. */
 .ui-icon-img {
   display: inline-block;
-  object-fit: cover;
   vertical-align: middle;
   flex-shrink: 0;
-  background: var(--bg-inset);
-  filter: saturate(0.82) contrast(1.04);
-  image-rendering: auto;
+}
+.ui-icon-svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
 }
 .ui-icon-xs {
   width: 18px;
   height: 18px;
-  border-radius: var(--radius-sm);
 }
 .ui-icon-sm {
   width: 20px;
   height: 20px;
-  border-radius: var(--radius-sm);
 }
 .ui-icon-pill {
   width: 20px;
   height: 20px;
-  border-radius: var(--radius-sm);
 }
 .ui-icon-nav {
   width: 20px;
   height: 20px;
-  border-radius: var(--radius-sm);
 }
 .ui-icon-brand {
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-md);
 }
 .ui-icon-card {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-md);
 }
 
 /* ==========================================================================
@@ -2155,7 +2462,7 @@ body.read-only-mode #monthNotesTextarea {
   z-index: 100;
   align-items: center;
   justify-content: center;
-  padding: var(--space-5);
+  padding: var(--space-3);
 }
 .modal-overlay.active {
   display: flex;
@@ -2163,7 +2470,7 @@ body.read-only-mode #monthNotesTextarea {
 
 .modal-sheet {
   background: var(--bg-card);
-  border: 1px solid var(--border-hover);
+  border: 1px solid var(--hairline-strong);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-float);
   width: 100%;
@@ -2192,34 +2499,34 @@ body.read-only-mode #monthNotesTextarea {
   border-color: var(--accent-rose) !important;
 }
 
-/* Emoji de encabezado de modal (🔐 💰 🚧): no se pueden borrar desde CSS
-   porque son texto; se desaturan y bajan de 2.2rem a 20px. El margen lo
-   sigue poniendo el HTML inline (varía por posición). */
+/* Glifo de encabezado de modal: también vacío (ver §25). El margen lo sigue
+   poniendo el HTML inline (varía por posición). */
 .modal-glyph {
   font-size: var(--text-2xl);
   line-height: 1;
-  filter: grayscale(1);
-  opacity: 0.5;
   flex-shrink: 0;
 }
 
 .role-choice-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-  margin: var(--space-2) 0;
+  gap: var(--space-2);
+  margin: var(--space-1) 0;
 }
 
+/* La tarjeta de rol es un grupo seleccionable con contenido propio: sí lleva
+   filete. El padding sube de 16px a 24px para separar el título, la
+   descripción y la acción sin depender de más líneas. */
 .role-choice-card {
   background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
-  padding: var(--space-4);
+  padding: var(--space-3);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-2);
   text-align: left;
   color: var(--text-main);
   position: relative;
@@ -2227,7 +2534,7 @@ body.read-only-mode #monthNotesTextarea {
   transition: var(--transition-normal);
 }
 .role-choice-card:hover {
-  border-color: var(--border-hover);
+  border-color: var(--hairline-strong);
   background: var(--bg-card);
 }
 .role-choice-card.card-readonly:hover {
@@ -2237,12 +2544,10 @@ body.read-only-mode #monthNotesTextarea {
   border-color: var(--accent-primary-border);
 }
 
-/* 👁️ / 👑 como icono de 2rem: se reducen y desaturan. */
+/* Icono de las tarjetas de rol: también vacío (ver §25). */
 .role-card-icon {
   font-size: var(--text-3xl);
   line-height: 1;
-  filter: grayscale(1);
-  opacity: 0.55;
 }
 
 .role-card-titles h4 {
@@ -2250,7 +2555,7 @@ body.read-only-mode #monthNotesTextarea {
   font-size: var(--text-lg);
   font-weight: 600;
   color: var(--text-main);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-tight);
   letter-spacing: var(--tracking-tight);
 }
 .role-card-titles p {
@@ -2259,11 +2564,14 @@ body.read-only-mode #monthNotesTextarea {
   line-height: 1.45;
 }
 
+/* La acción de la tarjeta de rol es un botón: lleva filete. El relleno teñido
+   ya la distingue del texto de arriba, así que el filete queda en
+   `--hairline` y sube a `--hairline-strong` en el hover. */
 .role-card-action-btn {
   font-family: var(--font-display);
   font-size: var(--text-sm);
   font-weight: 600;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-tight) var(--space-2);
   border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
@@ -2275,29 +2583,31 @@ body.read-only-mode #monthNotesTextarea {
 .card-readonly .role-card-action-btn {
   background: var(--accent-emerald-light);
   color: var(--text-emerald);
-  border-color: var(--accent-emerald-border);
 }
 .card-readonly:hover .role-card-action-btn {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-emerald-hover);
   color: var(--text-emerald);
 }
 .card-admin .role-card-action-btn {
   background: var(--accent-primary-light);
   color: var(--text-secondary);
-  border-color: var(--border-subtle);
+  border-color: transparent;
 }
 .card-admin:hover .role-card-action-btn {
   background: var(--bg-raised);
   color: var(--text-main);
 }
 
+/* El encabezado del sheet es un grupo dentro de la caja del sheet: conserva su
+   filete. El footer también (marca el corte de las acciones), pero pierde el
+   fondo `--bg-surface`: era una tercera caja apilada. */
 .modal-sheet-header {
-  padding: var(--space-5);
-  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 .modal-sheet-header h3 {
   font-size: var(--text-2xl);
@@ -2310,7 +2620,6 @@ body.read-only-mode #monthNotesTextarea {
 /* Un botón de cierre no es una cápsula perfecta con borde y sombra. */
 .btn-close-sheet {
   background: transparent;
-  border: 1px solid transparent;
   color: var(--text-muted);
   font-size: var(--text-base);
   width: 32px;
@@ -2329,25 +2638,25 @@ body.read-only-mode #monthNotesTextarea {
 }
 
 .modal-sheet-body {
-  padding: var(--space-5);
+  padding: var(--space-3);
 }
 
 .form-field {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-2);
 }
 .form-field label {
   display: block;
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
 }
 
 .form-input-lg {
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-2);
   background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius-md);
   font-family: inherit;
   font-size: var(--text-md);
@@ -2369,17 +2678,17 @@ body.read-only-mode #monthNotesTextarea {
 .form-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-2);
 }
 
 .modal-sheet-footer {
-  padding: var(--space-3) var(--space-5);
-  background: var(--bg-surface);
-  border-top: 1px solid var(--border-subtle);
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  border-top: 1px solid var(--hairline);
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
 
 /* ==========================================================================
@@ -2387,20 +2696,20 @@ body.read-only-mode #monthNotesTextarea {
    ========================================================================== */
 .neo-toast {
   position: fixed;
-  bottom: var(--space-6);
-  right: var(--space-6);
+  bottom: var(--space-4);
+  right: var(--space-4);
   background: var(--bg-surface);
   color: var(--text-main);
-  border: 1px solid var(--border-hover);
-  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--hairline-strong);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-float);
   font-size: var(--text-base);
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  max-width: min(420px, calc(100vw - var(--space-6) * 2));
+  gap: var(--space-2);
+  max-width: min(420px, calc(100vw - var(--space-4) * 2));
   z-index: 200;
   transform: translateY(120px);
   opacity: 0;
@@ -2411,29 +2720,32 @@ body.read-only-mode #monthNotesTextarea {
   transform: translateY(0);
   opacity: 1;
 }
-/* `#toastIcon` recibe emoji del JS (✓ 🗑 💸 🔒 ℹ): se desatura. */
-#toastIcon {
-  filter: grayscale(1);
-}
+/* `#toastIcon` queda VACÍO: `showToast()` sigue recibiendo un argumento `icon`
+   (no se tocó la firma) pero todos los payloads son cadena vacía (§25). El
+   mensaje del toast ya dice qué pasó; el icono no aportaba información. */
 
 /* ==========================================================================
    23. ESTADOS VACÍOS
-   ========================================================================== */
+   `padding` de `--space-6` (48px) a `--space-4` (32px). Medido antes del
+   cambio: `.empty-feed-placeholder` ocupaba 141px para dos lineas de texto,
+   porque los 48px de padding vertical eran mas que el texto mismo. 32px sigue
+   sendo aire deliberado y el bloque deja de competir con el contenido de las
+   tarjetas vecinas. */
 .empty-feed-placeholder {
-  padding: var(--space-7) var(--space-5);
+  padding: var(--space-4) var(--space-3);
   text-align: center;
   color: var(--text-secondary);
 }
 .empty-feed-placeholder > div {
   font-size: var(--text-3xl);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
   filter: grayscale(1);
   opacity: 0.4;
   line-height: 1;
 }
 .empty-feed-placeholder p {
   font-size: var(--text-md);
-  margin-top: var(--space-1);
+  margin-top: var(--space-tight);
 }
 
 /* ==========================================================================
@@ -2504,8 +2816,8 @@ body.read-only-mode #monthNotesTextarea {
   .segments-navigation-bar {
     display: flex;
     overflow-x: auto;
-    gap: var(--space-2);
-    padding: 0 0 var(--space-2) 0;
+    gap: var(--space-1);
+    padding: 0 0 var(--space-1) 0;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
@@ -2520,13 +2832,13 @@ body.read-only-mode #monthNotesTextarea {
     min-width: 100px;
   }
   .main-content {
-    padding: var(--space-4) var(--space-4) var(--space-7) var(--space-4);
+    padding: var(--space-2) var(--space-2) var(--space-6) var(--space-2);
   }
 }
 
 @media (max-width: 768px) {
   .app-topbar {
-    padding: 0 var(--space-3);
+    padding: 0 var(--space-2);
   }
   .topbar-quick-kpi {
     display: none;
@@ -2537,11 +2849,11 @@ body.read-only-mode #monthNotesTextarea {
   }
   .btn-topbar-notes {
     font-size: var(--text-xs);
-    padding: var(--space-1);
+    padding: var(--space-tight);
   }
   .expense-card-item {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
+    gap: var(--space-1);
   }
   .expense-item-amount {
     text-align: left;
@@ -2556,7 +2868,7 @@ body.read-only-mode #monthNotesTextarea {
   }
   .chart-canvas-container {
     height: 270px;
-    padding: var(--space-3);
+    padding: var(--space-2);
   }
   .view-heading {
     font-size: var(--text-2xl);
@@ -2566,7 +2878,7 @@ body.read-only-mode #monthNotesTextarea {
 /* Modales como bottom sheet en vertical */
 @media (max-width: 600px) {
   .main-content {
-    padding: var(--space-3) var(--space-2) var(--space-7) var(--space-2);
+    padding: var(--space-2) var(--space-1) var(--space-6) var(--space-1);
   }
   .modal-overlay {
     align-items: flex-end;
@@ -2583,17 +2895,17 @@ body.read-only-mode #monthNotesTextarea {
     animation: sheetSlideUp var(--duration-standard) var(--ease-enter);
   }
   .modal-sheet-header {
-    padding: var(--space-4);
+    padding: var(--space-2);
   }
   .modal-sheet-body {
-    padding: var(--space-4) !important;
+    padding: var(--space-2) !important;
   }
   .modal-sheet-footer {
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-1) var(--space-2);
   }
   .role-choice-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3);
+    gap: var(--space-2);
   }
   /* `.form-grid-2` nunca colapsaba: los campos quedaban de 130px de ancho. */
   .form-grid-2 {
@@ -2601,16 +2913,16 @@ body.read-only-mode #monthNotesTextarea {
     gap: 0;
   }
   .neo-toast {
-    left: var(--space-3);
-    right: var(--space-3);
-    bottom: var(--space-3);
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: var(--space-2);
     max-width: none;
   }
 }
 
 @media (max-width: 480px) {
   .content-card-header {
-    padding: var(--space-2);
+    padding: var(--space-1);
   }
   /* Bajar el h3 de tarjeta es lo que evita que "Gastos Extraordinarios"
      se corte con puntos suspensivos en pantallas diminutas. */
@@ -2621,8 +2933,8 @@ body.read-only-mode #monthNotesTextarea {
     display: none;
   }
   .expense-card-item {
-    padding: var(--space-2);
-    gap: var(--space-2);
+    padding: var(--space-1);
+    gap: var(--space-1);
   }
   .expense-item-title,
   .expense-item-amount {
@@ -2631,10 +2943,10 @@ body.read-only-mode #monthNotesTextarea {
   .btn-status-toggle {
     min-width: 76px;
     font-size: var(--text-2xs);
-    padding: var(--space-1);
+    padding: var(--space-tight);
   }
   .btn-ghost-rose {
-    padding: var(--space-1);
+    padding: var(--space-tight);
   }
   .metric-card-number {
     font-size: var(--text-xl);
@@ -2646,32 +2958,122 @@ body.read-only-mode #monthNotesTextarea {
     font-size: var(--text-lg);
   }
   .tx-right {
-    gap: var(--space-2);
+    gap: var(--space-1);
   }
 }
 
 /* ==========================================================================
-   25. PREFERENCIAS DEL SISTEMA
+   25. GLIFOS: SVG EN LÍNEA Y MARCAS DIBUJADAS EN CSS
+   Los emoji iconográficos quedaron prohibidos por la skill ("Reject AI slop:
+   ... emoji icons"). No se reemplazaron por otro glifo con nombre: se
+   resolvieron en dos Families.
+
+   1) Iconografía FUNCIONAL -> SVG inline de 16x16, trazo `currentColor`, que
+      hereda color y foco del control. Cierra, limpia, chevrons y lupa: son
+      la acción del botón, no decoración, y un SVG es lo que hace apple.com.
+   2) Marcas de ESTADO -> CSS puro. El punto de "tiene notas" y el sentido
+      ingreso/gasto se dibujan con `border-radius` y `transform`, sin carácter
+      ni fuente de iconos.
+
+   Ninguno se anima: los glifos no llevan `transition` propia.
+   ========================================================================== */
+.ui-glyph {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* El botón de borrar se dibuja sobre un fondo pequeño: 1em heredaría 15px. */
+.btn-delete-expense .ui-glyph,
+.btn-delete-tx .ui-glyph {
+  width: 13px;
+  height: 13px;
+}
+
+/* Sentido del movimiento en el feed: chevron dibujado con dos bordes, en vez
+   del carácter ->/->. El color ya lo ponía `.tx-icon-ingreso` / `.tx-icon-gasto`
+   vía `color`, así que `currentColor` es suficiente. */
+.tx-icon-circle .ui-glyph {
+  width: 14px;
+  height: 14px;
+}
+
+/* Contenedores que existían SOLO para alojar un emoji. Al vaciarse deben
+   desaparecer: si no, dejan un hueco del tamaño del glifo que ya no está.
+   `:empty` no cuenta hijos elemento, así que un <svg> o un <img> reales
+   mantienen su caja. */
+.modal-glyph:empty,
+.role-card-icon:empty,
+.metric-icon-box:empty,
+.search-box-icon:empty,
+#toastIcon:empty,
+#authModeIcon:empty {
+  display: none;
+}
+
+/* ==========================================================================
+   26. PREFERENCIAS DEL SISTEMA
    `prefers-color-scheme` NO se usa: la app es dark-only por decisión de
    producto (identidad "Obsidian" para un panel financiero nocturno). Es lo que
    hace apple.com: 0 ocurrencias en sus 5 hojas. Una media query forzaría un
    tema que el producto no ofrece y sin control de layout.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  /* Cubre las 65 declaraciones `transition` de esta hoja, no solo las que
+     :root tokeniza: la regla universal usa `!important`, así que gana contra
+     los tokens `--transition-fast/normal/bounce` y contra cualquier
+     `transition:` escrito a mano. Los 6 @keyframes (`fadeIn`, `cardEnter`,
+     `cardExit`, `sheetSlideUp`, `modalPop`, `modalShake`) también entran por
+     `animation-duration`. apple.com tiene 34 reglas de este tipo; antes
+     esta hoja tenía 1. */
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    /* Sin esto, una transición con `delay` seguía esperando después de
+      Reducer Motion: se acortaba la duración pero no la espera. */
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* `animation: none` global rompería los estados finales: `cardEnter` y
+     `cardExit` usan `forwards`, y sin animation la tarjeta quedaría en su
+     estado inicial. En su lugar se fija el estado final a mano, que es lo
+     que el usuario quiere ver: el resultado, sin el recorrido. */
+  .content-card-box.card-anim-in,
+  .content-card-box.card-anim-out {
+    animation: none !important;
+    transform: none;
+    opacity: 1;
+  }
+  .modal-sheet {
+    animation: none !important;
+    transform: none;
+    opacity: 1;
+  }
+  .empty-segments-notice,
+  .empty-feed-placeholder {
+    animation: none !important;
+    opacity: 1;
   }
 
   /* Cross-fade en lugar de escalar: la señal sigue, el movimiento no. */
   .btn:active,
   .btn-sidebar-quick-action:active,
   .btn-status-toggle:active,
-  .segment-pill-btn:active {
+  .segment-pill-btn:active,
+  .btn-ghost-rose:active {
     transform: none;
     opacity: 0.65;
   }
@@ -2700,13 +3102,16 @@ body.read-only-mode #monthNotesTextarea {
 
 @media (prefers-contrast: more) {
   :root {
-    --border-subtle: rgba(255, 255, 255, 0.24);
-    --border-hover: rgba(255, 255, 255, 0.4);
-    --border-focus: rgba(255, 255, 255, 0.6);
+    --hairline: rgba(255, 255, 255, 0.24);
+    --hairline-strong: rgba(255, 255, 255, 0.4);
+    --hairline-focus: rgba(255, 255, 255, 0.6);
     --text-secondary: #c3c9d4;
     --text-muted: #9aa2b1;
     --bg-card: #17181f;
     --bg-surface: #20212a;
+    /* `--hairline-focus` se sobreescribe acá aunque hoy no lo consuma ninguna
+       regla: si `--hairline` sube a 0.24 en alto contraste, el filete de foco
+       tiene que subir con él. Mantener el par sincronizado. */
     --bg-inset: #0b0c11;
   }
 }

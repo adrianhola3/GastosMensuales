@@ -54,6 +54,34 @@ function readToken(tokenName, fallbackToken) {
     : '';
 }
 
+/**
+ * Una sola línea centrada cuando la serie está vacía.
+ *
+ * Sin esto, `beginAtZero` sobre datos todos-cero produce una escala 0..1 con
+ * rótulos "S/ 0.2", "S/ 0.4"... que no son cifras del usuario, y el anillo
+ * dibuja tres arcos neutros que parecen datos. Los dos son actively misleading:
+ * un eje que inventa una escala y un anillo que finge una composición.
+ *
+ * El texto se pinta con los MISMOS tokens que el resto del gráfico, así que no
+ * hay literales de color en este archivo.
+ */
+const sinDatos = {
+  id: 'gastos-sin-datos',
+  afterDraw(chart, args, opts) {
+    if (!opts || !opts.texto) return;
+    const ctx = chart.ctx;
+    const area = chart.chartArea;
+    if (!area) return;
+    ctx.save();
+    ctx.fillStyle = readToken('--text-muted', '--text-secondary');
+    ctx.font = `12px ${readToken('--font-body')}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(opts.texto, (area.left + area.right) / 2, (area.top + area.bottom) / 2);
+    ctx.restore();
+  },
+};
+
 function renderGlobalCharts() {
   if (typeof Chart === 'undefined') return;
   if (!window.financialStore) return;
@@ -94,17 +122,35 @@ function renderGlobalCharts() {
   const colorIngresos = readToken('--accent-emerald', '--accent-cyan');
   const colorBalance = readToken('--accent-rose', '--accent-cyan');
   const colorAxis = readToken('--text-muted', '--text-secondary');
-  const colorGrid = readToken('--hairline', '--hairline-strong');
-  const colorTooltipBg = readToken('--bg-surface', '--bg-card');
+  // El grid se lee de `--hairline-strong`, no de `--hairline`: sobre la
+  // superficie #0f1015 un filete al 9% es invisible y el eje queda flotando.
+  const colorGrid = readToken('--hairline-strong', '--hairline');
+  // El tooltip va sobre `--bg-inset`: con `--bg-surface` el cuadro del tooltip
+  // queda del mismo color que la sección y sus bordes son lo único que se ve.
+  const colorTooltipBg = readToken('--bg-inset', '--bg-surface');
   const colorTooltipBorder = readToken('--hairline-strong', '--hairline');
   const colorTooltipTitle = readToken('--text-main', '--text-primary');
   const colorTooltipBody = readToken('--text-secondary', '--text-main');
   const fontSans = readToken('--font-body');
   const fontMono = readToken('--font-mono');
 
+  // Sin datos acumulados, `beginAtZero` produce una escala 0..1 y el eje rotula
+  // "S/ 0.2", "S/ 0.4"... que no son cifras del usuario. En ese caso el eje se
+  // oculta en vez de mentir: queda el campo vacío con su leyenda.
+  const hayDatosSerie = ingresosAcumulados.concat(balanceAcumulado)
+    .some(v => Number(v) !== 0);
+
+  // Marca la sección para que la hoja baje el lienzo a 120px cuando no hay
+  // nada que dibujar. Sin esto quedaban 280px de vacío por una línea de texto.
+  const marcarVacio = (canvas, vacio) => {
+    const seccion = canvas.closest('.chart-section');
+    if (seccion) seccion.classList.toggle('is-empty', vacio);
+  };
+
   // 1. Gráfico de Barras: Ingresos Acumulados vs Balance Neto Acumulado
   const barCanvas = document.getElementById('chartTrendBar') || document.getElementById('globalBarChart');
   if (barCanvas) {
+    marcarVacio(barCanvas, !hayDatosSerie);
     if (barChartInstance) {
       barChartInstance.destroy();
       barChartInstance = null;
@@ -112,6 +158,7 @@ function renderGlobalCharts() {
 
     barChartInstance = new Chart(barCanvas, {
       type: 'bar',
+      plugins: [sinDatos],
       data: {
         labels: labels,
         datasets: [
@@ -135,7 +182,13 @@ function renderGlobalCharts() {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+          'gastos-sin-datos': {
+            texto: hayDatosSerie ? '' : 'Sin ingresos registrados en el acumulado.'
+          },
           legend: {
+            // Sin datos, una leyenda de dos series y cero barras es ruido: se
+            // oculta y queda la sola línea de estado vacío.
+            display: hayDatosSerie,
             position: 'top',
             labels: {
               boxWidth: 10,
@@ -162,9 +215,11 @@ function renderGlobalCharts() {
         scales: {
           y: {
             beginAtZero: true,
+            display: hayDatosSerie,
             ticks: {
               color: colorAxis,
               font: { family: fontMono, size: 11 },
+              maxTicksLimit: 6,
               callback: function(value) {
                 return 'S/ ' + value;
               }
@@ -211,6 +266,7 @@ function renderGlobalCharts() {
 
     donutChartInstance = new Chart(donutCanvas, {
       type: 'doughnut',
+      plugins: [sinDatos],
       data: {
         labels: catLabels,
         datasets: [{
@@ -228,6 +284,9 @@ function renderGlobalCharts() {
         maintainAspectRatio: false,
         cutout: '70%',
         plugins: {
+          'gastos-sin-datos': {
+            texto: totalGastos > 0 ? '' : 'Sin gastos registrados en el acumulado.'
+          },
           legend: {
             position: 'bottom',
             labels: {

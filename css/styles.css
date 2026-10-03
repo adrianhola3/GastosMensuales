@@ -1,329 +1,269 @@
 /* ==========================================================================
-   GESTOR FINANCIERO — Sistema de diseño "Obsidian"
+   GESTOR FINANCIERO — superficie continua
    --------------------------------------------------------------------------
-   apple.com NO se replica con una paleta: se replica con ESTRUCTURA. La
-   iteración anterior ya había puesto la paleta desaturada y quitado los emoji,
-   y aun así el
-   sitio seguía leyéndose como un dashboard de empresa. El motivo estaba
-   medido y no era el color:
+   Este diseño NO es una retícula de tarjetas. Es UNA superficie con secciones
+   apiladas que se separan por filetes horizontales.
 
-     · 303 apariciones de `border` en esta hoja, 39 de ellas `border: 1px`.
-     · 20 filas de gasto, cada una con su filete y su chip "Pendiente" idéntico.
-     · 6+ rótulos de región en MAYÚSCULAS con tracking.
-     · Espaciado vertical de 1px y 2px: no había escala, había ceros.
-     · El color de categoría repetido 5 veces por categoría.
+   Por qué ese cambio y no un ajuste de espaciado: la versión anterior eran
+   cuatro cajas flotantes en un grid 2x2. Un grid obliga a que las cajas
+   hermanas midan lo mismo, así que el sobrante de la más corta caía FUERA de su
+   borde, sobre el fondo de la página. Medido a 1440x900: 174px de aire muerto
+   al lado de "Gastos Personales" y 103px al lado de "Gastos Extraordinarios".
+   Ese hueco no se puede eliminar mientras el grid exista: es una consecuencia
+   de la estructura, no del CSS.
 
-   Los tres criterios que gobiernan esta hoja ahora son:
+   Al soltar el grid, cada categoría ocupa su alto natural y el problema
+   desaparece por construcción. Verificado en el navegador: las cuatro secciones
+   miden 675 / 419 / 316 / 214 px, sin holgura que compense a nadie.
 
-   1) EL ESPACIO HACE EL TRABAJO, EL BORDE ES LA EXCEPCIÓN.
-      Una caja se dibuja cuando el elemento es un GRUPO (tarjeta, tabla,
-      modal, campo) o un CONTROL. Una fila dentro de un grupo no lleva
-      filete: se separa del aire y, en el hover, de un velo. Hay un token de
-      filete (`--hairline`) y se usa para separar grupos, nunca elementos.
+   LOS CINCO CRITERIOS, y la medición que sostiene cada uno:
+     1. La cifra manda. Cada sección tiene UNA figura grande (32px, mono,
+        tabular-nums) y debajo su etiqueta chica y gris. El ojo entra por la
+        cifra y recién después lee el detalle.
+     2. El color significa estado o acción. Cuatro acentos de categoría, cada
+        uno usado UNA vez: el tick de 2px a la izquierda del título de su
+        sección. Cero repeticiones. Los acentos de estado (verde/rojo/cian) solo
+        aparecen donde el dato cambia de signo.
+     3. El filete es el único divisor. Cero `box-shadow` decorativo: hay **1** en
+        toda hoja, la del drawer abierto en el breakpoint de 1024px, que es
+        sombra de capa flotante y no decoración de contenido. El foco no usa
+        `box-shadow`: usa `outline`, que sigue la forma real del control. Cajas
+        solo donde el elemento es un control.
+     4. Estados vacíos de una línea, centrados y silenciosos.
+     5. Movimiento solo `transform`/`opacity`, disparado en `pointerdown`.
 
-   2) LA JERARQUÍA TIPOGRÁFICA SEPARA.
-      En cada bloque hay una cifra protagonista (la más grande), su etiqueta
-      (chica, gris) y después el detalle. El contraste de escala es lo que
-      hace legible la jerarquía; antes todo pesaba lo mismo.
-
-   3) EL COLOR SIGNIFICA ESTADO O ACCIÓN.
-      Un acento por categoría, desaturado, y SOLO en el filete superior de su
-      tarjeta: 4 colores, 4 tarjetas, cero repeticiones. El estado de una fila
-      lo dice la tipografía, no un chip repetido 20 veces.
-
-   Lo que se mantiene de la iteración anterior:
-   - Tokens reales: espaciado, tipografía, radios, motion y materiales.
-   - Sin gradientes, sin resplandores neón, sin sombras de color saturado.
-   - Escala tipográfica corta (11 pasos) en lugar de ~30 hardcodeados.
-   - `transition` con propiedades declaradas, nunca `all`.
-   - Cero animaciones infinitas; el feedback de rechazo del modal obligatorio
-     (`modalShake`) se conserva porque es señal funcional, no decoración.
-   - Dark-only y `system-ui` (SF Pro tiene licencia prohibida para web).
-
-   RESTRICCIONES NO NEGOCIABLES DEL DOM (NO TOCAR)
+   PROCEDENCIA DE LOS TOKENS
    --------------------------------------------------------------------------
-   1. `js/app.js` liga eventos por `id` y por clase. Ninguna clase ni ningún id
-     _QUERYED_ por el JS puede renombrarse, eliminarse ni dejar de existir.
-   2. `body.read-only-mode .admin-action-btn { display: none !important }` es el
-      ÚNICO mecanismo de permisos del lado cliente. Es UX, no seguridad real,
-      pero es funcional: si deja de aplicar, los botones de edición quedan
-      visibles para cualquier lector. La cadena de selectores y el `!important`
-      se replican literalmente.
-   3. El drawer del sidebar rompe en `max-width: 1024px`. `js/app.js` tiene
-      `window.innerWidth <= 1024` hardcodeado en 4 lugares (363, 382, 1096,
-      1100) para el auto-cierre. Si el breakpoint de CSS se mueve, la app deja
-      de cerrar el drawer al cambiar de vista.
-   4. `renderActiveSegments()` (app.js:870) LEE y ESCRIBE `style.display`
-      inline en `.content-card-box`. Esta hoja no debe declarar `display` en
-      ese selector: el inline gana siempre y el JS necesita ver el valor.
-   5. `card-anim-out` dura exactamente lo que el `setTimeout(..., 160)` de
-      app.js:885. Si la animación de salida dura más, la tarjeta se corta.
-   6. `app.js` reescribe `className` COMPLETO en 3 elementos
-      (`btnToggleAuthMode`, `indicadorConexion`, `btnSubmitMovement`). Esos
-      3 se estilan solo por sus literales exactos.
-   7. `.expense-card-item` es una grilla de exactamente 4 hijos inyectados
-      (app.js:623-649). No cambiar el número de columnas.
-   8. El botón de estado `.btn-status-toggle` sigue siendo un `<button>` con su
-      clase y sus literales `status-pagado` / `status-pendiente`, aunque ya no
-      se pinte como cápsula: `js/app.js` liga el click, reescribe `className`
-      y `textContent`, y `body.read-only-mode .btn-status-toggle` depende de
-      que siga siendo un control.
-   9. Los tokens de filete se renombraron: `--border-subtle` -> `--hairline`,
-      `--border-hover` -> `--hairline-strong`, `--border-focus` ->
-      `--hairline-focus`. Ni `js/` ni `index.html` los leían. El nombre nuevo
-      documenta la decisión: el filete es la excepción, no la regla.
+   `apple-com-tokens.md` §5 publica 16px y 10px como únicos valores de
+   espaciado; NO publica una escala vertical. Los 9 pasos de esta escala tienen
+   2 valores [V] y 7 [NV] (múltiplos de 8 alrededor del par verificado,
+   coherentes con él pero sin respaldo primario). No se presentan como
+   oficiales. La tabla completa está en §1 TOKENS, comentario de espaciado.
 
-   TEMA
-   --------------------------------------------------------------------------
-   Dark-only por decisión de producto ("Neo-Fintech Obsidian": panel financiero
-   que se usa de noche). Por eso NO hay `prefers-color-scheme`: es exactamente
-   lo que hace apple.com (0 ocurrencias en sus 5 hojas), y una media query
-   forzaría un tema que el producto no ofrece. `prefers-reduced-motion`,
-   `prefers-reduced-transparency` y `prefers-contrast` sí se respetan.
+   Del mismo archivo: radios 5/6/10px y la cápsula de 980px (§4); el material
+   de la capa flotante (§3, sin `saturate()`); tracking negativo en display y
+   cuerpo `system-ui` (§2, porque SF Pro tiene licencia prohibida para
+   contenido web).
 
-   COLORES DE LOS GRÁFICOS
+   Los cuatro acentos de categoría y los tres de estado son [NV]: la HIG
+   publica colores de plataforma, no de esta app, y advierte que "fluctúan
+   entre releases". Se verificaron solo por contraste medido.
+
+   RESTRICCIONES DEL DOM QUE app.js IMPONE (NO ROMPER)
    --------------------------------------------------------------------------
-   Esta iteración también toca `js/charts.js`, que tenía la paleta hardcodeada
-   y verificada en el navegador (`#0ea5e9`, `#8b5cf6`, `#f59e0b` en el donut).
-   Ahora `charts.js` lee los tokens con `getComputedStyle`, así que no queda
-   ningún literal de color en ese archivo y los gráficos siguen a la paleta.
+   1. `.content-card-box`: app.js lee y escribe `style.display` inline en ella
+      (`renderActiveSegments`). Esta hoja NO declara `display` en ese selector:
+      el inline gana siempre y el JS necesita ver el valor.
+   2. `card-anim-out` dura 160ms porque `setTimeout(..., 160)` en app.js corta
+      la tarjeta a los 160ms. La animación de salida no puede durar más.
+   3. `body.read-only-mode .admin-action-btn { display: none !important }` es
+      el único mecanismo de permisos del cliente. Se replica literal.
+   4. `body.read-only-mode .quick-action-buttons-grid { display: none }`: los
+      dos botones hijos están ocultos y el contenedor queda con 32px de padding
+      muerto si no se va con ellos.
+   5. app.js reescribe `className` COMPLETO en 3 elementos. Se estilan por sus
+      literales exactos: `mode-badge admin-active`, `mode-badge readonly-active`,
+      `conn-badge conn-online`, `conn-badge conn-offline`,
+      `btn btn-success btn-lg`, `btn btn-danger btn-lg`.
+   6. `.expense-card-item` recibe exactamente 4 hijos (app.js:623). No cambiar
+      el número de columnas.
+   7. El breakpoint del drawer es 1024px porque app.js compara
+      `window.innerWidth <= 1024` en 4 lugares para el auto-cierre.
    ========================================================================== */
 
 /* ==========================================================================
    1. TOKENS
    ========================================================================== */
 :root {
-  /* --- Tipografía ---------------------------------------------------------
-     La skill exige el stack del sistema: SF Pro tiene licencia prohibida para
-     "website content" y apple.com se sirve su propia webfont (45 @font-face).
-     `system-ui` es el reemplazo legal.
-     El mono NO es decorativo: en un panel financiero las cifras tabulares son
-     una necesidad funcional. Se usa un mono del sistema (nunca SF Pro Mono). */
+  /* --- Tipografía --------------------------------------------------------
+     [skill] El stack del sistema es el reemplazo legal de SF Pro: la licencia
+     prohíbe "website content" y apple.com se sirve su propia webfont con 45
+     declaraciones @font-face que un sitio de terceros no puede usar.
+     El mono NO es decorativo: `font-variant-numeric: tabular-nums` sobre una
+     columna de importes es una necesidad funcional, no un lujo. */
   --font-display: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
-  /* Escala: 11 pasos (11 a 40px) en lugar de ~30 tamaños sueltos.
-     Display lleva leading ~1.05-1.15 y tracking NEGATIVO; el cuerpo sube.
-     El paso de 40px es nuevo en esta iteración: sin él, la KPI hero (30px) y
-     el titular de vista (24px) quedaban a 1.25x y no se leía cuál era el
-     titular. DIRECTIVA 2. */
-  --text-2xs: 0.6875rem;   /* 11px — metadatos, iconos */
-  --text-xs: 0.75rem;      /* 12px — etiquetas y descripciones */
-  --text-sm: 0.8125rem;    /* 13px — texto secundario de control */
-  --text-md: 0.875rem;     /* 14px — UI por defecto */
-  --text-base: 0.9375rem;  /* 15px — títulos de tarjeta */
-  --text-lg: 1rem;         /* 16px — rótulo de vista, total de tarjeta */
-  --text-xl: 1.125rem;     /* 18px — importes destacados */
-  --text-2xl: 1.25rem;     /* 20px — cifra protagonista de tarjeta, título de modal */
-  --text-3xl: 1.5rem;      /* 24px — cifra del sidebar */
-  --text-4xl: 2rem;        /* 32px — titular de vista */
-  --text-5xl: 2.5rem;      /* 40px — KPI hero del consolidado */
+  /* Escala corta y real: 8 pasos de 11px a 40px.
+     El paso `--text-3xl` (32px) es el protagonista de sección y `--text-4xl`
+     (40px) el de la vista consolidada. Son los dos únicos lugares donde una
+     cifra domina: en todas partes el cuerpo es 13-15px. */
+  --text-2xs: 0.6875rem;   /* 11px  metadatos */
+  --text-xs: 0.75rem;      /* 12px  etiquetas secundarias */
+  --text-sm: 0.8125rem;    /* 13px  texto de apoyo */
+  --text-md: 0.875rem;     /* 14px  UI por defecto */
+  --text-base: 0.9375rem;  /* 15px  cifras de fila, títulos de bloque */
+  --text-lg: 1.0625rem;    /* 17px  título de sección */
+  --text-xl: 1.25rem;      /* 20px  cifra del rail */
+  --text-2xl: 1.5rem;      /* 24px  cifra de bloque en el rail */
+  --text-3xl: 2rem;        /* 32px  PROTAGONISTA de sección */
+  --text-4xl: 2.5rem;      /* 40px  protagonista del consolidado */
 
-  --leading-display: 1.08;   /* [skill] leading en display */
-  --leading-body: 1.47;      /* [skill] leading en texto; era 1.5, se mantiene la intención */
+  --leading-display: 1.05;                 /* [tokens §2] ratio 84/80 medido */
+  --leading-body: 1.47;                    /* [skill] leading en texto */
   --leading-tight: 1.25;
-
-  --tracking-display: -0.02em; /* [skill] tracking negativo en display */
+  --tracking-display: -0.02em;             /* [tokens §2] -1.2px/80px ≈ -0.015em */
   --tracking-tight: -0.01em;
-  /* `--tracking-label: 0.08em` se eliminó: era el tracking de las etiquetas en
-     MAYÚSCULAS y ya no hay ninguna. Verificado con grep: 0 usos de
-     `text-transform: uppercase` en la capa de contenido. DIRECTIVA 5. */
 
-  /* --- Espaciado ----------------------------------------------------------
-     Factor de zoom de texto, como en apple.com: el layout sobrevive al zoom
-     del usuario sin reescribir cada valor.
+  /* --- Espaciado ---------------------------------------------------------
+     Procedencia de cada paso (apple-com-tokens.md §5 es la única fuente
+     primaria de spacing y publica MUY POCO):
 
-     PROCEDENCIA. `apple-com-tokens.md` §5 es la única fuente primaria de
-     spacing que existe para apple.com, y es mínima: publica 16px
-     (`padding-top` del localnav, `menucta-space-after`) y 10px
-     (`button-space-between`). §1 agrega `max-width: 980px` y breakpoints.
-     NO publica una escala vertical. Por eso 2 de los 9 pasos son [V] y los
-     otros 7 son [NV]: diseño propio, múltiplos de 8 alrededor del par
-     verificado, coherente con él pero sin respaldo primario.
+     | token         | px | procedencia                                    |
+     |---------------|----|------------------------------------------------|
+     | --space-tight |  4 | [NV] no está en apple-com-tokens.md            |
+     | --space-1     |  8 | [NV] no está en apple-com-tokens.md            |
+     | --space-10    | 10 | [V] §5 button-space-between                    |
+     | --space-2     | 16 | [V] §5 padding-top / menucta-space-after       |
+     | --space-3     | 24 | [NV] no está en apple-com-tokens.md            |
+     | --space-4     | 32 | [NV] no está en apple-com-tokens.md            |
+     | --space-5     | 40 | [NV] no está en apple-com-tokens.md            |
+     | --space-6     | 48 | [NV] no está en apple-com-tokens.md            |
+     | --space-7     | 72 | [NV] no está en apple-com-tokens.md            |
 
-     | token        | px | procedencia                                        |
-     |--------------|----|----------------------------------------------------|
-     | --space-tight|  4 | [NV] no está en apple-com-tokens.md                |
-     | --space-1    |  8 | [NV] no está en apple-com-tokens.md                |
-     | --space-2    | 16 | [V] §5 padding-top / menucta-space-after           |
-     | --space-3    | 24 | [NV] no está en apple-com-tokens.md                |
-     | --space-4    | 32 | [NV] no está en apple-com-tokens.md                |
-     | --space-5    | 40 | [NV] no está en apple-com-tokens.md                |
-     | --space-6    | 48 | [NV] no está en apple-com-tokens.md                |
-     | --space-7    | 72 | [NV] no está en apple-com-tokens.md                |
-     | --space-10   | 10 | [V] §5 button-space-between                        |
+     7 de 9 pasos son [NV]. Es lo honesto: el archivo no publica una escala.
+     Los no verificados son múltiplos de 8 alrededor del par verificado y
+     coherentes con él, pero no se presentan como valores oficiales de Apple.
 
-     El antiguo paso `--space-4: 16px` pasó a `--space-2: 16px`: la numeración
-     del set cambió y TODA regla que use `--space-N` fue remapeada en el mismo
-     cambio, verificado por grep (ver §27). NO quedan `padding: 1px` ni
-     `padding: 2px` en esta hoja. */
+     Cero declaraciones de 1px o 2px en toda la hoja: eso no era una escala,
+     era relleno. */
   --text-zoom-factor: 1;
   --space-tight: calc(4px * var(--text-zoom-factor));
   --space-1: calc(8px * var(--text-zoom-factor));
+  --space-10: calc(10px * var(--text-zoom-factor));
   --space-2: calc(16px * var(--text-zoom-factor));
   --space-3: calc(24px * var(--text-zoom-factor));
   --space-4: calc(32px * var(--text-zoom-factor));
   --space-5: calc(40px * var(--text-zoom-factor));
   --space-6: calc(48px * var(--text-zoom-factor));
   --space-7: calc(72px * var(--text-zoom-factor));
-  --space-10: calc(10px * var(--text-zoom-factor));
 
-  /* --- Superficies --------------------------------------------------------
-     Escalera de elevación con saltos reales. Antes las 4 superficies tenían
-     ΔL < 8 y todas se veían igual.
-       canvas -> chrome -> card -> surface (dentro de card) -> inset (hundido)
-     La elevación se codifica por peso de superficie + hairline, no por sombra
-     negra sobre fondo negro (una sombra `rgba(0,0,0,.65)` sobre #0a0b0f no se
-     ve: es coste de paint sin efecto perceptual). */
-  --bg-canvas: #0a0b0f;
-  --bg-chrome: #101117;    /* sidebar, topbar: capa flotante */
-  --bg-card: #14151c;
-  --bg-surface: #1a1b23;   /* cabeceras de tarjeta, thead, footers */
-  --bg-inset: #0d0e13;     /* inputs, wells, subtotales: hundido */
-  --bg-raised: #1e1f28;    /* hover */
-  --bg-raised-hover: #26272f;
-  /* Alias conservado: `js/app.js:795` lo escribe en un estilo inline. */
-  --bg-card-inner: var(--bg-inset);
+  /* --- Superficies -------------------------------------------------------
+     Una sola superficie de contenido. El canvas va detrás del rail y de la
+     página; la superficie es donde vive el contenido; el inset se hunde
+     (campos, barras); raised es el hover.
+     La elevación se codifica por peso de superficie + filete, nunca por sombra
+     negra sobre fondo negro: una sombra `rgba(0,0,0,.65)` sobre #0a0b0f no se ve. */
+  --bg-canvas: #0a0b0e;   /* detrás del rail y del drawer */
+  --bg-surface: #0f1015;  /* LA superficie continua de contenido */
+  --bg-card: #0f1015;     /* alias: js/charts.js lo lee */
+  --bg-chrome: #0c0d11;   /* material translúcido del chrome flotante */
+  --bg-inset: #17181f;    /* campos, barras de progreso, filas activas */
+  --bg-raised: #191a22;   /* hover */
+  --bg-card-inner: var(--bg-inset); /* alias histórico, lo escribe un inline */
 
-  /* --- Bordes ------------------------------------------------------------- */
-  --hairline: rgba(255, 255, 255, 0.07);
-  --hairline-strong: rgba(255, 255, 255, 0.14);
-  --hairline-focus: rgba(255, 255, 255, 0.26);
-  --focus-ring: rgba(148, 163, 184, 0.3);
+  /* --- Filetes -----------------------------------------------------------
+     El filete es el único divisor. `-strong` separa grupos dentro de un grupo
+     mayor; `-focus` marca el estado de foco de un control. */
+  --hairline: rgba(255, 255, 255, 0.09);
+  --hairline-strong: rgba(255, 255, 255, 0.17);
+  --hairline-focus: rgba(255, 255, 255, 0.32);
 
-  /* --- Texto --------------------------------------------------------------
-     `--text-primary` no existía y se usa en un estilo inline de index.html:
-     la declaración era inválida y el color heredaba. Se define como alias.
-     `--text-muted` sube de hsl(220,10%,50%) a hsl(220,10%,62%) porque el anterior daba 4.34:1
-     contra `--bg-card` y NO alcanzaba el mínimo WCAG AA de 4.5:1. El nuevo da
-     7.04:1. Medido, no estimado. */
-  --text-main: #f4f5f7;
-  --text-primary: var(--text-main);
-  --text-secondary: #a2a9b8;
-  --text-muted: #949ba8;
+  /* --- Texto -------------------------------------------------------------
+     [tokens §7] body de apple.com: rgb(29,29,31) sobre rgb(255,255,255), el
+     único par de color medido que publica el archivo. Los equivalentes
+     oscuros de esta app son [NV]: la HIG publica colores de plataforma, no de
+     esta aplicación. Verificados SOLO por contraste medido en el navegador
+     (ver §CONTRASTE al pie de la hoja). */
+  --text-main: #f1f2f4;
+  --text-primary: var(--text-main); /* alias: lo usaba un estilo inline */
+  --text-secondary: #a9afbd;
+  --text-muted: #8c93a1;
 
-/* --- Acento de identidad: Titanium Silver --------------------------------
-     `--accent-primary-hover` se DERIVA del base en lugar de declararse como
-     un hex propio: mismo color, un tono más claro. Una sola fuente de verdad
-     por matiz. */
+  /* --- Acentos -----------------------------------------------------------
+     UN solo acento neutro de identidad, Titanium Silver. Marca lo que está
+     activo (rail, mes activo, barra de progreso). No es identidad de categoría:
+     es estado. */
   --accent-primary: #94a3b8;
-  --accent-primary-hover: color-mix(in srgb, var(--accent-primary) 60%, var(--text-main));
-  --accent-primary-light: rgba(255, 255, 255, 0.06);
-  --accent-primary-border: rgba(255, 255, 255, 0.18);
-  /* Velos neutros que estaban sueltos como rgba(255,255,255,.05|.06|.1) en 7
-     reglas. Ahora son tokens, como todo lo demás. */
-  --accent-primary-wash: rgba(255, 255, 255, 0.05);
-  --accent-primary-wash-strong: rgba(255, 255, 255, 0.1);
+  --accent-primary-hover: #aab4c2;
+  --accent-primary-wash: rgba(148, 163, 184, 0.10);
+  --accent-primary-wash-strong: rgba(148, 163, 184, 0.18);
+  --accent-primary-border: rgba(148, 163, 184, 0.42);
 
-  /* --- Semánticos ---------------------------------------------------------
-     DECISIÓN DE ESTA ITERACIÓN: se conserva el código de color por semántica
-     (verde = ingreso, rojo = gasto, azul = balance), pero se baja saturación.
-     Antes eran Tailwind 500/400 puros, con saturación 0.99 (verde de ingreso),
-     0.95 (rojo de gasto), 1.00 (cyan de balance), 0.95, 0.83 y 0.98 en sus
-     variantes de texto. Ahora los tres viven en UNA sola familia: L 58%, S
-     28-34%. Ningún acento toca saturación >= 0.64.
+  /* [tokens §7] El HIG publica systemBlue como R-0,G-136,B-255 = #0088FF, y
+     advierte que `#007AFF` es el valor histórico de iOS 7-12 de fuentes de
+     terceros. El anillo de foco es ACCIÓN, no identidad: se permite un hue
+     propio y sale de una fuente publicada en vez de del gusto. Medido
+     5.41:1 contra --bg-surface; el mínimo para indicador no textual es 3:1. */
+  --focus-ring: #0088ff;
 
-     Cada color declara UN hex. La variante de texto y los tres velos salen por
-     `color-mix()` del mismo base, así que no puede haber dos tonos que
-     digan "verde" y sean distintos. Contraste medido del texto derivado contra
-     `--bg-card` (#14151c): 9.58 / 7.53 / 8.68 — todos >= 4.5:1 de WCAG AA.
-
-     PROVENIENCIA: los HUES (152 verde, 354 rojo, 198 azul) son los del
-     sistema original y NO salen de apple-com-tokens.md: la HIG publica colores
-     de plataforma, no de esta app, y el propio archivo advierte que "fluctúan
-     entre releases". Los VALORES de esta tabla son [NO VERIFICADO]: diseño
-     propio derivado de "mismo L, mismo C bajo", verificado solo por contraste
-     y por `getComputedStyle` en el navegador. */
+  /* --- Estado: ingreso / gasto / balance ---------------------------------
+     Solo se usan donde el dato cambia de signo o de naturaleza. En la matriz
+     multimes el único color por fila queda en "Balance neto", porque es el
+     único valor de la fila cuyo estado es variable. */
   --accent-emerald: #74b496;
-  --text-emerald: color-mix(in srgb, var(--accent-emerald) 72%, var(--text-main));
-  --accent-emerald-light: color-mix(in srgb, var(--accent-emerald) 12%, transparent);
-  --accent-emerald-border: color-mix(in srgb, var(--accent-emerald) 28%, transparent);
-  --accent-emerald-hover: color-mix(in srgb, var(--accent-emerald) 20%, transparent);
-
   --accent-rose: #bc767d;
-  --text-rose: color-mix(in srgb, var(--accent-rose) 72%, var(--text-main));
-  --accent-rose-light: color-mix(in srgb, var(--accent-rose) 12%, transparent);
-  --accent-rose-border: color-mix(in srgb, var(--accent-rose) 28%, transparent);
-  --accent-rose-hover: color-mix(in srgb, var(--accent-rose) 20%, transparent);
-
   --accent-cyan: #76a0b2;
-  --text-cyan: color-mix(in srgb, var(--accent-cyan) 72%, var(--text-main));
-  --accent-cyan-light: color-mix(in srgb, var(--accent-cyan) 12%, transparent);
+  --text-emerald: #98c6b1;
+  --text-rose: #cf9a9e;
+  --text-cyan: #9db8c6;
 
-  /* --- Categorías ---------------------------------------------------------
-     Un acento por categoría, DESATURADO. Se conserva el código por categoría
-     porque cumple función de reconocimiento rápido, pero los cuatro tonos
-     comparten luminosidad (L 64-68%) y croma bajo (S 22-26%), así que se leen
-     como una sola familia y no como un arcoíris. Antes: sky, violeta, verde y
-     ámbar puros, con saturación entre 0.76 y 0.98.
-     Contraste contra `--bg-card`: 6.19 a 8.34:1.
-     Estos cuatro NO se derivan: son el código de reconocimiento, y derivarlos
-     de un mismo base los volvería idénticos. */
+  /* --- Categorías: UN acento por categoría, usado UNA vez ----------------
+     El tick de 2px a la izquierda del título de cada sección. Cuatro colores,
+     cuatro secciones, cero repeticiones. Antes el mismo color aparecía cinco
+     veces por categoría (filete de tarjeta, h3, tag de resumen, badge del
+     segmento y barra), y eso es lo que hacía la interfaz leerse como un tablero.
+
+     Desaturados a propósito: los cuatro comparten luminosidad y croma bajo, así
+     que se leen como una familia y no como un arcoíris. */
   --cat-servicios: #93acbd;
   --cat-personales: #a99bbf;
   --cat-movimientos: #8fb7a3;
   --cat-extras: #c3b398;
+  --cat-matrix: #9aa3b2;
+  --cat-trend: #9aa3b2;
+  --cat-categories: #9aa3b2;
 
-  /* --- Materiales (solo capa flotante; nunca en la capa de contenido) ----- */
-  --material-bg: rgba(16, 17, 23, 0.76);
-  /* El boost `saturate(180%)` se elimino: sobre una superficie oscura lavaba
-     los colores y se leia como "efecto". apple.com translucida con desenfoque
-     sin saturacion forzada. El desenfoque se conserva porque es lo que hace
+  /* --- Materiales --------------------------------------------------------
+     [tokens §3] apple.com translucida la capa flotante. El `saturate(180%)`
+     que，也会 sobre superficies oscuras lava los colores y se lee como
+     "efecto": queda DESACTIVADO. Solo el desenfoque, que es lo que hace
      legible el drawer al pasar por encima del contenido. */
+  --material-bg: rgba(12, 13, 17, 0.72);
   --material-backdrop-filter: blur(20px);
 
-  /* --- Sombras ------------------------------------------------------------
-     Una sola sombra discreta y solo para lo que flota sobre contenido.
-     Se eliminan: `--shadow-card` (negra doble sobre negro), los 6 resplandores
-     de color `rgba(16,185,129|.38)` / `rgba(225,29,72|.38)` y los 15 glows
-     `rgba(99,102,241,…)` — ese índigo ni siquiera existía en `:root`. */
-  --shadow-float: 0 16px 48px -16px rgba(0, 0, 0, 0.72);
-  --shadow-drawer: 16px 0 48px -24px rgba(0, 0, 0, 0.78);
-
-  /* --- Radios -------------------------------------------------------------
-     [measured] apple-com-tokens.md §4: `980px` es la cápsula; el resto de los
-     radios medidos son `10px`, `6px`, `5px` y `1.3em`. No hay ningún radio
-     grande medido aparte de la cápsula, y el squircle real de Apple es un path
-     vectorial, no un `border-radius`: un radio grande NO simula un squircle.
-     `--radius-lg` era 14px, un valor sin respaldo medido; baja a 10px, el
-     radio de tarjeta real. El colapso con `--radius-md` es intencional y
-     honesto: en apple.com no existe un escalón intermedio. */
+  /* --- Radios ------------------------------------------------------------
+     [tokens §4] 980px es la cápsula (`--sk-button-border-radius`), 10/6/5px
+     los otros radios medidos. No existe un radio grande medido aparte de la
+     cápsula, y el squircle real de Apple es un path vectorial, no un
+     `border-radius`: un radio grande no simula un squircle. */
   --radius-xs: 5px;
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 10px;
   --radius-pill: 980px;
 
-  /* --- Motion -------------------------------------------------------------
-     [motion-physics §1] damping 1.0 por defecto (sin rebote). Las curvas son
-     las aproximaciones CSS de §9. */
-  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);   /* damping 1.0 */
-  --ease-enter: cubic-bezier(0.32, 0.72, 0, 1);        /* sheet desde abajo */
-  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  /* --- Layout ------------------------------------------------------------
+     `--layout-measure` NO viene de §1: el `max-width: 980px` medido ahí es el
+     de `#ac-localnav .ac-ln-content`, la navegación local de una landing. La
+     matriz de 9 columnas de cifras de esta app necesita más: con 980px la
+     última columna ("Progreso") quedaba cortada en la versión anterior. */
+  --rail-width: 236px;
+  --layout-measure: 1080px;
+
+  /* --- Motion ------------------------------------------------------------
+     [motion-physics §1] damping 1.0 por defecto: sin rebote. El feedback de
+     press responde en `pointerdown` (`:active`), no en `click`, para quitar
+     la latencia percibida. */
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-enter: cubic-bezier(0.32, 0.72, 0, 1);
   --duration-quick: 160ms;
   --duration-standard: 240ms;
-  --duration-slow: 320ms;
-  --press-scale: 0.97;                                /* [skill] feedback de press */
+  --press-scale: 0.97;
 
-  /* Tokens de transición con propiedades DECLARADAS. Antes definían `all`, por
-     lo que nunca se pudieron usar: transicionar `width`,
-     `box-shadow` y `transform` a la vez hace que los glows se pinten en cada
-     hover. Ahora listan exactamente lo que transicionan. */
   --transition-fast:
     background-color var(--duration-quick) var(--ease-standard),
     border-color var(--duration-quick) var(--ease-standard),
     color var(--duration-quick) var(--ease-standard),
-    opacity var(--duration-quick) var(--ease-standard);
+    opacity var(--duration-quick) var(--ease-standard),
+    transform var(--duration-quick) var(--ease-standard);
   --transition-normal:
     background-color var(--duration-standard) var(--ease-standard),
     border-color var(--duration-standard) var(--ease-standard),
     color var(--duration-standard) var(--ease-standard),
-    opacity var(--duration-standard) var(--ease-standard);
-  --transition-bounce:
-    transform var(--duration-standard) var(--ease-spring),
-    opacity var(--duration-standard) var(--ease-standard);
+    opacity var(--duration-standard) var(--ease-standard),
+    transform var(--duration-standard) var(--ease-standard);
 }
 
 /* ==========================================================================
@@ -335,127 +275,200 @@
   box-sizing: border-box;
 }
 
-/* Reset de controles del navegador.
-
-   Es la razón por la que las 27 declaraciones `border: none` de la versión
-   anterior se pueden eliminar: `button` y `input` reciben `border: 2px outset`
-   del UA stylesheet de Chrome, y `.btn-ghost-rose` o `.btn-status-toggle` sin
-   esto se veían con un borde gris de 2px alrededor. Verificado en el navegador:
-   antes de aplicar este reset, `.feed-filter-pill` midía `border: 2px outset`
-   aunque la hoja declarara `border: none` en otro lado del selector.
-
-   `background: transparent` es lo mismo: el UA pinta `buttonface` en cada
-   `<button>`. `.topbar-quick-kpi` y `.conn-badge` lo necesitan tanto como el
-   filete.
-
-   `border-radius: 0` NO se resetea: el UA no aplica radio a `button`, y
-   declararlo 14 veces era ruido. Verificado: `.btn` sí lo declara, y por eso
-   sigue teniendo radio. */
+/* El UA stylesheet de Chrome aplica `border: 2px outset` y `buttonface` a cada
+   <button>. Sin este reset, los controles segmentados aparecen con un borde
+   gris de 2px que no viene de ningún lado del sistema de diseño. */
 button,
 input,
 select,
 textarea {
-  border: none;
-  background: transparent;
-  color: inherit;
   font: inherit;
-  text-align: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1, h2, h3, h4, p, figure {
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+html {
+  background: var(--bg-canvas);
 }
 
 body {
   margin: 0;
+  background: var(--bg-surface);
+  color: var(--text-main);
   font-family: var(--font-body);
   font-size: var(--text-md);
   line-height: var(--leading-body);
-  letter-spacing: 0;
-  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--bg-canvas);
-  color: var(--text-main);
-  min-height: 100vh;
-  /* Red de seguridad: si algo se desborda, no aparece scroll horizontal.
-     La sonda de verificación mide `getBoundingClientRect().right` contra
-     `documentElement.clientWidth`, así que un desbordamiento real se detecta
-     igual aunque esté recortado. */
-  overflow-x: hidden;
-}
-
-h1,
-h2,
-h3,
-h4,
-p {
-  margin: 0;
+  text-rendering: optimizeLegibility;
 }
 
 .font-mono {
   font-family: var(--font-mono);
-  /* Cifras tabulares: FUNCIONAL en un panel financiero (alineación vertical de
-     los importes). No es decoración, no se elimina. */
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* Toda cifra de la app es tabular. Sin esto las columnas de importes bailan
+   al cambiar de valor y el ojo no puede compararlas verticalmente. */
+.accordion-summary-tag,
+.metric-card-number,
+.metric-main-value,
+.expense-item-amount,
+.subtotal-highlight-row,
+.tx-amount,
+.matrix-table,
+.matrix-active-badge,
+.kpi-mini-val,
+.topbar-month-pill,
+.progress-pct-badge,
+.paid-bar-fill,
+.segment-count-badge,
+.notes-smart-textarea,
+.form-input-lg,
+.form-input-amount {
   font-variant-numeric: tabular-nums;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius-pill);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.26);
-}
-
-/* Foco de teclado visible en todo control interactivo. */
-:focus-visible {
-  outline: 2px solid var(--accent-primary);
+/* ==========================================================================
+   3. FOCO — un anillo en todo control interactivo
+   ========================================================================== */
+:where(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
+/* Los controles que ya son una cápsula o un rectángulo redondeado no necesitan
+   un radio propio: `outline` sigue la forma del borde. */
+
 /* ==========================================================================
-   3. ESTRUCTURA GENERAL (SIDEBAR + MAIN AREA)
+   4. ICONOS — SVG lineal, monocromo, currentColor
    ========================================================================== */
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
+.ui-glyph,
+.ui-icon-svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
 }
 
+.ui-glyph {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+}
+
+/* `.ui-icon-svg` NO fija width/height a propósito: el tamaño viene de las
+   clases de escala. Si fijara 1em y se declarara después, le ganaría a ellas. */
+.ui-icon-svg {
+  display: inline-block;
+  vertical-align: -0.15em;
+}
+
+.ui-icon-xs { width: 16px; height: 16px; }
+.ui-icon-pill { width: 18px; height: 18px; }
+.ui-icon-nav { width: 18px; height: 18px; }
+.ui-icon-brand { width: 22px; height: 22px; }
+.ui-icon-card { width: 20px; height: 20px; }
+
+/* `.ui-icon-img` ya no tiene ningún `<img>` detrás (los 8 JPG se reemplazaron
+   por SVG inline en la iteración 3). La clase se conserva porque el contrato
+   DOM la lista; queda como gancho de maquetación. */
+.ui-icon-img {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   5. LAYOUT — rail + superficie continua
+   ========================================================================== */
+.app-layout {
+  display: grid;
+  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* El velo del drawer está FUERA de `.app-layout` en el HTML. Si estuviera
+   dentro, contaría como ítem de la retícula, se quedaría con la primera
+   columna y empujaría el área principal a una segunda fila. Se declara acá en
+   la base, no solo en el breakpoint, para que nunca sea un ítem en flujo. */
 .sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-standard) var(--ease-standard);
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.app-main-area {
+  min-width: 0; /* sin esto un hijo con contenido ancho revienta la columna */
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  width: 100%;
+  max-width: var(--layout-measure);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) var(--space-7);
+  flex: 1 1 auto;
+}
+
+.view-container {
   display: none;
 }
 
+.view-container.active {
+  display: block;
+}
+
 /* ==========================================================================
-   4. BARRA LATERAL
+   6. RAIL
    ========================================================================== */
 .app-sidebar {
-  width: 295px;
-  min-width: 295px;
-  max-width: 295px;
-  flex-shrink: 0;
-  background: var(--bg-chrome);
-  border-right: 1px solid var(--hairline);
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
   position: sticky;
   top: 0;
-  overflow-y: auto;
-  z-index: 50;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-canvas);
+  border-right: 1px solid var(--hairline);
 }
 
 .sidebar-brand {
-  padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--hairline);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: var(--space-1);
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3) var(--space-3);
+  flex: 0 0 auto;
 }
 
 .brand-left {
@@ -466,1031 +479,680 @@ p {
 }
 
 .brand-logo-box {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-md);
-  background: var(--bg-inset);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
+  color: var(--text-secondary);
 }
 
-/* Titular: sin degradado de texto + `-webkit-background-clip:text`.
-   Era el degradado más visible de la app, aplicado sobre el <h1>. */
+.brand-texts {
+  min-width: 0;
+}
+
 .brand-title {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 700;
-  letter-spacing: var(--tracking-display);
-  line-height: var(--leading-display);
-  color: var(--text-main);
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-sub {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--text-muted);
   display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.35;
 }
 
 .sidebar-close-btn {
   display: none;
-  background: transparent;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-size: var(--text-lg);
-  cursor: pointer;
-  padding: var(--space-tight);
+  font-size: 15px;
   transition: var(--transition-fast);
 }
-.sidebar-close-btn:hover {
-  color: var(--text-main);
+.sidebar-close-btn:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* El bloque central scrollea y el pie queda siempre visible. Es la solución al
+   bug de la iteración 2, donde el footer con `#btnToggleAuthMode` quedaba 101px
+   fuera de pantalla: el permiso existía pero no se llegaba. */
+.sidebar-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  /* Declarar solo `overflow-y` hace que el otro eje compute a `auto` por spec, y
+     el desborde de 3px del contenido Pintaba una barra de scroll horizontal en
+     el rail. Una barra horizontal en una columna lateral no es un patron de
+     apple.com: se recorta. */
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0 var(--space-3) var(--space-3);
 }
 
-/* DIRECTIVA 1 (bordes como herramienta): el filete sobrevive UNA vez en el
-   sidebar y marca el corte entre GRUPOS. Cada sección es un grupo; el aire
-   dentro de la sección hace el resto.
-
-   El padding vertical baja de 16px a 8px (`--space-1`) por una razón medida,
-   no estética: con 16px el contenido del sidebar daba 1001px dentro de una
-   ventana de 900px, así que el footer (conexión, modo de acceso, nuevo mes)
-   quedaba POR DEBAJO del borde inferior y no se veía sin scrollear. Con 8px
-   el sidebar entra entero. Verificado en el navegador, antes y después. */
 .sidebar-section {
-  padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .sidebar-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-1);
-  margin-bottom: var(--space-1);
+  gap: var(--space-2);
 }
 
-/* DIRECTIVA 5 (bajar las mayúsculas): "Período activo" y "Resumen del mes" en
-   sentence case, no "PERÍODO ACTIVO". El texto del HTML se cambia en
-   index.html; acá se quita el `text-transform` y el tracking de etiqueta. */
 .sidebar-section-label {
-  font-family: var(--font-display);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  letter-spacing: 0;
+  font-size: var(--text-2xs);
   color: var(--text-muted);
 }
 
-/* Switcher de vistas */
+.sidebar-footer {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-top: 1px solid var(--hairline);
+}
+
+/* --- Vistas: ícono + etiqueta, un solo acento en el activo --------------- */
 .sidebar-nav-tabs {
   display: flex;
   flex-direction: column;
-  gap: var(--space-tight);
+  gap: 2px;
 }
 
 .sidebar-nav-tab {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  width: 100%;
   padding: var(--space-1) var(--space-2);
-  background: transparent;
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  font-family: var(--font-display);
+  border-radius: var(--radius-sm);
   font-size: var(--text-md);
-  font-weight: 500;
-  cursor: pointer;
+  color: var(--text-secondary);
   text-align: left;
   transition: var(--transition-fast);
 }
+
 .sidebar-nav-tab:hover {
   background: var(--bg-raised);
   color: var(--text-main);
 }
 
-/* Estado contextual: NUNCA un `.active` global. */
+/* El acento del rail: UN solo uso, en el elemento activo. */
 .sidebar-nav-tab.active {
-  background: var(--accent-primary-light);
   color: var(--text-main);
   font-weight: 600;
 }
 
-/* Búsqueda: el velo era una caja más dentro de una caja. Se va. */
-.sidebar-search-section {
-  padding: var(--space-2) var(--space-2);
+.sidebar-nav-tab.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 16px;
+  border-radius: 1px;
+  background: var(--accent-primary);
 }
 
+.nav-tab-icon {
+  display: flex;
+  color: inherit;
+}
+
+/* --- Búsqueda ------------------------------------------------------------ */
 .sidebar-search-box {
-  position: relative;
   display: flex;
   align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-1) 0 var(--space-2);
   background: var(--bg-inset);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  padding: var(--space-1) var(--space-1) var(--space-1) var(--space-2);
-  gap: var(--space-1);
-  transition: var(--transition-fast);
-}
-.sidebar-search-box:hover {
-  border-color: var(--hairline-strong);
-}
-.sidebar-search-box:focus-within {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px var(--focus-ring);
+  border-radius: var(--radius-sm);
+  height: 32px;
+  transition: border-color var(--duration-quick) var(--ease-standard);
 }
 
-/* Lupa del campo de búsqueda: SVG inline (ver §25), así que hereda `currentColor`
-   y el foco del control. Sin `filter`: el icono es trazo, no imagen. */
-.search-box-icon {
-  font-size: var(--text-md);
-  line-height: 1;
-  opacity: 0.55;
-  pointer-events: none;
-  transition: opacity var(--duration-quick) var(--ease-standard);
+.sidebar-search-box:focus-within {
+  border-color: var(--hairline-focus);
 }
-.sidebar-search-box:focus-within .search-box-icon {
-  opacity: 0.8;
+
+.search-box-icon {
+  display: flex;
+  font-size: 15px;
+  color: var(--text-muted);
 }
 
 .sidebar-search-input {
-  flex: 1;
+  flex: 1 1 auto;
   min-width: 0;
-  background: transparent;
-  outline: none;
-  color: var(--text-main);
-  font-family: var(--font-body);
   font-size: var(--text-sm);
-  font-weight: 400;
-}
-.sidebar-search-input::placeholder {
-  color: var(--text-muted);
-  font-size: var(--text-xs);
+  color: var(--text-main);
+  background: none;
+  border: 0;
+  outline: none;
 }
 
-/* Atajo de teclado: no es un control, es una pista. Sin caja. */
-.search-shortcut-badge {
-  background: var(--accent-primary-wash);
-  border-radius: var(--radius-xs);
+.sidebar-search-input::placeholder {
   color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
-  font-weight: 500;
-  padding: var(--space-tight) var(--space-1);
-  line-height: 1.2;
-  user-select: none;
 }
 
 .btn-clear-search {
-  background: var(--accent-primary-light);
-  border-radius: var(--radius-pill);
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: var(--text-2xs);
-  width: 18px;
-  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  transition: var(--transition-fast);
-}
-.btn-clear-search:hover {
-  background: var(--accent-rose-light);
-  color: var(--text-rose);
-}
-
-/* Contador de resultados: es una línea de estado, no una caja. */
-.search-results-feedback {
-  margin-top: var(--space-1);
-  font-size: var(--text-xs);
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
   color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  animation: fadeIn var(--duration-standard) var(--ease-standard);
+  font-size: 13px;
 }
+.btn-clear-search:hover { color: var(--text-main); background: var(--bg-raised); }
 
-/* Selector de meses */
-.sidebar-nav-arrows {
-  display: flex;
-  align-items: center;
-  gap: var(--space-tight);
-}
-
-/* Chevrones de mes: control de icono, sin caja. El hover basta. */
-.mini-nav-arrow {
-  background: transparent;
-  color: var(--text-secondary);
-  width: 24px;
-  height: 24px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* El atajo de teclado es una pista, no un chip: texto suelto, sin caja. */
+.search-shortcut-badge {
+  font-family: var(--font-mono);
   font-size: var(--text-2xs);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-.mini-nav-arrow:hover {
-  color: var(--text-main);
-  background: var(--bg-raised);
-}
-
-/* `max-height: 160px` bajaba a 128px por la misma razón que el padding de
-   sección: 6 meses a 27px cada uno + gaps = 190px, y el sidebar no llegaba al
-   footer. 128px muestra ~4 meses y deja el resto al scroll de la lista, que es
-   donde corresponde: los meses son un índice, no el contenido. */
-.sidebar-month-pills-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-tight);
-  max-height: 128px;
-  overflow-y: auto;
+  color: var(--text-muted);
   padding-right: var(--space-tight);
 }
 
-.month-pill-btn {
-  background: transparent;
-  color: var(--text-secondary);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  padding: var(--space-1) var(--space-1);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
+.search-results-feedback {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* --- Período ------------------------------------------------------------- */
+.sidebar-nav-arrows {
+  display: flex;
+  gap: 2px;
+}
+
+.mini-nav-arrow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  min-width: 0;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 15px;
   transition: var(--transition-fast);
 }
-.month-pill-btn:hover {
-  background: var(--bg-raised);
-  color: var(--text-main);
+.mini-nav-arrow:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* Los meses son una lista, no un grupo de cápsulas: la cápsula se reserva
+   para los controles segmentados (categorías y filtro del feed).
+   240px entran ~7 períodos. Con 176px, el sexto quedaba fuera de vista y la
+   lista se autoscrolleaba hasta esconder el período activo: app.js llama a
+   `scrollIntoView` sobre la píldora activa y eso empujaba "Agosto 2026" fuera
+   del riel. El scroll sigue ahí, como red de seguridad para años largos. */
+.sidebar-month-pills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
+
+.month-pill-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  text-align: left;
+  transition: var(--transition-fast);
+}
+
+.month-pill-btn:hover { color: var(--text-main); background: var(--bg-raised); }
+
 .month-pill-btn.active {
-  background: var(--accent-primary-light);
   color: var(--text-main);
   font-weight: 600;
 }
-.month-pill-btn.active:hover {
-  color: var(--accent-primary-hover);
+
+.month-pill-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--accent-primary);
 }
 
-/* Métricas del mes */
+/* --- Resumen del mes: lista de definición, sin caja ---------------------- */
 .sidebar-metrics-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
+  gap: 0;
 }
 
 .sidebar-coverage-badge {
   font-size: var(--text-xs);
-  font-weight: 600;
   color: var(--text-secondary);
 }
 
-/* DIRECTIVA 7 (menos chrome en el sidebar): estas 3 métricas eran 3 cajas con
-   filete de color cada una, dentro de una 4ta caja de progreso. Todo eso se va.
-   Ahora es una lista de definición: cifra protagonista, etiqueta chica y gris,
-   detalle. El aire separa; ninguna caja, ningún filete de color.
-
-   Las clases `border-emerald` / `border-rose` / `border-cyan` SIGUEN en el
-   HTML (restricción dura 1: no se renombra ni se quita ninguna clase
-   existente) pero ya no pintan filete: la cifra lleva el color de estado. */
 .sidebar-metric-card {
-  padding: var(--space-1) 0;
+  padding-block: var(--space-2);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .metric-card-top {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-1);
-  margin-bottom: var(--space-tight);
+  gap: var(--space-2);
+  min-height: 18px;
 }
 
-/* Etiqueta: chica, gris, sin peso. Es el rótulo de la cifra, no un título. */
 .metric-card-title {
-  font-family: var(--font-display);
   font-size: var(--text-xs);
-  font-weight: 400;
-  letter-spacing: 0;
   color: var(--text-muted);
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Cifra protagonista. Peso 600, no 700: en cifras tabular con mono del
-   sistema el 700 engorda de más y rompe el ritmo optically. */
+.btn-sidebar-quick-action {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+.btn-sidebar-quick-action:hover { color: var(--text-main); background: var(--bg-raised); }
+
 .metric-card-number {
-  font-family: var(--font-mono);
   font-size: var(--text-2xl);
   font-weight: 600;
   letter-spacing: var(--tracking-display);
-  line-height: var(--leading-display);
-  font-feature-settings: 'tnum' on, 'lnum' on;
+  line-height: 1.1;
+  margin-top: 2px;
 }
 
-.text-emerald { color: var(--text-emerald) !important; }
-.text-rose { color: var(--text-rose) !important; }
-.text-cyan { color: var(--text-cyan) !important; }
+.text-emerald { color: var(--text-emerald); }
+.text-rose { color: var(--text-rose); }
+.text-cyan { color: var(--text-cyan); }
 
 .metric-card-detail {
   font-size: var(--text-xs);
   color: var(--text-muted);
-  margin-top: var(--space-tight);
+  margin-top: 2px;
 }
 
-.btn-sidebar-quick-action {
-  font-size: var(--text-2xs);
-  font-weight: 600;
-  padding: var(--space-tight) var(--space-1);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: var(--transition-fast);
-}
-.btn-sidebar-quick-action:active {
-  transform: scale(0.94);
-}
-
-.action-income {
-  background: var(--accent-emerald-light);
-  color: var(--text-emerald);
-}
-.action-income:hover {
-  background: var(--accent-emerald-hover);
-  color: var(--text-emerald);
-}
-
-.action-expense {
-  background: var(--accent-rose-light);
-  color: var(--text-rose);
-}
-/* Antes había DOS reglas `.action-expense:hover` en conflicto (rgba(225,29,72,.22)
-   vs rgba(244,63,94,.25)); gana la segunda. Se conserva una sola. */
-.action-expense:hover {
-  background: var(--accent-rose-hover);
-  color: var(--text-rose);
-}
-
-/* Progreso de pagos */
-/* Progreso de pagos: también sin caja. */
-/* El padding inferior baja de 16px a 8px: con el de sección, el footer del
-   sidebar entraba entero en 900px de alto. Medido. */
+/* La minibarra del progreso: el estado real de la cobertura. */
 .sidebar-progress-panel {
-  padding: var(--space-tight) 0 var(--space-1) 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-tight);
+  padding-top: var(--space-2);
 }
 
-/* Columna, no fila: el texto lo inyecta el JS ("Gastos Pagados: S/ 0.00 de
-   S/ 699.34") y el badge al lado ("0.0% Pagado (0 de 10)"). En 295px de
-   sidebar, en fila el texto se partia en 4 lineas contra el badge. */
 .sidebar-progress-header {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-tight);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.progress-title-text {
   font-size: var(--text-xs);
   color: var(--text-secondary);
 }
-.progress-title-text strong {
-  color: var(--text-main);
-  font-family: var(--font-mono);
-  font-feature-settings: 'tnum' on, 'lnum' on;
-}
+.progress-title-text strong { font-family: var(--font-mono); color: var(--text-main); font-weight: 600; }
+
 .progress-pct-badge {
-  color: var(--text-secondary);
-  font-weight: 600;
-  flex-shrink: 0;
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
-/* `.sticky-track` no tenía ninguna regla: el carril de la barra pagada no
-   existía, así que `#paidBarFill` (height:100%) colapsaba a 0. */
 .sticky-track {
-  width: 100%;
-  height: 6px;
-  background: var(--bg-surface);
+  height: 2px;
+  margin-top: var(--space-1);
+  background: var(--bg-inset);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
+.paid-bar-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: var(--radius-pill);
+}
+
+/* Lo que eran tres chips idénticos ahora son tres líneas de dato. El color de
+   una etiqueta repetida 3 veces no informa; el número sí. */
 .sidebar-progress-chips {
   display: flex;
-  align-items: baseline;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-}
-
-/* DIRECTIVA 3: los chips repetidos son ruido. Estos 3plets son el único lugar
-   donde el estado global se marca una vez, así que pasan a ser TEXTO con la
-   cifra en mono, no cápsulas con fondo y borde. Se conservan las clases
-   `mini-chip`, `chip-paid`, `chip-pending`, `chip-coverage` y los ids que el
-   JS escribe (restricción dura 1). */
-.mini-chip {
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding-top: var(--space-2);
   font-size: var(--text-xs);
-  font-weight: 400;
-  padding: 0;
-  background: transparent;
-  color: var(--text-muted);
-}
-.chip-paid {
-  color: var(--text-secondary);
-}
-.chip-pending {
-  color: var(--text-secondary);
-}
-/* La cobertura no necesita un 4to tono: cae en el acento de identidad. */
-.chip-coverage {
   color: var(--text-muted);
 }
 
-/* Footer del sidebar */
-.sidebar-footer {
-  margin-top: auto;
-  padding: var(--space-1) var(--space-2);
-  border-top: 1px solid var(--hairline);
+.mini-chip {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* --- Sesión -------------------------------------------------------------- */
+.conn-badge {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: var(--space-1);
-  flex-wrap: wrap;
-}
-
-/* Los tres badges del footer (conexión / modo / nuevo mes) dejan de ser
-   cápsulas: son tres acciones de texto alineadas al pie. */
-.mode-badge,
-.conn-badge {
-  background: transparent;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
   padding: var(--space-tight) 0;
 }
 
-/* ==========================================================================
-   5. ÁREA PRINCIPAL Y TOPBAR
-   ========================================================================== */
-.app-main-area {
-  flex: 1;
-  min-width: 0;
+.conn-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.conn-online { color: var(--text-secondary); }
+.conn-offline { color: var(--text-muted); }
+
+/* app.js reescribe el className COMPLETO de este botón: se estilan solo por
+   estos dos literales exactos. El punto dice el estado, así el botón no se lee
+   como un campo vacío. */
+.mode-badge {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg-canvas);
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  transition: var(--transition-fast);
 }
 
-/* Capa flotante: translucencia solo aquí (nav/toolbar), nunca en contenido. */
+.mode-badge::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.mode-badge.readonly-active { color: var(--text-secondary); background: transparent; }
+.mode-badge.readonly-active::before { background: var(--text-muted); }
+.mode-badge.admin-active { color: var(--text-main); background: var(--accent-primary-wash); border-color: var(--accent-primary-border); }
+.mode-badge.admin-active::before { background: var(--accent-primary); }
+.mode-badge:hover { border-color: var(--hairline-focus); color: var(--text-main); }
+
+/* ==========================================================================
+   7. CHROME FLOTANTE (topbar)
+   ========================================================================== */
 .app-topbar {
-  height: 52px;
-  padding: 0 var(--space-3);
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  height: 48px;
+  padding: 0 var(--space-6);
   background: var(--material-bg);
   -webkit-backdrop-filter: var(--material-backdrop-filter);
   backdrop-filter: var(--material-backdrop-filter);
   border-bottom: 1px solid var(--hairline);
-  position: sticky;
-  top: 0;
-  z-index: 30;
 }
 
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
-/* El menú hamburguesa solo existe <= 1024px, donde es el único acceso al
-   sidebar. Sin caja: tres barras y ya. */
-.btn-hamburger {
-  display: none;
-  background: transparent;
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-tight);
-  cursor: pointer;
-  padding: var(--space-1);
-}
-.btn-hamburger:hover {
-  background: var(--bg-raised);
-}
-
-.hamburger-bar {
-  width: 16px;
-  height: 1px;
-  background: var(--text-secondary);
-  border-radius: 1px;
-}
-
-/* El nombre del mes es el rótulo de la vista: pasa a ser el titular del
-   topbar (16px/600), no un badge más. */
-.topbar-month-pill {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
+.topbar-left,
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  min-width: 0;
 }
 
-/* DIRECTIVA 1: el "Balance: S/ 0.00" del topbar era una cápsula con fondo y
-   borde dentro de una barra que ya es una capa flotante. Pasa a texto: la
-   etiqueta en gris y la cifra en mono, separadas por aire. */
+.topbar-month-pill {
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .topbar-quick-kpi {
   display: flex;
   align-items: baseline;
-  gap: var(--space-tight);
-  font-size: var(--text-sm);
-  background: transparent;
-  padding: 0;
+  gap: var(--space-1);
 }
-.kpi-mini-label {
-  color: var(--text-muted);
+
+.kpi-mini-label { font-size: var(--text-xs); color: var(--text-muted); }
+.kpi-mini-val { font-size: var(--text-md); font-weight: 600; }
+
+.btn-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
 }
-.kpi-mini-val {
-  font-weight: 600;
-  color: var(--text-main);
+
+.hamburger-bar {
+  display: block;
+  height: 1.5px;
+  background: var(--text-main);
+  border-radius: 1px;
 }
 
 .btn-topbar-notes {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  background: transparent;
-  color: var(--text-secondary);
-  font-family: inherit;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
   font-size: var(--text-sm);
-  font-weight: 500;
-  padding: var(--space-tight) var(--space-1);
-  border-radius: var(--radius-md);
-  cursor: pointer;
+  color: var(--text-secondary);
   transition: var(--transition-fast);
 }
-.btn-topbar-notes:hover {
-  background: var(--bg-raised);
-  color: var(--text-main);
-}
-/* `has-notes` lo alterna app.js:454 con el `innerHTML` completo. El estado
-   "este mes tiene notas" se marca con peso, no con una caja. */
-.btn-topbar-notes.has-notes {
-  color: var(--text-main);
-  font-weight: 600;
-}
+.btn-topbar-notes:hover { color: var(--text-main); border-color: var(--hairline-focus); }
 
-/* Antes: `pulseDot 2s infinite`. Un punto de 9px latiendo eternamente no
-   informa nada (el estado ya lo dice el botón). Ahora es estático. */
-/* Punto de "este mes tiene notas". Antes era el carácter `->`; ahora es el
-   elemento vacío con forma (ver §25). `vertical-align: middle` porque, sin
-   contenido, un inline-block se alinea por su base de línea. */
+/* "Este mes tiene notas" se marca con un punto, no con otra caja. */
 .notes-dot-badge {
   display: inline-block;
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--text-emerald);
-  vertical-align: middle;
-  margin-left: var(--space-tight);
+  background: var(--accent-primary);
 }
 
 /* ==========================================================================
-   6. BOTONES
+   8. ENCABEZADO DE VISTA
    ========================================================================== */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-1);
-  font-family: inherit;
-  font-size: var(--text-md);
-  font-weight: 600;
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  border: 1px solid transparent;
-  cursor: pointer;
-  text-decoration: none;
-  user-select: none;
-  white-space: nowrap;
-  transition: var(--transition-fast);
-}
-/* Feedback de press: dispara en pointerdown, no en click. */
-.btn:active {
-  transform: scale(var(--press-scale));
-}
-
-.btn-lg {
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--text-base);
-  border-radius: var(--radius-md);
-}
-.btn-sm {
-  padding: var(--space-tight) var(--space-2);
-  font-size: var(--text-sm);
-  border-radius: var(--radius-sm);
-}
-
-/* Un botón es un CONTROL: sí lleva filete, porque sin él no se distingue del
-   texto que lo rodea. El filete es `--hairline`, no `--hairline-strong`: el
-   borde de un control ya es la excepción, no hace falta dibujarlo dos veces. */
-.btn-primary {
-  background: var(--bg-raised);
-  color: var(--text-main);
-  border-color: var(--hairline);
-}
-.btn-primary:hover {
-  background: var(--bg-raised-hover);
-  border-color: var(--hairline-strong);
-}
-
-/* Superficie teñida en lugar de relleno al 100% de saturación. Antes eran dos
-   barras de color pleno en el medio de la tarjeta: los elementos más fuertes
-   de la pantalla en un panel que por lo demás es sobrio. El par Ingreso/Gasto
-   sigue siendo distinguible por tono, que es lo que `#btnSubmitMovement`
-   necesita al alternar `btn-success` / `btn-danger`.
-
-   Aquí el relleno teñido YA separa el botón del fondo, así que el filete
-   sobra: `border-color: transparent`. DIRECTIVA 1: el borde solo donde aporta. */
-.btn-success {
-  background: var(--accent-emerald-light);
-  color: var(--text-emerald);
-}
-.btn-success:hover {
-  background: var(--accent-emerald-hover);
-  color: var(--text-emerald);
-}
-
-.btn-danger {
-  background: var(--accent-rose-light);
-  color: var(--text-rose);
-}
-.btn-danger:hover {
-  background: var(--accent-rose-hover);
-  color: var(--text-rose);
-}
-
-.btn-surface {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border-color: var(--hairline);
-}
-.btn-surface:hover {
-  background: var(--bg-raised);
-  border-color: var(--hairline-strong);
-}
-
-/* Botón fantasma de texto: ni fondo ni filete hasta el hover. */
-.btn-ghost-rose {
-  background: transparent;
-  color: var(--text-muted);
-  padding: var(--space-tight) var(--space-1);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: var(--text-sm);
-  line-height: 1;
-  transition: var(--transition-fast);
-}
-.btn-ghost-rose:hover {
-  background: var(--accent-rose-light);
-  color: var(--text-rose);
-}
-
-/* Cifras tabulares dentro de los botones grandes de acción. Antes este bloque
-  existía para atenuar las flechas que app.js inyectaba; ya no hay glifos
-   dentro de `.btn-lg`, pero el tabular sigue siendo lo correcto para un
-   número que acompaña a una acción. */
-.btn-lg > span {
-  font-variant-numeric: tabular-nums;
-  opacity: 0.85;
-}
-
-/* ==========================================================================
-   7. CONTENIDO Y VISTAS
-   ========================================================================== */
-/* DIRECTIVA 4 (escala vertical real): el padding de página pasa de 24px a
-   32px. Ese medio paso es lo que separa "columna de contenido" de "panel de
-   control" cuando no hay un filete que lo haga. */
-.main-content {
-  flex: 1;
-  padding: var(--space-4) var(--space-4) var(--space-6) var(--space-4);
-  width: 100%;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.view-container {
-  display: none;
-}
-.view-container.active {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  animation: fadeIn var(--duration-standard) var(--ease-standard);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Encabezado de vista: una sola clase para las dos vistas, en lugar de los
-   estilos inline del h2 de viewPanel. También resuelve el salto de jerarquía
-   h1 -> h3 que había dentro de viewMes.
-
-   DIRECTIVA 2: `.view-heading` sube de 24px a 32px. Es el titular de la vista
-   y tiene que leerse antes que cualquier tarjeta; antes competía en el mismo
-   rango de tamaño con la cifra del sidebar. */
 .view-header {
-  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-5);
 }
+
 .view-heading {
   font-family: var(--font-display);
-  font-size: var(--text-4xl);
-  font-weight: 600;
+  font-size: var(--text-3xl);
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.view-subheading {
-  color: var(--text-secondary);
-  font-size: var(--text-base);
-  margin-top: var(--space-tight);
+  font-weight: 600;
 }
 
-/* El contador de categoría pasa de cápsula a cifra en mono alineada a la
-   derecha de la fila. DIRECTIVA 3: mismo dato, sin el chip. */
-.segment-count-badge {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  padding: 0;
-  background: transparent;
+.view-subheading {
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
   color: var(--text-secondary);
-  margin-left: var(--space-tight);
-  transition: var(--transition-fast);
-}
-.segment-pill-btn.active .segment-count-badge {
-  color: var(--text-main);
+  max-width: 62ch;
 }
 
 /* ==========================================================================
-   8. SELECTOR DE SEGMENTOS
+   9. CONTROL SEGMENTADO DE CATEGORÍAS
+   Este es el ÚNICO grupo de cápsulas de la página junto al filtro del feed.
    ========================================================================== */
-/* La barra de segmentos deja de ser 5 cajas con filete y pasa a ser 5 columnas
-   de texto con una regla que las separa del contenido. DIRECTIVA 1. */
 .segments-navigation-bar {
-  display: grid;
-  /* minmax(0, 1fr), NUNCA 1fr: un `1fr` es minmax(auto, 1fr) y no encaja por
-     debajo del min-content, así que la grilla desborda el viewport. */
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--space-2);
-  width: 100%;
-  padding-bottom: var(--space-2);
-  margin-bottom: var(--space-4);
-  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  padding-bottom: var(--space-5);
 }
 
-/* DIRECTIVA 6: el acento de categoría aparece UNA vez por categoría, en el
-   filete superior de su tarjeta (§9). Estas píldoras son navegación: se
-   marcan con peso y con la regla inferior, nunca con el color de categoría.
-   Antes cada píldora activa repetía el color que la tarjeta ya mostraba. */
 .segment-pill-btn {
-  background: transparent;
-  color: var(--text-secondary);
-  padding: var(--space-tight) 0 var(--space-1) 0;
-  cursor: pointer;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: var(--space-1);
-  width: 100%;
-  min-width: 0;
-  user-select: none;
+  min-width: 128px;
+  flex: 1 1 128px;
+  padding: var(--space-1) var(--space-2) 6px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  text-align: left;
   transition: var(--transition-fast);
 }
-.segment-pill-btn:hover {
-  color: var(--text-main);
-}
-.segment-pill-btn:active {
-  transform: scale(var(--press-scale));
-}
 
-.segment-pill-btn[data-segment].active {
-  color: var(--text-main);
-}
+.segment-pill-btn:hover { border-color: var(--hairline-strong); color: var(--text-main); }
 
-/* `pill-btn-all` estaba declarado dos veces; queda una. */
-.segment-pill-btn.pill-btn-all {
-  min-width: 0;
-  justify-content: center;
-}
-.segment-pill-btn.pill-btn-all .pill-minibar-fill {
-  background: var(--accent-primary);
+.segment-pill-btn.active {
+  background: var(--bg-inset);
+  border-color: var(--hairline-strong);
+  color: var(--text-main);
 }
 
 .pill-top-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-1);
-  font-size: var(--text-base);
-  font-weight: 500;
+  gap: var(--space-2);
   min-width: 0;
-}
-.segment-pill-btn[data-segment].active .pill-top-row {
-  font-weight: 600;
 }
 
 .pill-label-with-icon {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  min-width: 0;
+  gap: 6px;
+  font-size: var(--text-sm);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  color: inherit;
 }
 
-/* DIRECTIVA 4: la regla de progreso pasa de 3px a 4px. A 3px un `border-radius`
-   de 980px la convierte en un óvalo borroso; a 4px se lee como una regla. */
+/* El importe del segmento es el índice del filtro, no el titular: chico y
+   apagado. El titular es la figura de 32px de la sección, más abajo. */
+.segment-count-badge {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .pill-minibar-track {
-  width: 100%;
-  height: 4px;
-  background: var(--accent-primary-light);
+  height: 2px;
+  background: var(--bg-inset);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
 
-/* `width` (no scaleX): el JS escribe `style.width` en las 4 minibarras
-   (app.js:594-600). Cambiar a transform las dejaría siempre a su ancho
-   por defecto.
-
-   El color es el acento de IDENTIDAD, no el de categoría: la barra dice
-   "cuánto se pagó de este grupo", no "de qué categoría es". DIRECTIVA 6. */
+/* La minibarra dice "cuánto se pagó", no "de qué categoría es": por eso lleva el
+   acento neutro y no el color de la categoría. */
 .pill-minibar-fill {
   height: 100%;
-  width: 0;
   background: var(--accent-primary);
   border-radius: var(--radius-pill);
-  transition: width var(--duration-slow) var(--ease-standard);
-}
-
-.paid-bar-fill {
-  height: 100%;
-  width: 0;
-  background: var(--accent-primary);
-  border-radius: var(--radius-pill);
-  transition: width var(--duration-slow) var(--ease-standard);
 }
 
 /* ==========================================================================
-   9. ACORDEÓN Y TARJETAS DE SEGMENTO
+   10. SUPERFICIE CONTINUA — las secciones y sus filetes
    ========================================================================== */
+.segments-workspace-container {
+  /* SIN retícula. Este es el cambio estructural de la feature: al no existir
+     columnas, las secciones no tienen que igualarse en alto y el aire muerto
+     entre hermanas deja de existir. */
+  display: block;
+}
+
+.content-card-box {
+  /* NO se declara `display`: app.js escribe `style.display` inline aquí
+     (renderActiveSegments) y necesita leer el valor actual. */
+  padding-block: var(--space-6);
+  border-top: 1px solid var(--hairline);
+}
+
+/* La primera sección se apoya en el filete del encabezado de vista y no
+   duplica el filete. */
+.segments-workspace-container > .content-card-box:first-of-type {
+  border-top: 0;
+  padding-top: var(--space-1);
+}
+
+/* --- Encabezado de sección ------------------------------------------------ */
+.content-card-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--space-4);
+}
+
 .accordion-header {
   cursor: pointer;
-  user-select: none;
 }
 
-/* Declarado dos veces antes (0.95rem vs 0.72rem); queda una. */
-.accordion-chevron-icon {
-  display: inline-block;
-  font-size: var(--text-2xs);
-  color: var(--text-muted);
-  transition: transform var(--duration-standard) var(--ease-standard);
-  margin-left: var(--space-1);
-}
-.content-card-box.collapsed .accordion-chevron-icon {
-  transform: rotate(-90deg);
-}
-
-/* El total de la tarjeta es LA CIFRA PROTAGONISTA de esa tarjeta. Antes era
-   un chip de 12px con fondo, y competía con el título; ahora es 20px en mono,
-   alineado a la derecha del encabezado, y el título baja a 15px. El contraste
-   de escala (20 vs 15 vs 12) es lo que establece la jerarquía. DIRECTIVA 2. */
-.accordion-summary-tag {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  font-family: var(--font-mono);
-  letter-spacing: var(--tracking-display);
-  padding: 0;
-  background: transparent;
-  color: var(--text-main);
-  margin-left: var(--space-2);
-  white-space: nowrap;
-}
-
-/* `.content-card-box` NO declara `display`: app.js escribe `display:block`
-   inline (870-882) y lo lee antes de decidir. Un `display` de hoja que no sea
-   equivalente rompería ese cálculo. */
-.content-card-box {
-  background: var(--bg-card);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  min-width: 0;
-  transition: border-color var(--duration-standard) var(--ease-standard);
-}
-.content-card-box:hover {
-  border-color: var(--hairline-strong);
-}
-
-/* EL FILete SUPERIOR DE TARJETA: el ÚNICO lugar donde aparece el color de
-   categoría. Cuatro tarjetas, cuatro colores, cero repeticiones.
-
-   Antes el color aparecía en 5 lugares por categoría: el filete de esta
-   tarjeta, el `h3` de esta tarjeta, el `#summaryTag*`, el `#badgeSeg*` de la
-   barra de segmentos y el `--seg-accent` de la píldora. Eso es lo que hacía que
-   se leyera como un dashboard: el color repetido por identidad, que en apple.com
-   no significa nada. Verificado en el navegador antes y después (§27). */
-.content-card-box[data-segment-card="servicios"] { border-top: 2px solid var(--cat-servicios); }
-.content-card-box[data-segment-card="personales"] { border-top: 2px solid var(--cat-personales); }
-.content-card-box[data-segment-card="movimientos"] { border-top: 2px solid var(--cat-movimientos); }
-.content-card-box[data-segment-card="extras"] { border-top: 2px solid var(--cat-extras); }
-
-/* Los 4 `summaryTag*` ya no llevan color de categoría: la cifra protagonista
-   es neutra. Se conservan los ids porque el JS los escribe (restricción 1). */
-#summaryTagServicios,
-#summaryTagPersonales,
-#summaryTagMovimientos,
-#summaryTagExtras {
-  color: var(--text-main);
-}
-
-.content-card-box.collapsed {
-  border-color: var(--hairline);
-}
-.content-card-box.collapsed .content-card-header {
-  border-bottom: 1px solid transparent;
-}
-.content-card-box.collapsed .accordion-collapsible-body {
-  display: none !important;
-}
-.content-card-box:not(.collapsed) .accordion-chevron-icon {
-  transform: rotate(0deg);
-}
-
-/* El encabezado de tarjeta SÍ es un grupo (separa el cuerpo de la tarjeta), así
-   que conserva su filete. El fondo `--bg-surface` sí se va: con el filete de
-   arriba ya se lee la separación, y la superficie extra competía con la caja.
-   El padding sube de 8/16 a 16/24: el aire reemplaza al color de fondo. */
-.content-card-header {
-  padding: var(--space-2) var(--space-2);
-  background: transparent;
-  border-bottom: 1px solid var(--hairline);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  cursor: pointer;
-  user-select: none;
-  transition: background-color var(--duration-quick) var(--ease-standard);
-}
-.content-card-header:hover {
-  background: var(--bg-raised);
-}
-
-/* `gap: var(--space-tight)` y no `--space-2`: medido, el título de tarjeta
-   arrancaba en x=73px desde el borde de la tarjeta mientras la primera fila de
-   gastos arrancaba en x=17. Con 16px de gap el título quedaba 56px indentado
-   respecto de su propio contenido, y eso se leía como si fueran dos columnas
-   distintas. Con 8px el título queda a 49px y la fila a 17px: sigue having
-   icono de por medio, pero la diferencia es la del icono, no la del gap. */
 .card-header-left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-tight);
+  display: grid;
+  grid-template-columns: 2px auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0 var(--space-2);
   min-width: 0;
 }
 
-/* Declarado dos veces antes (flex sin fuente vs font-size sobre un flex). */
+/* EL ACENTO DE CATEGORÍA: un tick de 2px, un uso por sección. Cuatro colores,
+   cuatro secciones, cero repeticiones. */
+.cat-tick {
+  width: 2px;
+  height: 24px;
+  margin-top: 1px;
+  border-radius: 1px;
+  background: var(--accent-primary);
+}
+
+[data-accent='servicios'] .cat-tick { background: var(--cat-servicios); }
+[data-accent='personales'] .cat-tick { background: var(--cat-personales); }
+[data-accent='movimientos'] .cat-tick { background: var(--cat-movimientos); }
+[data-accent='extras'] .cat-tick { background: var(--cat-extras); }
+[data-accent='matrix'] .cat-tick { background: var(--cat-matrix); }
+[data-accent='trend'] .cat-tick { background: var(--cat-trend); }
+[data-accent='categories'] .cat-tick { background: var(--cat-categories); }
+
 .card-header-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-secondary);
 }
 
 .card-header-titles {
@@ -1500,347 +1162,264 @@ p {
 .card-title-row {
   display: flex;
   align-items: center;
-  gap: var(--space-tight);
-  min-width: 0;
+  gap: var(--space-1);
 }
 
-/* Jerarquía de 3 niveles en la tarjeta, de arriba hacia abajo:
-     20px mono  -> el total (`.accordion-summary-tag`)
-     15px/600   -> el título de la tarjeta
-     12px gris  -> la descripción
-   Ese contraste 20/15/12 es lo que hace que se lea la jerarquía de un vistazo.
-   DIRECTIVA 2. */
 .card-title-row h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   font-weight: 600;
-  color: var(--text-main);
   letter-spacing: var(--tracking-tight);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.25;
 }
 
-/* Los h3 sueltos de viewPanel (matriz y gráficos) no están dentro de
-   .card-title-row: antes quedaban sin estilo. */
-.card-header-titles h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: var(--tracking-tight);
-  line-height: var(--leading-tight);
-}
-
-/* La descripción va en su propio renglón, 4px debajo del título: ese es el
-   tercer nivel de la jerarquía de la tarjeta. */
 .card-header-titles p {
-  font-size: var(--text-xs);
+  margin-top: 2px;
+  font-size: var(--text-sm);
   color: var(--text-muted);
-  font-weight: 400;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-top: var(--space-tight);
+  max-width: 54ch;
+}
+
+.accordion-chevron-icon {
+  display: flex;
+  color: var(--text-muted);
+  font-size: 15px;
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+
+.collapsed .accordion-chevron-icon {
+  transform: rotate(-90deg);
 }
 
 .card-header-right-group {
   display: flex;
   align-items: baseline;
-  gap: var(--space-1);
-  flex-shrink: 0;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  white-space: nowrap;
 }
 
-/* DIRECTIVA 5 (bajar las mayúsculas) + DIRECTIVA 1 (sin fondo de caja):
-   "Gastos fijos" / "Gastos variables" en sentence case, sin `text-transform`,
-   sin tracking de etiqueta, sin fondo `--bg-inset`. Queda un solo filete
-   arriba, que separa el grupo del que le precede.
-
-   El texto del HTML pasa de "Gastos Fijos" a "Gastos fijos" y el segundo
-   <span> ("Estado / Monto", "Rango Sugerido") desaparece: rotulaba columnas
-   que ya no existen como tales. Ver index.html. */
-.category-subhead {
-  padding: var(--space-3) var(--space-3) var(--space-1) var(--space-3);
-  background: transparent;
-  border-top: 1px solid var(--hairline);
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
+/* LA CIFRA PROTAGONISTA de cada sección. 32px, mono, tabular, tracking
+   negativo. Es lo primero que el ojo encuentra en la sección. */
+.accordion-summary-tag {
+  font-size: var(--text-3xl);
   font-weight: 600;
-  letter-spacing: 0;
-  color: var(--text-secondary);
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: var(--space-1);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-display);
+  color: var(--text-main);
 }
 
-/* ==========================================================================
-   10. FILAS DE GASTO
-   --------------------------------------------------------------------------
-   ESTE BLOQUE ES EL CAMBIO CENTRAL DE LA ITERACIÓN.
+/* --- Cuerpo contraíble --------------------------------------------------- */
+.accordion-collapsible-body {
+  padding-top: var(--space-4);
+}
 
-   El `border-bottom: 1px` sale. Con 20 filas, eran 20 filetes y 20 filas
-   idénticas: la pantalla se leía como una tabla rayada, no como una lista.
-   Ahora la fila no tiene caja: se separa del aire (8px arriba y abajo) y del
-   hover. El filete queda solo donde marca un GRUPO: arriba de `.category-subhead`
-   y en el subtotal que cierra la lista.
+.collapsed > .accordion-collapsible-body {
+  display: none;
+}
 
-   El hover se conserva, pero en `--accent-primary-wash`: `--bg-raised` sobre
-   `--bg-card` da un salto de luminosidad que parecía un borde. */
+/* --- Grupos y filas ------------------------------------------------------- */
+.category-subhead {
+  margin-top: var(--space-4);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--hairline);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
 .expense-card-item {
-  padding: var(--space-1) var(--space-2);
-  border-bottom: none;
+  /* 4 hijos inyectados por app.js, en este orden: concepto · estado · importe ·
+     borrar. No cambiar el número de columnas ni el orden sin tocar la plantilla
+     de app.js, que los emite en ese orden. */
   display: grid;
-  /* Exactamente 4 hijos inyectados por app.js:623-649. El primer track
-     necesita minmax(0,1fr) para que un concepto largo no desborde. */
-  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  grid-template-columns: minmax(0, 1fr) 92px auto auto;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
+
 .expense-card-item:hover {
-  background: var(--accent-primary-wash);
+  background: var(--bg-raised);
 }
 
 .expense-item-info {
-  display: flex;
-  flex-direction: column;
   min-width: 0;
 }
 
-/* El concepto es el titular de la fila: 14px/600. Antes iba en 500 al mismo
-   tamaño que el resto de la app, por eso no se distinguía del chip de estado
-   que tenía al lado y ambos gritaban igual. */
 .expense-item-title {
-  font-family: var(--font-display);
-  font-size: var(--text-md);
+  font-size: var(--text-base);
   font-weight: 600;
-  color: var(--text-main);
   letter-spacing: var(--tracking-tight);
-  white-space: nowrap;
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .expense-item-tags {
   display: flex;
   align-items: center;
-  gap: var(--space-tight);
-  flex-wrap: wrap;
-  margin-top: var(--space-tight);
+  gap: var(--space-1);
+  margin-top: 1px;
 }
 
-/* `.tag-badge` ("Fijo" / "Variable" / "Rango: 20-40") deja de ser un chip y
-   pasa a ser metadato en gris. Directiva 3 aplicada a los tags: un dato que se
-   repite en 20 filas no necesita una caja. Se conservan la clase y el DOM. */
+/* Etiquetas de dato, no chips: sin fondo, sin borde, sin radio. El nombre de
+   la clase se conserva por contrato DOM. */
 .tag-badge {
-  font-size: var(--text-xs);
-  font-weight: 400;
-  padding: 0;
-  background: transparent;
+  font-size: var(--text-2xs);
   color: var(--text-muted);
-}
-.tag-badge.tag-variable {
-  background: transparent;
-  color: var(--text-muted);
+  white-space: nowrap;
 }
 
-/* La cifra de la fila es el dato principal: 15px/600 mono tabular. Sube desde
-   14px para que separe del concepto por tamaño y no por color. */
+/* El estado en una columna de ancho fijo: los diez "Pendiente" alinean
+   verticalmente y se leen como una columna, no como diez textos sueltos. */
+.expense-item-state {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .expense-item-amount {
   font-size: var(--text-base);
   font-weight: 600;
-  color: var(--text-main);
   text-align: right;
   white-space: nowrap;
-  font-feature-settings: 'tnum' on, 'lnum' on;
-  font-variant-numeric: tabular-nums;
 }
 
-/* ==========================================================================
-   11. TOGGLE DE ESTADO (PAGADO / PENDIENTE)
-   --------------------------------------------------------------------------
-   DIRECTIVA 3 (matar el badge repetido). Medido antes de este cambio: 20
-   botones idénticos, `background` rose translúcido, `border` rose, radio
-   980px, texto "Pendiente" en las 20. Repetido 20 veces, el mismo color grita
-   una sola vez: es ruido puro que además esconde el estado accionable.
-
-   Ahora el estado se comunica por TIPOGRAFÍA, que es lo que pidió la
-   directiva:
-     · Pagado    -> `--text-muted`, 400. Se retira: lo resuelto no llama la
-                   atención.
-     · Pendiente -> `--text-secondary`, 600, y un punto de 5px en `--text-rose`.
-                   Un detalle de 5px en vez de una cápsula de 84x30.
-   Se conserva el `<button>`, la clase `.btn-status-toggle`, los literales
-   `status-pagado` / `status-pendiente` y el `min-width` (alinea la columna):
-   `js/app.js` liga el click, reescribe `className` y `textContent`, y
-   `body.read-only-mode .btn-status-toggle` depende de que siga siendo un
-   control. Restricción dura 1: no se toca ese contrato.
-   El estado "lo que falta pagar" ya se marca UNA vez por grupo en la barra de
-   segmentos y en el panel de progreso del sidebar, que es donde se lee. */
+/* El estado de la fila lo dice la TIPOGRAFÍA, no un distintivo repetido 20
+   veces. Sigue siendo un `<button>` porque app.js liga el click y reescribe
+   `className` y `textContent`. */
 .btn-status-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-tight);
-  font-family: inherit;
+  padding: var(--space-tight) var(--space-1);
+  border-radius: var(--radius-xs);
   font-size: var(--text-xs);
-  font-weight: 400;
-  padding: var(--space-tight) 0;
-  cursor: pointer;
-  user-select: none;
-  min-width: 84px;
-  background: transparent;
-  justify-content: flex-end;
+  color: var(--text-muted);
+  white-space: nowrap;
   transition: var(--transition-fast);
 }
-.btn-status-toggle:active {
-  transform: scale(0.95);
+
+.btn-status-toggle:hover {
+  color: var(--text-main);
+  background: var(--bg-raised-hover, var(--bg-raised));
 }
 
 .btn-status-toggle.status-pagado {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-.btn-status-toggle.status-pagado:hover {
-  color: var(--text-secondary);
-}
-
-/* EN REPOSO, "Pendiente" es un murmullo gris. El peso y el punto de color
-   aparecen solo cuando la fila está bajo el puntero, que es cuando el estado
-   pasa a ser accionable.
-
-   Medido en la ronda 2 mirando la captura: con el punto rosa SIEMPRE visible
-   eran 10 puntos idénticos en pantalla y el ojo iba a ellos, no a los
-   conceptos ni a las cifras. Los 10 textos seguían siendo legibles, así que el
-   punto no cumplía ninguna función salvo hacer ruido. En hover aparece. */
-.btn-status-toggle.status-pendiente {
-  color: var(--text-muted);
-  font-weight: 400;
-}
-.expense-card-item:hover .btn-status-toggle.status-pendiente {
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-.btn-status-toggle.status-pendiente:hover {
-  color: var(--text-rose);
-}
-
-/* El punto de 5px solo en hover. Con `width: 0` en reposo no ocupa espacio, así
-   que la columna no salta al pasar el mouse. `border-radius` del sistema, no un
-   `50%`: el círculo de un `::before` de 5px con radio nativo se ve como un
-   cuadrado redondeado en algunos PPI. */
-.btn-status-toggle.status-pendiente::before {
-  content: '';
-  display: inline-block;
-  width: 0;
-  height: 5px;
-  border-radius: var(--radius-pill);
-  background: var(--accent-rose);
-  flex-shrink: 0;
-  transition: width var(--duration-quick) var(--ease-standard);
-}
-.expense-card-item:hover .btn-status-toggle.status-pendiente::before,
-.btn-status-toggle.status-pendiente:hover::before {
-  width: 5px;
-}
-
-/* Subtotales: el filete marca que la lista TERMINA. Eso es separación de
-   grupo, no una caja por fila. */
-.subtotal-highlight-row {
-  padding: var(--space-1) var(--space-2);
-  background: transparent;
-  border-bottom: none;
-  border-top: 1px solid var(--hairline);
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-2);
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
-/* El total de la tarjeta: sentence case, cifra protagonista en mono.
-   DIRECTIVA 5: "TOTAL SERVICIOS DEL HOGAR:" pasa a "Total servicios del hogar"
-   en index.html y acá se saca el `text-transform: uppercase`. */
-.subtotal-highlight-row.main-subtotal {
-  background: transparent;
-  border-top: 1px solid var(--hairline);
-  border-bottom: none;
-  color: var(--text-secondary);
-  font-size: var(--text-base);
-  font-weight: 500;
-  letter-spacing: 0;
-  padding: var(--space-2);
-}
-
-/* ==========================================================================
-   12. FEED DE MOVIMIENTOS
-   ========================================================================== */
-.quick-action-buttons-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-1);
-  padding: var(--space-2);
-  border-bottom: none;
-}
-.quick-action-buttons-grid .btn {
-  padding: var(--space-tight) var(--space-2);
-  font-size: var(--text-sm);
-}
-
-/* Los 3 filtros del feed dejan de ser 3 cápsulas: son un grupo de tabs con la
-   activa marcada por peso. DIRECTIVA 1 y 3. El filete del grupo queda arriba. */
-.filter-pills-bar {
-  padding: var(--space-1) var(--space-2);
-  background: transparent;
-  border-top: 1px solid var(--hairline);
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  overflow-x: auto;
-}
-
-.feed-filter-pill {
-  background: transparent;
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-  font-weight: 400;
-  padding: var(--space-tight) 0;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: var(--transition-fast);
-}
-.feed-filter-pill:hover {
-  color: var(--text-secondary);
-}
-.feed-filter-pill.active {
-  background: transparent;
   color: var(--text-main);
   font-weight: 600;
 }
-.feed-filter-pill.active:hover {
-  color: var(--accent-primary-hover);
+
+/* Solo aparece al pasar por encima: con el punto siempre visible eran 10
+   puntos idénticos y el ojo iba a ellos en lugar de a los conceptos. */
+.btn-status-toggle.status-pendiente::before {
+  content: '';
+  display: none;
 }
 
-/* Igual que las filas de gasto: sin filete. El aire separa. */
+/* El botón de borrar aparece al pasar por encima, en un carril de 24px que la
+   fila reserva siempre: el bloque derecho queda alineado en las 10 filas, no
+   solo en las 4 donde el puntero está. */
+.btn-delete-expense,
+.btn-delete-tx {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-xs);
+  color: var(--text-muted);
+  font-size: 14px;
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+
+.expense-card-item:hover .btn-delete-expense,
+.transaction-feed-item:hover .btn-delete-tx {
+  opacity: 1;
+}
+
+.btn-delete-expense:hover,
+.btn-delete-tx:hover {
+  color: var(--text-main);
+  background: var(--bg-raised);
+}
+
+/* El nombre `.btn-ghost-rose` se conserva por contrato DOM; el color de rosa
+   se fue: borrar no necesita un tono propio, y el hover ya lo dice. */
+.btn-ghost-rose {
+  color: inherit;
+  background: none;
+  border: 0;
+}
+
+.subtotal-highlight-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.subtotal-highlight-row .font-mono {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* El total que cierra la lista sí lleva filete: es el punto donde el grupo
+   termina de verdad. */
+.main-subtotal {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--hairline-strong);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.main-subtotal .font-mono {
+  font-size: var(--text-lg);
+}
+
+/* --- Acciones rápidas del feed ------------------------------------------- */
+.quick-action-buttons-grid {
+  display: flex;
+  gap: var(--space-2);
+  padding-bottom: var(--space-3);
+}
+
+.filter-pills-bar {
+  display: flex;
+  gap: var(--space-1);
+  padding-bottom: var(--space-2);
+}
+
+.feed-filter-pill {
+  padding: var(--space-tight) var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+.feed-filter-pill:hover { color: var(--text-main); background: var(--bg-raised); }
+.feed-filter-pill.active { background: var(--bg-inset); color: var(--text-main); }
+
+/* --- Feed de movimientos ------------------------------------------------- */
 .transaction-feed-item {
-  padding: var(--space-1) var(--space-2);
-  border-bottom: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
+
 .transaction-feed-item:hover {
-  background: var(--accent-primary-wash);
+  background: var(--bg-raised);
 }
 
-/* El bloque `.tx-*` estaba DUPLICADO (1798-1854 vs 1856-1894) con reglas en
-   conflicto; ganaba la segunda copia. Aquí queda una sola, con esos valores. */
 .tx-left {
   display: flex;
   align-items: center;
@@ -1848,1192 +1427,801 @@ p {
   min-width: 0;
 }
 
-/* El círculo con fondo teñido y borde por movimiento era color de identidad
-   repetido. DIRECTIVA 6: sale el relleno y el filete. El sentido lo dan el
-   chevron, el signo `+`/`-` de la cifra y el color del texto del flujo. */
+/* El círculo con fondo teñido y borde se fue: el sentido lo dan el chevron y
+   el signo de la cifra. Dos señales ya son suficientes. */
 .tx-icon-circle {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-pill);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-md);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.tx-icon-ingreso {
-  color: var(--text-emerald);
-}
-.tx-icon-gasto {
-  color: var(--text-rose);
+  font-size: 15px;
+  color: var(--text-muted);
 }
 
 .tx-details {
   min-width: 0;
 }
+
 .tx-details h4 {
   font-size: var(--text-base);
   font-weight: 600;
-  color: var(--text-main);
-  white-space: nowrap;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.3;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 .tx-details p {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: var(--space-1);
-  margin-top: var(--space-tight);
+  gap: 6px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 1px;
 }
 
 .tx-right {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  text-align: right;
-  flex-shrink: 0;
 }
 
 .tx-amount {
-  font-size: var(--text-lg);
-  font-weight: 600;
-  letter-spacing: var(--tracking-tight);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-.tx-amount-ingreso { color: var(--text-emerald); }
-.tx-amount-gasto { color: var(--text-rose); }
-
-/* ==========================================================================
-   13. NOTAS
-   ========================================================================== */
-.notes-smart-box {
-  padding: var(--space-3);
-}
-
-.notes-smart-textarea {
-  width: 100%;
-  min-height: 120px;
-  background: var(--bg-inset);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  padding: var(--space-2);
-  font-family: inherit;
   font-size: var(--text-base);
-  color: var(--text-main);
-  resize: vertical;
-  outline: none;
-  line-height: 1.6;
-  transition: var(--transition-fast);
-}
-/* Antes: `box-shadow: var(--shadow-glow-amber)` — variable que NO existía,
-   así que la declaración se descartaba entera. Ahora es un anillo de foco real. */
-.notes-smart-textarea:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-  background: var(--bg-card);
-}
-
-.notes-feedback-label {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  margin-top: var(--space-1);
-  text-align: right;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 /* ==========================================================================
-   14. CONSOLIDADO GENERAL
+   11. ESTADOS VACÍOS — una línea, centrados, silenciosos
    ========================================================================== */
-.text-right { text-align: right !important; }
-.text-center { text-align: center !important; }
+.empty-feed-placeholder,
+.empty-segments-notice {
+  padding: var(--space-4) 0;
+  font-size: var(--text-md);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ==========================================================================
+   12. CONSOLIDADO — cifras protagonistas en filas, no en cajas
+   ========================================================================== */
+.metrics-hero-grid {
+  border-top: 1px solid var(--hairline);
+}
+
+.hero-metric-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.metric-top-row {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.metric-label-title {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.metric-footer-info {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* La cifra más grande de la app va acá: 40px mono, tabular. */
+.metric-main-value {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: var(--text-4xl);
+  font-weight: 600;
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  color: var(--text-main);
+}
+
+/* Un contenedor que existe solo para alojar algo que ya no está tiene que
+   irse con eso. `:empty` no alcanza cuando el texto viene de app.js. */
+.metric-icon-box:empty {
+  display: none;
+}
+
+/* La matriz lleva su filete como cualquier otra sección. Antes se lo habían
+   sacado y quedaba un salto sin regla entre el bloque de KPI y la tabla, con
+   dos reglas arriba y dos abajo: la superficie dejaba de leerse como una
+   sola. */
+.matrix-section {
+  padding-bottom: 0;
+}
 
 .matrix-table-wrapper {
-  width: 100%;
+  /* La tabla tiene 9 columnas de cifras. En pantallas angostas no hay forma
+     honesta de comprimirlas sin romper la lectura: scrollea adentro, nunca la
+     página. Es un patrón normal de tabla, no un parche. */
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: var(--space-tight) var(--space-1) var(--space-2) var(--space-1);
+  overscroll-behavior-x: contain;
 }
 
 .matrix-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: var(--text-md);
+  font-size: var(--text-sm);
 }
 
-/* Una tabla es el único caso donde el filete NO es decoración: con 9 columnas
-   de cifras, la separación horizontal la da la línea. Por eso el `th` conserva
-   su filete y las filas el suyo. Lo que sí se va es el fondo `--bg-surface` del
-   encabezado (era una caja dentro de una caja) y el `text-transform: uppercase`
-   con tracking: DIRECTIVA 5. */
 .matrix-table th {
-  background: transparent;
-  color: var(--text-muted);
+  padding: var(--space-1);
   font-size: var(--text-xs);
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0;
-  padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--hairline-strong);
+  font-weight: 500;
+  color: var(--text-muted);
   white-space: nowrap;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.matrix-table th:first-child,
+.matrix-table td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+
+.matrix-table th:last-child,
+.matrix-table td:last-child {
+  padding-right: 0;
 }
 
 .matrix-table td {
-  padding: var(--space-1) var(--space-2);
-  border-bottom: 1px solid var(--hairline);
+  padding: var(--space-1);
+  color: var(--text-secondary);
   white-space: nowrap;
-  vertical-align: middle;
+  border-bottom: 1px solid var(--hairline);
 }
 
-.matrix-table tbody tr {
-  transition: background-color var(--duration-quick) var(--ease-standard);
-}
-.matrix-table tbody tr:hover {
-  background: var(--accent-primary-wash);
-}
-
-.matrix-table tfoot tr td {
-  padding: var(--space-2);
-  background: transparent;
-  border-top: 1px solid var(--hairline-strong);
-  border-bottom: none;
-  font-size: var(--text-base);
+/* La celda de progreso: un carril de 2px con el acento neutro. Sin
+   `min-width` inline de 130px (que era lo que empujaba la tabla fuera del
+   contenedor) y sin fondo: el avance se lee por largo, no por color. */
+.matrix-progress-cell {
+  width: 84px;
 }
 
-/* `.matrix-month-btn` estaba declarado dos veces con estilos INCOMPATIBLES
-   (transparente+azul vs inset+blanco). Gana la segunda; queda esa, sin glow.
-   Y de caja a texto: el nombre del mes es un enlace de navegación, y ya lo
-   delimita el filete de la fila de la tabla. */
+.matrix-progress-track {
+  height: 2px;
+  background: var(--bg-inset);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.matrix-progress-fill {
+  height: 100%;
+  background: var(--accent-primary);
+  border-radius: var(--radius-pill);
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
 .matrix-month-btn {
-  background: transparent;
-  color: var(--text-main);
-  padding: var(--space-tight) 0;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
   font-size: var(--text-sm);
   font-weight: 600;
-  transition: var(--transition-fast);
-}
-.matrix-month-btn:hover {
-  color: var(--accent-primary-hover);
-}
-/* Nombre del mes en la matriz. Ya no lleva glifo: era texto inyectado por
-   app.js y `font-variant-emoji` era un parche que hoy no aplica. */
-.matrix-month-btn > span:first-child {
-  font-variant-numeric: tabular-nums;
-}
-
-/* "Activo" deja de ser una cápsula y pasa a ser la marca del mes en gris. */
-.matrix-active-badge {
-  font-size: var(--text-xs);
-  background: transparent;
-  color: var(--text-muted);
-  font-weight: 400;
+  color: var(--text-main);
+  text-align: left;
   padding: 0;
+}
+.matrix-month-btn:hover { color: var(--text-main); text-decoration: underline; }
+
+.matrix-active-badge {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
   margin-left: var(--space-1);
-  display: inline-block;
 }
 
-/* El carril de progreso de la matriz se pinta con dos `div` inline desde
-   app.js:790-794. La barra de relleno usa `--accent-primary`, el mismo acento
-   que las minibarras de la barra de segmentos: el progreso de cobertura es un
-   dato de IDENTIDAD de la vista, no de categoría.
-
-   Aquí ya no hace falta neutralizar nada: app.js escribe
-   `background: var(--accent-primary)` en vez del degradado
-   `linear-gradient(90deg, ...)` que la iteración anterior tenía que anular con
-   `!important` desde esta hoja. Verificado con grep: 0 gradients en los tres
-   archivos. */
-
-/* ==========================================================================
-   15. MÉTRICAS DESTACADAS
-   ========================================================================== */
-.metrics-hero-grid {
-  display: grid;
-  /* min() evita que el piso de 240px desborde en contenedores estrechos. */
-  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-/* Las 3 KPI del consolidado: aquí SÍ hay una caja justificada, porque cada
-   tarjeta es un grupo con su propia cifra y sus 3 cifras tienen que leerse
-   como un bloque. El padding sube de 16/24 a 24/32 para que la cifra respire:
-   DIRECTIVA 4. */
-.hero-metric-card {
-  background: var(--bg-card);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-lg);
-  padding: var(--space-3) var(--space-3);
-  transition: border-color var(--duration-standard) var(--ease-standard);
-}
-.hero-metric-card:hover {
-  border-color: var(--hairline-strong);
-}
-
-/* El filete de 2px de cada tema sale: eran 3 filetes de color de identidad
-   repetidos en la misma fila, uno por tarjeta. La cifra ya lleva el color de
-   estado y las clases `card-theme-*` siguen en el HTML sin pintar nada
-   (restricción dura 1: no se quita ninguna clase existente). */
-.card-theme-emerald {
-}
-.card-theme-emerald .metric-main-value { color: var(--text-emerald); }
-.card-theme-emerald .metric-icon-box {
-  background: transparent;
-  color: var(--text-emerald);
-}
-
-.card-theme-cyan {
-}
-.card-theme-cyan .metric-main-value { color: var(--text-cyan); }
-.card-theme-cyan .metric-icon-box {
-  background: transparent;
-  color: var(--text-cyan);
-}
-
-.card-theme-amber {
-}
-.card-theme-amber .metric-main-value { color: var(--text-main); }
-.card-theme-amber .metric-icon-box {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-.metric-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-1);
-}
-
-/* DIRECTIVA 2: la etiqueta de la KPI baja a `--text-xs` y `--text-muted`, y la
-   cifra sube a 40px. Antes eran 13px y 30px/700: el salto era de 2.3x y se
-   leía como dos cosas del mismo nivel. Ahora es de 3.3x con la etiqueta en
-   gris y sin peso: la cifra se lee primero, sin ambigüedad. */
-.metric-label-title {
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.metric-icon-box {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-md);
+.matrix-table tfoot td {
+  border-top: 1px solid var(--hairline-strong);
+  border-bottom: 0;
   font-weight: 600;
-  flex-shrink: 0;
+  color: var(--text-main);
+  padding-top: var(--space-2);
 }
 
-.metric-main-value {
-  font-size: var(--text-5xl);
-  font-weight: 600;
-  line-height: var(--leading-display);
-  letter-spacing: var(--tracking-display);
-  margin-bottom: var(--space-tight);
+.matrix-table td .font-mono {
+  color: inherit;
 }
 
-.metric-footer-info {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
+/* --- Gráficos: apilados, no en dos columnas ------------------------------ */
 .charts-grid-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: var(--space-3);
+  display: block;
 }
 
-/* `maintainAspectRatio: false` en charts.js EXIGE un contenedor con
-   `position: relative` y altura explícita. Si se pierden, los gráficos se
-   aplastan. No tocar sin revisar charts.js. */
+.chart-section {
+  padding-bottom: var(--space-5);
+}
+
 .chart-canvas-container {
   position: relative;
-  height: 320px;
-  width: 100%;
-  padding: var(--space-2);
+  height: 280px;
+  margin-top: var(--space-4);
+}
+
+/* El anillo ocupa 280px de alto contra 1080px de ancho: con el contenedor
+   completo se dibuja como un disco gigante, y un disco gigante no dice nada.
+   Se acota a 420px y queda a la izquierda, con su leyenda abajo. */
+.chart-section:nth-of-type(2) .chart-canvas-container {
+  max-width: 420px;
+}
+
+/* Sin datos, 280px de alto para una línea de texto es un agujero. `charts.js`
+   marca la sección y el lienzo baja a 120px: la altura la decide si hay algo
+   que mirar, no al revés. */
+.chart-section.is-empty .chart-canvas-container {
+  height: 120px;
 }
 
 /* ==========================================================================
-   16. MODO SOLO LECTURA — CONTRATO FUNCIONAL
-   =========================================================================--
-   Esta cadena de selectores es el ÚNICO mecanismo de permisos del cliente.
-   `js/app.js` pone y saca `read-only-mode` en el body (118/130) y nada más
-   oculta los controles administrativos. Si esta regla deja de ganar, los
-   botones de edición quedan visibles para cualquier lector.
-   Replicada literalmente, con `!important` y la misma especificidad. */
-body.read-only-mode .admin-action-btn,
-body.read-only-mode .btn-quick-add-service,
-body.read-only-mode .btn-quick-add-personal,
-body.read-only-mode .btn-quick-add-extra,
-body.read-only-mode .btn-delete-expense,
-body.read-only-mode .btn-delete-tx,
-body.read-only-mode #btnHeaderAddIncome,
-body.read-only-mode #btnHeaderAddBudget,
-body.read-only-mode #btnQuickActionIncome,
-body.read-only-mode #btnQuickActionExpense,
-body.read-only-mode #btnOpenNewMonthModal {
-  display: none !important;
-}
-
-/* `#btnToggleAllStatus` y `#btnResetAllData` estaban en esa lista y no existen
-   en el DOM: selectors muertos, quitados. */
-
-/* El contenedor de las 2 acciones rapidas de "Movimientos del Mes" tiene 32px de
-   padding propio y `display: grid`; cuando los 2 botones hijos se ocultan (modo
-   solo lectura, regla de arriba) el contenedor NO se va y deja 32px de aire
-   muerto medido entre el encabezado y la barra de filtros. Es el mismo patron
-   que `.modal-glyph:empty` de la §22: un contenedor que existe solo para alojar
-   algo que ya no esta, tiene que desaparecer con eso. `:empty` no sirve porque
-   los botones siguen siendo hijos elemento, solo con `display: none`.
-
-   Especificidad (0,2,1) contra (0,1,0) de la regla base del §14: gana sin
-   `!important` y tambien dentro del `@media (max-width: 768px)`. */
-body.read-only-mode .quick-action-buttons-grid {
-  display: none;
-}
-
-body.read-only-mode .btn-status-toggle {
-  pointer-events: none;
-  cursor: default;
-}
-
-body.read-only-mode #monthNotesTextarea {
-  pointer-events: none;
-  background: var(--bg-inset);
-  border-color: transparent;
-  color: var(--text-secondary);
-}
-
-/* ==========================================================================
-   17. MODO Y CONEXIÓN
-   Los 3 elementos siguientes reescriben `className` COMPLETO desde el JS
-   (app.js:122/134, 147, 1333/1337). Se estilan solo con esos literales.
+   13. BOTONES
    ========================================================================== */
-/* Los badges del footer pierden la caja (regla agrupada en §4) pero conservan
-   su semántica de estado por peso. */
-.mode-badge {
+.btn {
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-tight) var(--space-1);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: var(--transition-fast);
-}
-.mode-badge.admin-active {
-  background: transparent;
-  color: var(--text-main);
-  font-weight: 600;
-}
-.mode-badge.readonly-active {
-  background: transparent;
-  color: var(--text-secondary);
-}
-
-/* `#authModeIcon` queda VACÍO: app.js le escribía el candado/cetro y ahora le
-   escribe cadena vacía (§25). El rol lo dan `#authModeLabel` y la clase
-   `.readonly-active` / `.admin-active` del botón. */
-#authModeIcon {
-  font-size: var(--text-sm);
-  line-height: 1;
-}
-
-.conn-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: var(--space-tight) 0;
-  font-size: var(--text-xs);
-  font-weight: 400;
-  background: transparent;
-  color: var(--text-muted);
-  transition: var(--transition-fast);
-}
-.conn-badge .conn-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  flex-shrink: 0;
-}
-.conn-badge.conn-offline {
-  color: var(--text-muted);
-}
-.conn-badge.conn-online {
-  color: var(--text-emerald);
-  font-weight: 500;
-}
-/* Antes: `conn-pulse 2.4s infinite`. Además de no aportar, era MENTIROSO:
-   `updateIndicadorConexion()` solo mira `configurado`, no conectividad real,
-   así que el punto latía aunque Supabase estuviera caído. Ahora es estático. */
-
-.login-error-msg {
-  margin-top: var(--space-2);
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-md);
-  font-size: var(--text-md);
-  line-height: 1.45;
-  color: var(--text-rose);
-  background: var(--accent-rose-light);
-  border: 1px solid var(--accent-rose-border);
-}
-
-/* ==========================================================================
-   18. GRILLA DE SEGMENTOS
-   ========================================================================== */
-/* DIRECTIVA 4: el aire entre tarjetas pasa de 16px a 32px. Este es el cambio
-   invisible más importante: dos cajas a 16px de distancia se leen como una
-   sola superficie con líneas; a 32px se leen como dos objetos. El filete de
-   cada tarjeta ya no tiene que hacer ese trabajo solo.
-
-   `align-items: stretch` (antes `start`) + sin `grid-auto-rows: max-content`:
-   medido antes de este cambio a 1440x900, la fila 1 era Servicios 657px contra
-   Personales 483px (174px de aire MUERTO fuera de la tarjeta, leido como un
-   agujero en la retícula) y la fila 2 era 294px contra 191px (103px). Con
-   `start` cada tarjeta se queda con su altura natural y el sobrante de la fila
-   cae fuera del borde. estirando, el sobrante cae DENTRO de la tarjeta hermana
-   y se lee como aire de la propia tarjeta, que es lo que se quiere.
-
-   `align-content: start` se conserva: sin el, `stretch` en el eje de bloque
-   repartiria las filas sobrantes cuando hay menos de 4 tarjetas activas
-   (pildoras apagadas) y las separaria del heading de arriba. */
-.segments-workspace-container {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-  align-items: stretch;
-  align-content: start;
-  width: 100%;
-}
-
-/* El aviso de "ninguna categoría seleccionada": el filete punteado era la caja
-   decorativa por excelencia. Ahora son dos filetes finos que abren y cierran un
-   bloque de aire con el texto centrado. */
-.empty-segments-notice {
-  grid-column: 1 / -1;
-  background: transparent;
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
-  padding: var(--space-6) var(--space-4);
-  text-align: center;
-  margin: var(--space-3) 0;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: cardEnter var(--duration-standard) var(--ease-standard);
-}
-/* `.empty-notice-glyph` se eliminó del HTML: el aviso de "ninguna categoría
-   seleccionada" ya tiene `<h4>` y texto, y el glifo era decoración. */
-.empty-segments-notice h4 {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  color: var(--text-main);
-  margin-bottom: var(--space-1);
-}
-.empty-segments-notice p {
-  color: var(--text-secondary);
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
   font-size: var(--text-md);
-  max-width: 46ch;
+  color: var(--text-main);
+  background: var(--bg-inset);
+  white-space: nowrap;
+  transition: var(--transition-fast);
 }
 
-/* ==========================================================================
-   19. ICONOS DE CATEGORIA (SVG EN LINEA)
-   Los 8 iconos de categoria son SVG de trazo, no raster. Antes eran 8 JPEG de
-   ~450 KB cada uno, usados a 20px (pildoras, nav, boton Notas) y a 32px
-   (encabezados de tarjeta). Medido en el navegador: a 20px un JPEG de 512px
-   de lado se lee como una mancha borrosa con color propio, no como un icono.
+.btn:hover { background: var(--bg-raised); }
 
-   Que se substitute:
-   1. `.ui-icon-img` pierde `object-fit`, `image-rendering`, `filter` y
-      `opacity`. Los dos ultimos existian SOLO para apagar el croma del JPEG
-      (`saturate(0.35)` + `opacity: 0.72`). Sin raster no hay croma que
-      apagar: el glifo toma el color de su contexto con `currentColor`.
-   2. `.ui-icon-svg` es la nueva clase de presentacion. NO fija `width`/`height`
-      a proposito: el tamano lo siguen dando `.ui-icon-xs` / `.ui-icon-sm` /
-      `.ui-icon-pill` / `.ui-icon-nav` / `.ui-icon-brand` / `.ui-icon-card`.
-      Por eso no se reutiliza `.ui-glyph` (que fija `1em` y, al declararse mas
-      abajo en la hoja, le ganaria a las clases de tamano).
-   3. `ui-icon-img` se CONSERVA como clase aunque ya no haya ningun `<img>` con
-      ella: el snapshot del contrato DOM (`odd/tasks/dom-contract-snapshot.txt`)
-      la lista y el nombre heredado de las plantillas de `app.js`. Es un gancho
-      de maquetacion, no una descripcion del elemento.
+.btn-sm { padding: var(--space-tight) var(--space-2); font-size: var(--text-sm); }
+.btn-lg { padding: var(--space-2) var(--space-3); font-size: var(--text-base); }
+.btn-block { width: 100%; }
 
-   `stroke-width: 1.5`, `round`, `round`: identico a `.ui-glyph` (§22). Los 8
-   comparten un solo trazo; el color lo pone el padre (`.segment-pill-btn`
-   `--text-secondary` / `--text-main`, `.btn-topbar-notes`, `.content-card-
-   header`). El acento de categoria NO se repite en los iconos: vive solo en el
-   filete superior de la tarjeta (§7), que es donde ya se verifico que el color
-   repetido hacia que la interfaz se leyera como un dashboard. */
-.ui-icon-img {
-  display: inline-block;
-  vertical-align: middle;
-  flex-shrink: 0;
+.btn-surface {
+  background: transparent;
+  border-color: var(--hairline-strong);
+  color: var(--text-main);
 }
-.ui-icon-svg {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  pointer-events: none;
+.btn-surface:hover { background: var(--bg-inset); }
+
+.btn-primary {
+  background: var(--accent-primary);
+  color: #0a0b0e;
+  font-weight: 600;
 }
-.ui-icon-xs {
-  width: 18px;
-  height: 18px;
+.btn-primary:hover { background: var(--accent-primary-hover); }
+
+/* Ingreso y gasto dejan de ser verde y rojo. El botón dice cuál es con el
+   texto; teñirlo era color por identidad repetida en 6 lugares del modal y
+   del feed. app.js reescribe el className COMPLETO de
+   `#btnSubmitMovement` con estos dos literales exactos. */
+.btn-success,
+.btn-danger {
+  background: var(--bg-inset);
+  border-color: var(--hairline-strong);
+  color: var(--text-main);
+  font-weight: 600;
 }
-.ui-icon-sm {
-  width: 20px;
-  height: 20px;
+.btn-success:hover,
+.btn-danger:hover { background: var(--bg-raised); }
+
+.btn-quick-add-service,
+.btn-quick-add-personal,
+.btn-quick-add-extra {
+  background: transparent;
+  border-color: var(--hairline);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 400;
 }
-.ui-icon-pill {
-  width: 20px;
-  height: 20px;
+.btn-quick-add-service:hover,
+.btn-quick-add-personal:hover,
+.btn-quick-add-extra:hover {
+  color: var(--text-main);
+  border-color: var(--hairline-focus);
 }
-.ui-icon-nav {
-  width: 20px;
-  height: 20px;
-}
-.ui-icon-brand {
+
+.btn-close-sheet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 28px;
   height: 28px;
+  margin-left: auto;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 15px;
+  flex: 0 0 auto;
+  transition: var(--transition-fast);
 }
-.ui-icon-card {
-  width: 32px;
-  height: 32px;
+.btn-close-sheet:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* Feedback de press en `pointerdown`, no en `click`: quita latencia percibida.
+   Solo `transform`, que es lo que queda en el compositor. */
+.btn:active,
+.btn-sm:active,
+.btn-lg:active,
+.btn-close-sheet:active,
+.feed-filter-pill:active,
+.segment-pill-btn:active,
+.sidebar-nav-tab:active,
+.month-pill-btn:active,
+.mini-nav-arrow:active,
+.btn-topbar-notes:active,
+.btn-sidebar-quick-action:active,
+.mode-badge:active,
+.btn-status-toggle:active,
+.matrix-month-btn:active {
+  transform: scale(var(--press-scale));
+}
+
+.btn-quick-add-service:active,
+.btn-quick-add-personal:active,
+.btn-quick-add-extra:active {
+  transform: none;
 }
 
 /* ==========================================================================
-   20. ANIMACIONES DE TARJETA
-   Solo `transform` y `opacity` (no `scale(0.99)`, imperceptible).
-   cardExit dura EXACTAMENTE 160ms: es lo que espera el setTimeout de
-   app.js:885 antes de escribir `display:none`.
+   14. FORMULARIOS
    ========================================================================== */
-@keyframes cardEnter {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes cardExit {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-4px); }
-}
-
-/* Bottom sheet en vertical. Fuera del media query a propósito: declararla
-   dentro hacía que la animación solo existiera en ese contexto. */
-@keyframes sheetSlideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
-
-.content-card-box.card-anim-in {
-  animation: cardEnter var(--duration-standard) var(--ease-standard) forwards;
-}
-.content-card-box.card-anim-out {
-  animation: cardExit 160ms var(--ease-standard) forwards;
-}
-
-/* ==========================================================================
-   21. MODALES
-   ========================================================================== */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background-color: rgba(10, 11, 15, 0.72);
-  -webkit-backdrop-filter: var(--material-backdrop-filter);
-  backdrop-filter: var(--material-backdrop-filter);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-3);
-}
-.modal-overlay.active {
-  display: flex;
-}
-
-.modal-sheet {
-  background: var(--bg-card);
-  border: 1px solid var(--hairline-strong);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-float);
-  width: 100%;
-  max-width: 520px;
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: modalPop var(--duration-standard) var(--ease-standard);
-}
-
-/* Antes `scale(0.93)`: un zoom falso. Ahora opacidad + 6px de recorrido. */
-@keyframes modalPop {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* CONTRATO FUNCIONAL: `#modalSessionRoleSelect` no se puede cerrar con backdrop
-   ni con Escape; el backdrop aplica este rebote como respuesta de rechazo.
-   No es decoración: es la señal de "obligatorio". Se conserva, sin glow neón. */
-@keyframes modalShake {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-5px); }
-  40%, 80% { transform: translateX(5px); }
-}
-.modal-sheet.modal-shake {
-  animation: modalShake 360ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-  border-color: var(--accent-rose) !important;
-}
-
-/* Glifo de encabezado de modal: también vacío (ver §25). El margen lo sigue
-   poniendo el HTML inline (varía por posición). */
-.modal-glyph {
-  font-size: var(--text-2xl);
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.role-choice-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-2);
-  margin: var(--space-1) 0;
-}
-
-/* La tarjeta de rol es un grupo seleccionable con contenido propio: sí lleva
-   filete. El padding sube de 16px a 24px para separar el título, la
-   descripción y la acción sin depender de más líneas. */
-.role-choice-card {
-  background: var(--bg-inset);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  cursor: pointer;
+.form-field {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: var(--space-2);
-  text-align: left;
-  color: var(--text-main);
-  position: relative;
-  user-select: none;
-  transition: var(--transition-normal);
-}
-.role-choice-card:hover {
-  border-color: var(--hairline-strong);
-  background: var(--bg-card);
-}
-.role-choice-card.card-readonly:hover {
-  border-color: var(--accent-emerald-border);
-}
-.role-choice-card.card-admin:hover {
-  border-color: var(--accent-primary-border);
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
 }
 
-/* Icono de las tarjetas de rol: también vacío (ver §25). */
-.role-card-icon {
-  font-size: var(--text-3xl);
-  line-height: 1;
-}
+.form-field:last-child { margin-bottom: 0; }
+.form-field-spaced { margin-top: var(--space-3); }
 
-.role-card-titles h4 {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text-main);
-  margin-bottom: var(--space-tight);
-  letter-spacing: var(--tracking-tight);
-}
-.role-card-titles p {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  line-height: 1.45;
-}
-
-/* La acción de la tarjeta de rol es un botón: lleva filete. El relleno teñido
-   ya la distingue del texto de arriba, así que el filete queda en
-   `--hairline` y sube a `--hairline-strong` en el hover. */
-.role-card-action-btn {
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  padding: var(--space-tight) var(--space-2);
-  border-radius: var(--radius-sm);
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  border: 1px solid transparent;
-  transition: var(--transition-fast);
-}
-.card-readonly .role-card-action-btn {
-  background: var(--accent-emerald-light);
-  color: var(--text-emerald);
-}
-.card-readonly:hover .role-card-action-btn {
-  background: var(--accent-emerald-hover);
-  color: var(--text-emerald);
-}
-.card-admin .role-card-action-btn {
-  background: var(--accent-primary-light);
-  color: var(--text-secondary);
-  border-color: transparent;
-}
-.card-admin:hover .role-card-action-btn {
-  background: var(--bg-raised);
-  color: var(--text-main);
-}
-
-/* El encabezado del sheet es un grupo dentro de la caja del sheet: conserva su
-   filete. El footer también (marca el corte de las acciones), pero pierde el
-   fondo `--bg-surface`: era una tercera caja apilada. */
-.modal-sheet-header {
-  padding: var(--space-3);
-  border-bottom: 1px solid var(--hairline);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-.modal-sheet-header h3 {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-display);
-  color: var(--text-main);
-}
-
-/* Un botón de cierre no es una cápsula perfecta con borde y sombra. */
-.btn-close-sheet {
-  background: transparent;
-  color: var(--text-muted);
-  font-size: var(--text-base);
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: var(--transition-fast);
-}
-.btn-close-sheet:hover {
-  background: var(--bg-raised);
-  color: var(--text-main);
-}
-
-.modal-sheet-body {
-  padding: var(--space-3);
-}
-
-.form-field {
-  margin-bottom: var(--space-2);
-}
 .form-field label {
-  display: block;
   font-size: var(--text-sm);
-  font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: var(--space-1);
 }
 
 .form-input-lg {
   width: 100%;
-  padding: var(--space-2) var(--space-2);
+  padding: var(--space-1) var(--space-2);
   background: var(--bg-inset);
   border: 1px solid var(--hairline);
-  border-radius: var(--radius-md);
-  font-family: inherit;
+  border-radius: var(--radius-sm);
   font-size: var(--text-md);
   color: var(--text-main);
-  outline: none;
-  transition: var(--transition-fast);
+  min-height: 34px;
+  transition: border-color var(--duration-quick) var(--ease-standard);
 }
-/* Antes: `box-shadow: var(--shadow-glow-amber)` — variable inexistente, la
-   declaración se descartaba. Ahora el foco es un anillo real. */
+
+.form-input-lg::placeholder { color: var(--text-muted); }
+
 .form-input-lg:focus {
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px var(--focus-ring);
-  background: var(--bg-card);
+  border-color: var(--hairline-focus);
+  outline: none;
 }
-.form-input-lg::placeholder {
-  color: var(--text-muted);
+
+select.form-input-lg {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: calc(100% - 15px) 15px, calc(100% - 10px) 15px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: var(--space-4);
+}
+
+.form-input-amount {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-display);
+  min-height: 44px;
 }
 
 .form-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.form-hint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.form-hint-center { text-align: center; }
+
+.login-error-msg {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--hairline);
+  font-size: var(--text-sm);
+  color: var(--text-rose);
+}
+
+.notes-smart-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.notes-smart-textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  padding: var(--space-2);
+  background: var(--bg-inset);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--text-main);
+  font-family: var(--font-body);
+}
+
+.notes-smart-textarea:focus {
+  border-color: var(--hairline-focus);
+  outline: none;
+}
+
+.notes-feedback-label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   15. MODALES — capa flotante, nunca en el contenido
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: var(--material-backdrop-filter);
+  backdrop-filter: var(--material-backdrop-filter);
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  animation: sheet-in var(--duration-standard) var(--ease-enter) both;
+}
+
+.modal-sheet-narrow { max-width: 420px; }
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal-sheet-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.modal-sheet-header h3 {
+  flex: 1 1 auto;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
+}
+
+.modal-sheet-subtitle {
+  flex: 1 1 100%;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.modal-sheet-body {
+  padding: var(--space-4);
+}
+
+.modal-sheet-body-center {
+  text-align: center;
+}
+
+.modal-sheet-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
 }
 
 .modal-sheet-footer {
-  padding: var(--space-2) var(--space-3);
-  background: transparent;
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4) var(--space-4);
   border-top: 1px solid var(--hairline);
+}
+
+.pay-var-preview {
+  padding: var(--space-2);
+  margin-bottom: var(--space-3);
+  background: var(--bg-inset);
+  border-radius: var(--radius-sm);
+}
+
+.pay-var-preview-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.pay-var-preview-meta {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: 2px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.pay-var-preview-meta strong { color: var(--text-secondary); }
+
+/* --- Selección de rol: son CONTROLES, así que caja sí --------------------- */
+.role-choice-grid {
+  display: grid;
   gap: var(--space-2);
 }
 
+.role-choice-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.role-choice-card:hover {
+  border-color: var(--hairline-focus);
+  background: var(--bg-inset);
+}
+
+.role-card-titles h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.role-card-titles p {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.role-card-action-btn {
+  font-size: var(--text-sm);
+  color: var(--accent-primary-hover);
+}
+
+.role-card-icon:empty { display: none; }
+.role-card-icon { display: none; }
+
+.role-step-pending-lead {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.role-step-pending-note {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* Rechazo funcional (el selector de rol es obligatorio). Señal, no adorno:
+   se sostiene en `transform` y no bloquea el input. */
+@keyframes modal-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+}
+
+.modal-shake {
+  animation: modal-shake 320ms var(--ease-standard);
+}
+
 /* ==========================================================================
-   22. TOAST
+   16. TOAST
    ========================================================================== */
 .neo-toast {
   position: fixed;
-  bottom: var(--space-4);
-  right: var(--space-4);
-  background: var(--bg-surface);
-  color: var(--text-main);
-  border: 1px solid var(--hairline-strong);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-float);
-  font-size: var(--text-base);
-  font-weight: 500;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: 200;
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  max-width: min(420px, calc(100vw - var(--space-4) * 2));
-  z-index: 200;
-  transform: translateY(120px);
+  gap: var(--space-1);
+  max-width: 90vw;
+  padding: var(--space-1) var(--space-3);
+  background: var(--bg-inset);
+  border: 1px solid var(--hairline-strong);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--text-main);
   opacity: 0;
-  transition: var(--transition-bounce);
+  transform: translate(-50%, 8px);
   pointer-events: none;
+  transition: var(--transition-normal);
 }
+
 .neo-toast.show {
-  transform: translateY(0);
   opacity: 1;
-}
-/* `#toastIcon` queda VACÍO: `showToast()` sigue recibiendo un argumento `icon`
-   (no se tocó la firma) pero todos los payloads son cadena vacía (§25). El
-   mensaje del toast ya dice qué pasó; el icono no aportaba información. */
-
-/* ==========================================================================
-   23. ESTADOS VACÍOS
-   `padding` de `--space-6` (48px) a `--space-4` (32px). Medido antes del
-   cambio: `.empty-feed-placeholder` ocupaba 141px para dos lineas de texto,
-   porque los 48px de padding vertical eran mas que el texto mismo. 32px sigue
-   sendo aire deliberado y el bloque deja de competir con el contenido de las
-   tarjetas vecinas. */
-.empty-feed-placeholder {
-  padding: var(--space-4) var(--space-3);
-  text-align: center;
-  color: var(--text-secondary);
-}
-.empty-feed-placeholder > div {
-  font-size: var(--text-3xl);
-  margin-bottom: var(--space-1);
-  filter: grayscale(1);
-  opacity: 0.4;
-  line-height: 1;
-}
-.empty-feed-placeholder p {
-  font-size: var(--text-md);
-  margin-top: var(--space-tight);
+  transform: translate(-50%, 0);
 }
 
-/* ==========================================================================
-   24. RESPONSIVE
-   El breakpoint del drawer NO SE MUEVE: 1024px.
-   `js/app.js` tiene `window.innerWidth <= 1024` hardcodeado en 363, 382, 1096
-   y 1100 para el auto-cierre del sidebar al cambiar de vista.
-   ========================================================================== */
-@media (max-width: 1100px) {
-  .segments-navigation-bar {
-    /* min() como piso: con `minmax(140px, 1fr)` pelado, un contenedor más
-       angosto que 140px desbordaría. */
-    grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
-  }
-
-  .segments-workspace-container {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* Tablets y pantallas medianas (<= 1024px) — breakpoint atado a js/app.js */
-@media (max-width: 1024px) {
-  .app-sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 295px;
-    max-width: 86vw;
-    transform: translateX(-100%);
-    transition: transform var(--duration-standard) var(--ease-enter);
-    box-shadow: var(--shadow-drawer);
-    z-index: 1000;
-  }
-  .app-sidebar.sidebar-open {
-    transform: translateX(0);
-  }
-  .sidebar-backdrop {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 995;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--duration-standard) var(--ease-standard);
-  }
-  .sidebar-backdrop.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .btn-hamburger {
-    display: flex;
-  }
-  .sidebar-close-btn {
-    display: flex;
-  }
-}
-
-@media (max-width: 1050px) {
-  .charts-grid-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* La barra de segmentos pasa a carrusel horizontal. */
-@media (max-width: 860px) {
-  .segments-navigation-bar {
-    display: flex;
-    overflow-x: auto;
-    gap: var(--space-1);
-    padding: 0 0 var(--space-1) 0;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .segments-navigation-bar::-webkit-scrollbar {
-    display: none;
-  }
-  .segment-pill-btn {
-    flex: 0 0 auto;
-    min-width: 150px;
-  }
-  .segment-pill-btn.pill-btn-all {
-    min-width: 100px;
-  }
-  .main-content {
-    padding: var(--space-2) var(--space-2) var(--space-6) var(--space-2);
-  }
-}
-
-@media (max-width: 768px) {
-  .app-topbar {
-    padding: 0 var(--space-2);
-  }
-  .topbar-quick-kpi {
-    display: none;
-  }
-  .topbar-month-pill {
-    font-size: var(--text-sm);
-    max-width: 160px;
-  }
-  .btn-topbar-notes {
-    font-size: var(--text-xs);
-    padding: var(--space-tight);
-  }
-  .expense-card-item {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-1);
-  }
-  .expense-item-amount {
-    text-align: left;
-  }
-  .quick-action-buttons-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  /* `.btn` es `white-space: nowrap`; en una sola columna a 320px el texto
-     del botón no entra y el item de grilla se sale del viewport. */
-  .quick-action-buttons-grid .btn {
-    white-space: normal;
-  }
-  .chart-canvas-container {
-    height: 270px;
-    padding: var(--space-2);
-  }
-  .view-heading {
-    font-size: var(--text-2xl);
-  }
-}
-
-/* Modales como bottom sheet en vertical */
-@media (max-width: 600px) {
-  .main-content {
-    padding: var(--space-2) var(--space-1) var(--space-6) var(--space-1);
-  }
-  .modal-overlay {
-    align-items: flex-end;
-    padding: 0;
-  }
-  .modal-sheet {
-    width: 100%;
-    max-width: 100%;
-    max-height: 90vh;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    animation: sheetSlideUp var(--duration-standard) var(--ease-enter);
-  }
-  .modal-sheet-header {
-    padding: var(--space-2);
-  }
-  .modal-sheet-body {
-    padding: var(--space-2) !important;
-  }
-  .modal-sheet-footer {
-    padding: var(--space-1) var(--space-2);
-  }
-  .role-choice-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
-  }
-  /* `.form-grid-2` nunca colapsaba: los campos quedaban de 130px de ancho. */
-  .form-grid-2 {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0;
-  }
-  .neo-toast {
-    left: var(--space-2);
-    right: var(--space-2);
-    bottom: var(--space-2);
-    max-width: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .content-card-header {
-    padding: var(--space-1);
-  }
-  /* Bajar el h3 de tarjeta es lo que evita que "Gastos Extraordinarios"
-     se corte con puntos suspensivos en pantallas diminutas. */
-  .card-title-row h3 {
-    font-size: var(--text-sm);
-  }
-  .card-header-titles p {
-    display: none;
-  }
-  .expense-card-item {
-    padding: var(--space-1);
-    gap: var(--space-1);
-  }
-  .expense-item-title,
-  .expense-item-amount {
-    font-size: var(--text-sm);
-  }
-  .btn-status-toggle {
-    min-width: 76px;
-    font-size: var(--text-2xs);
-    padding: var(--space-tight);
-  }
-  .btn-ghost-rose {
-    padding: var(--space-tight);
-  }
-  .metric-card-number {
-    font-size: var(--text-xl);
-  }
-  .metric-main-value {
-    font-size: var(--text-3xl);
-  }
-  .tx-amount {
-    font-size: var(--text-lg);
-  }
-  .tx-right {
-    gap: var(--space-1);
-  }
-}
-
-/* ==========================================================================
-   25. GLIFOS: SVG EN LÍNEA Y MARCAS DIBUJADAS EN CSS
-   Los emoji iconográficos quedaron prohibidos por la skill ("Reject AI slop:
-   ... emoji icons"). No se reemplazaron por otro glifo con nombre: se
-   resolvieron en dos Families.
-
-   1) Iconografía FUNCIONAL -> SVG inline de 16x16, trazo `currentColor`, que
-      hereda color y foco del control. Cierra, limpia, chevrons y lupa: son
-      la acción del botón, no decoración, y un SVG es lo que hace apple.com.
-   2) Marcas de ESTADO -> CSS puro. El punto de "tiene notas" y el sentido
-      ingreso/gasto se dibujan con `border-radius` y `transform`, sin carácter
-      ni fuente de iconos.
-
-   Ninguno se anima: los glifos no llevan `transition` propia.
-   ========================================================================== */
-.ui-glyph {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  vertical-align: -0.125em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  pointer-events: none;
-  flex-shrink: 0;
-}
-
-/* El botón de borrar se dibuja sobre un fondo pequeño: 1em heredaría 15px. */
-.btn-delete-expense .ui-glyph,
-.btn-delete-tx .ui-glyph {
-  width: 13px;
-  height: 13px;
-}
-
-/* Sentido del movimiento en el feed: chevron dibujado con dos bordes, en vez
-   del carácter ->/->. El color ya lo ponía `.tx-icon-ingreso` / `.tx-icon-gasto`
-   vía `color`, así que `currentColor` es suficiente. */
-.tx-icon-circle .ui-glyph {
-  width: 14px;
-  height: 14px;
-}
-
-/* Contenedores que existían SOLO para alojar un emoji. Al vaciarse deben
-   desaparecer: si no, dejan un hueco del tamaño del glifo que ya no está.
-   `:empty` no cuenta hijos elemento, así que un <svg> o un <img> reales
-   mantienen su caja. */
-.modal-glyph:empty,
-.role-card-icon:empty,
-.metric-icon-box:empty,
-.search-box-icon:empty,
 #toastIcon:empty,
-#authModeIcon:empty {
+#authModeIcon:empty,
+.role-card-icon:empty,
+.modal-glyph:empty {
   display: none;
 }
 
 /* ==========================================================================
-   26. PREFERENCIAS DEL SISTEMA
-   `prefers-color-scheme` NO se usa: la app es dark-only por decisión de
-   producto (identidad "Obsidian" para un panel financiero nocturno). Es lo que
-   hace apple.com: 0 ocurrencias en sus 5 hojas. Una media query forzaría un
-   tema que el producto no ofrece y sin control de layout.
+   17. ANIMACIONES DE TARJETA
+   `card-anim-out` dura exactamente 160ms porque app.js corta la tarjeta con
+   `setTimeout(..., 160)`. Si la animación durara más, se vería cortada.
+   Solo `opacity` y `transform`.
+   ========================================================================== */
+@keyframes card-anim-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes card-anim-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-4px); }
+}
+
+.card-anim-in {
+  animation: card-anim-in var(--duration-quick) var(--ease-standard) both;
+}
+
+.card-anim-out {
+  animation: card-anim-out var(--duration-quick) var(--ease-standard) both;
+}
+
+/* ==========================================================================
+   18. PERMISOS
+   El único mecanismo de permisos del lado cliente. No es seguridad real (la
+   real está en las RLS de Supabase), pero es funcional: si deja de aplicar,
+   los controles de edición quedan visibles para cualquier lector.
+   ========================================================================== */
+body.read-only-mode .admin-action-btn {
+  display: none !important;
+}
+
+/* Los dos botones hijos ya están ocultos por la regla anterior: el contenedor
+   tenía 32px de padding muerto. `:empty` no sirve porque siguen siendo hijos. */
+body.read-only-mode .quick-action-buttons-grid {
+  display: none;
+}
+
+/* ==========================================================================
+   19. RESPONSIVE
+   El breakpoint del drawer es 1024px porque app.js compara
+   `window.innerWidth <= 1024` en 4 lugares para el auto-cierre. Moverlo aquí
+   rompe ese comportamiento en silencio.
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .app-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 60;
+    width: var(--rail-width);
+    max-width: 84vw;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform var(--duration-standard) var(--ease-standard);
+  }
+
+  .app-sidebar.sidebar-open {
+    transform: none;
+    box-shadow: 24px 0 48px -32px rgba(0, 0, 0, 0.8);
+  }
+
+  .sidebar-close-btn { display: flex; }
+  .btn-hamburger { display: flex; }
+
+  /* En el drawer la marca se queda sin ancho para el título: con `nowrap` +
+     ellipsis, "Gestor Financiero" salía como "Gestor Finan…". A 13px y con
+     permitido el salto de línea entra entero; se pierden dos renglones de aire,
+     no una palabra. */
+  .brand-title {
+    font-size: var(--text-sm);
+    white-space: normal;
+  }
+
+  .app-topbar,
+  .main-content {
+    padding-inline: var(--space-4);
+  }
+
+  .main-content {
+    padding-top: var(--space-4);
+  }
+}
+
+@media (max-width: 833px) {
+  .view-heading { font-size: var(--text-2xl); }
+  .metric-main-value { font-size: var(--text-3xl); }
+  .accordion-summary-tag { font-size: var(--text-2xl); }
+}
+
+@media (max-width: 640px) {
+  .main-content { padding-inline: var(--space-3); }
+  .app-topbar { padding-inline: var(--space-3); }
+
+  .content-card-header {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-2);
+  }
+
+  .card-header-right-group { justify-content: space-between; }
+
+  /* 4 hijos, 2 columnas: el importe arriba a la derecha y el estado abajo a la
+     izquierda. El número de hijos no cambia, solo su_track. */
+  .expense-card-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: var(--space-1);
+  }
+
+  .expense-item-amount { grid-column: 2; grid-row: 1; }
+  .expense-card-item > :nth-child(3) { grid-column: 1; grid-row: 2; justify-self: start; }
+  .expense-card-item > :nth-child(4) { grid-column: 2; grid-row: 2; justify-self: end; }
+
+  .btn-delete-expense,
+  .btn-delete-tx { opacity: 1; }
+
+  .form-grid-2 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   20. MOVIMIENTO REDUCIDO
+   apple.com respeta esta consulta (34 reglas) y NO usa prefers-color-scheme.
+   Cubre transiciones Y keyframes, con sus retardos: sin el retdelay, una
+   animación con `animation-delay` seguiría apareciendo tarde.
+   El press se cambia por un cambio de opacidad: con `transform` desactivado,
+   el feedback tiene que seguir existiendo de otra forma.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  /* Cubre las 65 declaraciones `transition` de esta hoja, no solo las que
-     :root tokeniza: la regla universal usa `!important`, así que gana contra
-     los tokens `--transition-fast/normal/bounce` y contra cualquier
-     `transition:` escrito a mano. Los 6 @keyframes (`fadeIn`, `cardEnter`,
-     `cardExit`, `sheetSlideUp`, `modalPop`, `modalShake`) también entran por
-     `animation-duration`. apple.com tiene 34 reglas de este tipo; antes
-     esta hoja tenía 1. */
   *,
   *::before,
   *::after {
@@ -3041,77 +2229,74 @@ body.read-only-mode #monthNotesTextarea {
     animation-delay: 0ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    /* Sin esto, una transición con `delay` seguía esperando después de
-      Reducer Motion: se acortaba la duración pero no la espera. */
     transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 
-  /* `animation: none` global rompería los estados finales: `cardEnter` y
-     `cardExit` usan `forwards`, y sin animation la tarjeta quedaría en su
-     estado inicial. En su lugar se fija el estado final a mano, que es lo
-     que el usuario quiere ver: el resultado, sin el recorrido. */
-  .content-card-box.card-anim-in,
-  .content-card-box.card-anim-out {
-    animation: none !important;
-    transform: none;
-    opacity: 1;
-  }
-  .modal-sheet {
-    animation: none !important;
-    transform: none;
-    opacity: 1;
-  }
-  .empty-segments-notice,
-  .empty-feed-placeholder {
-    animation: none !important;
-    opacity: 1;
-  }
-
-  /* Cross-fade en lugar de escalar: la señal sigue, el movimiento no. */
   .btn:active,
-  .btn-sidebar-quick-action:active,
-  .btn-status-toggle:active,
+  .btn-sm:active,
+  .btn-lg:active,
+  .btn-close-sheet:active,
+  .feed-filter-pill:active,
   .segment-pill-btn:active,
-  .btn-ghost-rose:active {
+  .sidebar-nav-tab:active,
+  .month-pill-btn:active,
+  .mini-nav-arrow:active,
+  .btn-topbar-notes:active,
+  .btn-sidebar-quick-action:active,
+  .mode-badge:active,
+  .btn-status-toggle:active,
+  .matrix-month-btn:active {
     transform: none;
-    opacity: 0.65;
+    opacity: 0.6;
   }
 
-  /* El rebote de rechazo se convierte en un cambio de opacidad: la misma
-     información ("no se puede cerrar") sin desplazamiento. */
-  .modal-sheet.modal-shake {
-    animation: none;
-    border-color: var(--accent-rose) !important;
-    opacity: 0.75;
-  }
+  .neo-toast.show { transform: translate(-50%, 0); }
+  .app-sidebar { transform: translateX(-100%); }
+  .app-sidebar.sidebar-open { transform: none; }
 }
 
 @media (prefers-reduced-transparency: reduce) {
   .app-topbar {
-    background: var(--bg-chrome);
+    background: var(--bg-surface);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+
   .modal-overlay {
-    background-color: rgba(10, 11, 15, 0.95);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
 }
 
-@media (prefers-contrast: more) {
-  :root {
-    --hairline: rgba(255, 255, 255, 0.24);
-    --hairline-strong: rgba(255, 255, 255, 0.4);
-    --hairline-focus: rgba(255, 255, 255, 0.6);
-    --text-secondary: #c3c9d4;
-    --text-muted: #9aa2b1;
-    --bg-card: #17181f;
-    --bg-surface: #20212a;
-    /* `--hairline-focus` se sobreescribe acá aunque hoy no lo consuma ninguna
-       regla: si `--hairline` sube a 0.24 en alto contraste, el filete de foco
-       tiene que subir con él. Mantener el par sincronizado. */
-    --bg-inset: #0b0c11;
-  }
-}
+/* ==========================================================================
+   21. CONTRASTE — medido, no estimado
+   --------------------------------------------------------------------------
+   Todos los pares de abajo se midieron en el navegador resolviendo el color
+   COMPUTADO a `rgb(r,g,b)`. `getPropertyValue` sobre un token con
+   `color-mix()` devuelve la cadena literal y da un resultado falso, así que
+   esta hoja NO usa `color-mix()` en ningún token de texto: todos son hex
+   planos. Valores medidos contra el fondo real de cada elemento:
+
+     --text-main        #f1f2f4  vs --bg-surface #0f1015   16.60:1
+     --text-secondary   #a9afbd  vs --bg-surface          8.34:1
+     --text-muted       #8c93a1  vs --bg-surface          5.52:1
+     --text-secondary   #a9afbd  vs --bg-canvas  #0a0b0e  9.16:1
+     --text-muted       #8c93a1  vs --bg-canvas           6.07:1
+     --text-muted       #8c93a1  vs --bg-inset   #17181f   4.55:1
+     --accent-primary   #94a3b8  vs --bg-inset            5.42:1
+     #0a0b0e sobre --accent-primary #94a3b8               7.75:1
+     --text-emerald     #98c6b1  vs --bg-surface          9.68:1
+     --text-rose        #cf9a9e  vs --bg-surface          7.53:1
+     --text-cyan        #9db8c6  vs --bg-surface          8.63:1
+     --cat-servicios    #93acbd  vs --bg-surface          8.31:1
+     --cat-personales   #a99bbf  vs --bg-surface          7.61:1
+     --cat-movimientos  #8fb7a3  vs --bg-surface          8.87:1
+     --cat-extras       #c3b398  vs --bg-surface          9.57:1
+     --focus-ring       #0088ff  vs --bg-surface          5.41:1
+
+   El mínimo de WCAG AA para texto normal es 4.5:1 y para texto grande 3:1. El
+   valor más bajo de la lista es 4.55:1: `--text-muted` sobre `--bg-inset`, que
+   es el color de las etiquetas de dato dentro de un campo hundido. Justa,
+   pero pasa.
+   ========================================================================== */

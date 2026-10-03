@@ -20,10 +20,19 @@
   <div class="app-layout">
 
     <!-- ==========================================================
-         RAIL LATERAL
-         Icono + etiqueta, un solo acento para el activo. No es un
-         menú: son cuatro bloques de lectura (marca, vistas, período,
-         resumen) y al pie el estado de la sesión.
+         RAIL LATERAL — navegación y nada más
+         Cuatro cosas: marca, las dos vistas, buscador, y un pie con
+         estado y modo. SIN cifras y SIN lista de meses: eso son datos,
+         y los datos van en el contenido (fila de métricas + tira de
+         pagos + selector de período).
+
+         Por qué sin scroll interno: con datos dentro, el bloque central
+         medía 1019px contra 692px disponibles y la navegación quedaba
+         cortada. Medido antes del cambio: `scrollHeight` 1019 /
+         `clientHeight` 692, con 327px de contenido inalcanzable y
+         `#btnToggleAuthMode` a 840px de un viewport de 900. Ahora el
+         rail mide ~330px de contenido en 900: sobra espacio, así que
+         el problema era de densidad, no de alto.
          ========================================================== -->
     <aside id="appSidebar" class="app-sidebar">
 
@@ -38,23 +47,20 @@
         <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="Cerrar panel"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
 
-      <div class="sidebar-scroll">
-      <!-- Vistas -->
-      <div class="sidebar-section">
-        <div class="sidebar-nav-tabs">
-          <button type="button" id="btnNavMes" class="sidebar-nav-tab active">
-            <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"/></svg></span>
-            <span>Vista Mensual</span>
-          </button>
-          <button type="button" id="btnNavPanel" class="sidebar-nav-tab">
-            <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></span>
-            <span>Consolidado</span>
-          </button>
-        </div>
-      </div>
+      <!-- Las dos vistas. Es toda la navegación del producto. -->
+      <nav class="sidebar-nav" aria-label="Vistas">
+        <button type="button" id="btnNavMes" class="sidebar-nav-tab active">
+          <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"/></svg></span>
+          <span>Vista Mensual</span>
+        </button>
+        <button type="button" id="btnNavPanel" class="sidebar-nav-tab">
+          <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></span>
+          <span>Consolidado</span>
+        </button>
+      </nav>
 
-      <!-- Búsqueda -->
-      <div class="sidebar-section sidebar-search-section">
+      <!-- Buscador -->
+      <div class="sidebar-search-section">
         <div class="sidebar-search-box">
           <span class="search-box-icon"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="6.8" cy="6.8" r="4.3"/><path d="M10 10l3.4 3.4"/></svg></span>
           <input type="text" id="sidebarSearchInput" class="sidebar-search-input" placeholder="Buscar gasto o abono"
@@ -67,71 +73,9 @@
         </div>
       </div>
 
-      <!-- Período -->
-      <div class="sidebar-section">
-        <div class="sidebar-section-header">
-          <span class="sidebar-section-label">Período activo</span>
-          <div class="sidebar-nav-arrows">
-            <button type="button" id="btnPrevMonth" class="mini-nav-arrow" title="Mes anterior"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></button>
-            <button type="button" id="btnNextMonth" class="mini-nav-arrow" title="Mes siguiente"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.5L10.5 8 6 12.5"/></svg></button>
-          </div>
-        </div>
-        <div id="monthPillsContainer" class="sidebar-month-pills-list" role="tablist" aria-label="Períodos"></div>
-      </div>
-
-      <!-- Resumen del mes: lista de definición, sin caja. -->
-      <div class="sidebar-section sidebar-metrics-section">
-        <div class="sidebar-section-header">
-          <span class="sidebar-section-label">Resumen del mes</span>
-          <span id="monthAbonoPercentLabel" class="sidebar-coverage-badge font-mono">0.0%</span>
-        </div>
-
-        <div class="sidebar-metric-card border-emerald">
-          <div class="metric-card-top">
-            <span class="metric-card-title">Ingresos &amp; abonos</span>
-            <button type="button" id="btnHeaderAddIncome" class="btn-sidebar-quick-action action-income admin-action-btn"
-              title="Registrar nuevo abono">Abono</button>
-          </div>
-          <div id="monthTotalIngresos" class="metric-card-number font-mono text-emerald">S/ 0.00</div>
-          <div id="monthIngresosCount" class="metric-card-detail">0 abonos registrados</div>
-        </div>
-
-        <div class="sidebar-metric-card border-rose">
-          <div class="metric-card-top">
-            <span class="metric-card-title">Presupuesto de gastos</span>
-            <button type="button" id="btnHeaderAddBudget" class="btn-sidebar-quick-action action-expense admin-action-btn"
-              title="Añadir nuevo gasto presupuestado">Gasto</button>
-          </div>
-          <div id="monthTotalEgresos" class="metric-card-number font-mono text-rose">S/ 0.00</div>
-          <div id="monthGastosCount" class="metric-card-detail">0 de 0 gastos pagados</div>
-        </div>
-
-        <div class="sidebar-metric-card border-cyan">
-          <div class="metric-card-top">
-            <span class="metric-card-title">Balance neto</span>
-          </div>
-          <div id="monthBalanceNeto" class="metric-card-number font-mono text-cyan">S/ 0.00</div>
-          <div id="monthBalanceStatusLabel" class="metric-card-detail">Ingresos menos gastos</div>
-        </div>
-
-        <div class="sidebar-progress-panel">
-          <div class="sidebar-progress-header">
-            <span id="paidTextInfo" class="progress-title-text">Gastos Pagados: <strong>S/ 0.00</strong></span>
-            <span id="paidPercentBadge" class="progress-pct-badge font-mono">0.0%</span>
-          </div>
-          <div class="sticky-track">
-            <div id="paidBarFill" class="paid-bar-fill" style="width: 0%;"></div>
-          </div>
-          <div class="sidebar-progress-chips">
-            <span id="paidSummaryLabel" class="mini-chip chip-paid">S/ 0.00</span>
-            <span id="pendingSummaryLabel" class="mini-chip chip-pending">S/ 0.00</span>
-            <span id="coverageTextInfo" class="mini-chip chip-coverage">0.0%</span>
-          </div>
-        </div>
-      </div>
-      </div><!-- sidebar-scroll -->
-
-      <!-- Pie: estado de la sesión -->
+      <!-- Pie: estado de la sesión. Es META, no navegación: chico, gris,
+           anclado al borde inferior. Sin caja: era el último borde del
+           rail y lo único que delimitaba algo que no es un control. -->
       <div class="sidebar-footer">
         <div id="indicadorConexion" class="conn-badge conn-offline"
           title="Los datos se guardan solo en este navegador">
@@ -141,8 +85,6 @@
           title="Haz clic para ingresar y desbloquear la edición">
           <span id="authModeIcon"></span> <span id="authModeLabel">Solo Lectura</span>
         </button>
-        <button type="button" id="btnOpenNewMonthModal" class="btn btn-surface btn-sm admin-action-btn"
-          title="Crear o duplicar un mes">Nuevo mes</button>
       </div>
     </aside>
 
@@ -184,6 +126,80 @@
           <div class="view-header">
             <h2 class="view-heading">Detalle mensual</h2>
             <p class="view-subheading">Activa las categorías que quieras revisar en paralelo.</p>
+          </div>
+
+          <!-- ============================================================
+               FILA DE MÉTRICAS — los DATOS que estaban en el rail.
+               Va justo debajo del título porque es donde el ojo llega
+               primero y donde se responde "¿cómo voy?" antes de leer
+               una sola fila de gasto.
+
+               Cuatro celdas de la misma altura, Hairline entre ellas,
+               cifras tabulares y alineadas. El color va SOLO en la que
+               significa estado (Balance neto): app.js escribe el color
+               inline en `#monthBalanceNeto` según el signo, y las otras
+               tres son neutras a propósito.
+               ============================================================ -->
+          <div class="metrics-row">
+
+            <div class="metric-cell">
+              <span class="metric-cell-label">Ingresos y abonos</span>
+              <div class="metric-cell-value-row">
+                <span id="monthTotalIngresos" class="metric-cell-value font-mono">S/ 0.00</span>
+                <button type="button" id="btnHeaderAddIncome" class="metric-cell-action admin-action-btn"
+                  title="Registrar nuevo abono">Abono</button>
+              </div>
+              <span id="monthIngresosCount" class="metric-cell-note">0 abonos registrados</span>
+            </div>
+
+            <div class="metric-cell">
+              <span class="metric-cell-label">Presupuesto de gastos</span>
+              <div class="metric-cell-value-row">
+                <span id="monthTotalEgresos" class="metric-cell-value font-mono">S/ 0.00</span>
+                <button type="button" id="btnHeaderAddBudget" class="metric-cell-action admin-action-btn"
+                  title="Añadir nuevo gasto presupuestado">Gasto</button>
+              </div>
+              <span id="monthGastosCount" class="metric-cell-note">0 de 0 gastos pagados</span>
+            </div>
+
+            <div class="metric-cell">
+              <span class="metric-cell-label">Balance neto</span>
+              <div class="metric-cell-value-row">
+                <span id="monthBalanceNeto" class="metric-cell-value font-mono">S/ 0.00</span>
+              </div>
+              <span id="monthBalanceStatusLabel" class="metric-cell-note">Ingresos menos gastos</span>
+            </div>
+
+            <div class="metric-cell">
+              <span class="metric-cell-label">Cobertura</span>
+              <div class="metric-cell-value-row">
+                <span id="monthAbonoPercentLabel" class="metric-cell-value font-mono">0.0%</span>
+              </div>
+              <span class="metric-cell-note">Ingresos sobre el presupuesto</span>
+            </div>
+          </div>
+
+          <!-- Tira de PAGOS: el detalle que responde "¿cuánto falta?".
+               Una sola línea: cuánto se pagó de lo presupuestado, cuánto
+               queda, el carril de avance y el porcentaje. Antes eran tres
+               "chips" apilados en el rail que repetían el mismo importe. -->
+          <div class="payments-strip">
+            <span id="paidTextInfo" class="payments-lead">Gastos Pagados: <strong>S/ 0.00</strong></span>
+            <span id="pendingSummaryLabel" class="payments-fact font-mono">Pendiente: S/ 0.00</span>
+            <span class="payments-track"><span id="paidBarFill" class="payments-fill" style="width: 0%;"></span></span>
+            <span id="paidPercentBadge" class="payments-fact font-mono">0.0% Pagado (0 de 0)</span>
+          </div>
+
+          <!-- SELECTOR DE PERÍODO — horizontal, compacto, en el contenido.
+               Misma función y mismo estado activo que la lista vertical
+               del rail; lo que cambia es el eje. El "Nuevo mes" vino con
+               él: administration de períodos es gestión de contenido, no
+               navegación ni meta de sesión. -->
+          <div class="period-bar">
+            <button type="button" id="btnPrevMonth" class="period-arrow" title="Mes anterior" aria-label="Mes anterior"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></button>
+            <div id="monthPillsContainer" class="period-track" role="group" aria-label="Períodos"></div>
+            <button type="button" id="btnNextMonth" class="period-arrow" title="Mes siguiente" aria-label="Mes siguiente"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.5L10.5 8 6 12.5"/></svg></button>
+            <button type="button" id="btnOpenNewMonthModal" class="period-new admin-action-btn" title="Crear o duplicar un mes">Nuevo mes</button>
           </div>
 
           <!-- Control segmentado: el único grupo de cápsulas de la página. -->

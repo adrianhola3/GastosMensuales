@@ -365,17 +365,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- RENDERIZADO DEL SELECTOR DE MESES (HORIZONTAL PILLS) ---
+  // --- RENDERIZADO DEL SELECTOR DE MESES (TIRA HORIZONTAL) ---
   function renderMonthPills() {
     monthPillsContainer.innerHTML = '';
     const months = store.getAllMonthsList();
     const activeId = store.data.activeMonthId;
 
     months.forEach(m => {
+      const isActive = m.id === activeId;
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `month-pill-btn ${m.id === activeId ? 'active' : ''}`;
-      btn.innerHTML = `<span>${escaparHTML(m.nombre)}</span> <span style="font-size: var(--text-xs);">${m.id === activeId ? '' : ''}</span>`;
+      btn.className = `month-pill-btn ${isActive ? 'active' : ''}`;
+      // El selector pasó de columna a tira horizontal: el estado del período
+      // tiene que ser legible por tecnología asistiva y no solo por la clase.
+      btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      btn.innerHTML = `<span>${escaparHTML(m.nombre)}</span>`;
 
       btn.addEventListener('click', () => {
         switchView('mes', m.id);
@@ -387,10 +391,12 @@ document.addEventListener('DOMContentLoaded', () => {
       monthPillsContainer.appendChild(btn);
     });
 
-    // Auto-scroll para centrar la píldora activa
+    // Auto-scroll para centrar el período activo. El eje cambió con el
+    // selector: `block: 'nearest'` solo alcanzaba en vertical, así que el
+    // período activo podía quedar fuera de la tira con muchos meses.
     const activePill = monthPillsContainer.querySelector('.month-pill-btn.active');
     if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
     }
   }
 

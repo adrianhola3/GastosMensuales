@@ -184,13 +184,25 @@
 
           <!-- Tira de PAGOS: el detalle que responde "¿cuánto falta?".
                Una sola línea: cuánto se pagó de lo presupuestado, cuánto
-               queda, el carril de avance y el porcentaje. Antes eran tres
-               "chips" apilados en el rail que repetían el mismo importe. -->
+               queda, el carril de avance y el porcentaje.
+
+               LO QUE SE SACÓ Y POR QUÉ, con el número repetido contado:
+               antes esta tira decía el presupuesto DOS veces y el par
+               "pagados de totales" DOS veces, y las dos copias estaban a
+               40px de su original:
+                 · "de S/ <presupuesto>" era el mismo `totalEgresos` que la
+                   celda 2 de `.metrics-row` ya muestra 40px más arriba. Se fue
+                   el "de", y con él la repetición.
+                 · "(3 de 9)" al lado del porcentaje era el mismo
+                   `pagadosCount de totalItemsPresupuesto` que la nota de esa
+                   misma celda 2 ya dice. Se fue el paréntesis.
+               Lo que queda NO está en ninguna otra parte: el importe pagado, el
+               pendiente, el carril y el porcentaje de avance. -->
           <div class="payments-strip">
             <span id="paidTextInfo" class="payments-lead">Gastos Pagados: <strong>S/ 0.00</strong></span>
             <span id="pendingSummaryLabel" class="payments-fact font-mono">Pendiente: S/ 0.00</span>
             <span class="payments-track"><span id="paidBarFill" class="payments-fill" style="width: 0%;"></span></span>
-            <span id="paidPercentBadge" class="payments-fact font-mono">0.0% Pagado (0 de 0)</span>
+            <span id="paidPercentBadge" class="payments-fact font-mono">0.0% Pagado</span>
           </div>
 
           <!-- SELECTOR DE PERÍODO — horizontal, compacto, en el contenido.
@@ -429,7 +441,6 @@
             <div class="hero-metric-card card-theme-emerald">
               <div class="metric-top-row">
                 <span class="metric-label-title">Ingresos acumulados</span>
-                <div class="metric-icon-box"></div>
               </div>
               <div id="kpiGlobalIngresos" class="metric-main-value font-mono">S/ 0.00</div>
               <div class="metric-footer-info">Todos los abonos confirmados</div>
@@ -438,7 +449,6 @@
             <div class="hero-metric-card card-theme-cyan">
               <div class="metric-top-row">
                 <span class="metric-label-title">Balance acumulado</span>
-                <div class="metric-icon-box"></div>
               </div>
               <div id="kpiGlobalBalance" class="metric-main-value font-mono">S/ 0.00</div>
               <div class="metric-footer-info">Ingresos menos gastos realizados</div>
@@ -447,10 +457,6 @@
             <div class="hero-metric-card card-theme-amber">
               <div class="metric-top-row">
                 <span class="metric-label-title">Cumplimiento</span>
-                <!-- Vacío a propósito: la cifra de abajo ya dice "0.0%". La caja
-                     del ícono queda con :empty -> display:none. Antes ponía un
-                     "%" suelto que, al lado de la etiqueta, se leía como error. -->
-                <div class="metric-icon-box"></div>
               </div>
               <div id="kpiGlobalCumplimiento" class="metric-main-value font-mono">0.0%</div>
               <div class="metric-footer-info">Porcentaje general de cobertura</div>
@@ -542,7 +548,6 @@
         <div id="roleSelectStepChoices">
           <div class="role-choice-grid">
             <div id="btnChooseReadOnly" class="role-choice-card card-readonly" role="button" tabindex="0">
-              <div class="role-card-icon"></div>
               <div class="role-card-titles">
                 <h4>Modo lectura</h4>
                 <p>Consultá balances, el desglose por categoría y los movimientos sin permisos de edición.</p>
@@ -551,7 +556,6 @@
             </div>
 
             <div id="btnChooseAdmin" class="role-choice-card card-admin" role="button" tabindex="0">
-              <div class="role-card-icon"></div>
               <div class="role-card-titles">
                 <h4>Administrador</h4>
                 <p>Acceso completo para registrar gastos, abonos, crear períodos y editar datos.</p>
@@ -692,6 +696,88 @@
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
           <button type="submit" class="btn btn-success btn-lg">Confirmar y marcar pagado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Editar gasto presupuestado (solo administrador) -->
+  <div id="modalEditExpense" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Editar gasto</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formEditExpense">
+        <input type="hidden" id="editExpenseMonthId" value="">
+        <input type="hidden" id="editExpenseItemId" value="">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="editExpenseConcepto">Concepto</label>
+            <input type="text" id="editExpenseConcepto" class="form-input-lg" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="editExpenseMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="editExpenseMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div id="editExpenseRangeField" class="form-field" style="display: none;">
+              <label for="editExpenseRango">Rango estimado (opcional)</label>
+              <input type="text" id="editExpenseRango" class="form-input-lg font-mono" placeholder="100 - 150">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="editExpenseTipoReadonly">Tipo</label>
+            <p id="editExpenseTipoReadonly" class="form-readonly-value">Fijo</p>
+            <p class="form-hint">El tipo decide en qué lista vive el gasto, así que no se cambia desde acá.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Editar movimiento (solo administrador) -->
+  <div id="modalEditMovement" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Editar movimiento</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formEditMovement">
+        <input type="hidden" id="editMovementMonthId" value="">
+        <input type="hidden" id="editMovementId" value="">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="editMovementConcepto">Concepto</label>
+            <input type="text" id="editMovementConcepto" class="form-input-lg" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="editMovementMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="editMovementMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div class="form-field">
+              <label for="editMovementFecha">Fecha</label>
+              <input type="date" id="editMovementFecha" class="form-input-lg font-mono">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="editMovementFlujoReadonly">Tipo de movimiento</label>
+            <p id="editMovementFlujoReadonly" class="form-readonly-value">Ingreso</p>
+            <p class="form-hint">Ingreso o gasto define el signo del movimiento, así que no se cambia desde acá.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
         </div>
       </form>
     </div>

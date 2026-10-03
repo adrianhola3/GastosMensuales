@@ -218,6 +218,12 @@
       fuerte publicado. */
   --hairline: rgba(29, 29, 31, 0.12);
   --hairline-strong: rgba(29, 29, 31, 0.20);
+  /* Pista de la barra de progreso de la matriz. La pista usaba `--bg-inset`,
+     que en claro es #f2f2f5 sobre una tarjeta blanca: 1.03:1, invisible. Un 0%
+     se leia como "sin dato" y no como cero. Este gris es el separador real de
+     apple.com en tema claro (60,60,67 al 29%), NO VERIFICADO contra la
+     referencia: medido en pantalla, no tomado de `apple-com-tokens.md`. */
+  --progress-track: rgba(60, 60, 67, 0.29);
   --hairline-focus: rgba(29, 29, 31, 0.36);
 
   /* --- Texto -------------------------------------------------------------
@@ -420,6 +426,7 @@ html.theme-dark {
      alpha bajo y no negro. */
   --hairline: rgba(255, 255, 255, 0.09);
   --hairline-strong: rgba(255, 255, 255, 0.17);
+  --progress-track: rgba(255, 255, 255, 0.22);
   --hairline-focus: rgba(255, 255, 255, 0.32);
 
   --text-main: #f1f2f4;
@@ -1802,6 +1809,12 @@ body {
    12. CONSOLIDADO — cifras protagonistas en filas, no en cajas
    ========================================================================== */
 .metrics-hero-grid {
+  /* FALTAVA `display: grid`. Como era un bloque, las 3 tarjetas se apilaban y
+     cada una estiraba la cifra al extremo de las 1080px del area de contenido:
+     ~730px de aire entre "Balance acumulado" y su numero. Ahora son 3 celdas
+     con filete vertical, el mismo ritmo que `.metrics-row` de Vista Mensual. */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--hairline);
 }
 
@@ -1811,7 +1824,14 @@ body {
   column-gap: var(--space-4);
   align-items: baseline;
   padding-block: var(--space-4);
+  padding-inline-start: var(--space-3);
   border-bottom: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+}
+
+.hero-metric-card:first-child {
+  padding-inline-start: 0;
+  border-left: 0;
 }
 
 .metric-top-row {
@@ -1909,8 +1929,8 @@ body {
 }
 
 .matrix-progress-track {
-  height: 2px;
-  background: var(--bg-inset);
+  height: 4px;
+  background: var(--progress-track);
   border-radius: var(--radius-pill);
   overflow: hidden;
 }
@@ -2505,6 +2525,14 @@ body.read-only-mode .quick-action-buttons-grid {
   .metrics-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric-cell:nth-child(odd) { border-left: 0; padding-left: 0; }
 
+  /* Las 3 cifras del Consolidado se mantienen en 3 columnas: son menos que las
+     4 de Vista Mensual y a 992px cada celda da 330px, que alcanza para la
+     etiqueta y "S/ 12,345.67" juntos. Se les baja el cuerpo para que la cifra
+     no tenga que apretarse. */
+  .metrics-hero-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero-metric-card { padding-inline-start: var(--space-2); }
+  .hero-metric-card .metric-main-value { font-size: var(--text-2xl); }
+
   .app-topbar,
   .main-content {
     padding-inline: var(--space-4);
@@ -2534,6 +2562,13 @@ body.read-only-mode .quick-action-buttons-grid {
   .metrics-row { grid-template-columns: minmax(0, 1fr); }
   .metric-cell { border-left: 0; padding-left: 0; }
   .metric-cell + .metric-cell { border-top: 1px solid var(--hairline); }
+
+  /* A 640px las 3 celdas del Consolidado no entran: la etiqueta y la cifra
+     pelarian por el mismo renglon. Pasan a apilarse, y el filete vertical se
+     convierte en horizontal para no perder la separacion. */
+  .metrics-hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-metric-card { padding-inline-start: 0; border-left: 0; }
+  .hero-metric-card + .hero-metric-card { border-top: 1px solid var(--hairline); }
 
   /* "Nuevo mes" baja de renglón: con los 6 meses y las dos flechas, a 640px
      el riel se queda sin espacio y el botón terminaba sobre el mes activo. */

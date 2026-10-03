@@ -428,7 +428,10 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('monthBalanceStatusLabel').textContent = 'Déficit (gastos superan ingresos)';
     } else {
       balanceEl.style.color = 'var(--text-cyan)';
-      document.getElementById('monthBalanceStatusLabel').textContent = 'Equilibrado (S/ 0.00)';
+      // T4: era 'Equilibrado (S/ 0.00)'. La celda de arriba ya muestra
+      // "S/ 0.00" en 28px, y el paréntesis repetía ese mismo número en 12px
+      // justo debajo. La etiqueta dice el estado; el número, la cifra.
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Equilibrado';
     }
 
     const pctAvance = totals.porcentajeAvance.toFixed(1);
@@ -507,40 +510,39 @@ document.addEventListener('DOMContentLoaded', () => {
         elBalanceStatus.textContent = 'Saldo a favor disponible';
       } else if (totals.balanceNeto < 0) {
         elBalanceStatus.textContent = 'Déficit (gastos superan ingresos)';
-      } else {
-        elBalanceStatus.textContent = 'Equilibrado (S/ 0.00)';
-      }
+        } else {
+          elBalanceStatus.textContent = 'Equilibrado';
+        }
     }
     const elAbonoPercent = document.getElementById('monthAbonoPercentLabel');
     if (elAbonoPercent) elAbonoPercent.textContent = `${totals.porcentajeAvance.toFixed(1)}%`;
 
     // Dual Barras de Progreso (Sticky)
+    //
+    // T4: los dos textos de esta tira tenían la duplicación. Antes decía
+    // "Gastos Pagados: <pagado> de <presupuesto>", y ese <presupuesto> es
+    // exactamente `totals.totalEgresos`, que la celda 2 de `.metrics-row` ya
+    // muestra 40px más arriba con la cifra grande. Y el badge decía
+    // "<pct>% Pagado (3 de 9)", donde el par "3 de 9" es el mismo
+    // `pagadosCount de totalItemsPresupuesto` que la nota de esa celda ya
+    // escribe. Se quitaron las dos copias; lo que queda —importe pagado,
+    // pendiente, carril y porcentaje— no está en ninguna otra parte.
     const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
     const elPaidTextInfo = document.getElementById('paidTextInfo');
     if (elPaidTextInfo) {
-      elPaidTextInfo.innerHTML = ` Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong> de <strong>${window.formatCurrency(totals.totalEgresos)}</strong>`;
+      elPaidTextInfo.innerHTML = `Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong>`;
     }
     const elPaidPercentBadge = document.getElementById('paidPercentBadge');
     if (elPaidPercentBadge) {
-      elPaidPercentBadge.textContent = `${pctPagado}% Pagado (${totals.pagadosCount} de ${totals.totalItemsPresupuesto})`;
+      elPaidPercentBadge.textContent = `${pctPagado}% Pagado`;
     }
     const elPaidBarFill = document.getElementById('paidBarFill');
     if (elPaidBarFill) {
       elPaidBarFill.style.width = `${Math.min(100, totals.porcentajePagado || 0)}%`;
     }
-    const elPaidSummaryLabel = document.getElementById('paidSummaryLabel');
-    if (elPaidSummaryLabel) {
-      elPaidSummaryLabel.textContent = `Pagado: ${window.formatCurrency(totals.montoPagadoPresupuesto)}`;
-    }
     const elPendingSummaryLabel = document.getElementById('pendingSummaryLabel');
     if (elPendingSummaryLabel) {
       elPendingSummaryLabel.textContent = `Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
-    }
-
-    const pctAvance = totals.porcentajeAvance.toFixed(1);
-    const elCoverageTextInfo = document.getElementById('coverageTextInfo');
-    if (elCoverageTextInfo) {
-      elCoverageTextInfo.textContent = `Cobertura: ${pctAvance}%`;
     }
 
     // Actualizar indicador en topbar
@@ -572,8 +574,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const elSubExtras = document.getElementById('subtotalGastosExtra');
     if (elSubExtras) elSubExtras.textContent = window.formatCurrency(totals.subtotalExtras);
 
-    const elGrandTotal = document.getElementById('grandTotalAmount');
-    if (elGrandTotal) elGrandTotal.textContent = window.formatCurrency(totals.totalEgresos);
+    // T4: aquí estaba el write a `#grandTotalAmount`. El nodo no existe en
+    // index.html —el total del mes vive en `#monthTotalEgresos`, en la celda 2
+    // de `.metrics-row`— así que la línea no tenía a quién escribir y el `if`
+    // la ocultaba. Código muerto, no una funcionalidad.
 
     // Tags de resumen en encabezados de acordeón
     const tagServ = document.getElementById('summaryTagServicios');
@@ -652,7 +656,10 @@ row.innerHTML = `
           ${window.formatCurrency(item.monto)}
         </div>
 
-        <div>
+        <div class="item-actions">
+          <button type="button" class="btn-ghost-rose btn-edit-expense admin-action-btn" data-item-id="${escaparHTML(item.id)}" title="Editar gasto">
+            <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"/></svg>
+          </button>
           <button type="button" class="btn-ghost-rose btn-delete-expense admin-action-btn" data-item-id="${escaparHTML(item.id)}" title="Eliminar gasto">
             <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg>
           </button>
@@ -674,6 +681,14 @@ row.innerHTML = `
           showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '' : '');
         }
       });
+
+      // Evento: Editar gasto
+      const editBtn = row.querySelector('.btn-edit-expense');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          openEditExpenseModal(monthId, item);
+        });
+      }
 
       // Evento: Eliminar gasto
       const deleteBtn = row.querySelector('.btn-delete-expense');
@@ -738,9 +753,18 @@ row.innerHTML = `
           <div class="tx-amount font-mono ${isIngreso ? 'tx-amount-ingreso' : 'tx-amount-gasto'}">
             ${isIngreso ? '+' : '-'} ${window.formatCurrency(m.monto)}
           </div>
+          <button type="button" class="btn-ghost-rose btn-edit-tx admin-action-btn" title="Editar movimiento"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"/></svg></button>
           <button type="button" class="btn-ghost-rose btn-delete-tx admin-action-btn" title="Eliminar movimiento"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
         </div>
       `;
+
+      // Evento: Editar movimiento
+      const editBtn = item.querySelector('.btn-edit-tx');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          openEditMovementModal(month.id, m);
+        });
+      }
 
       // Evento: Eliminar movimiento
       const deleteBtn = item.querySelector('.btn-delete-tx');
@@ -950,12 +974,11 @@ tr.innerHTML = `
     });
   });
 
-  const btnRestoreAll = document.getElementById('btnRestoreAllSegments');
-  if (btnRestoreAll) {
-    btnRestoreAll.addEventListener('click', () => {
-      toggleSegment('all');
-    });
-  }
+  /* T4: aquí estaba el binding de `#btnRestoreAllSegments`. El nodo no existe
+   * en index.html, así que el `if (btnRestoreAll)` nunca era verdadero y el
+   * listener no se llegaba a registrar. La función que llama, `toggleSegment`,
+   * sigue viva y reachable desde la píldora "Ver todo". Se va el binding
+   * muerto, no la función. */
 
   // --- ACORDEÓN: COLAPSAR / EXPANDIR TARJETAS AL HACER CLIC EN SU ENCABEZADO ---
   document.querySelectorAll('.accordion-header').forEach(header => {
@@ -1335,6 +1358,137 @@ tr.innerHTML = `
     });
   }
 
+  // --- MODALES: EDITAR GASTO Y EDITAR MOVIMIENTO (solo administrador) ---
+  //
+  // Los dos son "alta con los datos ya puestos": se abre el sheet, se muestran
+  // los valores reales del registro, el usuario cambia los que se pueden
+  // cambiar y se guarda un PARCHE. Es el mismo sistema de modales del resto de
+  // la app (`.modal-overlay` + `.active`), no un unobtenedor de eventos nuevo:
+  // el cierre general y la tecla Escape ya los cubren porque miran esa clase y
+  // no una lista de ids.
+  //
+  // Lo que NO se edita, y el motivo de cada caso:
+  //  · El TIPO del gasto. `store.updateBudgetItem` mezcla campos, no mueve el
+  //    registro entre `fijos`, `variables` y `extras`: cambiar el tipo sin
+  //    moverlo dejaría un "Variable" viviendo adentro de la lista de fijos.
+  //  · El FLUJO del movimiento (ingreso/gasto). Define el signo con el que la
+  //    fila dibuja la cifra y el sentido del chevron. Pasarlo de ingreso a
+  //    gasto es otra operación, no una edición de texto.
+  //  · El ESTADO. Para eso están el toggle de la fila y el modal de pago
+  //    variable, que además piden confirmación.
+  // Todo campo que el formulario no está mandando sobrevive por el merge.
+  const modalEditExpense = document.getElementById('modalEditExpense');
+  const modalEditMovement = document.getElementById('modalEditMovement');
+
+  function openEditExpenseModal(monthId, item) {
+    if (!modalEditExpense) return;
+
+    document.getElementById('editExpenseMonthId').value = monthId;
+    document.getElementById('editExpenseItemId').value = item.id;
+
+    const inputConcepto = document.getElementById('editExpenseConcepto');
+    const inputMonto = document.getElementById('editExpenseMonto');
+    const readonlyTipo = document.getElementById('editExpenseTipoReadonly');
+    const inputRango = document.getElementById('editExpenseRango');
+    const fieldRango = document.getElementById('editExpenseRangeField');
+
+    inputConcepto.value = item.concepto;
+    inputMonto.value = Number(item.monto).toFixed(2);
+    if (readonlyTipo) readonlyTipo.textContent = item.tipo || 'Fijo';
+
+    /* El rango solo tiene sentido en un variable: es el mismo criterio que usa
+       el modal de alta. Si el campo queda oculto y el registro tuviera un
+       rango guardado, el parche NO lo incluye y el merge lo deja intacto. */
+    const esVariable = item.tipo === 'Variable';
+    if (fieldRango) fieldRango.style.display = esVariable ? 'block' : 'none';
+    if (inputRango) inputRango.value = item.rango || '';
+
+    modalEditExpense.classList.add('active');
+    setTimeout(() => {
+      inputConcepto.focus();
+      inputConcepto.select();
+    }, 80);
+  }
+
+  const formEditExpense = document.getElementById('formEditExpense');
+  if (formEditExpense) {
+    formEditExpense.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const monthId = document.getElementById('editExpenseMonthId').value;
+      const itemId = document.getElementById('editExpenseItemId').value;
+      const concepto = document.getElementById('editExpenseConcepto').value.trim();
+      const monto = parseFloat(document.getElementById('editExpenseMonto').value);
+
+      if (!concepto) return;
+      if (isNaN(monto) || monto < 0) {
+        alert('Por favor ingresa un monto válido.');
+        return;
+      }
+
+      const patch = { concepto, monto };
+      const fieldRango = document.getElementById('editExpenseRangeField');
+      if (fieldRango && fieldRango.style.display !== 'none') {
+        patch.rango = document.getElementById('editExpenseRango').value.trim();
+      }
+
+      store.updateBudgetItem(monthId, itemId, patch);
+
+      if (modalEditExpense) modalEditExpense.classList.remove('active');
+      renderMonthView();
+      showToast(`Gasto "${concepto}" actualizado`, '');
+    });
+  }
+
+  function openEditMovementModal(monthId, m) {
+    if (!modalEditMovement) return;
+
+    document.getElementById('editMovementMonthId').value = monthId;
+    document.getElementById('editMovementId').value = m.id;
+
+    const inputConcepto = document.getElementById('editMovementConcepto');
+    const inputMonto = document.getElementById('editMovementMonto');
+    const inputFecha = document.getElementById('editMovementFecha');
+    const readonlyFlujo = document.getElementById('editMovementFlujoReadonly');
+
+    inputConcepto.value = m.concepto;
+    inputMonto.value = Number(m.monto).toFixed(2);
+    if (inputFecha) inputFecha.value = m.fecha || '';
+    if (readonlyFlujo) readonlyFlujo.textContent = m.flujo || 'Movimiento';
+
+    modalEditMovement.classList.add('active');
+    setTimeout(() => {
+      inputConcepto.focus();
+      inputConcepto.select();
+    }, 80);
+  }
+
+  const formEditMovement = document.getElementById('formEditMovement');
+  if (formEditMovement) {
+    formEditMovement.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const monthId = document.getElementById('editMovementMonthId').value;
+      const movId = document.getElementById('editMovementId').value;
+      const concepto = document.getElementById('editMovementConcepto').value.trim();
+      const monto = parseFloat(document.getElementById('editMovementMonto').value);
+      const fecha = document.getElementById('editMovementFecha');
+
+      if (!concepto) return;
+      if (isNaN(monto) || monto < 0) {
+        alert('Por favor ingresa un monto válido.');
+        return;
+      }
+
+      const patch = { concepto, monto };
+      if (fecha && fecha.value) patch.fecha = fecha.value;
+
+      store.updateMovement(monthId, movId, patch);
+
+      if (modalEditMovement) modalEditMovement.classList.remove('active');
+      renderMonthView();
+      showToast(`Movimiento "${concepto}" actualizado`, '');
+    });
+  }
+
   // --- MODAL: REGISTRAR MOVIMIENTO (FLUJO DE CAJA) ---
   const formAddMovement = document.getElementById('formAddMovement');
   const modalMovementTitle = document.getElementById('modalMovementTitle');
@@ -1461,6 +1615,9 @@ tr.innerHTML = `
   // El de rol se sacude PERO NO CORTA EL FLUJO: antes este bloque hacia
   // `return`, y si el de rol estaba activo Escape quedaba muerto para todos los
   // demás. Los dos caminos corren: uno avisa, el otro cierra.
+  // Son 8 modales descartables porque la lista se agranda con cada sheet nuevo
+  // (editar gasto y editar movimiento); el selector es por clase, así que no
+  // hay nada que actualizar acá cuando se agrega uno.
   window.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     const roleModal = document.getElementById('modalSessionRoleSelect');

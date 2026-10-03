@@ -1450,20 +1450,34 @@ tr.innerHTML = `
     }
   });
 
-  // Prevenir que Escape cierre el modal de selección obligatoria
+  // Escape: cierra el modal de arriba, con una excepción deliberada.
+  //
+  // `modalSessionRoleSelect` NO se cierra: es una selección obligatoria y sin
+  // salida, igual que el clic fuera del panel. Se sacude para avisar, que es lo
+  // que ya hacía. Los otros 6 modales sí son descartables, y su botón de cerrar
+  // quita `.active`: esto llama a la misma operación, no es una segunda
+  // implementación del cierre.
+  //
+  // El de rol se sacude PERO NO CORTA EL FLUJO: antes este bloque hacia
+  // `return`, y si el de rol estaba activo Escape quedaba muerto para todos los
+  // demás. Los dos caminos corren: uno avisa, el otro cierra.
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      const roleModal = document.getElementById('modalSessionRoleSelect');
-      if (roleModal && roleModal.classList.contains('active')) {
-        const sheet = roleModal.querySelector('.modal-sheet');
-        if (sheet) {
-          sheet.classList.remove('modal-shake');
-          void sheet.offsetWidth;
-          sheet.classList.add('modal-shake');
-        }
-        e.preventDefault();
-        e.stopPropagation();
+    if (e.key !== 'Escape') return;
+    const roleModal = document.getElementById('modalSessionRoleSelect');
+    if (roleModal && roleModal.classList.contains('active')) {
+      const sheet = roleModal.querySelector('.modal-sheet');
+      if (sheet) {
+        sheet.classList.remove('modal-shake');
+        void sheet.offsetWidth;
+        sheet.classList.add('modal-shake');
       }
+      e.preventDefault();
+    }
+    const descartables = [...document.querySelectorAll('.modal-overlay.active')]
+      .filter(m => m.id !== 'modalSessionRoleSelect');
+    if (descartables.length) {
+      descartables[descartables.length - 1].classList.remove('active');
+      e.preventDefault();
     }
   });
 

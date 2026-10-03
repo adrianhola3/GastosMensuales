@@ -82,6 +82,44 @@ const sinDatos = {
   },
 };
 
+/**
+ * Total de egresos en el hole del donut.
+ *
+ * El hole estaba vacio a proposito y eso era un error: en una app financiera el
+ * total ES el dato, y sin el hay que leer la leyenda y sumar mentalmente. Ademas
+ * el ring se dibuja con `cutout: '70%'`, o sea que el centro ya estaba
+ * reservado y sin usar.
+ *
+ * El valor sale de `window.formatCurrency`, el MISMO formateador que usa la fila
+ * "Total del año" de la matriz, asi que los dos numeros coinciden caracter por
+ * caracter. No se recalcula ni se re-formatea aqui.
+ */
+const totalEnCentro = {
+  id: 'gastos-total-centro',
+  afterDatasetsDraw(chart, args, opts) {
+    if (!opts || !opts.valor) return;
+    const meta = chart.getDatasetMeta(0);
+    if (!meta || !meta.data || !meta.data.length) return;
+    const arc = meta.data[0];
+    // Sin hole real no hay centro que pintar: si el radio interior es 0 el texto
+    // caeria encima del anillo.
+    if (!arc || !arc.innerRadius) return;
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = readToken('--text-muted', '--text-secondary');
+    ctx.font = `11px ${readToken('--font-body')}`;
+    ctx.fillText(opts.etiqueta || 'Total', arc.x, arc.y - 15);
+
+    ctx.fillStyle = readToken('--text-main', '#000');
+    ctx.font = `600 20px ${readToken('--font-mono', 'monospace')}`;
+    ctx.fillText(opts.valor, arc.x, arc.y + 5);
+    ctx.restore();
+  },
+};
+
 function renderGlobalCharts() {
   if (typeof Chart === 'undefined') return;
   if (!window.financialStore) return;
@@ -266,7 +304,7 @@ function renderGlobalCharts() {
 
     donutChartInstance = new Chart(donutCanvas, {
       type: 'doughnut',
-      plugins: [sinDatos],
+      plugins: [sinDatos, totalEnCentro],
       data: {
         labels: catLabels,
         datasets: [{
@@ -286,6 +324,14 @@ function renderGlobalCharts() {
         plugins: {
           'gastos-sin-datos': {
             texto: totalGastos > 0 ? '' : 'Sin gastos registrados en el acumulado.'
+          },
+          // Con total 0 no se pinta nada: `sinDatos` ya pone su mensaje y dos
+          // textos en el mismo lugar se pisan.
+          'gastos-total-centro': {
+            etiqueta: 'Total de egresos',
+            valor: totalGastos > 0 && window.formatCurrency
+              ? window.formatCurrency(totalGastos)
+              : ''
           },
           legend: {
             position: 'bottom',

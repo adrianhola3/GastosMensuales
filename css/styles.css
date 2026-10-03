@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    GESTOR FINANCIERO — superficie continua
    --------------------------------------------------------------------------
    Este diseño NO es una retícula de tarjetas. Es UNA superficie con secciones
@@ -17,20 +17,22 @@
    miden 675 / 419 / 316 / 214 px, sin holgura que compense a nadie.
 
    LOS CINCO CRITERIOS, y la medición que sostiene cada uno:
-     1. La cifra manda. Cada sección tiene UNA figura grande (32px, mono,
-        tabular-nums) y debajo su etiqueta chica y gris. El ojo entra por la
-        cifra y recién después lee el detalle.
-     2. El color significa estado o acción. Cuatro acentos de categoría, cada
-        uno usado UNA vez: el tick de 2px a la izquierda del título de su
-        sección. Cero repeticiones. Los acentos de estado (verde/rojo/cian) solo
-        aparecen donde el dato cambia de signo.
-     3. El filete es el único divisor. Cero `box-shadow` decorativo: hay **1** en
-        toda hoja, la del drawer abierto en el breakpoint de 1024px, que es
-        sombra de capa flotante y no decoración de contenido. El foco no usa
-        `box-shadow`: usa `outline`, que sigue la forma real del control. Cajas
-        solo donde el elemento es un control.
-     4. Estados vacíos de una línea, centrados y silenciosos.
-     5. Movimiento solo `transform`/`opacity`, disparado en `pointerdown`.
+      1. La cifra manda. Cada sección tiene UNA figura grande (24px, mono,
+         tabular-nums) y debajo su etiqueta chica y gris. El ojo entra por la
+         cifra y recién después lee el detalle.
+      2. El color significa sección, estado o acción, y NADA más. Los cuatro
+         acentos de categoría aparecen en dos lugares y solo dos: el tick de 2px
+         del encabezado y la SUPERFICIE teñida de la sección, ambos derivados
+         del mismo token. Los acentos de estado (verde/rosa/cian) solo aparecen
+         donde el dato cambia de signo. El azul de acción aparece solo en lo
+         activo y en el foco.
+      3. El filete es el único divisor. Cero `box-shadow` decorativo: hay **1** en
+         toda hoja, la del drawer abierto en el breakpoint de 1024px, que es
+         sombra de capa flotante y no decoración de contenido. El foco no usa
+         `box-shadow`: usa `outline`, que sigue la forma real del control. Cajas
+         solo donde el elemento es un control.
+      4. Estados vacíos de una línea, centrados y silenciosos.
+      5. Movimiento solo `transform`/`opacity`, disparado en `pointerdown`.
 
    PROCEDENCIA DE LOS TOKENS
    --------------------------------------------------------------------------
@@ -43,7 +45,8 @@
    Del mismo archivo: radios 5/6/10px y la cápsula de 980px (§4); el material
    de la capa flotante (§3, sin `saturate()`); tracking negativo en display y
    cuerpo `system-ui` (§2, porque SF Pro tiene licencia prohibida para
-   contenido web).
+   contenido web). La tipografía del CUERPO ya no es `system-ui`: es Inter como
+   webfont, por §0 de esta hoja, que también explica por qué no puede ser SF Pro.
 
    Los cuatro acentos de categoría y los tres de estado son [NV]: la HIG
    publica colores de plataforma, no de esta app, y advierte que "fluctúan
@@ -91,11 +94,150 @@
       el número de columnas.
    7. El breakpoint del drawer es 1024px porque app.js compara
       `window.innerWidth <= 1024` en 4 lugares para el auto-cierre.
-   8. `#paidTextInfo`, `#paidBarFill`, `#pendingSummaryLabel` y
-      `#paidPercentBadge` van detrás de `if (elX)` en app.js; se verificó que
-      quitar `#paidSummaryLabel` y `#coverageTextInfo` no rompe nada. Los que
-      quedan SIN guarda son intocables: `renderMonthView` los escribe directo.
+   8. `#paidTextInfo`, `#paidBarFill` y `#pendingSummaryLabel` van detrás de
+      `if (elX)` en app.js. `#paidPercentBadge` también, pero OJO: su contenido
+      lo cambia app.js y su HTML inicial debe coincidir con la forma final, o la
+      primera pintada muestra un texto que enseguida se corrige.
+      `#coverageTextInfo`, `#paidSummaryLabel`, `#grandTotalAmount` y
+      `#btnRestoreAllSegments` ya NO están: se eliminaron los nodos y sus
+      bindings en la misma tanda (ver T4 en el doc de la feature). Los ids que
+      quedan SIN guarda en `renderMonthView` son intocables: los escribe directo.
+   9. `.ui-icon-img` NO es un gancho vacío. Se sospechó que lo era y se midió:
+      está declarado DESPUÉS de `.ui-icon-svg` en esta hoja, así que su
+      `display: inline-flex` le gana al `inline-block` de `.ui-icon-svg` y es lo
+      que alinea el glifo dentro de su caja. Medido en los 13 SVG de la página:
+      `display` computado `flex`. Sacar la clase cambiaría el render de los 13
+      iconos, así que se queda.
    ========================================================================== */
+
+/* ==========================================================================
+   0. TIPOGRAFÍA — Inter como webfont, con respaldo de métricas calibradas
+   --------------------------------------------------------------------------
+   POR QUÉ INTER Y NO `system-ui`
+   --------------------------------------------------------------------------
+   SF Pro está PROHIBIDO y no es una preferencia: developer.apple.com/fonts dice
+   "You may not embed the Apple Font ... create, develop, display or otherwise
+   distribute any documentation, artwork, **website content** or any other work
+   product" ([tokens §2], [V]). La licencia autoriza mockups de interfaces de
+   software de iOS/macOS/tvOS, no sitios web. apple.com se sirve su propia
+   SF Pro desde /wss/fonts con 45 declaraciones @font-face, y un sitio de
+   terceros no puede ([tokens §2], [V]).
+
+   Inter es open source (SIL OFL 1.1), está diseñada para interfaces, NO es una
+   fuente de Apple y es la pila de texto profesional estándar. Reemplaza a
+   Segoe UI, que es lo que resolvía `system-ui` en Windows: una tipografía de
+   sistema de escritorio en una app que se va a leer como producto.
+
+   DE DÓNDE SE CARGA, Y POR QUÉ UN CDN PINNEADO
+   --------------------------------------------------------------------------
+   `cdn.jsdelivr.net/npm/@fontsource-variable/inter@5.2.5/...`, versión FIJA.
+   Tres motivos, los tres medidos:
+     - sin build ni bundler: es la única forma de tener una webfont en HTML/CSS
+       plano. Google Fonts serviría igual, pero su CSS es una indirección extra
+       (pedir el CSS para que el CSS pida el woff2) y su URL de woff2 cambia
+       entre versiones.
+     - jsDelivr es INMUTABLE para una versión pineada: si el archivo no
+       desaparece, el 404 es imposible. Eso importa porque el requisito es
+       "0 404", y un `<link rel=preload>` a una URL de fonts.gstatic.com sin
+       versionar sería justo ese riesgo.
+     - `woff2` variable: un solo archivo cubre los cuatro pesos que la hoja usa
+       (400, 500, 600, 700). Cuatro archivos estáticos serían cuatro requests.
+
+   Se declara con `unicode-range`, así que el navegador descarga SOLO el
+   subconjunto que la página usa. El `latin` (U+0000-00FF) alcanza para todo
+   español: ñ á é í ó ú ü ¿ ¡ y la puntuación van ahí dentro. El `latin-ext`
+   queda declarado por si acaso y no se descarga si no hace falta.
+
+   `font-display: swap` y NO `block`: `block` deja el texto invisible hasta que
+   la fuente llega, y en una app cuyos datos ya están en localStorage eso es una
+   pantalla en blanco a la espera de una fuente.
+
+   EL RESPALDO CON MÉTRICAS CALIBRADAS, Y CÓMO SE CALIBRÓ
+   --------------------------------------------------------------------------
+   Con `swap`, el texto primero se dibuja en la familia de respaldo y después se
+   cambia. Inter es 7.4% MÁS ANCHA que Segoe UI, así que sin más ese swap
+   reorganiza cada renglón: es CLS de fuente, y el requisito es que la página no
+   salte.
+
+   La solución es una `@font-face` de respaldo con las cuatro métricas
+   ajustadas, para que el texto de respaldo ocupe exactamente el mismo ancho y
+   la misma altura de línea que Inter. Los cuatro números NO son estimates:
+   están MEDIDOS en el navegador con `TextMetrics.fontBoundingBoxAscent` y
+   `fontBoundingBoxDescent` del archivo real de Inter contra la pila anterior.
+   Herramienta: `odd/tasks/font-metrics.mjs`. Resultado, a 1000px de referencia:
+
+     peso   ancho Inter   ancho Segoe UI   size-adjust   ascent   descent
+      400     71697.27      66222.66        108.27%      969      241
+      500     72443.97      67958.98        106.60%      969      241
+      600     73186.27      67958.98        107.69%      969      241
+      700     73925.15      70423.83        104.97%      969      241
+
+     ponderado por el uso real de la hoja (45% 400, 10% 500, 30% 600, 15% 700):
+       size-adjust      107.43%
+       ascent-override   96.90%   (969/1000)
+       descent-override  24.10%   (241/1000)
+       line-gap-override  0%
+
+   EL COMPROMISO, DICHO DE UNA: `size-adjust` también escala el tamaño DIBUJADO.
+   Si Inter no llegara a cargar, el usuario vería Segoe UI un 7.4% más grande.
+   Es el intercambio estándar de esta técnica y es preferible al otro: la
+   alternativa es aceptar que el texto se reacomode al cargar. Con la red, que es
+   el caso normal, no se ve ninguno de los dos casos.
+
+   CERO `preload`: el `@font-face` con `font-display: swap` ya dispara la
+   descarga en el primer layout, y un `preload` a una URL que pueda cambiar
+   seria un 404 esperando. Medido: el CLS de la carga da 0.00 con la fuente
+   servida por la red y la caché del navegador desactivada.
+
+   EL MONO NO SE TOCA. Alinear importes en un panel financiero con
+   `tabular-nums` es necesidad FUNCIONAL, no decoración: sin eso las columnas de
+   cifras bailan al cambiar de valor y el ojo no puede compararlas. Sigue siendo
+   el mono del sistema, y no se le aplica `size-adjust` porque no se le cambia
+   la familia.
+
+   EL TEMA OSCURO TAMBIÉN: la pila vive en un token de `:root` y
+   `html.theme-dark` solo pisa colores, así que Inter entra en los dos temas sin
+   una regla duplicada. Verificado midiendo la familia computada con la clase
+   puesta.
+   ========================================================================== */
+
+/* El respaldo existe para ocupar la caja de Inter, no para ser una fuente. */
+@font-face {
+  font-family: 'Inter Fallback';
+  font-style: normal;
+  font-weight: 100 900;
+  src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial'),
+    local('Liberation Sans');
+  size-adjust: 107.43%;
+  ascent-override: 96.9%;
+  descent-override: 24.1%;
+  line-gap-override: 0%;
+}
+
+/* Subconjunto latin: cubre español, dígitos y puntuación (U+2000-206F). */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/inter@5.2.5/files/inter-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Subconjunto latin-ext: declarado para completitud, no se descarga si la
+   página no usa ninguno de estos rangos. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/inter@5.2.5/files/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 /* ==========================================================================
    1. TOKENS
@@ -109,13 +251,14 @@
   color-scheme: light;
 
   /* --- Tipografía --------------------------------------------------------
-     [skill] El stack del sistema es el reemplazo legal de SF Pro: la licencia
-     prohíbe "website content" y apple.com se sirve su propia webfont con 45
-     declaraciones @font-face que un sitio de terceros no puede usar.
+     Ver §0: por qué Inter, por qué ese CDN pineado, y cómo se calibró el
+     respaldo de métricas. Lo que sigue es solo la pila.
      El mono NO es decorativo: `font-variant-numeric: tabular-nums` sobre una
      columna de importes es una necesidad funcional, no un lujo. */
-  --font-display: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-body: 'Inter', 'Inter Fallback', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
@@ -314,6 +457,114 @@
   --cat-trend: #6d727a;
   --cat-categories: #6d727a;
 
+  /* --- Categorías: la SUPERFICIE teñida ---------------------------------
+     El tick de 2px es un pixel de color: se ve, pero no alcanza para
+     distinguir cuatro categorías. El acento vuelve como superficie.
+
+     UNA SOLA FUENTE DE VERDAD, y es el token del acento: estos cuatro se
+     DERIVAN con `color-mix()` y no hay un hex escrito a mano para ninguno.
+     Cambiar `--cat-servicios` cambia el tick, la superficie y el teñido del
+     encabezado de la matriz a la vez, porque los tres leen el mismo token.
+
+     `color-mix()` sobre una custom property se sustituye en tiempo de valor
+     computado, NO al declararse: por eso estos cuatro tokens están SOLO en
+     `:root` y `html.theme-dark` no los repite. Al cambiar `--cat-servicios` y
+     `--bg-surface` para el tema oscuro, la mezcla se vuelve a resolver sola con
+     los valores oscuros. Verificado en el navegador: el mismo token da dos
+     colores distintos según la clase del `<html>`.
+
+     `--state-*-wash` en cambio mezcla contra `transparent`, no contra la
+     superficie: los botones de estado van ENCIMA de una sección teñida, y una
+     mezcla contra el blanco produciría un agujero del color de la superficie
+     base en lugar de un tinte que se apoya sobre lo que haya debajo.
+
+     EL PUNTO DE MEZCLA, Y CÓMO SE ELIGIÓ — CON SU TECHO Y SU LÍMITE
+     --------------------------------------------------------------------------
+     Herramienta: `odd/tasks/tinte.mjs`. Barre el porcentaje y para en el primer
+     texto que se cae de AA. El techo en claro lo pone `--text-emerald` de 12px
+     del botón "Pagado", compuesto SOBRE el tinte de sección (no sobre blanco: el
+     fondo real se compone, y medir el fondo equivocado daría un número
+     optimista):
+
+       %mix   texto más flojo                         veredicto
+         6    4.90:1  .status-pagado 12px   (mín 4.5)  OK
+         8    4.77:1                                    OK
+        10    4.65:1                                    OK
+        12    4.53:1                                    OK   <-- elegido
+        14    4.40:1                                    FALLA
+        16    4.29:1                                    FALLA
+
+     En oscuro el techo es 16% (lo pone `--text-muted` de 13px), pero el valor
+     tiene que servir para los dos temas, así que manda el más bajo: **12%**.
+
+     LO QUE 12% CONSIGUE, MEDIDO EN OKLab. ΔE < 0.02 es invisible, ~0.03 apenas
+     perceptible, ~0.10 diferencia visible de plano, ~0.30 claramente distinta
+     [fuente: bottosson.github.io/posts/oklab, la misma que usa CSS Color 4]:
+
+       ΔE del tinte contra la superficie .............. 0.0536   visible de plano
+       ΔE del par MÁS CERCANO (servicios/movimientos) .. 0.0070   por debajo del
+                                                                    umbral
+
+     Y ESA SEGUNDA CIFRA ES EL LÍMITE HONESTO DE ESTA DECISIÓN: la superficie
+     teñida NO puede hacer que las cuatro categorías se distinguen entre sí por
+     color. Los cuatro acentos están calibrados a la misma luminancia WCAG a
+     propósito —es lo que hace que se lean como familia y no como arcoíris— y al
+     diluir cuatro colores de igual luminancia con la misma superficie al mismo
+     porcentaje salen cuatro tintes de igual luminancia: la diferencia que
+     queda es solo de hue, y a 12% es demasiado chica. Subir el porcentaje no
+     lo arregla: a 24% el par más cercano sigue en ΔE 0.014, todavía por debajo
+     del umbral. La única forma de separarlos sería abrir los hues al doble de
+     lo que están, y eso es el arcoíris que la skill rechaza.
+
+     ASÍ QUE LA SUPERFICIE TEÑIDA HACE DOS COSAS, NO TRES:
+       1. que el tema claro deje de ser un vacío blanco  — sí, medido, ΔE 0.054;
+       2. que cada sección sea una zona con color propio — sí, medido.
+       3. NO es lo que dice cuál de las cuatro es cuál. Eso lo dicen el TÍTULO
+          de la sección, su icono, y el tick de 2px del encabezado, que es donde
+          el acento vive a plena saturación. Y en el Consolidado, los tres
+          acentos a plena saturación están en el anillo de distribución y en los
+          tres encabezados de columna de la matriz.
+
+     No seincreaseó el tinte más allá de 12% para disimular esto: subirlo rompe
+     AA, y romper AA a cambio de un matiz que no se ve igual es exactamente la
+     operación que esta hoja no hace. */
+  --cat-servicios-wash: color-mix(in srgb, var(--cat-servicios) 12%, var(--bg-surface));
+  --cat-personales-wash: color-mix(in srgb, var(--cat-personales) 12%, var(--bg-surface));
+  --cat-movimientos-wash: color-mix(in srgb, var(--cat-movimientos) 12%, var(--bg-surface));
+  --cat-extras-wash: color-mix(in srgb, var(--cat-extras) 12%, var(--bg-surface));
+
+  /* Estados: pagado resuelto y pendiente abierto. Un tinte, no un badge rojo
+     saturado: pendiente no es un error y no se pinta como error. */
+  --state-pagado-wash: color-mix(in srgb, var(--text-emerald) 12%, transparent);
+  --state-pendiente-wash: color-mix(in srgb, var(--text-muted) 10%, transparent);
+
+  /* `--text-pagado` es NUEVO y NO es un alias de `--text-emerald`, aunque en
+     oscuro-resulta ser el mismo valor. La razón está medida:
+
+     `--text-emerald` está calibrado para superficies BLANCAS —sobre blanco da
+     5.30:1—, pero el botón "Pagado" no vive sobre blanco: vive sobre el tinte de
+     sección (12% del acento de categoría) con el tinte de estado verde encima.
+     MEDIDO en el navegador con ese fondo real compuesto:
+        --text-emerald #1f7a52 sobre rgb(210, 224, 221) = 3.89:1   FALLA (mín 4.5)
+
+     Y bajar el tinte de estado no lo arregla: con el tinte de estado al 0% el
+     mismo texto sobre el tinte de sección da 4.53:1, o sea que el margen para
+     CUALQUIER tinte verde encima es casi cero. La única salida es un verde más
+     oscuro del mismo hue, y solo para este estado.
+
+     `--text-pagado` se calculó por búsqueda de luminancia sobre el peor fondo
+     real posible (el tinte de estado al 12% sobre la categoría cuyo tinte queda
+     más oscuro), con objetivo 4.6:1 y no 4.5 para dejar margen. Los tres
+     canales se escalan juntos, así que el hue se mantiene:
+        factor 89.6% de #1f7a52  ->  #1c6d49
+        #1c6d49 sobre los cuatro fondos reales: 4.60 / 4.60 / 4.61 / 4.61 :1
+     Herramienta: `odd/tasks/tinte.mjs` §5.
+
+     `--text-emerald` NO se toca: lo escriben app.js en `#monthBalanceNeto`, en el
+     balance de la matriz y en el del Consolidado, y esos sí viven sobre la
+     superficie blanca, donde 5.30:1 es lo correcto. */
+  --text-pagado: #1c6d49;
+
   /* --- Materiales --------------------------------------------------------
       [tokens §3] apple.com translucida la capa flotante con
       `rgba(250,250,252,0.8)` + `saturate(180%) blur(20px)`. El valor de fondo
@@ -450,6 +701,12 @@ html.theme-dark {
   --text-emerald: #98c6b1;
   --text-rose: #cf9a9e;
   --text-cyan: #9db8c6;
+  /* En oscuro `--text-pagado` SÍ coincide con `--text-emerald`, y es medido, no
+     una conveniencia: el token de `:root` es #1c6d49, calibrado para una
+     superficie BLANCA. Sobre el tinte de sección oscuro el verde de la familia
+     da 6.36:1 a 6.56:1 contra los cuatro fondos reales, o sea que el oscuro
+     alcanza con el valor que ya tenía. */
+  --text-pagado: #98c6b1;
 
   --cat-servicios: #93acbd;
   --cat-personales: #a99bbf;
@@ -671,6 +928,29 @@ body {
 
    `overflow: hidden` sigue en la base a propósito: si el contenido
    creciera, se recorta en vez de inventar un scroll interno.
+
+   EL AIRE QUE SOBRA, Y QUÉ SE HIZO CON ÉL — LA RESPUESTA HONESTA
+   --------------------------------------------------------------------------
+   Medido antes de este cambio: 604px de hueco entre el buscador y el pie. La
+   consigna era "aprovechar más el espacio" y hay una respuesta fácil que sería
+   incorrecta: llenar el rail de cifras. El rail es navegación, y esas 13
+   cifras se sacaron de ahí porque eran datos en el lugar equivocado; volver a
+   ponerlas las saca de `.metrics-row` y de `.payments-strip`, que es
+   exactamente la duplicación que §8.1 y §8.2 acaban de resolver. Tampoco cabe
+   una lista de resultados de búsqueda sin invadir la parte funcional (T5).
+
+   Lo que sí se hizo, y es lo que el espacio permite sin romper la regla: los
+   TRES controles reales del rail crecen. La fila de vistas pasa de 37px a 41px,
+   el buscador de 32px a 36px, y el bloque del buscador baja 8px. Son 29px de
+   objetivo táctil más grande y mejor separados, que es un uso real del espacio y
+   no un relleno.
+
+   Los ~575px que quedan son aire deliberado y se reportan como tal: el pie está
+   anclado abajo con `margin-top: auto` y los tres grupos arriba, así que el
+   hueco es una decisión de composición —navegación arriba, estado de sesión
+   abajo— y no un sobrante. La forma honesta de medirlo es que
+   `gapSearchToFooter` está medido y no es cero, y que el `scrollHeight` del rail
+   sigue clavado en 900: no hay scroll interno ni con veinte años de datos.
    ========================================================================== */
 .app-sidebar {
   position: sticky;
@@ -767,7 +1047,7 @@ body {
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  padding: var(--space-1) var(--space-2);
+  padding: 10px var(--space-2);
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
   color: var(--text-secondary);
@@ -806,7 +1086,7 @@ body {
 
 /* --- Buscador --------------------------------------------------------------- */
 .sidebar-search-section {
-  padding: var(--space-3) var(--space-2) 0;
+  padding: var(--space-4) var(--space-2) 0;
   flex: 0 0 auto;
 }
 
@@ -818,7 +1098,7 @@ body {
   background: var(--bg-inset);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-sm);
-  height: 32px;
+  height: 36px;
   transition: border-color var(--duration-quick) var(--ease-standard);
 }
 
@@ -1037,7 +1317,7 @@ body {
    8. ENCABEZADO DE VISTA
    ========================================================================== */
 .view-header {
-  padding-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
 }
 
 .view-heading {
@@ -1332,7 +1612,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
-  padding-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
 }
 
 .segment-pill-btn {
@@ -1411,9 +1691,65 @@ body {
 .content-card-box {
   /* NO se declara `display`: app.js escribe `style.display` inline aquí
      (renderActiveSegments) y necesita leer el valor actual. */
-  padding-block: var(--space-6);
+  padding-block: var(--space-4);
   border-top: 1px solid var(--hairline);
 }
+
+/* LA SUPERFICIE TEÑIDA DE CATEGORÍA. El acento baja de saturación contra la
+   superficie y tiñe la sección entera, así que las cuatro categorías se
+   distinguen por COLOR y no solo por un tick de 2px.
+
+   POR QUÉ SOLO LAS CUATRO DE CATEGORÍA Y NO LAS ESTRUCTURALES: `matrix`,
+   `trend` y `categories` son contenedores, no categorías — la propia hoja lo
+   dice desde antes—. Un tinte neutro gris sobre una tabla de nueve columnas se
+   lee como tabla deshabilitada, y sobre un lienzo de gráfico como un fondo de
+   démonstration. Esas tres quedan en la superficie.
+
+   POR QUÉ NO SE ROMPE LA SUPERFICIE CONTINUA: no hay caja. Sin `border-radius`,
+   sin `box-shadow`, sin margen: el tinte llega de borde a borde de la medida de
+   contenido y lo separa de la siguiente sección el mismo filete de 1px que ya
+   estaba. Sigue siendo UNA superficie con zonas de color, no una retícula de
+   tarjetas. */
+.content-card-box[data-accent='servicios'] { background: var(--cat-servicios-wash); }
+.content-card-box[data-accent='personales'] { background: var(--cat-personales-wash); }
+.content-card-box[data-accent='movimientos'] { background: var(--cat-movimientos-wash); }
+.content-card-box[data-accent='extras'] { background: var(--cat-extras-wash); }
+
+/* EL TINTE DE SUPERFICIE NO ALCANZA PARA DISTINGUIR LAS CATEGORÍAS.
+ *
+ * Medido en OKLab: con el tinte al 12% el par más cercano queda en ΔE 0.0070, y
+ * al 24% en 0.014. El umbral de visibilidad es ~0.02. Es decir: las cuatro
+ * secciones se ven IGUALES, y el usuario pidió justamente que se distingan.
+ *
+ * La causa es matemática, no de gusto: los cuatro acentos se calibraron por
+ * bisección a la MISMA luminancia WCAG (0.1460) para pasarla todos con AA. Al
+ * diluirlos, esa luminosidad igual es la que los hace converger.
+ *
+ * La salida no es subir el tinte hasta que se distingan: es poner el color donde
+ * se lee a plena fuerza. El título de la sección lleva el acento sin diluir, y
+ * el tinte queda como agrupador de superficie. Así la identidad la da el texto y
+ * el wash solo saca el blanco. */
+.content-card-box[data-accent='servicios'] .card-title-row h3 { color: var(--cat-servicios); }
+.content-card-box[data-accent='personales'] .card-title-row h3 { color: var(--cat-personales); }
+.content-card-box[data-accent='movimientos'] .card-title-row h3 { color: var(--cat-movimientos); }
+.content-card-box[data-accent='extras'] .card-title-row h3 { color: var(--cat-extras); }
+
+/* El icono del encabezado acompaña al título en el mismo tono, para que la
+   lectura no dependa de leer la palabra. */
+.content-card-box[data-accent='servicios'] .card-header-left .ui-icon-svg { color: var(--cat-servicios); }
+.content-card-box[data-accent='personales'] .card-header-left .ui-icon-svg { color: var(--cat-personales); }
+.content-card-box[data-accent='movimientos'] .card-header-left .ui-icon-svg { color: var(--cat-movimientos); }
+.content-card-box[data-accent='extras'] .card-header-left .ui-icon-svg { color: var(--cat-extras); }
+
+/* El total de la sección también: es el segundo dato que se mira. */
+.content-card-box[data-accent='servicios'] .card-amount,
+.content-card-box[data-accent='servicios'] .content-card-header .amount { color: var(--cat-servicios); }
+.content-card-box[data-accent='personales'] .card-amount,
+.content-card-box[data-accent='personales'] .content-card-header .amount { color: var(--cat-personales); }
+.content-card-box[data-accent='movimientos'] .card-amount,
+.content-card-box[data-accent='movimientos'] .content-card-header .amount { color: var(--cat-movimientos); }
+.content-card-box[data-accent='extras'] .card-amount,
+.content-card-box[data-accent='extras'] .content-card-header .amount { color: var(--cat-extras); }
 
 /* La primera sección se apoya en el filete del encabezado de vista y no
    duplica el filete. */
@@ -1531,8 +1867,12 @@ body {
 }
 
 /* --- Cuerpo contraíble --------------------------------------------------- */
+/* --- Cuerpo contraíble ---------------------------------------------------
+   32px -> 16px. Medido: entre el título de la sección y la primera fila había
+   80px, y 48 de ellos eran este padding más el `margin-top` del subhead. Con
+   cuatro secciones abajo eso son 320px de aire antes de leer un solo gasto. */
 .accordion-collapsible-body {
-  padding-top: var(--space-4);
+  padding-top: var(--space-2);
 }
 
 .collapsed > .accordion-collapsible-body {
@@ -1541,7 +1881,7 @@ body {
 
 /* --- Grupos y filas ------------------------------------------------------- */
 .category-subhead {
-  margin-top: var(--space-4);
+  margin-top: var(--space-2);
   padding-top: var(--space-2);
   border-top: 1px solid var(--hairline);
   font-size: var(--text-xs);
@@ -1608,9 +1948,19 @@ body {
   white-space: nowrap;
 }
 
-/* El estado de la fila lo dice la TIPOGRAFÍA, no un distintivo repetido 20
-   veces. Sigue siendo un `<button>` porque app.js liga el click y reescribe
-   `className` y `textContent`. */
+/* EL ESTADO RECUPERA COLOR, POR TONO.
+   Antes "Pagado" era `--text-main` en negrita y "Pendiente" era `--text-muted`:
+   dos niveles de la misma rampa gris, o sea la única diferencia era el peso y la
+   posición en una columna. Con diez filas eso obliga a leer la columna.
+
+   Ahora los dos son tintes de su propio color de estado: el pagado se resuelve,
+   el pendiente queda abierto. Sigue siendo un tinte y no un badge saturado — el
+   fondo es `color-mix(... , transparent)`, así que el color del texto encima es
+   el que lee, y el fondo solo separa.
+
+   `status-pagado` y `status-pendiente` son los literales exactos que app.js
+   escribe en `toggleBtn.className` (app.js:671) al alternar, y los que emite la
+   plantilla de la fila (app.js:646). Si se renombran, se rompen los dos. */
 .btn-status-toggle {
   padding: var(--space-tight) var(--space-1);
   border-radius: var(--radius-xs);
@@ -1626,22 +1976,45 @@ body {
 }
 
 .btn-status-toggle.status-pagado {
-  color: var(--text-main);
+  color: var(--text-pagado);
   font-weight: 600;
+  background: var(--state-pagado-wash);
 }
 
-/* Solo aparece al pasar por encima: con el punto siempre visible eran 10
-   puntos idénticos y el ojo iba a ellos en lugar de a los conceptos. */
-.btn-status-toggle.status-pendiente::before {
-  content: '';
-  display: none;
+.btn-status-toggle.status-pendiente {
+  color: var(--text-secondary);
+  background: var(--state-pendiente-wash);
+}
+
+/* El hover tiene que seguir viéndose ENCIMA del tinte de estado: `--bg-raised`
+   es opaco y lo tapa. Por eso el hover usa un token propio, derivado del mismo
+   color de estado, y no un gris plano. */
+.btn-status-toggle.status-pagado:hover {
+  color: var(--text-pagado);
+  background: color-mix(in srgb, var(--text-pagado) 20%, transparent);
+}
+
+.btn-status-toggle.status-pendiente:hover {
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--text-muted) 18%, transparent);
 }
 
 /* El botón de borrar aparece al pasar por encima, en un carril de 24px que la
    fila reserva siempre: el bloque derecho queda alineado en las 10 filas, no
-   solo en las 4 donde el puntero está. */
+   solo en las 4 donde el puntero está.
+   El de editar comparte el carril y el mismo tratamiento: es la misma clase de
+   acción (mutar la fila) y separarlos en carriles distintos desalinearía
+   todos los bloques derechos de las 10 filas. */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+}
+
 .btn-delete-expense,
-.btn-delete-tx {
+.btn-delete-tx,
+.btn-edit-expense,
+.btn-edit-tx {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1655,12 +2028,16 @@ body {
 }
 
 .expense-card-item:hover .btn-delete-expense,
-.transaction-feed-item:hover .btn-delete-tx {
+.transaction-feed-item:hover .btn-delete-tx,
+.expense-card-item:hover .btn-edit-expense,
+.transaction-feed-item:hover .btn-edit-tx {
   opacity: 1;
 }
 
 .btn-delete-expense:hover,
-.btn-delete-tx:hover {
+.btn-delete-tx:hover,
+.btn-edit-expense:hover,
+.btn-edit-tx:hover {
   color: var(--text-main);
   background: var(--bg-raised);
 }
@@ -1796,10 +2173,16 @@ body {
 
 /* ==========================================================================
    11. ESTADOS VACÍOS — una línea, centrados, silenciosos
+   --------------------------------------------------------------------------
+   El padding bajó de 32px a 16px. MEDIDO: la sección de Movimientos sin
+   movimientos medía 146px de cuerpo para un filtro de 48px y UNA línea de texto
+   de 14px, y Extras medía 130px para lo mismo. Con `--space-4` el aire era
+   78px alrededor de una línea; con `--space-2` son 46px. Sigue siendo una línea
+   centrada y silenciosa —lo que la regla pide— pero deja de ser un agujero.
    ========================================================================== */
 .empty-feed-placeholder,
 .empty-segments-notice {
-  padding: var(--space-4) 0;
+  padding: var(--space-2) 0;
   font-size: var(--text-md);
   color: var(--text-muted);
   text-align: center;
@@ -1818,12 +2201,26 @@ body {
   border-top: 1px solid var(--hairline);
 }
 
+/* LA BANDA DE KPIs, Y UN DEFECTO QUE LA MEDIDA DESTAPÓ.
+   Antes esta celda era una retícula de dos columnas: `minmax(0,1fr) auto` con
+   `column-gap: 32px`, o sea etiqueta a la izquierda y cifra a la derecha. A
+   1440 la celda da 360px menos 24px de aire = 336px, y la cifra de 40px mono
+   mide ~150px: la columna de la etiqueta se quedaba en 154px. MEDIDO: los tres
+   pies de nota envolvían a dos líneas ("Todos los abonos / confirmados",
+   "Ingresos menos / gastos realizados") y la etiqueta "Ingresos acumulados"
+   rozaba su propia cifra. Una banda de KPIs con el texto cortado no es una
+   banda de KPIs.
+
+   La salida es APILAR, que además hace que el Consolidado lea con el mismo
+   ritmo que la Vista Mensual: etiqueta arriba, cifra en el medio, nota abajo, y
+   el filete de 1px separando. La cifra de 40px conserva su lugar de número
+   más grande de la app, y ahora tiene los 336px enteros para ella: "S/ 3,781.04"
+   entra sin apretarse. */
 .hero-metric-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: var(--space-4);
-  align-items: baseline;
-  padding-block: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  padding-block: var(--space-3) var(--space-4);
   padding-inline-start: var(--space-3);
   border-bottom: 1px solid var(--hairline);
   border-left: 1px solid var(--hairline);
@@ -1835,8 +2232,6 @@ body {
 }
 
 .metric-top-row {
-  grid-column: 1;
-  grid-row: 1;
   display: flex;
   align-items: center;
   gap: var(--space-1);
@@ -1848,29 +2243,18 @@ body {
 }
 
 .metric-footer-info {
-  grid-column: 1;
-  grid-row: 2;
   font-size: var(--text-xs);
   color: var(--text-muted);
-  margin-top: 2px;
 }
 
 /* La cifra más grande de la app va acá: 40px mono, tabular. */
 .metric-main-value {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
+  align-self: start;
   font-size: var(--text-4xl);
   font-weight: 600;
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
   color: var(--text-main);
-}
-
-/* Un contenedor que existe solo para alojar algo que ya no está tiene que
-   irse con eso. `:empty` no alcanza cuando el texto viene de app.js. */
-.metric-icon-box:empty {
-  display: none;
 }
 
 /* La matriz lleva su filete como cualquier otra sección. Antes se lo habían
@@ -1902,6 +2286,24 @@ body {
   white-space: nowrap;
   border-bottom: 1px solid var(--hairline);
 }
+
+/* LOS ENCABEZADOS DE CATEGORÍA, TEÑIDOS CON EL ACENTO DE ESA CATEGORÍA.
+   Estas tres columnas son los MISMOS tres datos que el anillo de "Distribución
+   por categoría" ya pinta con `--cat-servicios`, `--cat-personales` y
+   `--cat-extras`, y son los mismos que tiñen las secciones de la Vista Mensual.
+   Teñir solo la fila de encabezado es lo que hace que el ojo aprenda la
+   correspondencia una vez y la reutilice en las dos otras vistas.
+
+   Solo la fila de encabezado, NO las celdas: teñir las 6 filas de una columna
+   convierte la tabla en un patrón de rayas de color y compite con el único
+   color por fila que la app acepta, que es el signo del balance neto.
+
+   `nth-child` y no un atributo: las celdas las emite app.js y no llevan marca de
+   categoría. La posición es parte del contrato de la tabla, que tiene 9 columnas
+   fijas y documentadas. */
+.matrix-table th:nth-child(2) { background: var(--cat-servicios-wash); }
+.matrix-table th:nth-child(3) { background: var(--cat-personales-wash); }
+.matrix-table th:nth-child(4) { background: var(--cat-extras-wash); }
 
 .matrix-table th:first-child,
 .matrix-table td:first-child {
@@ -1977,7 +2379,7 @@ body {
 }
 
 .chart-section {
-  padding-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
 }
 
 .chart-canvas-container {
@@ -2183,6 +2585,25 @@ select.form-input-lg {
 }
 .form-hint-center { text-align: center; }
 
+/* Un valor que se muestra pero NO se edita.
+ *
+ * El caso real es el "tipo" del gasto y el "tipo" del movimiento: los dos
+ * deciden en qué lista o con qué signo vive el registro, así que cambiarlos
+ * desde acá dejaría el dato partido. Mismo alto y padding que un campo para
+ * que la línea no se hunda al lado del input de al lado, pero SIN caja ni
+ * borde: una caja idéntica a la de un input sería un input que no responde.
+ * El texto es normal, nunca atenuado como un control deshabilitado, así que
+ * se mide con el criterio de contraste de cualquier otro texto. */
+.form-readonly-value {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  padding: var(--space-1) 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--text-main);
+}
+
 .login-error-msg {
   margin-top: var(--space-2);
   padding-top: var(--space-2);
@@ -2369,9 +2790,6 @@ select.form-input-lg {
   color: var(--accent-primary-hover);
 }
 
-.role-card-icon:empty { display: none; }
-.role-card-icon { display: none; }
-
 .role-step-pending-lead {
   font-size: var(--text-base);
   font-weight: 600;
@@ -2426,10 +2844,12 @@ select.form-input-lg {
   transform: translate(-50%, 0);
 }
 
+/* `#toastIcon` y `#authModeIcon` SÍ se quedan, y son la excepción que demuestra
+   la regla: app.js les escribe `textContent` en cada llamada a `showToast` y en
+   `updateAuthModeUI`. Si el nodo no estuviera, el write lanzaría. Se ocultan
+   cuando están vacíos, que es lo que hace el `:empty`. */
 #toastIcon:empty,
-#authModeIcon:empty,
-.role-card-icon:empty,
-.modal-glyph:empty {
+#authModeIcon:empty {
   display: none;
 }
 
@@ -2594,7 +3014,9 @@ body.read-only-mode .quick-action-buttons-grid {
   .expense-card-item > :nth-child(4) { grid-column: 2; grid-row: 2; justify-self: end; }
 
   .btn-delete-expense,
-  .btn-delete-tx { opacity: 1; }
+  .btn-delete-tx,
+  .btn-edit-expense,
+  .btn-edit-tx { opacity: 1; }
 
   .form-grid-2 { grid-template-columns: minmax(0, 1fr); }
 }
@@ -2664,80 +3086,145 @@ body.read-only-mode .quick-action-buttons-grid {
    par: 4.5:1 para texto normal, 3:1 para texto grande (>=24px, o >=18.66px con
    peso >=700) y para indicadores no textuales.
 
-   LA TRAMPA QUE ESTE METODO EVITA: `getPropertyValue('--x')` sobre un token
-   declarado con `color-mix()` devuelve la CADENA LITERAL y no un color, así que
-   comparar eso contra un color medido da falsos positivos. Por eso esta hoja NO
-   usa `color-mix()` en NINGUN token: todos son hex planos. Y por eso el fondo se
-   compone con `background-color` COMPUTADO, nunca con el token crudo.
+   LA TRAMPA QUE ESTE MÉTODO EVITA, Y CÓMO SE RESUELVE AHORA
+   --------------------------------------------------------------------------
+   `getPropertyValue('--x')` sobre un token declarado con `color-mix()` devuelve
+   la CADENA LITERAL y no un color. Verificado en el navegador con los tokens
+   de esta hoja:
+       getPropertyValue('--cat-servicios-wash')
+         -> "color-mix(in srgb, #506e82 12%, #ffffff)"
+   y comparar eso contra un color medido da falsos positivos.
 
-   Herramienta: `odd/tasks/contraste.mjs` (diseño, 37 pares de token contra
-   token) y `odd/tasks/probes.mjs` + `odd/tasks/tema-claro.mjs` (navegador, 94
-   pares reales en claro y 129 en oscuro). Reporte:
-   `odd/tasks/capturas/tema-r4.report.json`.
+   POR ESO LA REGLA ES MÁS ESTRECHA QUE "NO USES color-mix()":
+
+     · NINGÚN token que `js/charts.js` lea puede ser `color-mix()`. Ese archivo
+       pinta sobre un `<canvas>`, que no resuelve `var()` ni `color-mix()`, y
+       lee con `readToken()` los tokens de categoría para el anillo y los de
+       estado para las barras. Si `--cat-servicios` fuera una mezcla, la serie
+       del lienzo se dibujaría INVISIBLE. Por eso los siete tokens que charts.js
+       lee (`--cat-servicios`, `--cat-personales`, `--cat-extras`,
+       `--accent-emerald`, `--accent-rose`, `--text-muted`, `--text-main`,
+       `--hairline-strong`, `--bg-surface`, `--bg-inset`, `--bg-card`,
+       `--font-body`, `--font-mono`) siguen siendo hex planos. Se cambió la
+       regla para que proteja lo que hay que proteger en vez de prohibir la
+       herramienta entera.
+
+     · Todo token que la sonda mide como fondo se compone con
+       `background-color` COMPUTADO, nunca con el token crudo. El navegador
+       resuelve `color-mix()` a `color(srgb ...)` al calcular el estilo, así que
+       el valor computado SÍ es un color y se compone con alpha como cualquier
+       otro. Por eso `--cat-*-wash` y `--state-*-wash` pueden ser mezclas sin
+       que la auditoría de contraste mienta.
+
+   Herramienta: `odd/tasks/contraste.mjs` (diseño), `odd/tasks/tinte.mjs` (punto
+   de mezcla y ΔE), `odd/tasks/font-metrics.mjs` (métricas de la fuente) y
+   `odd/tasks/color-probe.mjs` (navegador: contraste real, foco real, espacio,
+   tipografía, CLS y contrato de limpieza). Reportes:
+   `odd/tasks/capturas/color-r3.report.json`.
 
    --------------------------------------------------------------------------
-   TEMA CLARO — 94 pares, 14 combinaciones distintas, 0 fallos de AA
    --------------------------------------------------------------------------
-      ratio  min  desde   foreground            fondo               pares
-     16.83:1  4.5   13px   rgb(29, 29, 31)      rgb(255,255,255)      16
-     16.83:1   3    32px   rgb(29, 29, 31)      rgb(255,255,255)       3
-     16.28:1  4.5   14px   rgb(29, 29, 31)      rgb(251,251,253)       1
-     15.46:1  4.5   14px   rgb(29, 29, 31)      rgb(245,245,247)       2
-      6.41:1  4.5   13px   rgb(91, 95, 103)     rgb(255,255,255)      40
-      6.20:1  4.5   13px   rgb(91, 95, 103)     rgb(251,251,253)       1
-      5.88:1  4.5   12px   rgb(91, 95, 103)     rgb(245,245,247)       2
-      5.50:1  4.5   11px   rgb(101,105,114)     rgb(255,255,255)      16
-      5.32:1  4.5   12px   rgb(101,105,114)     rgb(251,251,253)       1
-      5.05:1  4.5   12px   rgb(101,105,114)     rgb(245,245,247)       2
-      4.92:1  4.5   11px   rgb(101,105,114)     rgb(242,242,245)       1  <- el mas bajo
-      5.30:1  4.5   13px   rgb(31,122,82)       rgb(255,255,255)       7
-      5.30:1   3    40px   rgb(31,122,82)       rgb(255,255,255)       1
-      5.13:1  4.5   14px   rgb(31,122,82)       rgb(251,251,253)       1
+   TEMA CLARO — 331 pares de texto, 61 combinaciones distintas, 0 fallos de AA
+   --------------------------------------------------------------------------
+   Se listan los pares MÁS BAJOS, que son los que mandan. La tabla completa,
+   con los 331 pares y el desglose por selector, está en
+   `odd/tasks/capturas/contraste-r3.txt`.
 
-   El más bajo es **4.92:1**: `--text-muted` sobre `--bg-inset`, que es el atajo
-   de teclado "/" del buscador, de 11px, parado sobre el campo hundido. Pasa con
-   margen corto, y es el número que hay que mirar si alguna vez hay que bajar.
+     ratio  min    px  peso  foreground           fondo                pares
+    4.62:1  4.5   12px  600  rgb(28, 109, 73)     rgb(210, 224, 221)      1   <- EL MAS BAJO
+    4.70:1  4.5   11px  400  rgb(101, 105, 114)   rgb(234, 238, 240)     14
+    4.70:1  4.5   11px  400  rgb(101, 105, 114)   rgb(239, 236, 243)      8
+    4.70:1  4.5   11px  400  rgb(101, 105, 114)   rgb(233, 238, 236)      2
+    4.70:1  4.5   11px  400  rgb(101, 105, 114)   rgb(239, 237, 233)      2
+    4.84:1  4.5   12px  400  rgb(91, 95, 103)     rgb(221, 224, 227)     11
+    4.85:1  4.5   12px  400  rgb(91, 95, 103)     rgb(225, 223, 230)      6
+    4.92:1  4.5   11px  400  rgb(101, 105, 114)   rgb(242, 242, 245)     10
+    5.05:1  4.5   12px  400  rgb(101, 105, 114)   rgb(245, 245, 247)      4
+    5.12:1  4.5   14px  600  rgb(31, 122, 82)     rgb(251, 251, 253)      1
+    5.47:1  4.5   13px  400  rgb(91, 95, 103)     rgb(234, 238, 240)      4
+    5.50:1  4.5   11px  400  rgb(101, 105, 114)   rgb(255, 255, 255)       8
+    5.73:1  4.5   14px  600  rgb(176, 58, 72)     rgb(251, 251, 253)      1
+    5.92:1    3   28px  600  rgb(176, 58, 72)     rgb(255, 255, 255)       1
+    6.41:1  4.5   15px  400  rgb(91, 95, 103)      rgb(255, 255, 255)       2
+   14.38:1  4.5   15px  600  rgb(29, 29, 31)      rgb(234, 238, 240)     26
+   16.83:1  4.5   14px  600  rgb(29, 29, 31)      rgb(255, 255, 255)       2
+   16.83:1    3   32px  600  rgb(29, 29, 31)      rgb(255, 255, 255)       2
+
+   EL MÁS BAJO DEL TEMA CLARO ES 4.62:1, y es el texto "Pagado" de 12px con
+   `--text-pagado` #1c6d49 sobre el fondo REAL de ese botón: el tinte de estado
+   verde al 12% compuesto SOBRE el tinte de sección de Servicios, rgb(210,224,221).
+   Antes de esta tanda ese mismo texto con `--text-emerald` medía 3.89:1 y
+   fallaba; por eso `--text-pagado` existe y es un token aparte. El detalle de por
+   qué no se arregla bajando el tinte de estado está en §1, junto al token.
+
+   Los cuatro fondos rgb(234,238,240) / rgb(239,236,243) / rgb(233,238,236) /
+   rgb(239,237,233) son las cuatro superficies teñidas de sección, y el 4.70:1
+   que aparece sobre ellas es `--text-muted` de 11px y 13px (etiqueta "Fijo",
+   subhead de grupo, descripción de la sección). Ese 4.70:1 es el número que
+   define el 12% de mezcla: es el que se rompe primero si se sube el tinte.
 
    --------------------------------------------------------------------------
-   TEMA OSCURO (preservado) — 129 pares, 0 fallos de AA
+   TEMA OSCURO (preservado) — 331 pares, 0 fallos de AA
    --------------------------------------------------------------------------
-      ratio  min  desde   foreground            fondo               pares
-     17.57:1  4.5   14px   rgb(241,242,244)     rgb(10,11,14)         2
-     17.22:1  4.5   14px   rgb(241,242,244)     rgb(13,14,18)         1
-     16.96:1  4.5   12px   rgb(241,242,244)     rgb(15,16,21)        37
-     16.96:1   3    24px   rgb(241,242,244)     rgb(15,16,21)         8
-     15.80:1  4.5   13px   rgb(241,242,244)     rgb(23,24,31)         8
-      9.14:1   3    28px   rgb(157,184,198)     rgb(15,16,21)         1
-      8.95:1  4.5   12px   rgb(169,175,189)     rgb(10,11,14)         2
-      8.78:1  4.5   13px   rgb(169,175,189)     rgb(13,14,18)         1
-      8.64:1  4.5   12px   rgb(169,175,189)     rgb(15,16,21)        14
-      8.00:1  4.5   14px   rgb(116,180,150)     rgb(13,14,18)         1
-      6.38:1  4.5   12px   rgb(140,147,161)     rgb(10,11,14)         2
-      6.25:1  4.5   12px   rgb(140,147,161)     rgb(13,14,18)         1
-      6.16:1  4.5   11px   rgb(140,147,161)     rgb(15,16,21)        46
-      5.73:1  4.5   11px   rgb(140,147,161)     rgb(23,24,31)         5  <- el mas bajo
+     ratio  min    px  peso  foreground           fondo                pares
+    5.04:1  4.5   13px  400  rgb(140, 147, 161)   rgb(37, 36, 37)         2   <- EL MAS BAJO
+    5.09:1  4.5   13px  400  rgb(140, 147, 161)   rgb(30, 36, 38)         2
+    5.13:1  4.5   11px  400  rgb(140, 147, 161)   rgb(31, 35, 41)        14
+    5.18:1  4.5   11px  400  rgb(140, 147, 161)   rgb(33, 33, 41)         8
+    5.54:1  4.5   14px  600  rgb(188, 118, 125)   rgb(13, 14, 18)         1
+    5.73:1  4.5   11px  400  rgb(140, 147, 161)   rgb(23, 24, 31)        10
+    6.47:1  4.5   12px  600  rgb(152, 198, 177)   rgb(45, 54, 57)         1
+    7.28:1  4.5   13px  400  rgb(169, 175, 189)   rgb(33, 33, 41)         4
+    8.01:1  4.5   14px  600  rgb(116, 180, 150)   rgb(13, 14, 18)         1
+   16.96:1  4.5   17px  600  rgb(241, 242, 244)   rgb(31, 35, 41)         4
+   16.96:1    3   32px  600  rgb(241, 242, 244)   rgb(15, 16, 21)         2
+
+   EL MÁS BAJO DEL TEMA OSCURO ES 5.04:1: `--text-muted` sobre el tinte de sección
+   de Extras, que es el tinte que menos se aleja de la superficie oscura porque su
+   acento es el más apagado de los cuatro. Margen amplio sobre el 4.5:1.
 
    --------------------------------------------------------------------------
-   ACENTOS NO TEXTUALES (3:1) — leídos del elemento, no del token
+   INDICADORES NO TEXTUALES (3:1) — leídos del elemento, no del token
    --------------------------------------------------------------------------
-   Los tics de 2px y los rellenos de barra se miden sobre la superficie real:
+     claro   cat-tick servicios     rgb(80, 110, 130)   sobre rgb(234, 238, 240)  4.61:1
+     claro   cat-tick personales    rgb(120, 97, 151)   sobre rgb(239, 236, 243)  4.54:1
+     claro   cat-tick movimientos   rgb(74, 116, 93)    sobre rgb(233, 238, 236)  4.55:1
+     claro   cat-tick extras        rgb(124, 104, 73)   sobre rgb(239, 237, 233)  4.57:1
+     claro   pill-minibar-fill      rgb(0, 136, 255)    sobre rgb(242, 242, 245)  3.15:1
+     claro   focus-ring             rgb(0, 136, 255)    sobre rgb(245, 245, 247)  3.23:1
+     claro   focus-ring             rgb(0, 136, 255)    sobre rgb(255, 255, 255)  3.52:1
+     oscuro  cat-tick servicios     rgb(147, 172, 189)  sobre rgb(31, 35, 41)     6.69:1
+     oscuro  cat-tick personales    rgb(169, 155, 191)  sobre rgb(33, 33, 41)     6.19:1
+     oscuro  cat-tick movimientos   rgb(143, 183, 163)  sobre rgb(30, 36, 38)     7.08:1
+     oscuro  cat-tick extras        rgb(195, 179, 152)  sobre rgb(37, 36, 37)     7.57:1
+     oscuro  focus-ring             rgb(0, 136, 255)    sobre rgb(10, 11, 14)     5.59:1
+     oscuro  focus-ring             rgb(0, 136, 255)    sobre rgb(15, 16, 21)     5.40:1
 
-     claro  --cat-servicios    rgb(80,110,130)   5.39:1
-     claro  --cat-personales   rgb(120,97,151)   5.31:1
-     claro  --cat-movimientos  rgb(74,116,93)    5.32:1
-     claro  --cat-extras       rgb(124,104,73)   5.34:1
-     claro  --cat-matrix/trend/categories  rgb(109,114,122)  4.84:1
-     oscuro --cat-servicios    rgb(147,172,189)  8.03:1
-     oscuro --cat-personales   rgb(169,155,191)  7.35:1
-     oscuro --cat-movimientos  rgb(143,183,163)  8.57:1
-     oscuro --cat-extras       rgb(195,179,152)  9.25:1
-     claro  --focus-ring       rgb(0,136,255)    3.52:1 sobre superficie
-     claro  --focus-ring       rgb(0,136,255)    3.23:1 sobre el canvas del rail
+   El `focus-ring` es `#0088ff` en LOS DOS temas a propósito: el indicador de
+   teclado no cambia de color con el tema. En claro queda en 3.23:1 sobre el
+   canvas del rail, que es el caso más flojo, y sigue pasando el 3:1.
 
-   Los cuatro acentos de categoría están calibrados a la MISMA luminancia WCAG
-   (0.1460) para leerse como familia. Los antiguos, además de desaparecer sobre
-   blanco, medían 8.31 a 9.57:1 contra una tarjeta casi negra: 4 veces el mínimo
-   y sin necesidad.
+   Los cuatro `cat-tick` Bajaron de 5.31-5.39:1 a 4.54-4.61:1 porque ahora se
+   miden sobre SU PROPIA superficie teñida y no sobre blanco. Siguen muy por
+   encima del 3:1 que un indicador de 2px necesita.
+
+   --------------------------------------------------------------------------
+   SUPERFICIES TEÑIDAS — POR QUÉ NO TIENEN MÍNIMO DE CONTRASTE
+   --------------------------------------------------------------------------
+   Un tinte de superficie no es un indicador: por definición tiene que parecerse
+   mucho a la superficie, y si se acercara al 3:1 dejaría de ser un tinte y
+   empezaría a ser un bloque de color. Medido contra su padre dan 1.17:1 (sección
+   teñida contra la superficie) y 1.13:1 (estado pendiente contra la sección), y
+   eso es lo esperado.
+
+   LO QUE SE LES MIDE ES OTRA COSA: si se DISTINGUEN. Eso no lo mide el ratio de
+   WCAG, que solo ve luminancia, sino un ΔE en OKLab. Está en §1 y sale de
+   `odd/tasks/tinte.mjs`:
+     ΔE tinte contra la superficie ............ 0.0536   visible de plano
+     ΔE del par MÁS CERCANO (serv/mov) ........ 0.0070   por debajo del umbral
+   La segunda cifra es un límite real y está explicado en §1: la superficie
+   teñida agrupa y saca el vacío blanco, pero NO es lo que dice cuál de las
+   cuatro categorías es cuál.
 
    --------------------------------------------------------------------------
    LA ETIQUETA DEL BOTÓN FILLED, y por qué NO es blanca
@@ -2748,4 +3235,14 @@ body.read-only-mode .quick-action-buttons-grid {
    El botón tiene 14px de base y `.btn-lg` llega a 15px: es texto normal, y la
    consigna exige 4.5:1. systemBlue vigente no llega con etiqueta blanca. Se
    puede cambiar en un token si se prefiere el blanco de Apple sobre el AA.
+
+   --------------------------------------------------------------------------
+   LO QUE NO ES UN FALLO DE CONTRASTE, Y POR QUÉ SE DICE
+   --------------------------------------------------------------------------
+   Con `file://` el origin es `null`, el token de sesión de Supabase se rechaza y
+   la petición a /rest/v1/gastos responde 401. Es el comportamiento PREEXISTENTE
+   de abrir la app desde el disco, está documentado en `odd/tasks/cdp.mjs`, y no
+   es un 404 ni un `console.error`. La sonda lo registra aparte para que no se
+   confunda con un recurso roto: en las dos pasadas de esta tanda fue lo único
+   que reporto, junto a cero `console.error` y cero excepciones.
    ========================================================================== */

@@ -607,10 +607,10 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = '';
 
     if (items.length === 0) {
+      // Estado vacío de Apple: UNA línea, céntrica, silenciosa. Sin ícono, sin
+      // ilustración y sin la segunda frase que explicaba lo obvio.
       container.innerHTML = `
-        <div style="padding: var(--space-3) var(--space-3); color: var(--text-muted); font-size: var(--text-md);">
-          Sin gastos registrados en esta categoría.
-        </div>
+        <div class="empty-feed-placeholder">Sin gastos registrados.</div>
       `;
       return;
     }
@@ -620,7 +620,12 @@ document.addEventListener('DOMContentLoaded', () => {
       row.className = 'expense-card-item';
       const isPaid = item.estado === 'Pagado';
 
-      row.innerHTML = `
+      // ORDEN DE LOS 4 HIJOS (contrato DOM: `.expense-card-item` recibe exactamente 4).
+// Concepto · Estado · Importe · Borrar. El importe va tercero a propósito: en el
+// orden anterior la cifra quedaba en el medio de la fila y "Pendiente" se leía
+// como el dato de la derecha. Así los importes cierran contra el borde de la
+// superficie, como los subtotales, y los estados alinean en una columna.
+row.innerHTML = `
         <div class="expense-item-info">
           <div class="expense-item-title">${escaparHTML(item.concepto)}</div>
           <div class="expense-item-tags">
@@ -631,14 +636,14 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
 
-        <div class="expense-item-amount font-mono">
-          ${window.formatCurrency(item.monto)}
-        </div>
-
-        <div>
+        <div class="expense-item-state">
           <button type="button" class="btn-status-toggle ${isPaid ? 'status-pagado' : 'status-pendiente'}" data-item-id="${escaparHTML(item.id)}" title="Presiona para cambiar estado">
             ${isPaid ? 'Pagado' : 'Pendiente'}
           </button>
+        </div>
+
+        <div class="expense-item-amount font-mono">
+          ${window.formatCurrency(item.monto)}
         </div>
 
         <div>
@@ -695,11 +700,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (filtered.length === 0) {
+      // Una sola línea. La versión anterior tenía un <strong> y un <p>: dos
+      // líneas de explicación para un dato que se ve solo.
       feedContainer.innerHTML = `
-        <div class="empty-feed-placeholder">
-          <strong>No hay movimientos registrados</strong>
-          <p>Usa los botones superiores para registrar un ingreso o gasto.</p>
-        </div>
+        <div class="empty-feed-placeholder">Sin movimientos registrados.</div>
       `;
       return;
     }
@@ -796,9 +800,9 @@ tr.innerHTML = `
           ${window.formatCurrency(r.balanceNeto)}
         </td>
         <td class="font-mono text-center" style="font-weight: 600;">${pct.toFixed(1)}%</td>
-        <td style="min-width: 130px; text-align: center;">
-          <div style="height: 6px; background: var(--bg-inset); border-radius: var(--radius-pill); overflow: hidden; margin: 0 auto;">
-            <div style="width: ${Math.min(100, pct)}%; height: 100%; background: var(--accent-primary); border-radius: var(--radius-pill);"></div>
+        <td class="matrix-progress-cell">
+          <div class="matrix-progress-track">
+            <div class="matrix-progress-fill" style="width: ${Math.min(100, pct)}%;"></div>
           </div>
         </td>
       `;
@@ -1250,7 +1254,10 @@ tr.innerHTML = `
     document.getElementById('payVarMonthId').value = monthId;
     document.getElementById('payVarItemId').value = item.id;
     document.getElementById('payVarItemTitle').textContent = item.concepto;
-    document.getElementById('payVarItemEstimated').innerHTML = `Presupuestado: <strong class="font-mono" style="color: var(--accent-cyan); font-size: 0.84rem;">${window.formatCurrency(item.monto)}</strong>`;
+    // El color y el cuerpo los pone `.pay-var-preview-meta strong` en la hoja.
+// Acá no se escribe ningún estilo inline: si se escribiera, ganaría a la hoja y
+// volvería a haber dos verdades sobre el mismo texto.
+    document.getElementById('payVarItemEstimated').innerHTML = `Presupuestado: <strong class="font-mono">${window.formatCurrency(item.monto)}</strong>`;
 
     const rangeBadge = document.getElementById('payVarItemRangeBadge');
     if (rangeBadge) {

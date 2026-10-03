@@ -650,6 +650,34 @@ class FinancialStore {
     return newMov;
   }
 
+  /**
+   * Edita un movimiento existente.
+   *
+   * Misma forma que `updateBudgetItem`: se localiza por id dentro de la
+   * colección del mes y la entrada se reemplaza por una mezcla del objeto
+   * anterior con los campos nuevos, de modo que lo que el formulario no
+   * envía sobrevive intacto (categoria, retornable, estado, fecha...).
+   *
+   * `monto` se castea a float igual que en `addMovement`: el formulario
+   * entrega texto y sin esto "45.50" quedaría guardado como cadena, que
+   * después suma mal en los totales.
+   */
+  updateMovement(monthId, movId, updatedFields) {
+    const m = this.getMonth(monthId);
+    if (!m || !m.movimientos) return false;
+
+    const idx = m.movimientos.findIndex(x => x.id === movId);
+    if (idx !== -1) {
+      m.movimientos[idx] = { ...m.movimientos[idx], ...updatedFields };
+      if (updatedFields.monto !== undefined) {
+        m.movimientos[idx].monto = parseFloat(updatedFields.monto) || 0;
+      }
+      this.save();
+      return true;
+    }
+    return false;
+  }
+
   deleteMovement(monthId, movId) {
     const m = this.getMonth(monthId);
     if (!m || !m.movimientos) return false;

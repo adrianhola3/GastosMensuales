@@ -71,21 +71,29 @@
 
    RESTRICCIONES DEL DOM QUE app.js IMPONE (NO ROMPER)
    --------------------------------------------------------------------------
-   0. EL RAIL ES NAVEGACIÓN Y NADA MÁS. Ni una cifra, ni el selector de
-      meses. Los datos viven arriba de todo en la Vista Mensual
-      (`.metrics-row` §8.1 + `.payments-strip` §8.2) y el selector de
-      períodos es `.period-bar` (§8.3). Sin scroll interno: si algo no
-      entra en 900px, el problema es de densidad, no de alto.
-   1. `.content-card-box`: app.js lee y escribe `style.display` inline en ella
+   0. EL RAIL ES NAVEGACIÓN: MARCA, LAS DOS VISTAS, LA LÍNEA DE TIEMPO Y EL
+       PIE. Ni una cifra ni el buscador: eso son datos, y viven en
+       `.ledger-toolbar` (§8.1), la banda pegada arriba de la Vista Mensual,
+       cuyo renglón A es la tira de cifras y cuyo renglón B es la navegación
+       (buscador + filtro). La lista de meses SÍ es navegación y sí está en
+       el rail (§8.3): es la línea de tiempo.
+       SIN SCROLL DEL RAIL ENTERO: la marca y el pie son `flex: 0 0 auto` y
+       solo la lista scrollea, con `min-height: 0` para que pueda encogerse.
+       El rail viejo se caía en lo contrario —`scrollHeight` 1019 contra
+       `clientHeight` 692, con el pie a 840px de un viewport de 900— y por
+       eso el `min-height` está explícito.
+   1. `.ledger-group`: app.js lee y escribe `style.display` inline en ella
       (`renderActiveSegments`). Esta hoja NO declara `display` en ese selector:
       el inline gana siempre y el JS necesita ver el valor.
    2. `card-anim-out` dura 160ms porque `setTimeout(..., 160)` en app.js corta
-      la tarjeta a los 160ms. La animación de salida no puede durar más.
+      el grupo a los 160ms. La animación de salida no puede durar más.
    3. `body.read-only-mode .admin-action-btn { display: none !important }` es
       el único mecanismo de permisos del cliente. Se replica literal.
-   4. `body.read-only-mode .quick-action-buttons-grid { display: none }`: los
-      dos botones hijos están ocultos y el contenedor queda con 32px de padding
-      muerto si no se va con ellos.
+   4. T5: los dos botones de alta de Movimientos (`#btnQuickActionIncome`,
+      `#btnQuickActionExpense`) dejaron de vivir en un `.quick-action-buttons-grid`
+      y están en el encabezado de su grupo, con `admin-action-btn`. La regla que
+      ocultaba el contenedor para que no quedara padding muerto se fue con él:
+      los botones se ocultan por `admin-action-btn` y no dejan contenedor.
    5. app.js reescribe `className` COMPLETO en 3 elementos. Se estilan por sus
       literales exactos: `mode-badge admin-active`, `mode-badge readonly-active`,
       `conn-badge conn-online`, `conn-badge conn-offline`,
@@ -262,11 +270,20 @@
   --font-mono: ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
-  /* Escala corta y real: 10 pasos de 11px a 40px.
+  /* Escala corta y real: 9 pasos de 11px a 40px.
      El paso `--text-3xl` (32px) es el protagonista de sección, `--text-4xl`
-     (40px) el de la vista consolidada y `--text-metrics` (28px) el de la fila
-     de métricas del mes. Son los tres únicos lugares donde una cifra domina:
-     en todas partes el cuerpo es 13-15px. */
+     (40px) el de la vista consolidada y `--text-lg` (17px) el titular de las
+     tres cifras de la barra de comando (§8.1). Son los tres únicos lugares
+     donde una cifra domina: en todas partes el cuerpo es 11-15px.
+
+     LO QUE SE SACÓ Y POR QUÉ: hasta T1 existía un paso propio de 28px
+     (`--text-metrics`) calibrado para las cuatro celdas de `.metrics-row`.
+     Con la barra de comando las tres cifras son de 17px y no hay celda que
+     llene, así que un token sin ninguna regla que lo use es código muerto:
+     se va la DECLARACIÓN y se queda el criterio, acá. Si un día una cifra
+     tiene que volver a 28px, el motivo medido sigue siendo el mismo: 28px
+     es el paso más grande con el que "S/ 12,345.67" entra en una celda de
+     222px, y 32px no entra (230px). */
   --text-2xs: 0.6875rem;   /* 11px  metadatos */
   --text-xs: 0.75rem;      /* 12px  etiquetas secundarias */
   --text-sm: 0.8125rem;    /* 13px  texto de apoyo */
@@ -277,15 +294,6 @@
   --text-2xl: 1.5rem;      /* 24px  cifra de bloque del consolidado */
   --text-3xl: 2rem;        /* 32px  PROTAGONISTA de sección */
   --text-4xl: 2.5rem;      /* 40px  protagonista del consolidado */
-
-  /* La fila de métricas del mes necesita un paso propio, y el motivo es de
-     ancho, no de gusto: son 4 celdas sobre 1080px de medida, o sea 270px
-     menos 24px de filete y 24px de aire = 222px útiles por cifra. A 32px
-     mono, "S/ 12,345.67" (13 caracteres) mide 230px y no entra; a 28px mide
-     202px y entra con 20px de margen. Es el paso más grande que cumple.
-     [NV] no está en apple-com-tokens.md: es una consecuencia medida de §1
-     y de §2 de ese archivo, no un valor publicado. */
-  --text-metrics: 1.75rem;  /* 28px  cifra de la fila de métricas del mes */
 
   --leading-display: 1.05;                 /* [tokens §2] ratio 84/80 medido */
   --leading-body: 1.47;                    /* [skill] leading en texto */
@@ -605,9 +613,54 @@
      `--layout-measure` NO viene de §1: el `max-width: 980px` medido ahí es el
      de `#ac-localnav .ac-ln-content`, la navegación local de una landing. La
      matriz de 9 columnas de cifras de esta app necesita más: con 980px la
-     última columna ("Progreso") quedaba cortada en la versión anterior. */
+     última columna ("Progreso") quedaba cortada en la versión anterior.
+
+     `--rail-width` volvió a 236px. LaReduction a 64px fue un error: medido,
+     dejaba 43.840px² de superficie sin uso (64 x 685) con cuatro controles
+     en una columna de 900px, y el rail no aportaba navegación. A 236px el
+     rail lleva marca, dos vistas, la LÍNEA DE TIEMPO de los períodos y el
+     pie: el tiempo se recorre en el rail, la categoría se filtra en la barra.
+
+     POR QUÉ LA MEDIDA SIGUE EN 1320px Y NO BAJÓ A 1080: `max-width` centra,
+     no rellena, y a 1440 con el rail en 236 la columna del contenido da
+     1189px. La tira de cinco cifras necesita ~1000px de ancho interior y
+     con 1080 quedaban en 984px: no entraba. Con 1320 la tira usa la columna
+     completa a 1440 (1093px interiores, canalDer 63px) y recién ahí empieza
+     a caparse. [NV] los dos: no hay ancho de rail publicado por apple.com.
+
+   `--drawer-width` es un token APARTE aunque hoy valga lo mismo que
+   `--rail-width`, y a propósito: el breakpoint de 1024px convierte el
+   MISMO `<aside>` en un panel, y si compartieran token, angostar el rail
+   angostaría el drawer sin que nadie lo pidiera.
+
+   `--section-rail-width` (T2) es un TERCER token y también aparte de los dos,
+   por la misma razón con un motivo nuevo: a <=1024px el rail de secciones no
+   se esconde —si se escondiera, el filtro de categoría desaparecería entero
+   en el teléfono y `empty.segment-filters` no tendría nada que pulsar—, sino
+   que se convierte en una BANDA horizontal arriba del contenido. Su ancho
+   deja de mandar ahí, y si compartiera token con `--rail-width`, angostar el
+   rail angostaría también la banda.
+
+   168px, no 200px, Y ESTE NÚMERO ESTÁ MEDIDO. A 200 la columna del contenido
+   da 989px y la tira de cinco celdas necesita 1049.8px: faltan 141.8px y no
+   salen de aire (las cinco celdas tienen `sobra = 0`, el ancho es dato). La
+   tira se parte, "Balance" baja a un segundo renglón y la barra de comando pasa
+   de 125.9px a 185.2px — 59.3px de scroll vertical para cambiar scroll
+   vertical por scroll vertical. Con 168 la columna da 1021px y quedan
+   25.2px de holgura (`node odd\tasks\diag-strip4.mjs`), que es lo único
+   robusto del barrido: 0.2px o 1.2px de aire no es una configuración, es una
+   coincidencia que el día que una cifra mida dos píxeles más se rompe sola sin
+   que nada avise.
+
+   CON 168 NO SE RECORTA NINGÚN NOMBRE. "Movimientos" con su conteo mide 118px a
+   13px; el nombre de sección, el subtotal y el botón de alta de 29px entran en
+   una línea, y el barrido midió `.rail-entry-name` y `.ledger-cell-label` con
+   `scrollWidth > clientWidth` sobre toda la matriz y no encontró ninguno. La
+   alternativa que el doc anterior proponía —144px— sí recortaba. */
   --rail-width: 236px;
-  --layout-measure: 1080px;
+  --drawer-width: 236px;
+  --section-rail-width: 168px;
+  --layout-measure: 1320px;
 
   /* --- Motion ------------------------------------------------------------
      [motion-physics §1] damping 1.0 por defecto: sin rebote. El feedback de
@@ -782,20 +835,16 @@ body {
 
 /* Toda cifra de la app es tabular. Sin esto las columnas de importes bailan
    al cambiar de valor y el ojo no puede compararlas verticalmente. */
-.accordion-summary-tag,
-.metric-cell-value,
+.ledger-group-subtotal,
+.ledger-cell-value,
 .metric-main-value,
 .expense-item-amount,
-.subtotal-highlight-row,
+.ledger-group-count,
 .tx-amount,
 .matrix-table,
 .matrix-active-badge,
 .kpi-mini-val,
-.topbar-month-pill,
-.payments-lead,
-.payments-fact,
 .payments-fill,
-.segment-count-badge,
 .notes-smart-textarea,
 .form-input-lg,
 .form-input-amount {
@@ -841,7 +890,9 @@ body {
 }
 
 .ui-icon-xs { width: 16px; height: 16px; }
-.ui-icon-pill { width: 18px; height: 18px; }
+/* El chip de filtro vive en una línea de 26px junto a cuatro siblings: 18px
+   de icono lo convertían en un botón de 34px y la fila se iba de ancho. */
+.ui-icon-chip { width: 14px; height: 14px; }
 .ui-icon-nav { width: 18px; height: 18px; }
 .ui-icon-brand { width: 22px; height: 22px; }
 .ui-icon-card { width: 20px; height: 20px; }
@@ -856,11 +907,30 @@ body {
 }
 
 /* ==========================================================================
-   5. LAYOUT — rail + superficie continua
+   5. LAYOUT — rail + columna de secciones + superficie continua
+   --------------------------------------------------------------------------
+   TRES COLUMNAS DESDE T2, y no dos con un bloque adentro. La razón es que la
+   columna de secciones es PEGADA: `position: sticky` + `height: 100vh`, como
+   el rail. Si fuera un bloque del contenido, el scroll la llevaría y dejaría
+   de ser navegación —habría que scrollear para volver a encontrarla—, y
+   además competiría por ancho con la tira de cifras, que es lo que
+   realmente necesita la medida.
+
+   EL COSTE, MEDIDO, PORQUE NO ES GRATIS
+   --------------------------------------------------------------------------
+   A 1440 la columna del contenido pasa de 1189px a 989px. La tira de cinco
+   cifras necesita ~1000px interiores, así que deja de entrar entera y
+   envuelve —que es exactamente el comportamiento que el breakpoint de 1024px
+   ya declara como preferible: una celda que salta de línea a un importe que
+   se recorta. El alto de la banda sube y con él `mainScrollHeight`; el
+   criterio de aceptación 7 del doc pide que no crezca y se midió: ver el
+   informe de esta tanda. La alternativa que lo evitaría (bajar
+   `--section-rail-width` a 144px) recorta el nombre de la sección, que es lo
+   único que la columna tiene que mostrar.
    ========================================================================== */
 .app-layout {
   display: grid;
-  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+  grid-template-columns: var(--rail-width) var(--section-rail-width) minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -907,50 +977,48 @@ body {
 }
 
 /* ==========================================================================
-   6. RAIL — navegación y nada más
+   6. RAIL — 236px, la espina temporal
    --------------------------------------------------------------------------
-   Un rail es un rail: corto, escaneable, sin scroll. Aquí hay exactamente
-   cuatro cosas —marca, las dos vistas, buscador, y un pie con estado y
-   modo— y ni una sola cifra.
+   Cuatro cosas, de arriba abajo: marca, las dos vistas, la línea de tiempo
+   de los períodos, y el pie con estado y modo. SIN cifras y SIN buscador:
+   eso son datos, y los datos viven en la barra de comando.
 
-   LO QUE SE SACÓ Y POR QUÉ (medido antes del cambio, 1440x900):
-   - El bloque "Resumen del mes" ocupaba 527px de alto y contenía 13
-     elementos con datos. Los datos son contenido: viven arriba de todo en
-     la Vista Mensual, en `.metrics-row` y `.payments-strip` (§8.1/§8.2).
-   - La lista de 6 meses medía 224px de alto con `max-height: 240px`: un
-     dropdown disfrazado que además repetía lo que el topbar ya dice. Ahora
-     es `.period-track`, horizontal, en el contenido (§8.3).
-   - "Nuevo mes" no es navegación ni meta de sesión: es gestión de
-     períodos, así que fue con el selector.
-   - `.sidebar-scroll` sostenía `scrollHeight` 1019 contra `clientHeight`
-     692. Sin los datos y sin la lista, el contenido del rail mide ~330px
-     en un viewport de 900: sobra espacio. El problema era densidad.
-
-   `overflow: hidden` sigue en la base a propósito: si el contenido
-   creciera, se recorta en vez de inventar un scroll interno.
-
-   EL AIRE QUE SOBRA, Y QUÉ SE HIZO CON ÉL — LA RESPUESTA HONESTA
+   LA DIVISIÓN QUE ORDENA EL REDISEÑO: EL TIEMPO SE RECORRE EN EL RAIL, LA
+   CATEGORÍA SE FILTRA EN LA BARRA.
    --------------------------------------------------------------------------
-   Medido antes de este cambio: 604px de hueco entre el buscador y el pie. La
-   consigna era "aprovechar más el espacio" y hay una respuesta fácil que sería
-   incorrecta: llenar el rail de cifras. El rail es navegación, y esas 13
-   cifras se sacaron de ahí porque eran datos en el lugar equivocado; volver a
-   ponerlas las saca de `.metrics-row` y de `.payments-strip`, que es
-   exactamente la duplicación que §8.1 y §8.2 acaban de resolver. Tampoco cabe
-   una lista de resultados de búsqueda sin invadir la parte funcional (T5).
+   Un rail de 236px con dos pestañas es un panel ancho para dos botones; con
+   la línea de tiempo es el reloj del presupuesto, y los 236px están
+   trabajando. Esa es la razón del ancho.
 
-   Lo que sí se hizo, y es lo que el espacio permite sin romper la regla: los
-   TRES controles reales del rail crecen. La fila de vistas pasa de 37px a 41px,
-   el buscador de 32px a 36px, y el bloque del buscador baja 8px. Son 29px de
-   objetivo táctil más grande y mejor separados, que es un uso real del espacio y
-   no un relleno.
+   POR QUÉ LA LÍNEA DE TIEMPO VUELTA AL RAIL, Y POR QUÉ NO ES MARCHA ATRÁS
+   --------------------------------------------------------------------------
+   La ronda anterior la sacó del rail por dos razones, y las dos siguen
+   siendo verdaderas; lo que cambia es dónde se resuelven:
 
-   Los ~575px que quedan son aire deliberado y se reportan como tal: el pie está
-   anclado abajo con `margin-top: auto` y los tres grupos arriba, así que el
-   hueco es una decisión de composición —navegación arriba, estado de sesión
-   abajo— y no un sobrante. La forma honesta de medirlo es que
-   `gapSearchToFooter` está medido y no es cero, y que el `scrollHeight` del rail
-   sigue clavado en 900: no hay scroll interno ni con veinte años de datos.
+   · "224px verticales con scroll propio para 6 meses". Acá la lista vive
+     en el bloque que CRECE con los meses, con `flex: 1 1 auto` y
+     `min-height: 0`, así que scrollea SOLO ella. La marca y el pie quedan
+     `flex: 0 0 auto` y el pie ya no puede quedar inalcanzable — que era
+     el fallo exacto del rail viejo: `scrollHeight` 1019 contra `clientHeight`
+     692, con 327px de contenido cortado y `#btnToggleAuthMode` a 840px de
+     un viewport de 900.
+   · "Duplicaba el nombre del topbar". Ya no duplica nada: el topbar no
+     muestra el período y `#activeMonthHeaderBadge` es el encabezado de
+     esta sección. Encima la tira horizontal era WRAP de una forma que
+     esta versión arregla: con 24 períodos se scrollea y la píldora activa
+     podía quedar fuera de vista. Acá `scrollIntoView` la trae y el eje
+     que scrollea es el vertical, que es el que la persona recorre.
+
+   LO QUE NO SE INVENTA
+   --------------------------------------------------------------------------
+   Con 6 períodos la lista deja ~400px de aire abajo y NO se rellenan: es
+   una lista, crece con los meses. El aire no es un hueco entre bloques
+   (el bloque de la lista crece y empuja al pie hasta el borde, así que
+   `huecoRail` da 0), es aire DENTRO de la lista, que es donde corresponde
+   a un elemento que crece.
+
+   `overflow: hidden` sigue en la base a propósito: si el contenido fijo
+   creciera, se recorta en vez de inventar un scroll interno del rail.
    ========================================================================== */
 .app-sidebar {
   position: sticky;
@@ -964,10 +1032,7 @@ body {
   border-right: 1px solid var(--hairline);
 }
 
-/* --- Marca: una línea de nombre, subtítulo chico y gris ---------------------
-   "Gestor Financiero" + "Presupuesto & Gastos" no repite nada de lo que el
-   topbar ya dice (el topbar dice el período). El logo baja a 20px porque el
-   título grew para las dos líneas del bloque de textos. */
+/* --- Marca: el texto entra entero en 236px. ------------------------------ */
 .sidebar-brand {
   display: flex;
   align-items: center;
@@ -1029,15 +1094,15 @@ body {
 }
 .sidebar-close-btn:hover { color: var(--text-main); background: var(--bg-raised); }
 
-/* --- Vistas: Ícono + etiqueta, un solo acento en el activo -----------------
+/* --- Vistas: ícono + etiqueta, un solo acento en el activo -----------------
    Sin rótulo de sección: con dos items, un encabezado de 11px sobre dos
-   renglones es ruido. La marca arriba y la regla del pie abajo ya separan
-   los tres bloques. */
+   renglones es ruido. La marca arriba, el rótulo de la línea de tiempo abajo
+   y la regla del pie ya separan los cuatro bloques. */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   gap: var(--space-tight);
-  padding: 0 var(--space-2);
+  padding: 0 var(--space-1);
   flex: 0 0 auto;
 }
 
@@ -1047,7 +1112,7 @@ body {
   align-items: center;
   gap: var(--space-2);
   width: 100%;
-  padding: 10px var(--space-2);
+  padding: 10px var(--space-1);
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
   color: var(--text-secondary);
@@ -1061,7 +1126,9 @@ body {
 }
 
 /* El acento del rail: UN solo uso, en el elemento activo. Regla de 2px +
-   peso de tipografía, no un bloque de color saturado. */
+   peso de tipografía, no un bloque de color saturado. La misma marca usa la
+   lista de períodos (§8.3), así que "acá estás" se lee igual en los dos
+   navegación. */
 .sidebar-nav-tab.active {
   color: var(--text-main);
   font-weight: 600;
@@ -1084,97 +1151,68 @@ body {
   color: inherit;
 }
 
-/* --- Buscador --------------------------------------------------------------- */
-.sidebar-search-section {
-  padding: var(--space-4) var(--space-2) 0;
+/* --- La línea de tiempo: el bloque que CRECE ------------------------------
+   `flex: 1 1 auto` + `min-height: 0` es lo que hace que la lista scrollee y
+   solo la lista. Sin `min-height: 0`, un item flex no baja de su
+   `min-content` y el bloque entero empujaría al pie fuera de la pantalla:
+   ese es el fallo que tenía el rail viejo (327px de contenido cortado) y
+   por eso el `min-height` está explícito y no es decoración. */
+.sidebar-periods {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: var(--space-3) var(--space-1) var(--space-2);
+}
+
+/* DOS RENGLONES, Y POR QUÉ: en uno solo el nombre del período se recorta a
+   "Septiembre …" —medido— porque el rótulo, el nombre y las dos flechas no
+   entran en los 211px libres de la columna. Con el nombre en `flex-basis:
+   100%` pasa a su propio renglón y entra entero ("Septiembre 2026" mide
+   105px), y las flechas quedan arriba a la derecha del rótulo, que es donde
+   un control de lista se espera. Los dos renglones son fijos
+   (`flex: 0 0 auto`): el nombre es la respuesta a "¿qué período estoy
+   mirando?" y no scrollea nunca, aunque la lista de 24 meses esté
+   mostrando otra cosa. */
+.sidebar-periods-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-tight);
+  padding: 0 var(--space-1) var(--space-1);
   flex: 0 0 auto;
 }
 
-.sidebar-search-box {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  padding: 0 var(--space-1) 0 var(--space-2);
-  background: var(--bg-inset);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-sm);
-  height: 36px;
-  transition: border-color var(--duration-quick) var(--ease-standard);
-}
-
-/* El anillo de foco del buscador va en la CAJA, no en el input: `outline` sigue
-   la forma real del control (incluido el radio) y no desplaza el layout, que es
-   lo que haría cambiar el grosor del borde mientras se escribe. Es el mismo
-   `--focus-ring` del resto de la hoja: mismo indicador para los cuatro controles
-   del rail.
-   Por eso el input NO lleva `outline: none`: el `outline` del navegador se
-   midió como "3px none" en él, y sin anillo en el elemento enfocable la auditoría
-   de foco no tiene nada que leer. El input no necesita su propio anillo porque
-   `:focus-within` de la caja lo cubre, y ese camino se verifica subiendo desde
-   el input hasta el primer ancestro con anillo. */
-.sidebar-search-box:focus-within {
-  border-color: var(--hairline-focus);
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 1px;
-}
-
-.search-box-icon {
-  display: flex;
-  font-size: 15px;
-  color: var(--text-muted);
-}
-
-.sidebar-search-input {
-  flex: 1 1 auto;
-  min-width: 0;
-  font-size: var(--text-sm);
-  color: var(--text-main);
-  background: none;
-  border: 0;
-}
-
-.sidebar-search-input::placeholder {
-  color: var(--text-muted);
-}
-
-.btn-clear-search {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: var(--radius-xs);
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-.btn-clear-search:hover { color: var(--text-main); background: var(--bg-raised); }
-
-/* El atajo de teclado es una pista, no un chip: texto suelto, sin caja. */
-.search-shortcut-badge {
-  font-family: var(--font-mono);
+.sidebar-section-label {
   font-size: var(--text-2xs);
   color: var(--text-muted);
-  padding-right: var(--space-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
-.search-results-feedback {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  padding-top: var(--space-1);
+/* T4: `.sidebar-period-name` se fue con `#activeMonthHeaderBadge`. El nombre
+   del período es ahora el título del topbar (`.topbar-page-title`), y el
+   encabezado del rail conserva lo que el rail sí controla: el rótulo y las
+   dos flechas, que caben en una línea. */
+
+.period-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-tight);
+  flex: 0 0 auto;
 }
 
 /* --- Pie: estado y modo. Es META, no navegación ----------------------------
-   Anclado al borde inferior con `margin-top: auto`: es lo último que se
-   mira y lo primero que tiene que seguir ahí. Sin caja y sin borde: era
-   el último `border` del rail y delimitaba algo que no es un control.
-   Dos renglones de 12px grises, cada uno con su punto de estado. */
+   Anclado al borde inferior con `margin-top: auto`, y `flex: 0 0 auto` para
+   que la lista de meses que crece nunca lo empuje fuera de la pantalla. Sin
+   caja y sin borde: era el último `border` del rail y delimitaba algo que no
+   es un control. */
 .sidebar-footer {
   margin-top: auto;
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-tight);
-  padding: var(--space-2);
+  padding: var(--space-2) var(--space-1);
   border-top: 1px solid var(--hairline);
 }
 
@@ -1184,12 +1222,12 @@ body {
   gap: var(--space-1);
   font-size: var(--text-xs);
   color: var(--text-muted);
-  padding: var(--space-tight) var(--space-2);
+  padding: var(--space-tight) var(--space-1);
 }
 
 .conn-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: currentColor;
 }
@@ -1206,7 +1244,7 @@ body {
   justify-content: flex-start;
   gap: var(--space-1);
   width: 100%;
-  padding: var(--space-1) var(--space-2);
+  padding: var(--space-1) var(--space-1);
   border-radius: var(--radius-sm);
   font-size: var(--text-xs);
   text-align: left;
@@ -1216,8 +1254,8 @@ body {
 .mode-badge::before {
   content: '';
   flex: 0 0 auto;
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: currentColor;
 }
@@ -1237,6 +1275,11 @@ body {
   z-index: 30;
   display: flex;
   align-items: center;
+  /* T4: `space-between` otra vez, pero ahora por una razón distinta a la
+     original. Antes estaba en `flex-end` porque el topbar tenía UNA sola cosa
+     a la derecha y repartir el ancho solo dejaba 1100px de vacío medidos. Hoy
+     la izquierda la ocupa el título de página, y repartir es lo que pone el
+     título contra el borde izquierdo y las cifras contra el derecho. */
   justify-content: space-between;
   gap: var(--space-3);
   height: 48px;
@@ -1255,14 +1298,33 @@ body {
   min-width: 0;
 }
 
-.topbar-month-pill {
-  font-size: var(--text-md);
+/* El lado izquierdo CRECE para que el título quede pegado al borde, y el
+   derecho no encoge: son cifras y un botón, y recortarlos para darle espacio
+   a un nombre largo sería cambiar el dato por la etiqueta. */
+.topbar-left { flex: 1 1 auto; }
+.topbar-right { flex: 0 0 auto; }
+
+/* EL TÍTULO DE PÁGINA. 17px, el mismo cuerpo del título de sección del libro:
+   responde a la misma pregunta ("¿qué estoy mirando?") y no puede pesar más
+   que la respuesta que contiene. Sin `flex: 0 0 auto`, porque un nombre de
+   período escrito a mano ("Período de prueba 11 2028") tiene que poder
+   recortarse con puntos suspensivos en vez de empujar Balance y Notas fuera
+   del topbar. */
+.topbar-page-title {
+  margin: 0;
+  font-size: var(--text-lg);
   font-weight: 600;
   letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
+
+/* `.topbar-month-pill` se fue con T1: el nombre del período bajó al renglón A
+   de la barra de comando, que es donde está el control que lo cambia. `.topbar-left`
+   sigue en el DOM porque a <=1024px vive adentro el botón del drawer. */
 
 .topbar-quick-kpi {
   display: flex;
@@ -1315,6 +1377,11 @@ body {
 
 /* ==========================================================================
    8. ENCABEZADO DE VISTA
+   --------------------------------------------------------------------------
+   Este bloque NO se borró aunque `#viewMes` haya dejado de usarlo: la Vista
+   Consolidado (`#viewPanel`) sigue con su `.view-header`, y el Consolidado
+   no se toca. El que se fue es el INSTANCIA de la Vista Mensual, que medía
+   95.6px repitiendo lo que la pestaña del rail ya decía.
    ========================================================================== */
 .view-header {
   padding-bottom: var(--space-4);
@@ -1336,154 +1403,244 @@ body {
 }
 
 /* ==========================================================================
-   8.1 FILA DE MÉTRICAS DEL MES
+   8.1 BARRA DE COMANDO — una banda, dos renglones
    --------------------------------------------------------------------------
-   Lo que era "Resumen del mes", cuatro cifras apiladas dentro del rail, ahora
-   es una fila arriba de todo en la Vista Mensual, justo debajo del título.
+   Reemplaza `.view-header` + `.metrics-row` + `.payments-strip` +
+   `.period-bar` + `.segments-navigation-bar`, que medían 380.5px apilados
+   antes del primer renglón de gasto. Es un solo elemento `sticky`: pegada
+   arriba y lo único que sobrevive al scrollear.
 
-   POR QUÉ AQUÍ Y NO EN EL RAIL: el rail es navegación. Una cifra es un dato.
-   Y esta fila es la que responde "¿cómo voy?" —Ingresos, Presupuesto, Balance,
-   Cobertura— antes de que el ojo lea una sola fila de gasto. Es el mismo
-   argumento por el que un panel de control de apple.com no tiene sus
-   lecturas pegadas a la navegación lateral.
+   · RENGLÓN A — LA TIRA DE CIFRAS. Cinco celdas de la misma estructura.
+   · RENGLÓN B — LA NAVEGACIÓN. Buscador izquierda, filtro de categoría
+     derecha, en la misma línea.
 
-   CELDAS: 4 columnas iguales, filete de 1px a la izquierda de cada una desde
-   la segunda. Cero caja, cero fondo, cero radio: el filete hace el trabajo y
-   las cifras alineadas por `tabular-nums` hacen el resto.
+   POR QUÉ LA BANDA SUBE A PEGARSE BAJO EL TOPBAR
+   --------------------------------------------------------------------------
+   `margin-top` negativo de los 48px de aire que `.main-content` le da al
+   contenido. Ese aire existía para el `.view-header` de 95.6px, que era un
+   título y necesitaba respirar; la barra no es un título, es la segunda
+   banda de cromo, y pertenece pegada bajo la primera. Medido: la primera
+   fila de gasto sube de y=371 a y=~320, que es el umbral de 11 renglones
+   por pantalla. El aire no se pierde: se reparte en el padding del propio
+   renglón y en el final de la página, donde no estorba a nadie.
+   `#viewPanel` no se entera: la regla es de `.ledger-toolbar`, y el
+   Consolidado sigue con sus 48px de aire arriba del título.
 
-   COLOR: SOLO en la celda 3. `#monthBalanceNeto` recibe su color inline de
-   app.js según el signo del balance, y el balance es el único de los cuatro
-   cuyo estado es variable. Las otras tres son neutras: teñirlas sería
-   repetir identidad por cuarta vez, que es exactamente lo que la sección de
-   categorias dejó de hacer.
-
-   ACCIONES: "Abono" y "Gasto" viajan con su cifra, no en el rail. Un botón
-   junto al número que modifica es más descubrible que un botón suelto al pie
-   de una columna de navegación, y es donde el usuario ya está mirando.
+   EL ALTO DE LA TIRA, Y POR QUÉ NO ES MÁS FINA
+   --------------------------------------------------------------------------
+   Etiqueta 11px + importe 20px + nota 12px = tres renglones por celda, con
+   un `gap` de 4px entre ellos. Medido: 64px. Es más alta que las 41.4px que
+   tenía la versión de tres renglones, y a cambio las cinco cifras se leen
+   comparables entre sí, que es lo que la versión anterior no lograba: dos
+   renglones con estructuras internas distintas dejaban los importes a
+   distinta altura, y las medidas que no entraban en una cifra terminaban en
+   micro-texto de 9-11px. Un dato en letra de pie de nota es peor que cuatro
+   celdas de 246px.
    ========================================================================== */
-.metrics-row {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--hairline);
-}
-
-.metric-cell {
+.ledger-toolbar {
+  position: sticky;
+  top: 48px; /* la altura del topbar: la barra se apoya debajo, no debajo del borde */
+  z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: var(--space-tight);
-  min-width: 0;
-  padding: var(--space-2) var(--space-3) var(--space-3) 0;
-  border-left: 1px solid var(--hairline);
+  gap: var(--space-1);
+  margin-top: calc(var(--space-6) * -1);
+  padding: var(--space-1) 0;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--hairline);
 }
 
-.metric-cell:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-.metric-cell-label {
-  font-size: var(--text-2xs);
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* `flex-start` y no `space-between`: con el botón al borde de la celda,
-   "Abono" quedaba pegado al filete y se leía como rótulo de la columna
-   SIGUIENTE. Pegado a su cifra, no hay duda de a qué modifica. En modo
-   Lector el botón desaparece y la cifra no se mueve. */
-.metric-cell-value-row {
+.ledger-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: var(--space-2);
   min-width: 0;
 }
 
-.metric-cell-value {
-  font-size: var(--text-metrics);
+/* --- A. LA TIRA DE CIFRAS --------------------------------------------------
+   `flex: 0 0 auto` en las celdas y `min-width: 0`: sin eso, un importe de
+   nueve cifras empuja el carril y las acciones fuera de la banda en vez de
+   recortar la cifra. El `gap` de 16px entre celdas es el aire; la
+   separación visual la hace la etiqueta de cada celda, no un filete. */
+/* T2: `flex-wrap` sube de la base, y antes de esta tanda estaba sólo en el
+   breakpoint de 1024px. La razón es que agregar la columna de secciones bajó
+   el contenido de 1189px a 989px a 1440, y con la tira en `nowrap` las cinco
+   celdas no entran: medido, `scrollWidth` 1050px en una caja de 893px, y los
+   botones "Abono"/"Gasto" se salían 109px fuera de la ventana — o sea una
+   barra de scroll horizontal en la página, que es un defecto peor que el de
+   la barra vertical que se quería evitar.
+
+   Y no es un parche: envolver es lo que ya hacía esta misma tira a <=1024px, y
+   lo que la hoja declara preferible —"es preferible una celda que salta de
+   línea a un importe que se recorta"—. La regla no cambió, cambió el ancho en
+   el que hace falta. */
+.ledger-strip {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* --- A2. T5 — LA TIRA CENTRADA DENTRO DE SU CELDA -------------------------
+   MEDIDO antes del cambio (`node odd\tasks\diag-extras.mjs`, fixture
+   `baseline`): las cinco celdas de `.ledger-strip` dejaban 86 de 97 nodos de
+   texto a más de 6px del centro de su padre. Los casos NO eran aleatorios: la
+   celda ya se declara como un bloque que se compara —cinco celdas de la misma
+   estructura, con etiqueta, importe y nota— y sus tres renglones quedaban
+   pegados al borde izquierdo de una celda cuyo ancho lo fija el renglón más
+   ancho. El más ancho es casi siempre el importe, así que las etiquetas
+   quedan a la izquierda de una caja cuyo centro no es su centro.
+
+   LA CAUSA, QUE NO ERA EL `text-align` DE LA CELDA
+   `.ledger-cell` es un bloque `flex-direction: column` con `align-items:
+   stretch`: cada hijo ocupa el ancho entero de la celda y su texto se alinea
+   al principio de esa caja. Centrar el texto sin recentrar los hijos dejaría
+   el `text-align` sin efecto, porque un bloque `stretch` es tan ancho como su
+   padre.
+
+   `align-items: center` + `text-align: center` centran los tres renglones.
+   No es "centrar todo": los `.expense-item-title` y los `.tag-badge` de las
+   filas NO se tocan, porque una fila de libro justifiable a la izquierda está
+   bien y es lo que hace legible leer diez renglones en paralelo.
+
+   POR QUÉ NO ROMPE LA COMPARABILIDAD DE LA TIRA
+   Las celdas siguen midiendo `flex: 0 0 auto`: el ancho lo sigue fijando el
+   renglón más ancho de cada celda. Lo único que cambia es dónde cae el texto
+   DENTRO de ese ancho, y ahora cae en el mismo eje para las cinco. Comparar
+   dos importes ya no exige alinear la vista a la izquierda de dos cajas de
+   ancho distinto. */
+.ledger-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-tight);
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.ledger-cell-label {
+  font-size: var(--text-2xs);
+  /* Interlineado 1.3 y NO el 1.47 del cuerpo: la celda apila tres renglones
+     seguidos y con el leading de texto corrido la tira mide 6px más sin
+     ganar nada. Medido: 66.8 -> 62.9px, que es justo lo que separa a 11
+     renglones de gasto por pantalla de 10. */
+  line-height: 1.3;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 20px, no 28px: con el rail de vuelta en 236px la columna del contenido da
+   1189px y la tira necesita ~1000px de ancho interior. A 28px el importe
+   "S/ 12,345.67" mide 230px y las cinco celdas no entran; a 20px mide 164 y
+   sobran ~90px de aire. Es el mismo criterio del paso de 28px que se
+   documentó en §1, aplicado al ancho nuevo. */
+.ledger-cell-value {
+  font-size: var(--text-xl);
   font-weight: 600;
-  line-height: var(--leading-display);
+  line-height: var(--leading-tight);
   letter-spacing: var(--tracking-display);
   color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* La tercera línea de cada celda: 12px, apagada, y con la palabra que
+   nombra el número adelante. "Cobertura 0.0%" se entiende; un "0.0%" solo,
+   no. `Cobertura` es texto fijo y `#monthAbonoPercentLabel` es el número
+   que escribe app.js. */
+.ledger-cell-note {
+  font-size: var(--text-xs);
+  /* 1.3 por lo mismo que la etiqueta: son las dos líneas de apoyo de la
+     misma celda y leen como un bloque, no como dos párrafos. */
+  line-height: 1.3;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ledger-note-key {
+  color: var(--text-secondary);
+}
+
+/* El estado del balance va AL LADO de la cifra y no debajo: estado y número
+   se leen en un solo vistazo, que es la pregunta que hace esta celda.
+
+   T5: `justify-content: center` para que ese par quede centrado DENTRO de la
+   celda. Antes la celda lo alineaba a la izquierda y el par quedaba pegado al
+   borde con `#monthBalanceStatusLabel` al aire a la derecha: medido, 54.9px
+   del centro. El par es una unidad —el número y lo que significa— y una
+   unidad centrada se lee como una; partida y pegada al borde se lee como una
+   etiqueta y un dato suelto. */
+.ledger-balance-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: var(--space-1);
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 100%;
 }
 
-/* La acción va chiquita y al lado de la cifra: no es un botón fantasma con
-   borde, es texto que se enciende al hover. Si el usuario está en modo
-   Lector el botón desaparece y la cifra se queda sola: por eso el
-   `justify-content: space-between` no deja hueco, la celda colapsa. */
-.metric-cell-action {
-  flex: 0 0 auto;
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  padding: 0 var(--space-tight);
-  border-radius: var(--radius-xs);
-  transition: var(--transition-fast);
-}
-.metric-cell-action:hover { color: var(--text-main); background: var(--bg-raised); }
+/* El carril va pegado a los dos textos que lo explican: el denominador a la
+   izquierda ("3 de 9 gastos pagados") y el porcentaje a la derecha. Así se
+   lee sin tener que buscar qué barra era, y así se lee una fracción:
+   base, barra, resultado.
 
-.metric-cell-note {
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+   `flex: 0 0 32px` y NO `0 1 32px`: con `flex-shrink: 1`, el pase de
+   tamaño intrínseco de Chrome resuelve la contribución de la pista en su
+   mínimo y la aplasta a 16px — medido, con el carril reducido a un guion
+   entre "0 de 10 gastos pagados" y "0.0% Pagado". Y `flex-wrap` en el
+   renglón, porque sin él los tres textos se pisan entre sí cuando la banda
+   va apretada: medido a 1024 en modo Administrador, "0.0% Pagado" encima
+   de sí mismo. A <=833px la pista se estira a renglón completo (§19).
 
-/* ==========================================================================
-   8.2 TIRA DE PAGOS
-   --------------------------------------------------------------------------
-   El detalle que responde "¿cuánto falta?". Antes eran tres "chips"
-   apilados en el rail —Pagado, Pendiente, Cobertura— que repetían el mismo
-   importe por tercera vez. Ahora es UNA línea: cuánto se pagó de lo
-   presupuestado, cuánto queda, el carril de avance y el porcentaje.
+   72px → 32px, Y POR QUÉ. Es la pieza más cara y menos informativa de la
+   celda: una barra de 2px de alto que representa una fracción, con la base
+   escrita a la izquierda ("2 de 6 gastos pagados") y el resultado escrito a
+   la derecha ("38.1% Pagado"). Los dos operandos ya están en el renglón; la
+   barra sólo dibuja la fracción que ya está escrita en números. A 32px sigue
+   leyéndose como proporción y libera 40px.
 
-   Se eliminaron dos nodos que app.js escribía y que no aportaban nada:
-   `#paidSummaryLabel` ("Pagado: S/ X") repetía el importe que ya dice
-   `#paidTextInfo`, y `#coverageTextInfo` ("Cobertura: Z%") era el mismo
-   `totals.porcentajeAvance` que la cifra de la celda 4. Los dos están
-   detrás de `if (elX)`, así que app.js no los necesita: se verificó que
-   quitar el nodo no rompe nada.
-   ========================================================================== */
-/* UNA sola regla abre la banda: la de arriba. La de abajo se quitó porque
-   medido había tres filetes horizontales en 128px (arriba de las métricas,
-   entre métricas y pagos, abajo de pagos) y eso ya no lee como una superficie
-   continua sino como una tabla con cuadricula. Ahora la banda se abre hacia
-   abajo y la separa del selector de períodos el aire, no otra linea. */
-.payments-strip {
+   Y esos 40px no son cosméticos: son lo que hace que la tira entre en UNA
+   línea al sumar la columna de secciones. Con la pista en 72px y la columna en
+   168 la tira necesita 1089.8px contra 1021px disponibles y se parte; la
+   alternativa era una barra de 185.2px con "Balance" en un segundo renglón
+   (medido: `diag-strip4.mjs`, fila `200px / 72px`). */
+.ledger-paid-line {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-1) 0 var(--space-2);
-  border-top: 1px solid var(--hairline);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  min-width: 0;
+  max-width: 100%;
 }
 
-.payments-lead {
+.ledger-paid-line > .ledger-cell-note { flex: 0 0 auto; }
+
+/* `flex: 0 0 auto` y NO `1 1 auto`: con `flex-grow: 1` esta celda se come
+   todo el aire sobrante de la tira y empuja "Pendiente", "Ingresos" y
+   "Balance" contra el borde derecho, con un hueco de 300px en el medio —
+medido, que es exactamente lo contrario de una tira de cifras
+    comparables. Las cinco celdas miden lo que necesitan y el aire va al
+    final. ("antes de las acciones" era cuando `.ledger-actions` estaba en
+    este renglón; ya no: "Abono"/"Gasto" bajaron al renglón del buscador,
+    porque no son cifras — ver el comentario en index.html.) */
+.ledger-cell-paid {
   flex: 0 0 auto;
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-.payments-lead strong { font-family: var(--font-mono); color: var(--text-main); font-weight: 600; }
-
-.payments-fact {
-  flex: 0 0 auto;
-  color: var(--text-secondary);
-  white-space: nowrap;
 }
 
-/* El carril va anclado a la derecha, pegado al porcentaje que explica, con
-   `margin-left: auto` comiendo el aire sobrante. Estirado a todo el ancho
-   sobrante (350px medidos) competía con los textos y se leía como un filete
-   más de la banda. Acotado a 180px dice lo que dice: cuánto va. */
+/* La pista y el relleno. Se llaman `payments-*` porque lo que pintan es
+   exactamente eso —cuánto de lo presupuestado está pagado— y ese nombre ya
+   lo leen `probes.mjs` y `color-probe.mjs`. */
 .payments-track {
-  flex: 0 1 180px;
-  margin-left: auto;
+  flex: 0 0 32px;
   height: 2px;
   background: var(--bg-inset);
   border-radius: var(--radius-pill);
@@ -1497,106 +1654,246 @@ body {
   border-radius: var(--radius-pill);
 }
 
-/* ==========================================================================
-   8.3 SELECTOR DE PERÍODO
-   --------------------------------------------------------------------------
-   Los 6 meses dejaron de ser una lista vertical de 224px dentro del rail
-   con `max-height: 240px` y su propio scroll: ahora son una tira horizontal
-   de una línea, arriba del contenido. Misma función, mismo estado activo,
-   mismo binding (`renderMonthPills` sigue pintando en
-   `#monthPillsContainer`).
+/* --- B. LA FILA DE BÚSQUEDA -----------------------------------------------
+   T2: este renglón compartía banda con los cinco chips de categoría y ahora
+   es sólo el buscador. El filtro subió a `<nav class="section-rail">` (§9b).
 
-   El scroll horizontal queda como red de seguridad para años largos: con 6
-   períodos entra entera, con 24 no entra de ninguna forma y esconderla no
-   la hace desaparecer. La barra se oculta igual —los ⟵ ⟶ y el deslizador
-   son la pista— porque una barra de 8px bajo una fila de 28px rompe la
-   lectura de una línea.
-   ========================================================================== */
-.period-bar {
+   `flex-wrap` se conserva, y ahora por un motivo más honesto: si el buscador
+   se estira a lo que sobra, la banda se convierte en una fila de dos mil
+   píxeles con un input enorme y un hueco al lado. Que el renglón pueda partirse
+   es la red de seguridad, no el caso normal.
+
+   T6: este renglón ya no es sólo el buscador. Lo comparten con `.ledger-actions`
+   ("Abono"/"Gasto"), que bajaron de la tira de cifras. Medido: el renglón mide
+   37px y aguanta los 110.1px de las acciones sin crecer — la barra sigue en
+   125.9px—, porque el buscador no es el que estira: `.command-search` tiene
+   `max-width` y lo que sobra va al renglón, no dentro del input. */
+.ledger-row-nav {
+  flex-wrap: wrap;
+  row-gap: var(--space-1);
+  padding-top: var(--space-tight);
+  border-top: 1px solid var(--hairline);
+}
+
+/* --- Acciones del mes ------------------------------------------------------
+   "Abono" y "Gasto" son texto que se enciende al pasar por encima, no botones
+   con borde: en modo Lector desaparecen (`admin-action-btn`) y el filete que
+   los separa de las cifras se queda, apuntando al aire. Es el precio de que
+   la barra no se mueva al cambiar de rol, y sale más barato que reservar
+   espacio para un botón que a la mitad de los usuarios no existe.
+
+   T6: `margin-left: auto` los sigue colgando a la derecha, pero ahora del
+   RENGLÓN DE ABAJO. Este bloque es el sexto hijo de `.ledger-strip` y dejó de
+   serlo: los botones se movieron al `.ledger-row-nav` del buscador, con el
+   argumento completo en el comentario de index.html. Acá sólo se ajusta lo que
+   cambia por consecuencia: `margin-left: auto` ahora los empuja contra el
+   borde derecho de la barra — que es donde deben estar, al lado del buscador
+   que también es una acción sobre el mes—. */
+.ledger-actions {
   display: flex;
   align-items: center;
   gap: var(--space-1);
-  padding: var(--space-2) 0;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
+.ledger-action {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-xs);
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+.ledger-action:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* ==========================================================================
+   8.2 EL BUSCADOR, que bajó del rail
+   --------------------------------------------------------------------------
+   Mismo componente, otro lugar: filtro junto a los datos que filtra. El
+   anillo de foco va en la CAJA, no en el input —`outline` sigue la forma real
+   del control, incluido el radio, y no desplaza el layout mientras se
+   escribe—. Por eso el input NO lleva `outline: none`: sin anillo en el
+   elemento enfocable la auditoría de foco no tiene nada que leer, y
+   `:focus-within` de la caja lo cubre igual.
+   ========================================================================== */
+/* El buscador no crece: se estira lo justo para que el placeholder
+   "Buscar gasto o abono" entre entero, y no más. Estirado a lo que sobra
+   empuja a los chips fuera de la banda y convierte la banda en una fila de
+   dos mil píxeles. */
+.command-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  min-width: 0;
+  flex: 1 1 260px;
+  max-width: 340px;
+}
+
+.command-search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-1) 0 var(--space-2);
+  background: var(--bg-inset);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  height: 32px;
+  transition: border-color var(--duration-quick) var(--ease-standard);
+}
+
+.command-search-box:focus-within {
+  border-color: var(--hairline-focus);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.command-search-icon {
+  display: flex;
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.command-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--text-main);
+  background: none;
+  border: 0;
+}
+
+.command-search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.btn-clear-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+.btn-clear-search:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* El atajo de teclado es una pista, no un chip: texto suelto, sin caja. */
+.search-shortcut-badge {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  padding-right: var(--space-tight);
+}
+
+/* El conteo de resultados cuelga DEBAJO de la caja y está en `display: none`
+   hasta que hay consulta, así que no le cuesta alto a la banda en reposo. */
+.search-results-feedback {
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   8.3 LA LÍNEA DE TIEMPO DEL RAIL
+   --------------------------------------------------------------------------
+   Los períodos viven en el rail porque es lo que navega (§6). Mismo binding,
+   mismo estado activo: `renderMonthPills` sigue pintando en
+   `#monthPillsContainer`.
+
+   VERTICAL, Y POR QUÉ ESO ES MEJOR QUE LA TIRA HORIZONTAL QUE T1 PUSO EN LA
+   BARRA. Con 6 períodos las dos entran entera, así que el argumento no es de
+   espacio: es de qué pasa con 24. La tira horizontal de 24 períodos medía
+   3196px de ancho contra 1224 disponibles: scrollea, y la píldora activa
+   puede quedar fuera de la vista. En vertical, agrupada en el bloque que
+   crece, la lista scrollea sola y `scrollIntoView` trae el período activo.
+
+   POR QUÉ NO SE AGRUPA POR AÑO: `mesesOrden` guarda el `nombre` que escribe
+   la persona en el modal "Nuevo mes", y es texto libre ("Febrero 2027",
+   "Mitad de año", "Q1"). Sacarle el año con un parseo sería adivinar, y una
+   lista agrupada por una etiqueta equivocada miente más que una lista plana.
+
+   `scrollbar-width: none`: con la lista de 24 meses scrolleando, una barra
+   de 8px a la derecha de una columna de 236px se come el aire de los
+   nombres. Los ⟵ ⟶ del encabezado y el ítem cortado son la pista, y son
+   pistas más honestas que una barra que aparece y desaparece.
+   ========================================================================== */
 .period-arrow {
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: var(--radius-xs);
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: 14px;
   transition: var(--transition-fast);
 }
 .period-arrow:hover { color: var(--text-main); background: var(--bg-raised); }
 .period-arrow:disabled { color: var(--text-muted); opacity: 0.5; cursor: default; }
 
-/* `flex: 0 1 auto` y NO `1 1 auto`: si el riel estira, con 6 períodos sobra
-   aire entre "Enero 2027" y "Nuevo mes" y se lee como "hay más meses" sin
-   haberlos. Ahora los meses se apretujan a la izquierda y "Nuevo mes"
-   ancla a la derecha. El riel sigue pudiendo encogerse con scroll
-   horizontal cuando hay muchos períodos: por eso `0 1` y no `0 0`. */
+/* El bloque que scrollea. `min-height: 0` es lo que permite que encoja: sin
+   él el `min-content` de un item flex no baja del alto del contenido y la
+   lista empujaría al pie del rail fuera de la pantalla. */
 .period-track {
   display: flex;
-  align-items: stretch;
-  gap: var(--space-tight);
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
   scrollbar-width: none;
 }
 .period-track::-webkit-scrollbar { display: none; }
 
-/* Un mes es una etiqueta, no una cápsula. El activo se marca con regla de
-   acento POR DEBAJO + peso de tipografía: en una fila horizontal la regla
-   tiene que ir abajo, porque arriba competiría con el rótulo de la sección
-   que tiene justo encima. */
+/* Un mes es una fila de una lista, no una cápsula: fondo `--bg-inset` y
+   peso 600 en el activo, que es la misma marca que usan los chips de
+   categoría. El `aria-pressed` que escribe app.js lleva el estado a quien
+   no ve el fondo. */
 .month-pill-btn {
-  position: relative;
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  height: 28px;
+  height: 30px;
   padding: 0 var(--space-2);
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  text-align: left;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: var(--transition-fast);
 }
 
 .month-pill-btn:hover { color: var(--text-main); background: var(--bg-raised); }
 
 .month-pill-btn.active {
+  background: var(--bg-inset);
   color: var(--text-main);
   font-weight: 600;
 }
 
-.month-pill-btn.active::after {
-  content: '';
-  position: absolute;
-  left: var(--space-2);
-  right: var(--space-2);
-  bottom: 0;
-  height: 2px;
-  border-radius: 1px;
-  background: var(--accent-primary);
+/* Administración de períodos: crear y eliminar. Van con la línea de tiempo
+   porque la gestionan, y en su propio bloque para que en modo Lector
+   `body.read-only-mode .admin-action-btn` se lleve los dos juntos y el bloque
+   quede vacío, en vez de dejar dos botones partidos. */
+.period-admin {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: 0 0 auto;
+  padding-top: var(--space-1);
 }
 
-/* "Nuevo mes" viaja con el selector porque administra períodos. Es la única
-   acción del bloque y por eso va a la derecha, con filete y `margin-left:
-   auto`: la lectura del riel es "estos son tus meses", y esto es otra cosa.
-   En modo Lector lo oculta `body.read-only-mode .admin-action-btn` y con él
-   desaparece su filete: un separador apuntando al vacío es peor que nada. */
 .period-new {
   flex: 0 0 auto;
-  margin-left: auto;
-  padding-left: var(--space-3);
-  border-left: 1px solid var(--hairline);
   font-size: var(--text-sm);
   color: var(--text-secondary);
   white-space: nowrap;
@@ -1604,78 +1901,321 @@ body {
 }
 .period-new:hover { color: var(--text-main); }
 
-/* ==========================================================================
-   9. CONTROL SEGMENTADO DE CATEGORÍAS
-   Este es el ÚNICO grupo de cápsulas de la página junto al filtro del feed.
-   ========================================================================== */
-.segments-navigation-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-  padding-bottom: var(--space-3);
+/* "Eliminar mes" comparte bloque con "Nuevo mes" porque es la misma familia:
+   administración de períodos, no navegación. Lo único que cambia es el peso: es
+   la acción destructiva —cada `save()` sobrescribe el blob entero en la nube, así
+   que no hay historial— y por eso se lee en rojo en reposo y solo se subraya al
+   pasar por encima. `.period-new:hover` (arriba) es (0,2,0), así que estas dos
+   reglas repiten el selector para poder ganar sin `!important`. */
+.period-new.period-new-danger { color: var(--text-rose); }
+.period-new.period-new-danger:hover { color: var(--text-rose); text-decoration: underline; text-underline-offset: 3px; }
+
+/* Opciones de qué copia el clon. Solo se muestran con un mes real elegido como
+   origen, y la visibilidad la lleva app.js con `style.display`, igual que
+   #inputBudgetRangeField; por eso el `display` de aquí es solo el punto de
+   partida y no compite con ese inline. */
+.clone-options {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
 }
 
+.clone-options-lead {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+}
+
+.clone-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.clone-option input[type="checkbox"] {
+  accent-color: var(--accent-primary);
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   9. FILTRO DE CATEGORÍA — chips de una línea
+   --------------------------------------------------------------------------
+   Antes eran cinco cápsulas de 128px mínimos, con rótulo, importe y
+   minibarra: 69.1px de alto.
+
+   T2 Y EL FINAL DE ESTA REGLA: los cinco botones que eran esta fila    DESAPARECIERON
+   de la barra. Ahora son entradas de `<nav class="section-rail">` (§9b), y todo
+   lo que se declara acá —alto de 26px, `padding` de una cápsula, marca de
+   chip activo con fondo `--bg-inset`— era la FORMA de un chip dentro de una
+   banda. En una columna de navegación la forma correcta es la de
+   `.sidebar-nav-tab`: renglón de 30px, marca de 2px + peso en el activo, y el
+   conteo y el subtotal a la derecha.
+
+   `.ledger-chips` ya no tiene ningún nodo que lo use y su regla se fue con él.
+   La regla que queda para <=833px, `.ledger-chips { margin-left: 0 }`, también:
+   `margin-left: auto` era lo que empujaba los chips al extremo derecho de la
+   banda, y ese extremo ya no existe.
+
+   LO QUE SE CONSERVA, Y ES LO IMPORTANTE
+   La clase `.segment-pill-btn` y el atributo `data-segment` no se tocan: los
+   leen `renderActiveSegments` y `toggleSegment` (app.js:1045,1130) y
+   `adversarial-suite.mjs:1336,1339,1364`. `aria-pressed` lo escribe app.js y
+   sigue siendo lo que le dice el estado a quien no ve la marca. La geometría
+   de la caja la toma `.rail-entry > .segment-pill-btn` en §9b.
+   ========================================================================== */
 .segment-pill-btn {
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-1);
+  height: 26px;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.segment-pill-btn:hover { color: var(--text-main); background: var(--bg-raised); }
+
+.segment-pill-btn.active {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.ledger-chip-label {
+  color: inherit;
+}
+
+/* ==========================================================================
+   9b. LA COLUMNA DE SECCIONES — 200px, la navegación de categoría
+   --------------------------------------------------------------------------
+   Lo que eran cinco chips de una línea en la barra de comando. La barra quedó
+   con la tira de cifras y el buscador —que es el filtro que tiene que estar
+   al lado del dato que filtra—, y la navegación de categoría subió a su propio
+   eje vertical.
+
+   POR QUÉ PEGADA Y NO EN FLUJO
+   --------------------------------------------------------------------------
+   `position: sticky` + `height: 100vh`, igual que `.app-sidebar`, por la misma
+   razón: si scrollea con el contenido, deja de ser navegación. Es lo contrario
+   de `.ledger-toolbar`, que es una banda PEGADA AL CONTENIDO y por eso se
+   scrollea con él. Dos cosas pegadas, a dos ejes distintos: la columna al
+   viewport, la banda al documento.
+
+   `flex: 1 1 auto` + `min-height: 0` en `.section-rail-list` es lo que hace que
+   scrollee SOLO la lista, si alguna vez hace falta, y que el pie quede
+   anclado al borde. Sin `min-height: 0` un item flex no baja de su
+   `min-content` y el bloque entero empujaría el pie fuera de la pantalla —
+   que es el fallo exacto que tenía el rail viejo (327px de contenido
+   cortado).
+
+   EL ACTIVO USA LA MISMA MARCA QUE `.sidebar-nav-tab.active`
+   --------------------------------------------------------------------------
+   Regla de 2px + peso de tipografía, NO un bloque de color saturado. La hoja
+   ya lo dice de `.sidebar-nav-tab` y la razón no cambió: el acento de la
+   navegación es UN solo uso, en el elemento activo, y tres navegaciones con
+   tres fondos distintos se leen como tres sistemas. `.segment-pill-btn.active`
+   conserva `aria-pressed` además de la clase, porque un filtro no puede
+   depender del color.
+   ========================================================================== */
+.section-rail {
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  padding: var(--space-2) 0 0;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--hairline);
+}
+
+.section-rail-head {
+  flex: 0 0 auto;
+  padding: 0 var(--space-2) var(--space-1);
+}
+
+/* El bloque que CRECE. `min-height: 0` explícito y no decoración: es lo que
+   separa "la lista scrollea" de "el pie se va de la pantalla". */
+.section-rail-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-tight);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+  padding: 0 var(--space-1);
+}
+.section-rail-list::-webkit-scrollbar { display: none; }
+
+/* UNA ENTRADA = FILTRAR + NAVEGAR + INFORMAR.
+   Los tres hijos de una fila son el filtro y su dato: el nombre y el ícono a
+   la izquierda, el conteo y el subtotal a la derecha, que es donde se busca un
+   número. El botón de alta va DEBAJO, en su propio renglón, porque es una
+   acción distinta de consultar. */
+.rail-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+/* La fila que era un chip de 26px ahora es una fila de navegación de ~30px:
+   `width: 100%` para que TODO el renglón sea el control, no sólo el texto del
+   nombre. En un libro, tocar la fila es una acción. */
+.rail-entry > .segment-pill-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
   gap: var(--space-1);
-  min-width: 128px;
-  flex: 1 1 128px;
-  padding: var(--space-1) var(--space-2) 6px;
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius-pill);
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  text-align: left;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.rail-entry > .segment-pill-btn:hover { color: var(--text-main); background: var(--bg-raised); }
+
+/* El conteo: cuántas filas hay. `flex: 0 0 auto` porque es corto y no compite
+   con el nombre; el nombre lleva el `min-width: 0` + ellipsis si hace falta. */
+.rail-entry-count {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-size: var(--text-2xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* El subtotal, DEBAJO del nombre y a la derecha: es el dato que responde
+   "¿cuánto gasté acá?", y al lado del nombre se leería como parte del rótulo.
+   `font-mono` + tabular para que las cuatro entradas alineen sus decimales en
+   el mismo eje, que es la razón de que el número sea comparable de un vistazo. */
+.rail-entry-total {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 1px;
+  padding-left: 22px; /* el aire del ícono: el subtotal cuelga del nombre, no del borde */
+}
+
+/* "Todo" no lleva conteo, subtotal ni alta: es el estado del filtro, no una
+   sección. Por eso no usa `.rail-entry` con su renglón de alta. */
+.rail-entry-all > .segment-pill-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  min-width: 0;
+  height: 30px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
   color: var(--text-secondary);
   text-align: left;
   transition: var(--transition-fast);
 }
+.rail-entry-all > .segment-pill-btn:hover { color: var(--text-main); background: var(--bg-raised); }
 
-.segment-pill-btn:hover { border-color: var(--hairline-strong); color: var(--text-main); }
+/* EL BOTÓN DE ALTA: UN SOLO `.rail-add-btn` PARA LOS CINCO.
+   Este es el bug reportado. `.btn-quick-add-extra` era `background:
+   transparent` + `color: --text-secondary)` + borde hairline: se leía como
+   texto, y estaba al final de una página larga. El renglón lo pone en su
+   propio lugar, alineado al ícono, con la misma caja para los cuatro.
 
-.segment-pill-btn.active {
+   Se declara UNA regla con UNA clase, no cuatro con cuatro: cuatro reglas
+   iguales son cuatro lugares donde la próxima sección nueva nace distinta. Y
+   gana `.btn` por peso de cascada porque `.rail-add-btn` se declara después. */
+.section-rail .rail-add-btn {
+  /* `.section-rail` adelante y NO `.rail-add-btn` a secas: los cinco botones
+     llevan también `.btn.btn-sm` en el HTML, y `.btn-sm` (línea §13) se declara
+     DESPUÉS que este bloque, así que a igual especificidad el último gana y el
+     padding horizontal real era el de `.btn-sm` — `var(--space-2)`, 16px —
+     no el `var(--space-1)` de 8px que esta regla declaraba. Medido antes del
+     cambio: 16px, y el botón "Gasto" de Movimientos se salía 18px del borde
+     de la columna a 168px (`diag-railhdr.mjs`).
+
+     Con el selector más específico el padding real pasa a ser el de 8px que
+     esta regla siempre quiso, los cinco quedan IGUALES entre sí —que es el
+     criterio 4— y el renglón de los dos de Movimientos entra con 12px de
+     aire. No es un parche por ancho: es la regla que estaba escrita y que por
+     fin se mide. */
+  padding: 0 var(--space-1);
+}
+
+.rail-add-btn {
+  /* Alineado con el nombre, no con el borde: `margin-left: 22px` es el ícono
+     (14px, `.ui-icon-chip`) más el `gap` de 8px, o sea el punto donde arranca
+     el texto del rótulo. El botón cuelga de la sección a la que pertenece.
+
+     El texto va CENTRADO dentro de su caja, que es lo que `.btn` ya hace y lo
+     que los cinco heredan. No se re-declara `justify-content` acá a propósito:
+     una quinta declaración de `justify-content` para cuatro controles que ya
+     coinciden es la forma de que la sexta sección nazca distinta. */
+  margin-left: 22px;
+  width: calc(100% - 22px);
+  height: 26px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-main);
   background: var(--bg-inset);
   border-color: var(--hairline-strong);
+}
+
+.rail-add-btn:hover {
+  background: var(--bg-raised);
+  border-color: var(--hairline-focus);
   color: var(--text-main);
 }
 
-.pill-top-row {
+/* Los dos de Movimientos van uno al lado del otro, no apilados: son la misma
+   acción sobre el mismo grupo (registrar un movimiento) y su dirección, así
+   que comparten renglón. `flex: 1 1 0` para que los dos midan lo mismo
+   aunque "Ingreso" y "Gasto" no tengan el mismo número de letras. */
+.rail-entry-adds {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  min-width: 0;
+  gap: var(--space-tight);
+  margin-left: 22px;
 }
 
-.pill-label-with-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-sm);
-  white-space: nowrap;
-  color: inherit;
+.rail-entry-adds > .rail-add-btn {
+  margin-left: 0;
+  width: auto;
+  flex: 1 1 0;
 }
 
-/* El importe del segmento es el índice del filtro, no el titular: chico y
-   apagado. El titular es la figura de 32px de la sección, más abajo. */
-.segment-count-badge {
+/* Pie de la columna: META, no navegación. Una frase que dice qué hace la
+   columna. Sin caja y sin filete de más. */
+.section-rail-foot {
+  margin-top: auto;
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-2);
+  border-top: 1px solid var(--hairline);
+}
+
+.rail-foot-note {
   font-size: var(--text-2xs);
   color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.pill-minibar-track {
-  height: 2px;
-  background: var(--bg-inset);
-  border-radius: var(--radius-pill);
-  overflow: hidden;
-}
-
-/* La minibarra dice "cuánto se pagó", no "de qué categoría es": por eso lleva el
-   acento neutro y no el color de la categoría. */
-.pill-minibar-fill {
-  height: 100%;
-  background: var(--accent-primary);
-  border-radius: var(--radius-pill);
+  line-height: 1.35;
+  display: block;
 }
 
 /* ==========================================================================
@@ -1688,10 +2228,26 @@ body {
   display: block;
 }
 
-.content-card-box {
-  /* NO se declara `display`: app.js escribe `style.display` inline aquí
+.ledger-body {
+  /* T5: `#ledgerBody` reemplaza las cuatro `.content-card-box`. Lo que se borra
+     y lo que queda, con la medida que lo decidió:
+
+     · el encabezado de tarjeta medía ~100px (título + descripción de una línea
+       + padding) y ahora son 32px en UNA línea;
+     · los 6 subheads "Gastos fijos/variables" (33px cada uno) y las 7 filas de
+       subtotal (33px cada una) desaparecieron: el desglose de un presupuesto de
+       diez gastos era ruido, y el total del GRUPO alcanza;
+     · Fijo/Variable no se perdió: es la etiqueta que cada fila ya traía.
+
+     El aire recuperado no se fue a ningún lado: son ~480px que vuelven a las
+     filas, y ese es el número que mueve `primeraFilaY` de 315.9 a <=240. */
+  display: block;
+}
+
+.ledger-group {
+  /* NO se declara `display`: app.js escribe `style.display` inline acá
      (renderActiveSegments) y necesita leer el valor actual. */
-  padding-block: var(--space-4);
+  padding-block: var(--space-2) 0;
   border-top: 1px solid var(--hairline);
 }
 
@@ -1707,83 +2263,197 @@ body {
 
    POR QUÉ NO SE ROMPE LA SUPERFICIE CONTINUA: no hay caja. Sin `border-radius`,
    sin `box-shadow`, sin margen: el tinte llega de borde a borde de la medida de
-   contenido y lo separa de la siguiente sección el mismo filete de 1px que ya
+   contenido y lo separa del siguiente grupo el mismo filete de 1px que ya
    estaba. Sigue siendo UNA superficie con zonas de color, no una retícula de
    tarjetas. */
-.content-card-box[data-accent='servicios'] { background: var(--cat-servicios-wash); }
-.content-card-box[data-accent='personales'] { background: var(--cat-personales-wash); }
-.content-card-box[data-accent='movimientos'] { background: var(--cat-movimientos-wash); }
-.content-card-box[data-accent='extras'] { background: var(--cat-extras-wash); }
+.ledger-group[data-accent='servicios'] { background: var(--cat-servicios-wash); }
+.ledger-group[data-accent='personales'] { background: var(--cat-personales-wash); }
+.ledger-group[data-accent='movimientos'] { background: var(--cat-movimientos-wash); }
+.ledger-group[data-accent='extras'] { background: var(--cat-extras-wash); }
 
 /* EL TINTE DE SUPERFICIE NO ALCANZA PARA DISTINGUIR LAS CATEGORÍAS.
  *
  * Medido en OKLab: con el tinte al 12% el par más cercano queda en ΔE 0.0070, y
- * al 24% en 0.014. El umbral de visibilidad es ~0.02. Es decir: las cuatro
- * secciones se ven IGUALES, y el usuario pidió justamente que se distingan.
+ * al 24% en 0.014. El umbral de visibilidad es ~0.02. Es decir: los cuatro
+ * grupos se ven IGUALES, y el usuario pidió justamente que se distingan.
  *
  * La causa es matemática, no de gusto: los cuatro acentos se calibraron por
  * bisección a la MISMA luminancia WCAG (0.1460) para pasarla todos con AA. Al
  * diluirlos, esa luminosidad igual es la que los hace converger.
  *
  * La salida no es subir el tinte hasta que se distingan: es poner el color donde
- * se lee a plena fuerza. El título de la sección lleva el acento sin diluir, y
+ * se lee a plena fuerza. El nombre del grupo lleva el acento sin diluir, y
  * el tinte queda como agrupador de superficie. Así la identidad la da el texto y
  * el wash solo saca el blanco. */
-.content-card-box[data-accent='servicios'] .card-title-row h3 { color: var(--cat-servicios); }
-.content-card-box[data-accent='personales'] .card-title-row h3 { color: var(--cat-personales); }
-.content-card-box[data-accent='movimientos'] .card-title-row h3 { color: var(--cat-movimientos); }
-.content-card-box[data-accent='extras'] .card-title-row h3 { color: var(--cat-extras); }
+.ledger-group[data-accent='servicios'] .ledger-group-name { color: var(--cat-servicios); }
+.ledger-group[data-accent='personales'] .ledger-group-name { color: var(--cat-personales); }
+.ledger-group[data-accent='movimientos'] .ledger-group-name { color: var(--cat-movimientos); }
+.ledger-group[data-accent='extras'] .ledger-group-name { color: var(--cat-extras); }
 
-/* El icono del encabezado acompaña al título en el mismo tono, para que la
-   lectura no dependa de leer la palabra. */
-.content-card-box[data-accent='servicios'] .card-header-left .ui-icon-svg { color: var(--cat-servicios); }
-.content-card-box[data-accent='personales'] .card-header-left .ui-icon-svg { color: var(--cat-personales); }
-.content-card-box[data-accent='movimientos'] .card-header-left .ui-icon-svg { color: var(--cat-movimientos); }
-.content-card-box[data-accent='extras'] .card-header-left .ui-icon-svg { color: var(--cat-extras); }
+/* El ícono acompaña al nombre en el mismo tono, para que la lectura no dependa
+   de leer la palabra. */
+.ledger-group[data-accent='servicios'] .ledger-group-icon,
+.ledger-group[data-accent='servicios'] .cat-tick { color: var(--cat-servicios); }
+.ledger-group[data-accent='personales'] .ledger-group-icon,
+.ledger-group[data-accent='personales'] .cat-tick { color: var(--cat-personales); }
+.ledger-group[data-accent='movimientos'] .ledger-group-icon,
+.ledger-group[data-accent='movimientos'] .cat-tick { color: var(--cat-movimientos); }
+.ledger-group[data-accent='extras'] .ledger-group-icon,
+.ledger-group[data-accent='extras'] .cat-tick { color: var(--cat-extras); }
 
-/* El total de la sección también: es el segundo dato que se mira. */
-.content-card-box[data-accent='servicios'] .card-amount,
-.content-card-box[data-accent='servicios'] .content-card-header .amount { color: var(--cat-servicios); }
-.content-card-box[data-accent='personales'] .card-amount,
-.content-card-box[data-accent='personales'] .content-card-header .amount { color: var(--cat-personales); }
-.content-card-box[data-accent='movimientos'] .card-amount,
-.content-card-box[data-accent='movimientos'] .content-card-header .amount { color: var(--cat-movimientos); }
-.content-card-box[data-accent='extras'] .card-amount,
-.content-card-box[data-accent='extras'] .content-card-header .amount { color: var(--cat-extras); }
+/* La cifra del grupo también: es el segundo dato que se mira. */
+.ledger-group[data-accent='servicios'] .ledger-group-subtotal { color: var(--cat-servicios); }
+.ledger-group[data-accent='personales'] .ledger-group-subtotal { color: var(--cat-personales); }
+.ledger-group[data-accent='movimientos'] .ledger-group-subtotal { color: var(--cat-movimientos); }
+.ledger-group[data-accent='extras'] .ledger-group-subtotal { color: var(--cat-extras); }
 
-/* La primera sección se apoya en el filete del encabezado de vista y no
-   duplica el filete. */
-.segments-workspace-container > .content-card-box:first-of-type {
+/* El primer grupo se apoya en el filete del encabezado de vista y no duplica
+   el filete. */
+.ledger-body > .ledger-group:first-of-type {
   border-top: 0;
   padding-top: var(--space-1);
 }
 
-/* --- Encabezado de sección ------------------------------------------------ */
-.content-card-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
-  column-gap: var(--space-4);
+/* --- EL ENCABEZADO: UNA SOLA LÍNEA ---------------------------------------
+   32px. Lo que hay en la línea, de izquierda a derecha: el tick de acento, el
+   ícono, el nombre, el conteo de filas, el chevron; y al otro extremo, la cifra
+   del grupo y su botón de añadir. En el medio queda aire, y ese aire es lo que
+   hace legible que el encabezado es una FILA y no el rótulo de una tarjeta.
+
+   La descripción larga ("Luz, internet, telefonía, pasajes y necesidades del
+   hogar") no se transladó a un `title`: repetía lo que el ícono ya decía y eran
+   18px por grupo. */
+.ledger-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: 32px;
 }
 
-.accordion-header {
-  cursor: pointer;
-}
-
-.card-header-left {
-  display: grid;
-  grid-template-columns: 2px auto minmax(0, 1fr);
-  align-items: start;
-  gap: 0 var(--space-2);
+/* El `h3` envuelve al botón para que el nombre del grupo sea un encabezado de
+   documento y no un `span` con peso 600. `display: block` y `margin: 0` lo
+   devuelven a flujo normal: un encabezado trae márgenes de navegador que no
+   son de este diseño. */
+.ledger-group-heading {
+  display: block;
+  flex: 1 1 auto;
+  margin: 0;
   min-width: 0;
+  font-size: inherit;
+  font-weight: inherit;
 }
 
-/* EL ACENTO DE CATEGORÍA: un tick de 2px, un uso por sección. Cuatro colores,
-   cuatro secciones, cero repeticiones. */
+/* `width: 100%` para que TODO el renglón sea el control, no solo el texto del
+   nombre: en un libro, tocar el encabezado es una acción, y una acción que solo
+   funciona con el ratón no es un control. `border: 0` y `background: none`
+   porque el control es el renglón, no un botón dibujado: el anillo de foco y el
+   `:active` los pone la hoja. */
+.ledger-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+}
+
+.ledger-group-name {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* EL CONTEO DE FILAS. Dice cuántas filas hay, y cuando el buscador o el filtro
+   dejan menos a la vista dice "3 de 9": un total que no se puede ver es una
+   cifra que no informa nada. */
+.ledger-group-count {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.ledger-group-icon { flex: 0 0 auto; }
+
+.ledger-group-chevron {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  transition: transform var(--duration-quick) var(--ease-standard);
+}
+
+.ledger-group.collapsed .ledger-group-chevron {
+  transform: rotate(-90deg);
+}
+
+.ledger-group-meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  white-space: nowrap;
+}
+
+/* LA CIFRA DEL GRUPO. 20px, mono, tabular, tracking negativo. Bajó de 24px
+   cuando el encabezado pasó a una línea: con el nombre al lado en el mismo
+   renglón, 24px hacía que la cifra del grupo y la del mes se leyeran como el
+   mismo rango. La escala queda limpia y descendente: 28px total del mes
+   (`.ledger-cell-value`) · 20px total de grupo · 17px nombre · 13px conteo. */
+.ledger-group-subtotal {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-display);
+  color: var(--text-main);
+}
+
+/* --- El cuerpo del grupo --------------------------------------------------
+   `padding-top: 0`: el encabezado es de 32px y la primera fila tiene que estar
+   pegada a él. Antes había 16px de padding más el `margin-top` del subhead, y
+   entre el rótulo del grupo y el primer gasto había 80px. */
+.ledger-group-body { padding-top: 0; }
+
+.ledger-group.collapsed > .ledger-group-body {
+  display: none;
+}
+
+/* EL BUSCADOR VACÍA UN GRUPO, Y EL GRUPO SE VA CON SUS FILAS.
+   Sin esto, un grupo al que el buscador le dejó cero filas visibles seguiría
+   anunciando un nombre, un total y un subtotal que ya no corresponden a nada en
+   pantalla. No se oculta con `style.display` porque esa propiedad la escribe
+   `renderActiveSegments` para el filtro de categoría, y dos filtros compitiendo
+   por la misma propiedad inline es la forma segura de que uno de los dos
+   mienta: se oculta el encabezado y el cuerpo, y el grupo no deja filete. */
+.ledger-group.busqueda-vacia > .ledger-group-head,
+.ledger-group.busqueda-vacia > .ledger-group-body { display: none; }
+
+.ledger-group.busqueda-vacia { padding-block: 0; border-top: 0; }
+
+/* --- Filtros del grupo de movimientos -------------------------------------
+   VIVEN DEBAJO DEL ENCABEZADO, ADENTRO del grupo. Antes eran una banda de 33px
+   entre cuatro tarjetas, y eso es justo lo que T5 viene a quitar: una banda que
+   se repite por sección es un subtotal con otro nombre. */
+.ledger-group-filters {
+  display: flex;
+  gap: var(--space-1);
+  padding-bottom: var(--space-2);
+}
+
+/* EL ACENTO DE CATEGORÍA: un tick de 2px, un uso por grupo. Cuatro colores,
+   cuatro grupos, cero repeticiones. 18px acá, y no los 24px de la tarjeta, para
+   no empujar el renglón de 32px. */
 .cat-tick {
   width: 2px;
-  height: 24px;
-  margin-top: 1px;
+  height: 18px;
+  flex: 0 0 auto;
   border-radius: 1px;
   background: var(--accent-primary);
 }
@@ -1796,12 +2466,53 @@ body {
 [data-accent='trend'] .cat-tick { background: var(--cat-trend); }
 [data-accent='categories'] .cat-tick { background: var(--cat-categories); }
 
-.card-header-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 2px;
-  color: var(--text-secondary);
+/* --- Grupos y filas ------------------------------------------------------- */
+.ledger-group-rows { min-width: 0; }
+
+/* ==========================================================================
+   10b. LAS SECCIONES ESTRUCTURALES DE LA VISTA CONSOLIDADO
+   --------------------------------------------------------------------------
+   T5 quitó las cuatro tarjetas del LIBRO, y con ellas se fueron sus reglas. Pero
+   `matrix-section` y las dos `chart-section` del Consolidado siguen usando
+   `.content-card-box`, `.content-card-header`, `.card-header-left`,
+   `.card-header-titles` y `.card-title-row`, y la Vista Consolidado está fuera
+   del alcance de esta ronda. Por eso estas reglas vuelven.
+
+   Y al volver queda algo que vale la pena decir: `.content-card-*` es ahora el
+   vocabulario de las tres secciones ESTRUCTURALES del Consolidado —una tabla y
+   dos lienzos— y `.ledger-*` es el del libro mensual. Son dos superficies
+   distintas con dos familias de nombres distintas, que es lo que debimos tener
+   desde el principio: "tarjeta de contenido" nunca Edgreesió a los gastos de un
+   mes ni a la tabla de la matriz.
+
+   Lo que NO volvió: `.accordion-collapsible-body`, `.category-subhead`,
+   `.subtotal-highlight-row`, `.main-subtotal`, `.card-header-right-group` y
+   `.accordion-summary-tag`. Ninguna de las dos vistas las usa. */
+.content-card-box {
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--hairline);
+}
+
+/* La matriz abre la vista Consolidado y se apoya en el filete del encabezado de
+   vista: no duplica el filete. */
+#viewPanel > .content-card-box:first-of-type {
+  border-top: 0;
+  padding-top: var(--space-1);
+}
+
+.content-card-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--space-4);
+}
+
+.card-header-left {
+  display: grid;
+  grid-template-columns: 2px auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0 var(--space-2);
+  min-width: 0;
 }
 
 .card-header-titles {
@@ -1828,75 +2539,22 @@ body {
   max-width: 54ch;
 }
 
-.accordion-chevron-icon {
-  display: flex;
-  color: var(--text-muted);
-  font-size: 15px;
-  transition: transform var(--duration-quick) var(--ease-standard);
-}
-
-.collapsed .accordion-chevron-icon {
-  transform: rotate(-90deg);
-}
-
-.card-header-right-group {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  white-space: nowrap;
-}
-
-/* LA CIFRA DE SECCIÓN. 24px, mono, tabular, tracking negativo.
-   Bajó de 32px en esta ronda, y el motivo es jerarquía medible: los totales
-   del mes (`.metric-cell-value`, 28px) son la SUMA de estas cuatro cifras, y
-   un padre no puede pesar menos que su parte sin que el ojo lea al revés.
-   Con 28 arriba y 24 abajo la escala es limpia y descendente:
-   32px titular · 28px total del mes · 24px total de categoría · 17px título
-   de sección · 13px descripción.
-
-   Follow-up a verificar mirando: con 32px, "S/ 417.80" de Servicios era lo
-   más llamativo del viewport después del titular, y el ojo bajaba al detalle
-   antes que a la respuesta. */
-.accordion-summary-tag {
-  font-size: var(--text-2xl);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: var(--tracking-display);
-  color: var(--text-main);
-}
-
-/* --- Cuerpo contraíble --------------------------------------------------- */
-/* --- Cuerpo contraíble ---------------------------------------------------
-   32px -> 16px. Medido: entre el título de la sección y la primera fila había
-   80px, y 48 de ellos eran este padding más el `margin-top` del subhead. Con
-   cuatro secciones abajo eso son 320px de aire antes de leer un solo gasto. */
-.accordion-collapsible-body {
-  padding-top: var(--space-2);
-}
-
-.collapsed > .accordion-collapsible-body {
-  display: none;
-}
-
-/* --- Grupos y filas ------------------------------------------------------- */
-.category-subhead {
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--hairline);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-}
-
 .expense-card-item {
   /* 4 hijos inyectados por app.js, en este orden: concepto · estado · importe ·
      borrar. No cambiar el número de columnas ni el orden sin tocar la plantilla
-     de app.js, que los emite en ese orden. */
+     de app.js, que los emite en ese orden.
+
+     `padding-block: 6px` en vez de `--space-1` (8px). MEDIDO: la fila medía
+     52.7px, y con 14 filas eso son 737.8px contra los 686.1px que hay entre la
+     primera fila y el borde de una pantalla de 900. La fila es el último lugar
+     donde se puede recuperar espacio de verdad, porque se repite por cada gasto
+     y no una vez por grupo: 4px por fila son 56px en 14 filas. Los 4px no se
+     notan al leer y el cromo de arriba se notaba a 100px. */
   display: grid;
   grid-template-columns: minmax(0, 1fr) 92px auto auto;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-1);
+  padding: 6px var(--space-1);
   border-radius: var(--radius-sm);
   transition: background-color var(--duration-quick) var(--ease-standard);
 }
@@ -1927,11 +2585,39 @@ body {
 }
 
 /* Etiquetas de dato, no chips: sin fondo, sin borde, sin radio. El nombre de
-   la clase se conserva por contrato DOM. */
+   la clase se conserva por contrato DOM.
+
+   `line-height: 1.2` y no el 1.47 del cuerpo. MEDIDO: la etiqueta vive en su
+   propia línea dentro de la fila, y a 11px con el interlineado de texto
+   corrido esa línea medía 16.2px —5px de aire entre dos palabras de cuatro
+   letras—. Como la etiqueta define el alto de la fila, ese exceso se pagaba en
+   todas las filas y no en ninguna en particular. */
 .tag-badge {
   font-size: var(--text-2xs);
+  line-height: 1.2;
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* T5 — LA ETIQUETA DE TIPO, CENTRADA EN LA CAJA QUE LE TOCABA.
+   MEDIDO antes (`diag-extras.mjs`): `.tag-badge` quedaba a 369.9–382px del
+   centro de `.expense-item-tags` en cada fila, y la fila más corta con
+   "Extra" a 377.6px. La causa es `align-items: center` + el ancho entero del
+   renglón: `.expense-item-info` es la primera columna de la retícula de la
+    fila y mide todo lo que sobra, así que un `display: flex` con dos etiquetas
+    alineadas al principio deja el extremo derecho en el aire con cada etiqueta
+    pegada al izquierda. Diez filas con "Fijo" y "Variable" de largos distintos
+    se leen como diez renglones ragged.
+
+   POR QUÉ SÍ, Y POR QUÉ SÓLO LAS ETIQUETAS
+   El `.expense-item-title` NO se centra: es el concepto del gasto y es el
+   ancla de la fila. Una columna de importes que se lee de izquierda a
+   derecha necesita su texto de encabezado alineado al mismo borde, y centrar
+   sólo las etiquetas hace que el título se salga del eje de las suyas. Las
+   etiquetas son metadato —el tipo, el rango— y el metadato centrado bajo un
+   título izquierdo es un bloque legible; al revés no lo es. */
+.expense-item-tags {
+  justify-content: center;
 }
 
 /* El estado en una columna de ancho fijo: los diez "Pendiente" alinean
@@ -2034,6 +2720,43 @@ body {
   opacity: 1;
 }
 
+/* LAS ACCIONES DE FILA NO SON SOLO DE HOVER. MEDIDO: `.btn-edit-expense` y
+   `.btn-delete-expense` se declaran con `opacity: 0` y solo la regla `:hover`
+ * de arriba los subia a 1. Tres consecuencias, ninguna aceptable:
+ *
+   1. TECLADO. El boton es enfocable (`tabIndex: 0`), asi que el recorrido con
+      Tab llega a el y lo deja invisible: el foco esta en un control que no se
+      ve. Es el fallo clasico de "enfocable pero invisible", y por eso la regla
+      de arriba esta acompanada de `:focus-within` sobre la fila. El foco se
+      lleva el grupo entero, no un boton suelto.
+ *   2. TACTIL. `@media (hover: none)` es justamente "este dispositivo no tiene
+      hover": un movil o una tablet. Ahi las acciones de fila nunca se ven, y
+      editar o borrar un gasto deja de tener superficie de UI. Con el gate de
+      admin abierto eso es un control muerto, que es la clase de defecto que el
+      proyecto elimina a proposito.
+ *   3. El hover sobre puntero fino se conserva: en el libro, donde las filas
+      se escanean en bloque, sacar el boton de borrar del renglon hasta que hace
+      falta es lo que evita que la lista parezca una tabla de peligro.
+ *
+ * Lo que se revealing es el GOLPE, no el renglon: la fila no cambia de alto ni
+ * pierde su separacion al aparecer las acciones.
+ */
+.expense-card-item:focus-within .btn-delete-expense,
+.expense-card-item:focus-within .btn-edit-expense,
+.transaction-feed-item:focus-within .btn-delete-tx,
+.transaction-feed-item:focus-within .btn-edit-tx {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .btn-delete-expense,
+  .btn-delete-tx,
+  .btn-edit-expense,
+  .btn-edit-tx {
+    opacity: 1;
+  }
+}
+
 .btn-delete-expense:hover,
 .btn-delete-tx:hover,
 .btn-edit-expense:hover,
@@ -2050,48 +2773,15 @@ body {
   border: 0;
 }
 
-.subtotal-highlight-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-1) var(--space-1);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-.subtotal-highlight-row .font-mono {
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-/* El total que cierra la lista sí lleva filete: es el punto donde el grupo
-   termina de verdad. */
-.main-subtotal {
-  margin-top: var(--space-2);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--hairline-strong);
-  font-size: var(--text-base);
-  font-weight: 600;
-  color: var(--text-main);
-}
-
-.main-subtotal .font-mono {
-  font-size: var(--text-lg);
-}
-
-/* --- Acciones rápidas del feed ------------------------------------------- */
-.quick-action-buttons-grid {
-  display: flex;
-  gap: var(--space-2);
-  padding-bottom: var(--space-3);
-}
-
-.filter-pills-bar {
-  display: flex;
-  gap: var(--space-1);
-  padding-bottom: var(--space-2);
-}
+/* T5: `.subtotal-highlight-row`, `.main-subtotal`, `.quick-action-buttons-grid`
+   y `.filter-pills-bar` se fueron con las siete filas de subtotal, los dos
+   botones sueltos de alta y la banda de filtros del feed. No se transladon: el
+   total vive en `#summaryTag*` dentro del encabezado del grupo, los botones de
+   alta también, y los tres filtros del feed están en `.ledger-group-filters`,
+   adentro del grupo de movimientos. Quedarían como reglas muertas si se
+   dejaran: escriben sobre `.accordion-summary-tag` y `.category-subhead` que ya
+   no existen, y un selector que no matchea nada es una mentira que la próxima
+   persona va a leer como si describiera algo. */
 
 .feed-filter-pill {
   padding: var(--space-tight) var(--space-2);
@@ -2186,6 +2876,44 @@ body {
   font-size: var(--text-md);
   color: var(--text-muted);
   text-align: center;
+}
+
+/* T5 — EL AVISO "NINGUNA CATEGORÍA SELECCIONADA", CENTRADO DE VERDAD.
+   El bloque ya se declaraba `text-align: center`, así que la regla parecía
+   cumplida. MEDIDO antes (`diag-extras.mjs`): el texto quedaba con la misma
+   desviación que un renglón justificable, porque `#noSegmentsSelectedNotice`
+   es un bloque dentro de `.ledger-body`, y `.ledger-body` es un bloque normal
+   que no se estira al ancho de la columna: mide lo que mide su contenido. El
+   `text-align: center` centra dentro de una caja del ancho del texto, que es
+   lo mismo que no centrar.
+
+   `width: 100%` + `max-width` es lo que hace falta: el aviso tiene que ocupar
+   el ancho de la columna para que el `center` tenga contra qué trabajar, y un
+   tope para que la frase no quede estirada en una columna ancha. Es la
+   diferencia entre una caja que se estira (`.app-main-area`, que sí es
+   `display: flex`) y una que no. */
+.empty-segments-notice {
+  width: 100%;
+  max-width: 46ch;
+  margin: 0 auto;
+}
+
+/* DENTRO DE UN GRUPO DEL LIBRO, un estado vacío es una FRASE, no un panel.
+   Medido con los dos grupos vacíos del mes por defecto (Movimientos y Extras):
+   el bloque centrado con `--space-2` arriba y abajo medía 46px de cuerpo más 16px
+   de padding del grupo, y el filtro de Movimientos le sumaba 40px: **164px de
+   pantalla para decir dos veces que no hay nada**. Centrado en 1093px de ancho
+   además lo convierte en un vacío con forma, que es justo lo contrario de
+   honesto: parece una sección a la que le falta el contenido.
+
+   Alineado a la izquierda y pegado al encabezado, el mismo texto lee "este
+   grupo está vacío" en 24px, y el renglón que sigue vuelve a estar a 24px del
+   encabezado del grupo. La honestidad no está en el tamano del bloque, está en
+   que la frase exista. */
+.ledger-group .empty-feed-placeholder {
+  padding: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  text-align: left;
 }
 
 /* ==========================================================================
@@ -2404,7 +3132,20 @@ body {
 
 /* ==========================================================================
    13. BOTONES
-   ========================================================================== */
+   --------------------------------------------------------------------------
+   `.btn` es el control, `.btn-surface` el secundario, `.btn-primary` la que
+   confirma y `.btn-danger` la que borra.
+
+   T2: los CINCO botones de alta de las secciones ya no se estilan acá. Viven
+   en la columna de secciones y su caja la declara `.rail-add-btn` (§9b), con
+   una sola regla para los cinco. El defecto reportado era que
+   `.btn-quick-add-extra` era `background: transparent` + `--text-secondary` +
+   borde hairline, o sea se leía como texto; cuatro reglas iguales no lo
+   arreglan, lo que lo arregla es ponerlos en el mismo lugar con la misma
+   clase. Abajo quedan los tres selectores de clase que app.js y las suites
+   leen, que ya no aplican caja y sólo fijan el `:active` sin escala:
+   dentro de una columna un `transform: scale()` sobre un botón de 26px
+   empuja el renglón de al lado. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -2459,20 +3200,15 @@ body {
 .btn-success:hover,
 .btn-danger:hover { background: var(--bg-raised); }
 
+/* T2: estas tres clases ya no declaran caja. La caja la pone `.rail-add-btn`
+   (§9b), que los cubre a los cinco por igual. Se conservan los selectores sólo
+   por el `:active` de abajo: un `scale()` dentro de una columna estrecha
+   empuja el renglón vecino, y un botón de alta de 26px no gana nada con
+   encogerse. */
 .btn-quick-add-service,
 .btn-quick-add-personal,
 .btn-quick-add-extra {
-  background: transparent;
-  border-color: var(--hairline);
-  color: var(--text-secondary);
-  font-size: var(--text-sm);
-  font-weight: 400;
-}
-.btn-quick-add-service:hover,
-.btn-quick-add-personal:hover,
-.btn-quick-add-extra:hover {
-  color: var(--text-main);
-  border-color: var(--hairline-focus);
+  transition: var(--transition-fast);
 }
 
 .btn-close-sheet {
@@ -2502,7 +3238,7 @@ body {
 .month-pill-btn:active,
 .period-arrow:active,
 .btn-topbar-notes:active,
-.metric-cell-action:active,
+.ledger-action:active,
 .mode-badge:active,
 .btn-status-toggle:active,
 .matrix-month-btn:active {
@@ -2880,17 +3616,30 @@ select.form-input-lg {
 /* ==========================================================================
    18. PERMISOS
    El único mecanismo de permisos del lado cliente. No es seguridad real (la
-   real está en las RLS de Supabase), pero es funcional: si deja de aplicar,
+   real está en la RLS de Supabase), pero es funcional: si deja de aplicar,
    los controles de edición quedan visibles para cualquier lector.
+   --------------------------------------------------------------------------
+   T2: los cinco botones de alta de la columna de secciones llevan
+   `admin-action-btn`, así que esta regla los lleva sin tocar nada. Es la
+   misma clase y el mismo `!important` de siempre: el modo de permisos NO se
+   cambió en esta tanda y `exigirAdmin()` sigue siendo la compuerta real.
    ========================================================================== */
 body.read-only-mode .admin-action-btn {
   display: none !important;
 }
 
-/* Los dos botones hijos ya están ocultos por la regla anterior: el contenedor
-   tenía 32px de padding muerto. `:empty` no sirve porque siguen siendo hijos. */
-body.read-only-mode .quick-action-buttons-grid {
-  display: none;
+/* T5: `.quick-action-buttons-grid` se fue con los botones de alta. T2 los movió
+   del encabezado del grupo de movimientos a la columna de secciones, así que
+   no hay contenedor en ningún lado y no hay padding muerto que tapar. La regla
+   de arriba los oculta a ellos. */
+
+/* Controles de escritura que no son `.admin-action-btn` y por eso seguían
+   visibles para el lector: el toggle de estado de cada fila y el botón de notas
+   del mes. El gate de escritura real está en `exigirAdmin()` (app.js); esto es
+   la misma ayuda visual que da la regla de arriba, no la seguridad. */
+body.read-only-mode .btn-status-toggle,
+body.read-only-mode #btnOpenNotesModal {
+  display: none !important;
 }
 
 /* ==========================================================================
@@ -2900,17 +3649,103 @@ body.read-only-mode .quick-action-buttons-grid {
    rompe ese comportamiento en silencio.
    ========================================================================== */
 @media (max-width: 1024px) {
+  /* T2: la columna de secciones NO se esconde en este breakpoint, y esa es la
+     decisión. Escondida, el filtro de categoría desaparecería entero en el
+     teléfono: no habría forma de apagar una sección, ni de volver a encender
+     una apagada, ni de llegar al alta de Extras —y `empty.segment-filters`
+     (adversarial-suite.mjs:1335) apagaría las cuatro y no tendría nada que
+     pulsar—.
+
+     Y tampoco podía ser un drawer como el rail: sería un tercer panel
+    lazily-oculto con su propio estado, su propio botón y su propio
+     `window.innerWidth <= 1024` en app.js, o sea cuatro lugares más donde el
+     breakpoint puede romperse en silencio. El breakpoint ya está congelado en
+     cuatro comparaciones y no se suma un quinto.
+
+     Lo que hace en su lugar es BAJAR DE EJE: la columna deja de ser columna y
+     pasa a ser una banda horizontal arriba del contenido, con las cinco
+     entradas en fila y su scroll en el eje que sobra. Es la misma decisión que
+     ya tomó `.sidebar-periods` —que a 1024 es `flex: 0 1 auto` con
+     `max-height` en vez de crecer—: cuando el ancho no alcanza para el eje que
+     la pieza usa, se le da el eje que sí tiene. */
   .app-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .section-rail {
+    position: sticky;
+    top: 0;
+    height: auto;
+    max-height: 100vh;
+    overflow: hidden;
+    padding: var(--space-1) 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .section-rail-head { display: none; }
+
+  .section-rail-list {
+    flex-direction: row;
+    gap: var(--space-1);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 var(--space-2);
+  }
+
+  /* Cada entrada se vuelve una tarjeta mínima con su nombre, su cifra y su
+     alta, y las tres cosas en DOS renglones: en horizontal no hay ancho para
+     nombre + conteo + subtotal + botón, y no se recorta el nombre. */
+  .rail-entry {
+    flex: 0 0 auto;
+    min-width: 132px;
+    gap: var(--space-tight);
+  }
+
+  .rail-entry > .segment-pill-btn {
+    width: auto;
+    min-width: 132px;
+    height: 26px;
+  }
+
+  .rail-entry-total {
+    padding-left: 0;
+    margin-top: 2px;
+  }
+
+  /* El alta no cuelga del ícono en horizontal: no hay ícono que colgar, y el
+     `margin-left: 22px` que en vertical alinea con el nombre en una banda
+     ancha dejaría un hueco de 22px a la izquierda de un botón de 60px. */
+  .rail-add-btn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .rail-entry-adds {
+    margin-left: 0;
+  }
+
+  .section-rail-foot { display: none; }
+
+  /* EL DRAWER NO SE ROMPE, Y AHORA ES MÁS FÁCIL DE ROMPER. El mismo `<aside>`
+     vuelve a ser un panel de 236px con TODO su texto, y su ancho es
+     `--drawer-width` y no `--rail-width`: hoy los dos tokens valen 236px, así
+     que la diferencia es invisible, pero si alguien angosta el rail y no
+     este, el breakpoint queda roto en silencio.
+
+     Y el rail ya no tiene que "volver a ser legible" acá: el texto se ve
+     siempre. Lo único que hay que acomodar es el ancho real de la marca,
+     que pierde 28px frente a la cruz de cierre. Con los gaps a 8px y el logo
+     a 18px, "Gestor Financiero" entra entero EN UNA LÍNEA a 13px: medido,
+     ~115px contra 146px disponibles. */
   .app-sidebar {
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
     z-index: 60;
-    width: var(--rail-width);
+    width: var(--drawer-width);
     max-width: 84vw;
     height: 100%;
     transform: translateX(-100%);
@@ -2925,25 +3760,33 @@ body.read-only-mode .quick-action-buttons-grid {
   .sidebar-close-btn { display: flex; }
   .btn-hamburger { display: flex; }
 
-  /* En el drawer la marca pierde 28px de la cruz de cierre. Con los gaps
-     bajada a 8px y el logo a 18px, "Gestor Financiero" entra entero EN UNA
-     LÍNEA a 13px: medido, ~115px contra 146px disponibles. Antes se leía
-     "Gestor Finan…" porque el logo ocupaba 22px y los gaps 16px. */
   .sidebar-brand { padding-inline: var(--space-1); }
   .brand-left { gap: var(--space-1); }
   .brand-logo-box .ui-icon-brand { width: 18px; height: 18px; }
   .brand-title { font-size: var(--text-sm); }
-  .sidebar-nav,
-  .sidebar-search-section,
-  .sidebar-footer { padding-inline: var(--space-1); }
 
-  /* 4 celdas no entran en 992px sin que la cifra de 28px tenga que
-     apelmizarse. 2 columnas a 24px dan 448px útiles: "S/ 12,345.67" mide
-     173px y sobra. El filete de la primera celda de cada fila se apaga en
-     la segunda fila con `:nth-child(odd)` porque en 2 columnas el índice
-     par ya no marca "no es la primera". */
-  .metrics-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .metric-cell:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .sidebar-nav { padding-inline: var(--space-1); }
+  .sidebar-nav-tab { padding: 10px var(--space-1); }
+
+  /* La lista de meses tiene que devolverle el alto al drawer: sin esto
+     seguiría con `flex: 1 1 auto` de una columna de 900px y el bloque de
+     administración quedaría pegado al borde de abajo, a 900px del rótulo.
+     `flex: 0 1 auto` + `max-height` la deja tomar lo que necesite. */
+  .sidebar-periods { flex: 0 1 auto; padding-inline: var(--space-1); }
+  .period-track { flex: 0 1 auto; max-height: 60vh; }
+
+  .sidebar-footer { padding-inline: var(--space-1); }
+  .conn-badge { justify-content: flex-start; padding: var(--space-tight) var(--space-1); }
+  .mode-badge { justify-content: flex-start; padding: var(--space-1) var(--space-1); }
+
+  /* La barra de comando baja su relleno: a 1024 la columna del contenido es
+     de 1009px, no de 1189, así que el padding de 48 le comería 96px de los
+     que hay. La tira de cinco cifras NO entra entera —necesita ~1000px
+     interiores contra 945 disponibles— y por eso se envuelve: es preferible
+     una celda que salta de línea a un importe que se recorta. */
+  .ledger-strip { flex-wrap: wrap; row-gap: var(--space-1); }
+  .ledger-cell-paid { min-width: 15rem; }
+  .ledger-actions { margin-left: 0; }
 
   /* Las 3 cifras del Consolidado se mantienen en 3 columnas: son menos que las
      4 de Vista Mensual y a 992px cada celda da 330px, que alcanza para la
@@ -2953,6 +3796,10 @@ body.read-only-mode .quick-action-buttons-grid {
   .hero-metric-card { padding-inline-start: var(--space-2); }
   .hero-metric-card .metric-main-value { font-size: var(--text-2xl); }
 
+  .app-topbar {
+    justify-content: space-between;
+  }
+
   .app-topbar,
   .main-content {
     padding-inline: var(--space-4);
@@ -2961,27 +3808,37 @@ body.read-only-mode .quick-action-buttons-grid {
   .main-content {
     padding-top: var(--space-4);
   }
+
+  /* El margen negativo de la barra come exactamente el padding-top que este
+     breakpoint acaba de bajar a 32px: sin esto la banda se solaparía con el
+     borde del topbar. */
+  .ledger-toolbar { margin-top: calc(var(--space-4) * -1); }
 }
 
 @media (max-width: 833px) {
   .view-heading { font-size: var(--text-2xl); }
   .metric-main-value { font-size: var(--text-3xl); }
-  .accordion-summary-tag { font-size: var(--text-xl); }
-  .metric-cell-value { font-size: var(--text-2xl); }
+  .ledger-group-subtotal { font-size: var(--text-lg); }
+  .ledger-group-name { font-size: var(--text-base); }
 
-  /* La tira de pagos pasa a dos renglones: en una sola línea el carril
-     quedaba con 180px al lado de dos textos que no entran. */
-  .payments-strip { flex-wrap: wrap; gap: var(--space-1) var(--space-3); }
-  .payments-track { order: 3; flex-basis: 100%; min-width: 0; margin-left: 0; }
+  /* La tira de cifras baja un peldaño de cuerpo: a 833px la columna da
+     741px y cinco celdas de 20px no entran de ninguna manera. */
+  .ledger-cell-value { font-size: var(--text-lg); }
+
+  /* T2: la regla de acá era `.ledger-chips { margin-left: 0 }` y se fue con
+     `.ledger-chips`, que ya no existe como nodo. El buscador sí se estira a
+     renglón completo: a 833px no hay ancho para el input y algo más. */
+  .command-search { max-width: none; flex-basis: 100%; }
+
+  /* El carril pasa a renglón propio, con su ancho completo. A 833px los tres
+     textos que lo explican y la barra no entran en un renglón, y al partirse
+     la barra tiene que poder aprovechar el ancho que le queda. */
+  .payments-track { flex: 1 1 100%; order: 3; }
 }
 
 @media (max-width: 640px) {
   .main-content { padding-inline: var(--space-3); }
   .app-topbar { padding-inline: var(--space-3); }
-
-  .metrics-row { grid-template-columns: minmax(0, 1fr); }
-  .metric-cell { border-left: 0; padding-left: 0; }
-  .metric-cell + .metric-cell { border-top: 1px solid var(--hairline); }
 
   /* A 640px las 3 celdas del Consolidado no entran: la etiqueta y la cifra
      pelarian por el mismo renglon. Pasan a apilarse, y el filete vertical se
@@ -2990,17 +3847,47 @@ body.read-only-mode .quick-action-buttons-grid {
   .hero-metric-card { padding-inline-start: 0; border-left: 0; }
   .hero-metric-card + .hero-metric-card { border-top: 1px solid var(--hairline); }
 
-  /* "Nuevo mes" baja de renglón: con los 6 meses y las dos flechas, a 640px
-     el riel se queda sin espacio y el botón terminaba sobre el mes activo. */
-  .period-bar { flex-wrap: wrap; }
-  .period-new { margin-left: 0; padding-left: 0; border-left: 0; }
+  /* El encabezado del libro no se parte en dos renglones: sigue siendo UNO de
+     32px, y lo que cede es el aire, no la estructura. El nombre ya tiene
+     `text-overflow: ellipsis`, y por eso `.ledger-group-heading` es
+     `flex: 1 1 auto` en la base: sin eso el `h3` no puede encogerse y el
+     ellipsis nunca llega a activarse. */
+  .ledger-group-head { gap: var(--space-2); }
 
+  /* El encabezado de las secciones del Consolidado sí se parte: su título es una
+     frase larga —"Ingresos acumulados frente a balance acumulado"— y a 640px no
+     entra con la descripción al lado. */
   .content-card-header {
     grid-template-columns: minmax(0, 1fr);
     row-gap: var(--space-2);
   }
 
-  .card-header-right-group { justify-content: space-between; }
+  /* T2: A 640px LA BANDA DE SECCIONES SE PARTE EN DOS RENGLONES en vez de
+     scrollear en horizontal. MEDIDO: cinco entradas de 132px más cuatro gaps
+     de 8px son 622px de ancho mínimo contra 593px disponibles (625 menos el
+     padding de la banda), o sea "Extras" quedaba con `right: 732` en una
+     ventana de 640: dentro de la banda, fuera de la vista, sin ninguna señal
+     de que hay algo más a la derecha.
+
+     Un renglón scrolleable en horizontal es un patrón válido, pero acá la
+     quinta entrada es la que carga el bug reportado —"no hay forma de añadir
+     en Extras"—, así que dejar Extras fuera de la vista a 640px sería
+     reintroducir el defecto en el ancho donde más se nota. `flex-wrap` cuesta
+     ~80px de alto en una pantalla de 900 y pone las cinco a la vista. */
+  .section-rail-list {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    row-gap: var(--space-1);
+  }
+
+  .rail-entry {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .rail-entry > .segment-pill-btn {
+    min-width: 0;
+  }
 
   /* 4 hijos, 2 columnas: el importe arriba a la derecha y el estado abajo a la
      izquierda. El número de hijos no cambia, solo su_track. */
@@ -3051,7 +3938,7 @@ body.read-only-mode .quick-action-buttons-grid {
   .month-pill-btn:active,
   .period-arrow:active,
   .btn-topbar-notes:active,
-  .metric-cell-action:active,
+  .ledger-action:active,
   .mode-badge:active,
   .btn-status-toggle:active,
   .matrix-month-btn:active {

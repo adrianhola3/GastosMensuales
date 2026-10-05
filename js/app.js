@@ -139,6 +139,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  /**
+   * Gate de escritura para el rol lector.
+   *
+   * Ocultar los botones (`.admin-action-btn`) es solo presentación: los
+   * formularios siguen en el DOM y un `.click()` los dispara igual. Este es el
+   * punto donde se corta la escritura de verdad.
+   *
+   * Consulta `obtenerSesion()` y no la copia `isAdmin` porque esa copia se
+   * refresca únicamente en `aplicarSesion()`: si la sesión cambia por otra vía
+   * queda vieja y dejaría pasar el rol. `obtenerSesion()` es la fuente de verdad.
+   *
+   * La condición es exactamente la de `setRoleReadOnly()` y por el mismo
+   * motivo: además del rol hay que respetar la elección explícita de "lector"
+   * de esta pestaña. Si solo se mirara el rol, un administrador que pulsó
+   * "Modo Solo Lectura" vería la interfaz bloqueada pero este gate lo dejaría
+   * escribir, y esa elección debe poder solo restringir.
+   *
+   * @param {string} accion qué intento de escritura se está haciendo, en minúsculas.
+   * @returns {boolean} true si la escritura puede seguir.
+   */
+  function exigirAdmin(accion) {
+    const autorizado = obtenerSesion().rol === 'admin' &&
+      sessionStorage.getItem(ELECCION_ROL_KEY) !== 'lector';
+    if (autorizado) return true;
+    showToast(`Solo el administrador puede ${accion}.`, '');
+    return false;
+  }
+
   // --- INDICADOR DE CONEXIÓN (T6) ---
   // Mínimo y con las mismas variables del tema, para que no desentone.
   function updateIndicadorConexion() {
@@ -391,12 +419,16 @@ document.addEventListener('DOMContentLoaded', () => {
       monthPillsContainer.appendChild(btn);
     });
 
-    // Auto-scroll para centrar el período activo. El eje cambió con el
-    // selector: `block: 'nearest'` solo alcanzaba en vertical, así que el
-    // período activo podía quedar fuera de la tira con muchos meses.
+    // Traer el período activo a la vista. La lista de períodos es VERTICAL
+    // (vive en el rail, §8.3), así que el eje que hay que mover es el de
+    // bloques: `block: 'center'` y no `block: 'nearest'`, porque con 24 meses
+    // `nearest` puede dejar la píldora pegada al borde de la lista y con el
+    // rótulo del período tapado. `inline` ya no importa: no hay scroll
+    // horizontal, pero se declara explícito para que nadie lo lea como
+    // heredado de la versión de tira horizontal.
     const activePill = monthPillsContainer.querySelector('.month-pill-btn.active');
     if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
     }
   }
 
@@ -409,7 +441,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totals = store.calculateMonthTotals(month.id);
 
-    // 1. Tarjetas de Métricas Principales (Grandes)
+    // 1. Cifras de la tira de la barra de comando. Las cuatro que tenían celda
+    // propia en la banda de `.metrics-row` de T1 ahora son celdas de la tira,
+    // y las que no tenían celda bajaron de la fila de micro-texto a celdas de
+    // 20px. Los destinos de cada id están escritos en index.html, junto al
+    // nodo.
     document.getElementById('monthTotalIngresos').textContent = window.formatCurrency(totals.totalIngresos);
     const movs = month.movimientos || [];
     const ingresosCount = movs.filter(x => x.flujo === 'Ingreso').length;
@@ -420,17 +456,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const balanceEl = document.getElementById('monthBalanceNeto');
     balanceEl.textContent = window.formatCurrency(totals.balanceNeto);
+    /* Las tres palabras del estado son UNA PALABRA cada una, y hace falta que
+       lo sean: `#monthBalanceStatusLabel` va al lado de la cifra de la celda
+       "Balance" y comparte su renglón. Antes eran "Saldo a favor disponible"
+       y "Déficit (gastos superan ingresos)": el paréntesis explicaba un
+       término que la palabra ya nombra, y con ingresos desiguales la celda
+       se iba de ancho y empujaba al resto de la tira.
+       `adversarial-suite.mjs:375` compara 'Equilibrado' literal; las otras
+       dos no las compara nadie. */
     if (totals.balanceNeto > 0) {
       balanceEl.style.color = 'var(--text-emerald)';
-      document.getElementById('monthBalanceStatusLabel').textContent = 'Saldo a favor disponible';
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Saldo a favor';
     } else if (totals.balanceNeto < 0) {
       balanceEl.style.color = 'var(--text-rose)';
-      document.getElementById('monthBalanceStatusLabel').textContent = 'Déficit (gastos superan ingresos)';
+      document.getElementById('monthBalanceStatusLabel').textContent = 'Déficit';
     } else {
       balanceEl.style.color = 'var(--text-cyan)';
-      // T4: era 'Equilibrado (S/ 0.00)'. La celda de arriba ya muestra
-      // "S/ 0.00" en 28px, y el paréntesis repetía ese mismo número en 12px
-      // justo debajo. La etiqueta dice el estado; el número, la cifra.
+      // T4: era 'Equilibrado (S/ 0.00)'. La cifra de al lado ya muestra
+      // "S/ 0.00" y el paréntesis repetía ese mismo número en 12px. La
+      // etiqueta dice el estado; el número, la cifra.
       document.getElementById('monthBalanceStatusLabel').textContent = 'Equilibrado';
     }
 
@@ -440,18 +484,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Dual Indicadores de Progreso y Métricas en Tiempo Real
     updateLiveProgressAndTotals(month.id);
 
-    // 3. Gastos de Servicios
-    renderExpenseCategory('listServiciosFijos', month.servicios.fijos || [], month.id);
-    renderExpenseCategory('listServiciosVariables', month.servicios.variables || [], month.id);
+    /* T5 — UN CONTENEDOR POR GRUPO, NO UNO POR COLECCIÓN.
+     * Los cinco `list*` y `transactionsFeedList` existían porque la tarjeta
+     * separaba cada categoría en "fijos" / "variables" / "extras", y cada
+     * subdivisión necesitaba su propia caja. El libro agrupa por CATEGORÍA: los
+     * fijos y los variables de Servicios son el mismo grupo y se distinguen por
+     * la etiqueta de cada renglón, no por una línea de subtítulo entre ellos.
+     * El orden de las dos listas se conserva para que el store siga siendo la
+     * única fuente del orden de lectura. */
+    renderExpenseCategory('ledgerRowsServicios',
+      [...(month.servicios.fijos || []), ...(month.servicios.variables || [])],
+      month.id, 'servicios');
 
-    // 4. Gastos Personales
-    renderExpenseCategory('listPersonalesFijos', month.personales.fijos || [], month.id);
-    renderExpenseCategory('listPersonalesVariables', month.personales.variables || [], month.id);
+    renderExpenseCategory('ledgerRowsPersonales',
+      [...(month.personales.fijos || []), ...(month.personales.variables || [])],
+      month.id, 'personales');
 
-    // 5. Gastos Extraordinarios
-    renderExpenseCategory('listGastosExtra', month.extras || [], month.id);
+    renderExpenseCategory('ledgerRowsExtras', month.extras || [], month.id, 'extras');
 
-    // 6. Feed de Transacciones (Flujo de Caja Real)
+    // Feed de Transacciones (Flujo de Caja Real)
     renderTransactionFeed(month);
 
     // 7. Notas del Mes (indicador en botón topbar)
@@ -469,8 +520,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
     renderActiveSegments();
 
-    if (sidebarSearchInput && sidebarSearchInput.value.trim().length > 0) {
-      performSidebarSearch(sidebarSearchInput.value);
+    /* T2: la columna de secciones se sincroniza AQUÍ y no sólo dentro de
+     * `sincronizarEncabezadosDeGrupo()`, y el motivo es un agujero que esa
+     * función tiene: `renderTransactionFeed` la llama al FINAL, después de
+     * dibujar el feed, y hace `return` temprano cuando el mes no tiene
+     * movimientos —`sincronizarEncabezadosDeGrupo` no llega a ejecutarse—.
+     *
+     * MEDIDO en el fixture `baseline` (PRUEBA-BETA no tiene movimientos):
+     * tras cambiar de período, `#ledgerGroupPersonales [data-group-count]` decía
+     * "2" y `#summaryTagPersonales` decía "S/ 999.99" —los dos correctos—
+     * mientras la columna seguía en "3 / S/ 1,123.44" del mes anterior.
+     *
+     * La llamada es idempotente y lee el DOM, así que llamarla dos veces por
+     * render no cuesta nada y cubre los dos caminos: acá el render completo
+     * (agregar, editar, borrar, cambiar de período) y
+     * `sincronizarEncabezadosDeGrupo` el filtrado y la búsqueda, que no
+     * repintan nada. */
+    sincronizarRailSecciones();
+
+    if (commandSearchInput && commandSearchInput.value.trim().length > 0) {
+      performCommandSearch(commandSearchInput.value);
     }
   }
 
@@ -507,9 +576,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const elBalanceStatus = document.getElementById('monthBalanceStatusLabel');
     if (elBalanceStatus) {
       if (totals.balanceNeto > 0) {
-        elBalanceStatus.textContent = 'Saldo a favor disponible';
+        elBalanceStatus.textContent = 'Saldo a favor';
       } else if (totals.balanceNeto < 0) {
-        elBalanceStatus.textContent = 'Déficit (gastos superan ingresos)';
+        elBalanceStatus.textContent = 'Déficit';
         } else {
           elBalanceStatus.textContent = 'Equilibrado';
         }
@@ -517,20 +586,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const elAbonoPercent = document.getElementById('monthAbonoPercentLabel');
     if (elAbonoPercent) elAbonoPercent.textContent = `${totals.porcentajeAvance.toFixed(1)}%`;
 
-    // Dual Barras de Progreso (Sticky)
+    // Las cifras de la tira de la barra de comando
     //
-    // T4: los dos textos de esta tira tenían la duplicación. Antes decía
-    // "Gastos Pagados: <pagado> de <presupuesto>", y ese <presupuesto> es
-    // exactamente `totals.totalEgresos`, que la celda 2 de `.metrics-row` ya
-    // muestra 40px más arriba con la cifra grande. Y el badge decía
-    // "<pct>% Pagado (3 de 9)", donde el par "3 de 9" es el mismo
-    // `pagadosCount de totalItemsPresupuesto` que la nota de esa celda ya
-    // escribe. Se quitaron las dos copias; lo que queda —importe pagado,
-    // pendiente, carril y porcentaje— no está en ninguna otra parte.
+    // `#paidTextInfo` y `#pendingSummaryLabel` escriben SOLO el importe. Antes
+    // decían "Gastos Pagados: S/ 0.00" y "Pendiente: S/ 0.00", y en la tira
+    // esas dos palabras ya son la etiqueta de su celda. Se quedan las
+    // etiquetas y los nodos bajan a un valor, con la misma regla de la ronda
+    // anterior: la etiqueta dice el qué, el nodo dice el número.
+    //
+    // `#monthGastosCount` ("3 de 9 gastos pagados") y `#paidPercentBadge`
+    // ("0.0% Pagado") NO se tocan: las suites los comparan contra la cadena
+    // literal (`adversarial-suite.mjs:376-377`), y `#monthGastosCount` es el
+    // denominador del carril, así que su lugar natural es pegado a él.
     const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
     const elPaidTextInfo = document.getElementById('paidTextInfo');
     if (elPaidTextInfo) {
-      elPaidTextInfo.innerHTML = `Gastos Pagados: <strong>${window.formatCurrency(totals.montoPagadoPresupuesto)}</strong>`;
+      elPaidTextInfo.textContent = window.formatCurrency(totals.montoPagadoPresupuesto);
     }
     const elPaidPercentBadge = document.getElementById('paidPercentBadge');
     if (elPaidPercentBadge) {
@@ -542,7 +613,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elPendingSummaryLabel = document.getElementById('pendingSummaryLabel');
     if (elPendingSummaryLabel) {
-      elPendingSummaryLabel.textContent = `Pendiente: ${window.formatCurrency(totals.montoPendientePresupuesto)}`;
+      elPendingSummaryLabel.textContent = window.formatCurrency(totals.montoPendientePresupuesto);
     }
 
     // Actualizar indicador en topbar
@@ -556,30 +627,26 @@ document.addEventListener('DOMContentLoaded', () => {
       elHeaderMonthBadge.textContent = month.nombre;
     }
 
-    // Subtotales en las tarjetas
-    const elSubServFijos = document.getElementById('subtotalServiciosFijos');
-    if (elSubServFijos) elSubServFijos.textContent = window.formatCurrency(totals.subtotalServiciosFijos);
-    const elSubServVar = document.getElementById('subtotalServiciosVariables');
-    if (elSubServVar) elSubServVar.textContent = window.formatCurrency(totals.subtotalServiciosVariables);
-    const elSubServTot = document.getElementById('subtotalTotalServicios');
-    if (elSubServTot) elSubServTot.textContent = window.formatCurrency(totals.subtotalServicios);
+    /* T5 — LOS SIETE SUBTOTALES INTERMEDIOS SE FUERON CON SUS FILAS.
+     *
+     * Aquí escribían `subtotalServiciosFijos`, `subtotalServiciosVariables`,
+     * `subtotalTotalServicios`, `subtotalPersonalesFijos`,
+     * `subtotalPersonalesVariables`, `subtotalTotalPersonales` y
+     * `subtotalGastosExtra`. Los nodos ya no están en index.html: eran el
+     * desglose que esta ronda reemplaza con UN subtotal por grupo, y dejarlos
+     * detrás de un `if` sería código muerto que además finge que la pantalla
+     * muestra algo que no muestra.
+     *
+     * Lo que se conserva intacto es el dato: `totals.subtotalServiciosFijos` y
+     * los otros seis los sigue calculando `store.calculateMonthTotals()`, y por
+     * eso el desglose vuelve el día que alguien lo necesite —con los nodos y sus
+     * reglas, no con siete escrituras dormidas. Lo que se cierra es la
+     * *presentación* de un desglose que no cabía en una pantalla.
+     *
+     * `#grandTotalAmount` se fue en T4, por el mismo motivo y con la misma
+     * explicación. */
 
-    const elSubPersFijos = document.getElementById('subtotalPersonalesFijos');
-    if (elSubPersFijos) elSubPersFijos.textContent = window.formatCurrency(totals.subtotalPersonalesFijos);
-    const elSubPersVar = document.getElementById('subtotalPersonalesVariables');
-    if (elSubPersVar) elSubPersVar.textContent = window.formatCurrency(totals.subtotalPersonalesVariables);
-    const elSubPersTot = document.getElementById('subtotalTotalPersonales');
-    if (elSubPersTot) elSubPersTot.textContent = window.formatCurrency(totals.subtotalPersonales);
-
-    const elSubExtras = document.getElementById('subtotalGastosExtra');
-    if (elSubExtras) elSubExtras.textContent = window.formatCurrency(totals.subtotalExtras);
-
-    // T4: aquí estaba el write a `#grandTotalAmount`. El nodo no existe en
-    // index.html —el total del mes vive en `#monthTotalEgresos`, en la celda 2
-    // de `.metrics-row`— así que la línea no tenía a quién escribir y el `if`
-    // la ocultaba. Código muerto, no una funcionalidad.
-
-    // Tags de resumen en encabezados de acordeón
+    // Tags de resumen: la cifra de cada grupo, en el encabezado del grupo.
     const tagServ = document.getElementById('summaryTagServicios');
     if (tagServ) tagServ.textContent = window.formatCurrency(totals.subtotalServicios);
     const tagPers = document.getElementById('summaryTagPersonales');
@@ -589,7 +656,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagMovs = document.getElementById('summaryTagMovimientos') || document.getElementById('summaryTagFlujo');
     if (tagMovs) tagMovs.textContent = `${movs.length} movs`;
 
-    // Badges en las píldoras de navegación de segmentos
+    // Badges en los chips de filtro. T1: los nodos `#badgeSeg*` ya NO están en
+    // index.html —los chips bajaron a una línea y sus importes eran la cuarta
+    // copia de los subtotales que cada encabezado muestra en `#summaryTag*`—. El
+    // binding queda detrás de `if` a propósito: si un día vuelven, esta función
+    // los vuelve a pintar sin tocar nada más acá.
     const badgeServ = document.getElementById('badgeSegServicios');
     if (badgeServ) badgeServ.textContent = window.formatCurrency(totals.subtotalServicios);
     const badgePers = document.getElementById('badgeSegPersonales');
@@ -599,7 +670,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const badgeMovs = document.getElementById('badgeSegMovimientos') || document.getElementById('badgeSegFlujo');
     if (badgeMovs) badgeMovs.textContent = `${movs.length} movs`;
 
-    // Minibarras de progreso por debajo de cada segmento
+    // Minibarras por debajo de cada segmento. T1: los `#miniBar*` ya no están en
+    // index.html, por el mismo motivo que los `#badgeSeg*` de arriba. El avance
+    // por categoría ahora se lee en las filas y en el carril general de la barra.
     const miniServ = document.getElementById('miniBarServicios');
     if (miniServ) miniServ.style.width = `${Math.min(100, totals.pctPagadoServicios || 0)}%`;
     const miniPers = document.getElementById('miniBarPersonales');
@@ -610,11 +683,124 @@ document.addEventListener('DOMContentLoaded', () => {
     if (miniMovs) miniMovs.style.width = `${Math.min(100, totals.pctPagadoMovimientos || 0)}%`;
   }
 
+  /* T5 — EL CONTEO Y LA CIFRA DEL GRUPO.
+   * Toda la maqueta del libro vive en el encabezado (index.html), pero dos de sus
+   * números los escribe JS porque cambian con los datos: cuántas filas hay y
+   * cuánto suman. Estas dos funciones son el único lugar del archivo que habla
+   * de eso, para que no queden dos versiones de la misma cuenta. */
+
+  /* El total real de filas de cada grupo, por categoría. Vive acá y NO en el
+   * DOM a propósito: es el dato que se opone a lo que el filtro dejó a la
+   * vista, y si viviera en un atributo habría dos fuentes de verdad —el
+   * atributo y el `dataset`— para el mismo número, una de las cuales se
+   * desactualiza sola. El DOM manda en cuántas filas hay AHORA; este mapa
+   * responde cuántas hay en total. El "3 de 9" es la resta entre las dos. */
+  const totalFilasPorGrupo = new Map();
+
+  function fijarConteoGrupo(categoria, visibles, total) {
+    const grupo = document.querySelector(`[data-segment-card="${categoria}"]`);
+    if (!grupo) return;
+    totalFilasPorGrupo.set(categoria, total);
+    fijarTextoConteo(grupo, visibles, total);
+  }
+
+  function fijarTextoConteo(grupo, visibles, total) {
+    const span = grupo.querySelector('[data-group-count]');
+    if (!span) return;
+    // Un total que no se puede ver no informa nada: cuando el buscador o el
+    // filtro dejan menos filas a la vista, el conteo dice exactamente cuántas
+    // hay de cuántas son.
+    span.textContent = visibles === total ? String(total) : `${visibles} de ${total}`;
+  }
+
+  /* Recorre los grupos DESPUÉS de que un filtro tocó las filas, y reescribe
+   * encabezado y conteo a partir del DOM. El DOM es la única fuente de verdad
+   * de lo que se VE; el mapa, de lo que EXISTE. Si el filtro y el conteo se
+   * calcularan los dos por separado, el día que uno cambie el otro va a mentir
+   * sin que nada se queje.
+   *
+   * T2: al final llama a `sincronizarRailSecciones()`. Es el único lugar del
+   * archivo donde ya se está mirando el DOM grupo por grupo y ya se sabe
+   * cuántas filas hay y cuántas se ven, así que la columna hereda esos
+   * números en vez de recalcularlos. Recalcularlos sería una segunda fuente
+   * de verdad para el mismo dato, que es exactamente la forma de que las dos
+   * diverjan sin que nada avise. */
+  function sincronizarEncabezadosDeGrupo() {
+    document.querySelectorAll('.ledger-group').forEach(grupo => {
+      const rows = grupo.querySelector('.ledger-group-rows');
+      const hijos = rows ? Array.prototype.slice.call(rows.children) : [];
+      const filas = hijos.filter(f => f.classList.contains('expense-card-item')
+        || f.classList.contains('transaction-feed-item'));
+      const visibles = filas.filter(f => f.style.display !== 'none').length;
+
+      /* Un grupo que el buscador dejó sin filas se va con ellas. Un grupo vacío
+       * de VERDAD no se oculta: su línea honesta de estado vacío es lo que lo
+       * hace legible como grupo sin gastos, y por eso la condición mira si había
+       * filas y no si quedan. */
+      grupo.classList.toggle('busqueda-vacia', filas.length > 0 && visibles === 0);
+
+      const cat = grupo.getAttribute('data-segment-card');
+      const total = totalFilasPorGrupo.has(cat) ? totalFilasPorGrupo.get(cat) : filas.length;
+      fijarTextoConteo(grupo, visibles, total);
+    });
+
+    sincronizarRailSecciones();
+  }
+
+  /* --- T2: EL CONTEO Y EL SUBTOTAL EN LA COLUMNA DE SECCIONES --------------
+   * Los cinco `.segment-pill-btn` pasaron de la barra de comando a
+   * `<nav class="section-rail">`, y cada entrada de sección muestra ahora dos
+   * números que antes sólo se leían al scrollear hasta el encabezado del
+   * grupo: cuántas filas hay y cuánto suman.
+   *
+   * LOS VALORES NO SE CALCULAN ACÁ: se COPIAN de los nodos que el libro ya
+   * escribió. `[data-rail-count]` lee `[data-group-count]` del grupo y
+   * `[data-rail-total]` lee `#summaryTag*`, así que la columna no puede
+   * discrepar del encabezado por construcción. La alternativa —recalcular con
+   * `calculateMonthTotals()`— daría el total del mes, que NO es lo que dice el
+   * encabezado cuando un filtro dejó menos filas a la vista, y el usuario
+   * vería dos cifras distintas para la misma pregunta.
+   *
+   * POR QUÉ SE LLAMA DESDE `sincronizarEncabezadosDeGrupo()` Y NO DESDE
+   * `renderMonthView()`
+   * Porque esa función ya se ejecuta después de CADA cosa que cambia lo que
+   * se ve: el render de cada categoría, el render del feed, el buscador al
+   * escribir y al limpiar, y el filtro de segmentos. Agregar, editar, borrar,
+   * cambiar de período y filtrar pasan todos por ahí. Llamarla desde el render
+   * la dejaría vieja en cuanto un filtro tocara el DOM.
+   *
+   * `[data-rail-total]` usa el MISMO literal que `#summaryTagMovimientos` para
+   * Movimientos (`"3 movs"`), porque el total de un grupo de movimientos no es
+   * un importe: es un conteo. */
+  function sincronizarRailSecciones() {
+    const entradas = document.querySelectorAll('.rail-entry[data-rail-entry]');
+    if (entradas.length === 0) return;
+
+    entradas.forEach(entrada => {
+      const cat = entrada.getAttribute('data-rail-entry');
+      const grupo = document.querySelector(`[data-segment-card="${cat}"]`);
+      if (!grupo) return;
+
+      const conteoGrupo = grupo.querySelector('[data-group-count]');
+      const conteoRail = entrada.querySelector('[data-rail-count]');
+      if (conteoRail && conteoGrupo) conteoRail.textContent = conteoGrupo.textContent;
+
+      /* El id del subtotal sigue la convención del encabezado: `summaryTag` +
+       * la categoría con la primera letra en mayúscula. Para "movimientos" el
+       * id real es `summaryTagMovimientos`, que es el mismo patrón. */
+      const idTag = 'summaryTag' + cat.charAt(0).toUpperCase() + cat.slice(1);
+      const tag = document.getElementById(idTag);
+      const totalRail = entrada.querySelector('[data-rail-total]');
+      if (totalRail && tag) totalRail.textContent = tag.textContent;
+    });
+  }
+
   // Renderizador de filas amplias de gastos
-  function renderExpenseCategory(containerId, items, monthId) {
+  function renderExpenseCategory(containerId, items, monthId, categoria) {
     const container = document.getElementById(containerId);
     if (!container) return;
     container.innerHTML = '';
+    fijarConteoGrupo(categoria, items.length, items.length);
 
     if (items.length === 0) {
       // Estado vacío de Apple: UNA línea, céntrica, silenciosa. Sin ícono, sin
@@ -628,6 +814,12 @@ document.addEventListener('DOMContentLoaded', () => {
     items.forEach(item => {
       const row = document.createElement('div');
       row.className = 'expense-card-item';
+      /* T5: la categoría es un ATRIBUTO, no un quinto hijo. La fila del libro
+       * sigue siendo el mismo renglón de siempre —concepto, estado, importe,
+       * acciones— y el encabezado del grupo es el que dice de qué categoría
+       * son. Un quinto hijo haría gastar a las 4 columnas de la retícula una
+       * posición para un dato que ya está escrito arriba. */
+      row.dataset.categoria = categoria;
       const isPaid = item.estado === 'Pagado';
 
       // ORDEN DE LOS 4 HIJOS (contrato DOM: `.expense-card-item` recibe exactamente 4).
@@ -669,11 +861,20 @@ row.innerHTML = `
       // Evento: Alternar estado en el lugar SIN salto de scroll ni recrear el DOM
       const toggleBtn = row.querySelector('.btn-status-toggle');
       toggleBtn.addEventListener('click', () => {
+        if (!exigirAdmin('cambiar el estado de un gasto')) return;
         if (item.tipo === 'Variable' && item.estado !== 'Pagado') {
           // Si es gasto variable y está pendiente, solicitar el monto efectivamente gastado
           openPayVariableModal(monthId, item, row);
         } else {
           const newState = store.toggleBudgetItemStatus(monthId, item.id);
+          /* El store devuelve null (o false) si el id ya no está: la fila es
+             vieja, de otra pestaña o de un re-render concurrente. Escribir
+             `item.estado = newState` a ciegas dejaba el estado en memoria
+             desincronizado y el toast anunciaba un "null". */
+          if (!newState) {
+            showToast('No se pudo cambiar el estado: el gasto ya no existe.', '');
+            return;
+          }
           item.estado = newState;
           toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
           toggleBtn.textContent = newState === 'Pagado' ? 'Pagado' : 'Pendiente';
@@ -694,10 +895,15 @@ row.innerHTML = `
       const deleteBtn = row.querySelector('.btn-delete-expense');
       if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
+          if (!exigirAdmin('eliminar un gasto')) return;
           if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
-            store.deleteBudgetItem(monthId, item.id);
+            /* El store devuelve false si el id no está. Sin mirarlo, el toast
+               afirmaba un borrado que no ocurrió. */
+            const borrado = store.deleteBudgetItem(monthId, item.id);
             renderMonthView();
-            showToast(`Gasto "${item.concepto}" eliminado`, '');
+            showToast(borrado
+              ? `Gasto "${item.concepto}" eliminado`
+              : `No se pudo borrar el gasto "${item.concepto}": ya no está en los datos.`, '');
           }
         });
       }
@@ -708,7 +914,8 @@ row.innerHTML = `
 
   // Renderizador de Feed de Transacciones (Flujo de Caja Real)
   function renderTransactionFeed(month) {
-    const feedContainer = document.getElementById('transactionsFeedList');
+    const feedContainer = document.getElementById('ledgerRowsMovimientos');
+    if (!feedContainer) return;
     feedContainer.innerHTML = '';
     const movs = month.movimientos || [];
 
@@ -719,6 +926,11 @@ row.innerHTML = `
     } else if (activeFeedFilter === 'gasto') {
       filtered = movs.filter(m => m.flujo === 'Gasto');
     }
+
+    /* T5: el denominador del "2 de 9" se escribe ANTES de la salida temprana del
+       estado vacío. Si se escribiera después, un mes sin movimientos dejaría el
+       conteo del encabezado apuntando al valor viejo. */
+    fijarConteoGrupo('movimientos', filtered.length, movs.length);
 
     if (filtered.length === 0) {
       // Una sola línea. La versión anterior tenía un <strong> y un <p>: dos
@@ -732,6 +944,7 @@ row.innerHTML = `
     filtered.forEach(m => {
       const item = document.createElement('div');
       item.className = 'transaction-feed-item';
+      item.dataset.categoria = 'movimientos';
       const isIngreso = m.flujo === 'Ingreso';
 
       item.innerHTML = `
@@ -770,16 +983,27 @@ row.innerHTML = `
       const deleteBtn = item.querySelector('.btn-delete-tx');
       if (deleteBtn) {
         deleteBtn.addEventListener('click', () => {
+          if (!exigirAdmin('eliminar un movimiento')) return;
           if (confirm(`¿Eliminar movimiento "${m.concepto}"?`)) {
-            store.deleteMovement(month.id, m.id);
+            /* Mismo caso que el borrado de gastos: el retorno se mira antes de
+               afirmar que se eliminó. */
+            const borrado = store.deleteMovement(month.id, m.id);
             renderMonthView();
-            showToast(`Movimiento eliminado`, '');
+            showToast(borrado
+              ? `Movimiento eliminado`
+              : `No se pudo borrar el movimiento "${m.concepto}": ya no está en los datos.`, '');
           }
         });
       }
 
       feedContainer.appendChild(item);
     });
+
+    /* El conteo del encabezado, HONESTO con el filtro puesto: si el filtro deja
+       2 de 9 movimientos a la vista, el encabezado dice "2 de 9" y no "2".
+       `#summaryTagMovimientos` sigue hablando del mes entero —`9 movs`— porque
+       ese es otro dato: el total del período contra lo que estás mirando. */
+    sincronizarEncabezadosDeGrupo();
   }
 
   // --- RENDER: VISTA CONSOLIDADA GENERAL (MULTIMES) ---
@@ -890,14 +1114,14 @@ tr.innerHTML = `
     const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     const isAllSelected = allKeys.every(k => activeSegments.has(k));
 
-    // Actualizar estado activo en botones
+    // Actualizar estado activo en botones. `aria-pressed` porque T1 los dejó
+    // como chips de una línea: un chip activo distinguido solo por el fondo y
+    // el peso no le dice nada a quien no ve, y el filtro es control, no decoro.
     document.querySelectorAll('.segment-pill-btn').forEach(btn => {
       const seg = btn.getAttribute('data-segment');
-      if (seg === 'all') {
-        btn.classList.toggle('active', isAllSelected);
-      } else {
-        btn.classList.toggle('active', activeSegments.has(seg));
-      }
+      const activo = seg === 'all' ? isAllSelected : activeSegments.has(seg);
+      btn.classList.toggle('active', activo);
+      btn.setAttribute('aria-pressed', activo ? 'true' : 'false');
     });
 
     // Mostrar u ocultar tarjetas con animación sin forzar colapso
@@ -935,6 +1159,71 @@ tr.innerHTML = `
     }
   }
 
+  /* T5: la clase `collapsed` ya no se puede aplicar sola. El encabezado es un
+   * `<button>` con `aria-expanded`, y si el atributo no acompaña a la clase,
+   * un lector de pantalla anuncia "expandido" sobre un grupo cerrado. Todas las
+   * entradas pasan por acá. */
+  function setGrupoColapsado(grupo, colapsado) {
+    if (!grupo) return;
+    grupo.classList.toggle('collapsed', colapsado);
+    const toggle = grupo.querySelector('.ledger-group-toggle');
+    if (toggle) toggle.setAttribute('aria-expanded', colapsado ? 'false' : 'true');
+  }
+
+  /* T2: ACTIVAR UNA SECCIÓN LA TRAE A LA VISTA.
+   * `toggleSegment` filtra: muestra u oculta el grupo. Eso deja al usuario en
+   * el mismo scroll de siempre con el grupo recién visible allá abajo, o —
+   * peor — con la sección que acaba de activar invisible porque quedó fuera de
+   * la pantalla. El clic en la navegación tiene que LLEVAR al dato.
+   *
+   * POR QUÉ NO DENTRO DE `toggleSegment()`
+   * Porque `toggleSegment` es la lógica del filtro y la usan las suites por su
+   * cuenta (`recorrido.mjs:217`, `adversarial-suite.mjs:1343` la llaman vía
+   * click). Scrollear dentro haría que un test de filtrado dependiera del
+   * scroll, y un test que depende del scroll es un test que falla cuando
+   * cambia el alto de una barra.
+   *
+   * `block: 'nearest'` y NO `'start'`: `start` empujaría el grupo hasta el
+   * borde superior del viewport, debajo de la barra de comando, que es
+   * `position: sticky` y ocupa 125.9px. `nearest` mueve lo mínimo, que es lo
+   * que se quiere: si el grupo ya está a la vista, no se mueve nada.
+   *
+   * Y no scrollea si la sección se está APAGANDO: apagar no lleva a ninguna
+   * parte, y `closest()` sobre un grupo que ya no se ve no daría nada útil.
+   *
+   * EL `scroll-margin-top`, MEDIDO, POR QUÉ NO ES UN NÚDULO FIJO
+   * MEDIDO en el fixture `baseline` con 14 filas de Extras: sin él, `nearest`
+   * dejaba el encabezado del grupo en y=160.1 con la barra de comando
+   * ocupando hasta y=233.2 — o sea el grupo scrolleado dentro de la banda,
+   * que es el peor de los dos mundos: se movió y no se ve.
+   *
+   * El margen es la altura REAL de la barra más el `top: 48px` del topbar, y
+   * esa altura no es una constante: medido, 185.2px a 1440, 198.3px a 640. Un
+   * `scroll-margin-top` fijo en la hoja taparía bien un caso y taparía mal el
+   * otro, así que se mide en el momento del clic. Es una lectura de
+   * `getBoundingClientRect` por clic de sección, no por fila ni por render.
+   *
+   * `scroll-margin-top` y NO `window.scrollBy`: `scrollIntoView` lo respeta y
+   * hace el ajuste dentro de su propio cálculo, con lo que el resultado es el
+   * mismo con y sin margen en vez de dos scrolls que se pelean. */
+  function activarSeccion(segment) {
+    if (!segment || segment === 'all') return;
+    const grupo = document.querySelector(`[data-segment-card="${segment}"]`);
+    if (!grupo) return;
+    // Un grupo oculto por el filtro no se scrollea: `scrollIntoView` lo
+    // bringaría sin quitarle el `display: none` y la persona vería el hueco.
+    if (getComputedStyle(grupo).display === 'none') return;
+    if (typeof grupo.scrollIntoView !== 'function') return;
+
+    const barra = document.querySelector('.ledger-toolbar');
+    const topbar = document.querySelector('.app-topbar');
+    const alturaBarra = barra ? barra.getBoundingClientRect().height : 0;
+    const topTopbar = topbar ? topbar.getBoundingClientRect().height : 0;
+    grupo.style.scrollMarginTop = Math.ceil(alturaBarra + topTopbar + 8) + 'px';
+
+    grupo.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+
   function toggleSegment(segment) {
     const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     const allCards = document.querySelectorAll('[data-segment-card]');
@@ -948,21 +1237,20 @@ tr.innerHTML = `
         allKeys.forEach(k => activeSegments.add(k));
         allCards.forEach(c => {
           c.style.display = 'block';
-          c.classList.remove('card-anim-out', 'collapsed');
+          c.classList.remove('card-anim-out');
+          setGrupoColapsado(c, false);
         });
       } else {
         // Si ya estaban todas expandidas, alternar a contraerlas
-        allCards.forEach(c => c.classList.add('collapsed'));
+        allCards.forEach(c => setGrupoColapsado(c, true));
       }
     } else {
       if (activeSegments.has(segment)) {
         activeSegments.delete(segment);
       } else {
         activeSegments.add(segment);
-        const c = document.querySelector(`[data-segment-card="${segment}"]`);
-        if (c) {
-          c.classList.remove('collapsed'); // Inicia expandida
-        }
+        // Inicia expandida
+        setGrupoColapsado(document.querySelector(`[data-segment-card="${segment}"]`), false);
       }
     }
     renderActiveSegments();
@@ -970,7 +1258,14 @@ tr.innerHTML = `
 
   document.querySelectorAll('.segment-pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      toggleSegment(btn.getAttribute('data-segment'));
+      const seg = btn.getAttribute('data-segment');
+      toggleSegment(seg);
+      /* T2: la navegación de la columna además de filtrar lleva al grupo. Va
+       * DESPUÉS de `toggleSegment` a propósito: si fuera antes, el grupo
+       * recién encendido todavía tendría `display: none` y `activarSeccion`
+       * saldría sin hacer nada —que es exactamente el caso para el que
+       * existe. */
+      if (seg !== 'all' && activeSegments.has(seg)) activarSeccion(seg);
     });
   });
 
@@ -980,29 +1275,47 @@ tr.innerHTML = `
    * sigue viva y reachable desde la píldora "Ver todo". Se va el binding
    * muerto, no la función. */
 
-  // --- ACORDEÓN: COLAPSAR / EXPANDIR TARJETAS AL HACER CLIC EN SU ENCABEZADO ---
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', (e) => {
-      if (e.target.closest('button')) return; // No colapsar si se hace clic en botones de acción
-      const card = header.closest('.content-card-box');
-      if (card) {
-        card.classList.toggle('collapsed');
-      }
+  /* --- EL ENCABEZADO DEL GRUPO CONTRAE Y DESPLIEGA -------------------------
+   * T5: antes era un `div.accordion-header` al que había que leer `e.target`
+   * para no colapsar cuando el clic caía en un botón. Ahora el control es un
+   * `<button>` —`.ledger-group-toggle`— y el botón de añadir está FUERA de él,
+   * en `.ledger-group-meta`: dos controles hermanos en el mismo renglón, en vez
+   * de un renglón que finge ser un botón y esconde dos.
+   *
+   * No hace falta `event.stopPropagation()` en el botón de añadir: no hay
+   * ancestro con listener. Lo que sí hay es `aria-expanded`, y por eso la
+   * clase y el atributo se escriben juntos en `setGrupoColapsado`. */
+  document.querySelectorAll('.ledger-group-toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+      const grupo = toggle.closest('.ledger-group');
+      if (grupo) setGrupoColapsado(grupo, !grupo.classList.contains('collapsed'));
     });
   });
 
-  // --- BARRA DE BÚSQUEDA ESPECÍFICA EN COLUMNA IZQUIERDA ---
-  const sidebarSearchInput = document.getElementById('sidebarSearchInput');
-  const btnClearSidebarSearch = document.getElementById('btnClearSidebarSearch');
-  const sidebarSearchResultsFeedback = document.getElementById('sidebarSearchResultsFeedback');
+  // --- BUSCADOR DE LA BARRA DE COMANDO ---
+  //
+  // Renombrado en T1, cuando el buscador bajó del rail a `.ledger-toolbar`:
+  // `sidebarSearchInput` -> `commandSearchInput`,
+  // `btnClearSidebarSearch` -> `btnCommandClearSearch`,
+  // `sidebarSearchResultsFeedback` -> `commandSearchResultsFeedback`.
+  // Un binding called "sidebar" sobre un input que ya no está en el sidebar
+  // describe mal lo que hace, y el que lo lea dentro de tres meses no va a
+  // tener ni el archivo ni el rail a la vista para darse cuenta.
+  //
+  // Lo que NO cambió: el atajo `/` sigue enganchado al `keydown` de `window`
+  // y sigue sin dispararse si hay foco en un campo de texto. No depende de
+  // dónde esté el input, así que moverlo no lo rompió.
+  const commandSearchInput = document.getElementById('commandSearchInput');
+  const btnCommandClearSearch = document.getElementById('btnCommandClearSearch');
+  const commandSearchResultsFeedback = document.getElementById('commandSearchResultsFeedback');
   const searchResultsCountText = document.getElementById('searchResultsCountText');
 
-  function performSidebarSearch(rawQuery) {
+  function performCommandSearch(rawQuery) {
     const query = (rawQuery || '').trim().toLowerCase();
 
     if (!query) {
-      if (btnClearSidebarSearch) btnClearSidebarSearch.style.display = 'none';
-      if (sidebarSearchResultsFeedback) sidebarSearchResultsFeedback.style.display = 'none';
+      if (btnCommandClearSearch) btnCommandClearSearch.style.display = 'none';
+      if (commandSearchResultsFeedback) commandSearchResultsFeedback.style.display = 'none';
 
       // Restaurar visibilidad de todos los elementos
       document.querySelectorAll('.expense-card-item').forEach(item => {
@@ -1011,18 +1324,20 @@ tr.innerHTML = `
       document.querySelectorAll('.transaction-feed-item').forEach(item => {
         item.style.display = '';
       });
+      // T5: los encabezados que el buscador se llevó vuelven con sus filas.
+      sincronizarEncabezadosDeGrupo();
       return;
     }
 
-    if (btnClearSidebarSearch) btnClearSidebarSearch.style.display = 'flex';
-    if (sidebarSearchResultsFeedback) sidebarSearchResultsFeedback.style.display = 'flex';
+    if (btnCommandClearSearch) btnCommandClearSearch.style.display = 'flex';
+    if (commandSearchResultsFeedback) commandSearchResultsFeedback.style.display = 'flex';
 
     // Desplegar todas las categorías para ver resultados completos
     const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     allKeys.forEach(k => activeSegments.add(k));
     document.querySelectorAll('[data-segment-card]').forEach(card => {
       card.style.display = 'block';
-      card.classList.remove('collapsed');
+      setGrupoColapsado(card, false);
     });
     renderActiveSegments();
 
@@ -1044,32 +1359,40 @@ tr.innerHTML = `
       if (matches) matchCount++;
     });
 
+    /* T5: los encabezados y los conteos se reescriben DESPUÉS de filtrar, a
+     * partir del DOM que acaba de quedar. Es el orden que importa: si el
+     * encabezado se actualizara antes, seguiría anunciando el total completo
+     * sobre una lista de dos filas, y un grupo al que el buscador le dejó
+     * cero filas seguiría ocupando una banda con un nombre y un subtotal que ya
+     * no corresponden a nada en pantalla. */
+    sincronizarEncabezadosDeGrupo();
+
     if (searchResultsCountText) {
       searchResultsCountText.textContent = `${matchCount} resultado${matchCount === 1 ? '' : 's'} encontrado${matchCount === 1 ? '' : 's'}`;
     }
   }
 
-  if (sidebarSearchInput) {
-    sidebarSearchInput.addEventListener('input', (e) => {
-      performSidebarSearch(e.target.value);
+  if (commandSearchInput) {
+    commandSearchInput.addEventListener('input', (e) => {
+      performCommandSearch(e.target.value);
     });
 
-    sidebarSearchInput.addEventListener('keydown', (e) => {
+    commandSearchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        sidebarSearchInput.value = '';
-        performSidebarSearch('');
-        sidebarSearchInput.blur();
+        commandSearchInput.value = '';
+        performCommandSearch('');
+        commandSearchInput.blur();
       }
     });
   }
 
-  if (btnClearSidebarSearch) {
-    btnClearSidebarSearch.addEventListener('click', () => {
-      if (sidebarSearchInput) {
-        sidebarSearchInput.value = '';
-        sidebarSearchInput.focus();
+  if (btnCommandClearSearch) {
+    btnCommandClearSearch.addEventListener('click', () => {
+      if (commandSearchInput) {
+        commandSearchInput.value = '';
+        commandSearchInput.focus();
       }
-      performSidebarSearch('');
+      performCommandSearch('');
     });
   }
 
@@ -1077,9 +1400,9 @@ tr.innerHTML = `
   window.addEventListener('keydown', (e) => {
     if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
       e.preventDefault();
-      if (sidebarSearchInput) {
-        sidebarSearchInput.focus();
-        sidebarSearchInput.select();
+      if (commandSearchInput) {
+        commandSearchInput.focus();
+        commandSearchInput.select();
       }
     }
   });
@@ -1150,6 +1473,7 @@ tr.innerHTML = `
 
   if (btnOpenNotesModal && modalMonthNotes) {
     btnOpenNotesModal.addEventListener('click', () => {
+      if (!exigirAdmin('editar las notas del mes')) return;
       const month = store.getActiveMonth();
       if (notesTextarea) notesTextarea.value = month ? (month.notas || '') : '';
       if (modalNotesSubtitle && month) {
@@ -1167,6 +1491,10 @@ tr.innerHTML = `
       if (notesFeedback) notesFeedback.textContent = 'Guardando notas...';
       clearTimeout(notesTimer);
       notesTimer = setTimeout(() => {
+        /* El gate va DENTRO del temporizador y no antes de programarlo: cada
+           pulsación reprograma los 400 ms, así que el aviso sale una vez por
+           ráfaga de escritura en vez de en cada tecla. */
+        if (!exigirAdmin('editar las notas del mes')) return;
         store.updateNotes(store.data.activeMonthId, notesTextarea.value);
         if (notesFeedback) {
           notesFeedback.textContent = 'Guardado automáticamente';
@@ -1193,6 +1521,7 @@ tr.innerHTML = `
   const inputBudgetRangeField = document.getElementById('inputBudgetRangeField') || document.getElementById('budgetRangeField');
 
   function openAddBudgetModal(defaultSection = 'servicios', defaultSubsection = 'fijos') {
+    if (!exigirAdmin('agregar un gasto')) return;
     if (formAddBudget) formAddBudget.reset();
     if (selectBudgetSection) selectBudgetSection.value = defaultSection;
     if (defaultSection === 'extras') {
@@ -1234,6 +1563,17 @@ tr.innerHTML = `
   const btnHeaderAddBudget = document.getElementById('btnHeaderAddBudget');
   if (btnHeaderAddBudget) btnHeaderAddBudget.addEventListener('click', () => openAddBudgetModal());
 
+  /* T2: los tres botones de alta de presupuesto viven en la columna de
+   * secciones (`<nav class="section-rail">`), no en el encabezado del grupo.
+   * Los selectores NO cambian: son las mismas tres clases, y
+   * `crud-admin.mjs:1012,1076,1095` los pulsa por clase. Lo que cambió es que
+   * hay UN botón por sección y que los tres se abren con su sección ya
+   * elegida —que es el motivo de que estén en la columna: el modal no
+   * arranca en "Servicios" para alguien que tocó "Extras".
+   *
+   * Se binding por clase y no por id a propósito: el id locongela el contrato
+   * DOM de las suites, y un selector de clase con un solo nodo en el DOM es
+   * la misma garantía con menos superficie. */
   const btnAddServ = document.querySelector('.btn-quick-add-service');
   if (btnAddServ) btnAddServ.addEventListener('click', () => openAddBudgetModal('servicios', 'fijos'));
 
@@ -1246,6 +1586,7 @@ tr.innerHTML = `
   if (formAddBudget) {
     formAddBudget.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!exigirAdmin('agregar un gasto')) return;
       const section = selectBudgetSection ? selectBudgetSection.value : 'servicios';
       const elSub = document.getElementById('budgetSubsection');
       const subsection = elSub ? elSub.value : 'fijos';
@@ -1256,6 +1597,13 @@ tr.innerHTML = `
       const elEstado = document.getElementById('budgetEstado');
       const estado = elEstado ? elEstado.value : 'Pendiente';
       const tipo = section === 'extras' ? 'Extra' : (subsection === 'variables' ? 'Variable' : 'Fijo');
+
+      /* `required` no frena un valor de solo espacios, y el store solo hace
+         `.trim()`: sin este chequeo el gasto se guardaba con concepto vacío. */
+      if (!concepto) {
+        showToast('El concepto del gasto no puede quedar vacío.', '');
+        return;
+      }
 
       store.addBudgetItem(store.data.activeMonthId, section, subsection, {
         concepto,
@@ -1277,6 +1625,7 @@ tr.innerHTML = `
   let currentVariableItemTarget = null;
 
   function openPayVariableModal(monthId, item, row) {
+    if (!exigirAdmin('registrar el pago de un gasto variable')) return;
     const modal = document.getElementById('modalPayVariableExpense');
     if (!modal) return;
 
@@ -1315,6 +1664,7 @@ tr.innerHTML = `
   if (formPayVar) {
     formPayVar.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!exigirAdmin('registrar el pago de un gasto variable')) return;
       const monthId = document.getElementById('payVarMonthId').value;
       const itemId = document.getElementById('payVarItemId').value;
       const inputAmount = document.getElementById('payVarActualAmount');
@@ -1381,6 +1731,7 @@ tr.innerHTML = `
   const modalEditMovement = document.getElementById('modalEditMovement');
 
   function openEditExpenseModal(monthId, item) {
+    if (!exigirAdmin('editar un gasto')) return;
     if (!modalEditExpense) return;
 
     document.getElementById('editExpenseMonthId').value = monthId;
@@ -1414,12 +1765,20 @@ tr.innerHTML = `
   if (formEditExpense) {
     formEditExpense.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!exigirAdmin('editar un gasto')) return;
       const monthId = document.getElementById('editExpenseMonthId').value;
       const itemId = document.getElementById('editExpenseItemId').value;
       const concepto = document.getElementById('editExpenseConcepto').value.trim();
       const monto = parseFloat(document.getElementById('editExpenseMonto').value);
 
-      if (!concepto) return;
+      /* `required` frena el vacío estricto pero no los solo espacios, así que el
+         aviso tiene que salir de acá. Antes era un `return` mudo: el modal
+         quedaba abierto sin explicar por qué. Mismo canal que el monto, que
+         dos líneas más abajo usa `alert`. */
+      if (!concepto) {
+        alert('El concepto del gasto no puede quedar vacío.');
+        return;
+      }
       if (isNaN(monto) || monto < 0) {
         alert('Por favor ingresa un monto válido.');
         return;
@@ -1431,7 +1790,16 @@ tr.innerHTML = `
         patch.rango = document.getElementById('editExpenseRango').value.trim();
       }
 
-      store.updateBudgetItem(monthId, itemId, patch);
+      /* El store devuelve false si el id no existe: la fila es vieja, de otra
+         pestaña o de un re-render concurrente. El modal se cierra igual —no hay
+         registro que editar y dejarlo abierto solo haría que el usuario reintente
+         sobre algo que ya no está— pero no se afirma que se guardó nada. */
+      if (!store.updateBudgetItem(monthId, itemId, patch)) {
+        if (modalEditExpense) modalEditExpense.classList.remove('active');
+        renderMonthView();
+        showToast('El gasto que intentas editar ya no existe.', '');
+        return;
+      }
 
       if (modalEditExpense) modalEditExpense.classList.remove('active');
       renderMonthView();
@@ -1440,6 +1808,7 @@ tr.innerHTML = `
   }
 
   function openEditMovementModal(monthId, m) {
+    if (!exigirAdmin('editar un movimiento')) return;
     if (!modalEditMovement) return;
 
     document.getElementById('editMovementMonthId').value = monthId;
@@ -1466,13 +1835,17 @@ tr.innerHTML = `
   if (formEditMovement) {
     formEditMovement.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!exigirAdmin('editar un movimiento')) return;
       const monthId = document.getElementById('editMovementMonthId').value;
       const movId = document.getElementById('editMovementId').value;
       const concepto = document.getElementById('editMovementConcepto').value.trim();
       const monto = parseFloat(document.getElementById('editMovementMonto').value);
       const fecha = document.getElementById('editMovementFecha');
 
-      if (!concepto) return;
+      if (!concepto) {
+        alert('El concepto del movimiento no puede quedar vacío.');
+        return;
+      }
       if (isNaN(monto) || monto < 0) {
         alert('Por favor ingresa un monto válido.');
         return;
@@ -1481,7 +1854,13 @@ tr.innerHTML = `
       const patch = { concepto, monto };
       if (fecha && fecha.value) patch.fecha = fecha.value;
 
-      store.updateMovement(monthId, movId, patch);
+      /* Ver el caso equivalente en `formEditExpense`: se cierra sin mentir. */
+      if (!store.updateMovement(monthId, movId, patch)) {
+        if (modalEditMovement) modalEditMovement.classList.remove('active');
+        renderMonthView();
+        showToast('El movimiento que intentas editar ya no existe.', '');
+        return;
+      }
 
       if (modalEditMovement) modalEditMovement.classList.remove('active');
       renderMonthView();
@@ -1497,6 +1876,7 @@ tr.innerHTML = `
   const btnSubmitMovement = document.getElementById('btnSubmitMovement');
 
   function openMovementModal(tipoFlujo = 'Ingreso') {
+    if (!exigirAdmin('registrar un movimiento')) return;
     formAddMovement.reset();
     inputMovFecha.value = new Date().toISOString().slice(0, 10);
     if (inputMovFlujo) inputMovFlujo.value = tipoFlujo;
@@ -1518,6 +1898,16 @@ tr.innerHTML = `
     }, 120);
   }
 
+  /* T2: los dos botones de alta de Movimientos también están en la columna de
+   * secciones, con los MISMOS ids —`crud-suite.mjs:789,818,862` los pulsa por
+   * id, y `adversarial-suite.mjs:444` los cuenta entre los globales que tienen
+   * que seguir funcionando en un mes vacío—. No hay binding nuevo: son los
+   * mismos handlers de siempre, que es lo que hace que un mes sin movimientos
+   * siga teniendo sus dos botones de alta.
+   *
+   * Ingreso y gasto son DOS botones y no uno con un selector, por dos razones
+   * que no son de gusto: la acción tiene dirección (un abono y un gasto no son
+   * el mismo dato ni el mismo signo) y las suites los pulsan por separado. */
   const btnHAddIncome = document.getElementById('btnHeaderAddIncome');
   if (btnHAddIncome) btnHAddIncome.addEventListener('click', () => openMovementModal('Ingreso'));
   const btnQAIncome = document.getElementById('btnQuickActionIncome');
@@ -1528,10 +1918,18 @@ tr.innerHTML = `
   if (formAddMovement) {
     formAddMovement.addEventListener('submit', (e) => {
       e.preventDefault();
+      if (!exigirAdmin('registrar un movimiento')) return;
       const concepto = document.getElementById('movConcepto').value.trim();
       const monto = parseFloat(document.getElementById('movMonto').value) || 0;
       const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
       const fecha = inputMovFecha.value;
+
+      /* Mismo caso que en el alta de gastos: `required` no corta los solo
+         espacios y el store solo hace `.trim()`. */
+      if (!concepto) {
+        showToast('El concepto del movimiento no puede quedar vacío.', '');
+        return;
+      }
 
       store.addMovement(store.data.activeMonthId, {
         concepto,
@@ -1553,9 +1951,25 @@ tr.innerHTML = `
   const formNewMonth = document.getElementById('formNewMonth');
   const selectCloneFrom = document.getElementById('newMonthCloneSelect');
   const btnOpenNM = document.getElementById('btnOpenNewMonthModal');
+  const cloneOpcionesRow = document.getElementById('cloneOpcionesRow');
+  const cloneIncluirExtras = document.getElementById('cloneIncluirExtras');
+  const cloneIncluirNotas = document.getElementById('cloneIncluirNotas');
+  const cloneIncluirMovimientos = document.getElementById('cloneIncluirMovimientos');
+
+  /* Las tres opciones solo significan algo con un mes real como origen: con "No
+     clonar" el período nuevo arranca vacío y las casillas sobrarían. Se muestra
+     con `style.display` por la misma convención que #inputBudgetRangeField. */
+  function actualizarOpcionesDeClonado() {
+    if (!cloneOpcionesRow || !selectCloneFrom) return;
+    cloneOpcionesRow.style.display = selectCloneFrom.value ? 'grid' : 'none';
+  }
 
   if (btnOpenNM && formNewMonth && selectCloneFrom) {
     btnOpenNM.addEventListener('click', () => {
+      if (!exigirAdmin('crear un período')) return;
+      /* `reset()` es lo que devuelve las tres casillas a su valor por defecto de
+         la etiqueta (extras y notas marcadas, movimientos apagado) en cada
+         apertura. */
       formNewMonth.reset();
       selectCloneFrom.innerHTML = '<option value="">-- No clonar (mes vacío) --</option>';
       store.getAllMonthsList().forEach(m => {
@@ -1565,21 +1979,77 @@ tr.innerHTML = `
         if (m.id === store.data.activeMonthId) opt.selected = true;
         selectCloneFrom.appendChild(opt);
       });
+      actualizarOpcionesDeClonado();
       modalNewMonth.classList.add('active');
     });
+
+    selectCloneFrom.addEventListener('change', actualizarOpcionesDeClonado);
   }
 
   formNewMonth.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (!exigirAdmin('crear un período')) return;
     const nombre = document.getElementById('newMonthName').value.trim();
     const cloneId = selectCloneFrom.value || null;
     if (!nombre) return;
 
-    const newId = store.addNewMonth(nombre, cloneId);
+    /* El store decide con estas tres banderas, y solo cuando hay mes origen: sin
+       `opciones` (o con las tres en false) el clon copia únicamente las cuatro
+       colecciones de presupuesto, como siempre. */
+    const newId = store.addNewMonth(nombre, cloneId, {
+      extras: !!(cloneIncluirExtras && cloneIncluirExtras.checked),
+      notas: !!(cloneIncluirNotas && cloneIncluirNotas.checked),
+      movimientos: !!(cloneIncluirMovimientos && cloneIncluirMovimientos.checked)
+    });
     modalNewMonth.classList.remove('active');
     switchView('mes', newId);
     showToast(`Nuevo mes "${nombre}" creado`, '');
   });
+
+  // --- ELIMINAR EL PERÍODO ACTIVO ---
+  const btnDeleteMonth = document.getElementById('btnDeleteMonth');
+
+  if (btnDeleteMonth) {
+    btnDeleteMonth.addEventListener('click', () => {
+      if (!exigirAdmin('eliminar un período')) return;
+
+      const mesId = store.data.activeMonthId;
+      const mes = store.getMonth(mesId);
+      if (!mes) {
+        showToast('No hay un período activo para eliminar.', '');
+        return;
+      }
+
+      /* El confirm tiene que decir QUÉ se pierde y cuántos son. No hay deshacer
+         ni historial: cada `save()` sobrescribe el blob entero en la nube, así
+         que un "¿estás seguro?" genérico esconde la consecuencia real. Los
+         "gastos" son los de presupuesto; los extra van aparte porque el usuario
+         los piensa como otra cosa. */
+      const gastos = (mes.servicios.fijos || []).length + (mes.servicios.variables || []).length +
+        (mes.personales.fijos || []).length + (mes.personales.variables || []).length;
+      const extras = mes.extras || [];
+      const movimientos = mes.movimientos || [];
+      const aceptado = window.confirm(
+        `¿Eliminar "${mes.nombre}"? Se borrarán ${gastos} gastos, ${movimientos.length} movimientos y ${extras.length} gastos extra de este período. Esta acción no se puede deshacer.`
+      );
+      if (!aceptado) return;
+
+      /* `deleteMonth` devuelve false cuando se niega (último mes del sistema) y
+         ya avisó con `alert()`. Un toast de éxito ahí sería mentira. */
+      if (!store.deleteMonth(mesId)) return;
+
+      // El store ya corrió el mes activo al primero que queda; hay que redibujar
+      // contra ese mes nuevo o la vista sigue mostrando el período borrado.
+      switchView('mes');
+      const nuevoActivo = store.getMonth(store.data.activeMonthId);
+      showToast(
+        nuevoActivo
+          ? `Período "${mes.nombre}" eliminado. Ahora estás en "${nuevoActivo.nombre}".`
+          : `Período "${mes.nombre}" eliminado.`,
+        ''
+      );
+    });
+  }
 
   // Cierre general de modales
   document.querySelectorAll('.btn-close-sheet, .btn-close-sheet-btn').forEach(btn => {

@@ -713,7 +713,16 @@ class FinancialStore {
   }
 
   // --- GESTIÓN DE MESES ---
-  addNewMonth(nombre, clonarDeMesId = null) {
+  /**
+   * @param {string} nombre nombre visible del período nuevo.
+   * @param {?string} clonarDeMesId mes origen del clon, o null para mes vacío.
+   * @param {{extras?: boolean, notas?: boolean, movimientos?: boolean}} opciones
+   *   Qué colecciones copIAN además de las cuatro de presupuesto cuando se clona.
+   *   Es opcional a propósito: sin `opciones` el clon se comporta exactamente
+   *   como antes (solo las cuatro de presupuesto), así que ningún llamador
+   *   existente cambia de resultado por haberle agregado el parámetro.
+   */
+  addNewMonth(nombre, clonarDeMesId = null, opciones = {}) {
     const id = nombre.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Date.now().toString().slice(-4);
     const corto = nombre.split(' ')[0] || nombre;
 
@@ -733,9 +742,20 @@ class FinancialStore {
           fijos: base.personales.fijos.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' })),
           variables: base.personales.variables.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' }))
         },
-        extras: [],
-        notas: '',
-        movimientos: []
+        // Un extra es una cuenta pendiente, igual que un gasto de presupuesto:
+        // se copia con id nuevo y vuelve a Pendiente.
+        extras: opciones.extras
+          ? base.extras.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' }))
+          : [],
+        notas: opciones.notas ? base.notas : '',
+        // Un movimiento NO se resetea a Pendiente, a diferencia de los gastos.
+        // Un movimiento es una transacción YA registrada, con su estado y su
+        // fecha: ponerlo en Pendiente cambiaría su significado (un ingreso ya
+        // cobrado volvería a ser un cobro pendiente) y falsearía el balance del
+        // clon. Por eso además es opt-in: copiarlo puede duplicar ingresos.
+        movimientos: opciones.movimientos
+          ? base.movimientos.map(m => ({ ...m, id: generateId() }))
+          : []
       };
     } else {
       nuevoMes = {

@@ -3643,23 +3643,136 @@ body.read-only-mode #btnOpenNotesModal {
 }
 
 /* ==========================================================================
-   19. RESPONSIVE
-   El breakpoint del drawer es 1024px porque app.js compara
-   `window.innerWidth <= 1024` en 4 lugares para el auto-cierre. Moverlo aquí
-   rompe ese comportamiento en silencio.
+   19. RESPONSIVE — DOS BREAKPOINTS DISTINTOS, Y ANTES SÓLO HABÍA UNO
+   --------------------------------------------------------------------------
+   Este bloque hacía dos cosas que comparten un mismo número —1024px— y el
+   número está bien para una y mal para la otra. Separadas:
+
+   · EL DRAWER de `.app-sidebar` — el rail de tiempo: **1024px**. CONGELADO.
+     `app.js` compara `window.innerWidth <= 1024` en 4 lugares (líneas 391, 414,
+     1459 y 1463) para el auto-cierre. Mover ese número rompe ese
+     comportamiento en silencio, y en silencio es como se rompe.
+
+   · LA COLUMNA de secciones — la navegación de categoría: **1440px**. §19a.
+     Abajo está la medida que lo decidió, porque este es el número que alguien
+     va a querer "optimizar" sin saber lo que cuesta.
+
+   La diferencia no es de estilo: con el número compartido, la columna vivía
+   en 1025-1423, que es exactamente el rango donde la barra de comando está
+   partida en dos renglones.
    ========================================================================== */
-@media (max-width: 1024px) {
-  /* T2: la columna de secciones NO se esconde en este breakpoint, y esa es la
-     decisión. Escondida, el filtro de categoría desaparecería entero en el
-     teléfono: no habría forma de apagar una sección, ni de volver a encender
-     una apagada, ni de llegar al alta de Extras —y `empty.segment-filters`
+
+/* --------------------------------------------------------------------------
+   19a. LA COLUMNA DE SECCIONES BAJA DE EJE A 1440px, NO A 1024px
+   --------------------------------------------------------------------------
+   POR QUÉ 1440 Y NO 1024 — LA MEDIDA, NO LA INTUICIÓN
+
+   La columna de secciones le roba 168px a la columna del contenido, y la tira
+   de cinco cifras necesita **883.8px** interiores. Medido: cuatro separaciones
+   de 16px entre cinco celdas (`diag-breakpoint.mjs`). Con la columna puesta,
+   la tira entra en un renglón sólo hasta ~1398px de ventana; de ahí para abajo
+   se parte en dos y "Balance" cae solo a una segunda fila:
+
+   | ventana | main | disponible | necesario | holgura | filas | barra  |
+   |  1440   | 1021 |    925     |   883.8   | +41.2   |   1   | 125.9  |
+   |  1400   |  981 |    885     |   883.8   |  +1.2   |   1   | 125.9  |
+   |  1366   |  947 |    851     |   883.8   | -32.8   |   2   | 185.2  |
+   |  1280   |  861 |    765     |   883.8   | -118.8  |   2   | 185.2  |
+   |  1025   |  606 |    510     |   883.8   | -373.8  |   2   | 204.8  |
+
+   El usuario tiene un monitor de 1366x768: está en la fila donde la barra pasa
+   de 125.9px a 185.2px, o sea la barra que se ve deformada.
+
+   Y NO SE ARREGLA ANGOSTANDO LA COLUMNA, que es lo que se intentó primero:
+   para que la tira entrara a 1280 con 3 columnas haría falta una columna de
+   **-48.2px**. No existe. El ancho de la tira es dato y no relleno: las cinco
+   celdas tienen `sobra = 0`. Lo único que se puede mover es DÓNDE ocurre la
+   transición, así que la columna baja de eje antes de que el ancho le falte.
+
+   POR QUÉ 1440 Y NO EL MÍNIMO (1423)
+   El número más bajo que deja 24px de aire del lado de las 3 columnas es 1423.
+   Se usa 1440 por dos razones, y ninguna es estética:
+     1. Es el ancho de referencia del proyecto —toda la hoja está medida a
+        1440x900— y un número redondo se puede leer, citar y defender. 1423
+        parece un número mágico y se invita a "redondearlo".
+     2. Bajar a 1423 no compra nada: del lado de la banda sobran +445.2px a
+        1440. El margen está donde no había problemas.
+
+   LA REGLA QUE SOSTIENE EL NÚMERO, PARA QUE NO SE TOQUE A LA LEYECIMA
+   La banda tiene que tener MÁS holgura que la columna en el punto donde se
+   cortaba, no al revés. Medido de los dos lados de la transición:
+     · 3 columnas (ventana > 1440), la más estrecha que las tiene: 1441px →
+       **+42.2px** de holgura en la tira.
+     · banda (ventana <= 1440), la más ancha que las tiene: 1440px → **+445.2px**.
+   Un +1.2px a 1400 es una coincidencia, no una configuración: el día que una
+   cifra mida un píxel más, la barra se parte sola sin que nada avise. Por eso
+   el criterio no es "que entre a 1440" sino "que entre en todo el rango de
+   escritorio con aire", y 1440 es el número que lo cumple.
+
+   Y NO ES EL DRAWER
+   Este bloque NO toca `.app-sidebar`: §19b es el único dueño de 1024px, y acá
+   no hay ni una regla de `.section-rail` compartida con él. Esa es la razón
+   de que estén en dos bloques y no en uno con dos números: una regla de
+   `.section-rail` dentro de §19b ganaría o perdería contra las de acá según el
+   orden, y el resultado sería un comportamiento distinto en 1025-1440 que en
+   <=1024 —que es el bug entero, en otra forma—. */
+@media (max-width: 1440px) {
+  /* La retícula PASA DE TRES COLUMNAS A DOS, no a una. `.app-sidebar` sigue en
+     flujo hasta 1024px, así que con una sola columna se iría a una fila propia
+     y empujaría `.app-main-area` abajo de él: el mismo error que
+     `.sidebar-backdrop` ya evita por estar fuera de `.app-layout`
+     (index.html:21). A dos columnas el rail queda a la izquierda y la banda a
+     su derecha, arriba del contenido — la misma lectura que a 1024, con el
+     rail todavía en la pantalla.
+
+     Y por eso el `grid-column`/`grid-row` explícito de los dos: el orden en el
+     DOM es sidebar, section-rail, app-main-area, y el reparto automático los
+     pondría en (1,1), (1,2) y (2,1) — con el contenido debajo del rail en vez
+     de a su lado. Los tres nombres explícitos son los que sostienen esto. */
+  .app-layout {
+    grid-template-columns: var(--rail-width) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  /* EL RAIL ABARCA LAS DOS FILAS, Y SIN ESTO LA BANDA PAGA 900px DE ALTO.
+     MEDIDO: con el rail sólo en la fila 1, esa fila se dimensiona al ítem más
+     alto —que es `.app-sidebar`, con `height: 100vh`— y el documento pasaba de
+     915px a 1815px en 1440 y de 974px a 1874px en 1200. La banda ocupaba su
+     ~100px y el resto era el rail occupying una fila vacía.
+
+     Que abarque `1 / 3` lo saca del cálculo de la fila 1: un ítem que cruza
+     filas reparte su alto entre ellas, así que los 100vh caen sobre la fila 1
+     (la banda, ~100px) más la fila 2 (el contenido) y no inflan ninguna. El
+     documento vuelve a los ~1015px que espera una banda, no a 1815.
+
+     A <=1024 esto es INERTE y no necesita reset: `.app-sidebar` pasa a
+     `position: fixed` ahí, y un hijo en flujo absoluto de un contenedor de
+     retícula no es ítem de retícula, así que su `grid-row` no se aplica. */
+  .app-sidebar {
+    grid-row: 1 / 3;
+  }
+
+  .section-rail {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .app-main-area {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* T2: la columna NO se esconde al bajar de eje, y esa es la decisión.
+     Escondida, el filtro de categoría desaparecería entero en el teléfono: no
+     habría forma de apagar una sección, ni de volver a encender una apagada, ni
+     de llegar al alta de Extras —y `empty.segment-filters`
      (adversarial-suite.mjs:1335) apagaría las cuatro y no tendría nada que
      pulsar—.
 
-     Y tampoco podía ser un drawer como el rail: sería un tercer panel
-    lazily-oculto con su propio estado, su propio botón y su propio
+     Y tampoco puede ser un drawer como el rail: sería un tercer panel
+     lazily-oculto con su propio estado, su propio botón y su propio
      `window.innerWidth <= 1024` en app.js, o sea cuatro lugares más donde el
-     breakpoint puede romperse en silencio. El breakpoint ya está congelado en
+     breakpoint puede romperse en silencio. El del drawer ya está congelado en
      cuatro comparaciones y no se suma un quinto.
 
      Lo que hace en su lugar es BAJAR DE EJE: la columna deja de ser columna y
@@ -3668,10 +3781,6 @@ body.read-only-mode #btnOpenNotesModal {
      ya tomó `.sidebar-periods` —que a 1024 es `flex: 0 1 auto` con
      `max-height` en vez de crecer—: cuando el ancho no alcanza para el eje que
      la pieza usa, se le da el eje que sí tiene. */
-  .app-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .section-rail {
     position: sticky;
     top: 0;
@@ -3727,6 +3836,35 @@ body.read-only-mode #btnOpenNotesModal {
   }
 
   .section-rail-foot { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   19b. EL DRAWER — 1024px, Y NO SE MUEVE
+   --------------------------------------------------------------------------
+   El breakpoint del drawer es 1024px porque `app.js` compara
+   `window.innerWidth <= 1024` en 4 lugares (391, 414, 1459, 1463) para el
+   auto-cierre. Este bloque es el único dueño de ese número, y no tiene adentro
+   ni una regla de `.section-rail`. */
+@media (max-width: 1024px) {
+  /* Recién acá la retícula pasa a UNA columna, porque recién acá `.app-sidebar`
+     pasa a `position: fixed` y sale de la retícula. Se deshacen los dos nombres
+     explícitos de §19a: sin esto, `.section-rail` seguiría anclado a la columna
+     2 y `.app-main-area` a la fila 2 de una retícula de una sola columna, con
+     la fila 2 sin dueño. */
+  .app-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+
+  .section-rail {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .app-main-area {
+    grid-column: auto;
+    grid-row: auto;
+  }
 
   /* EL DRAWER NO SE ROMPE, Y AHORA ES MÁS FÁCIL DE ROMPER. El mismo `<aside>`
      vuelve a ser un panel de 236px con TODO su texto, y su ancho es

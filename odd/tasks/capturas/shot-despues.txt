@@ -1,0 +1,8 @@
+﻿captura -> odd\tasks\capturas\despues-nav.png
+
+=== DESALINEACION VERTICAL (delta = abajo - arriba, px) ===
+nodos: 99 | desalineados >2.5px: 0
+ÔöîÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÉ
+Ôöé (index) Ôöé
+Ôö£ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöñ
+ÔööÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÿ

@@ -1,0 +1,27 @@
+{
+  "label": "r2",
+  "script": "edicion-admin.mjs",
+  "reglaGateEnArchivo": "body.read-only-mode .admin-action-btn { display: none !important }",
+  "prefersColorScheme": "PRESENTE (revisar)",
+  "congelamiento": {
+    "inyectadoEn": "document-start",
+    "setItemParcheado": true,
+    "hayRemoto": true,
+    "remotoCongelado": true,
+    "guardarEsContador": true
+  },
+  "store": {
+    "saveCongelado": true,
+    "updateBudgetItemOriginal": true,
+    "updateMovementOriginal": true,
+    "updateMovementEnElPrototipo": true
+  },
+  "error": "Error: excepcion en la pagina: TypeError: (intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(...) is not a function\n    at <anonymous>:59:6\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:428:3",
+  "diffSnapshot": [
+    "  NO HUBO SNAPSHOT COMPLETO: falta el de antes"
+  ],
+  "snapshotIdentico": false,
+  "abortar": [
+    "excepcion en el recorrido: Error: excepcion en la pagina: TypeError: (intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(intermediate value)(...) is not a function\n    at <anonymous>:59:6\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:428:3"
+  ]
+}

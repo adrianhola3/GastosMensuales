@@ -1,0 +1,232 @@
+{
+  "label": "r4",
+  "script": "edicion-admin.mjs",
+  "reglaGateEnArchivo": "body.read-only-mode .admin-action-btn { display: none !important }",
+  "prefersColorScheme": 0,
+  "congelamiento": {
+    "inyectadoEn": "document-start",
+    "setItemParcheado": true,
+    "hayRemoto": true,
+    "remotoCongelado": true,
+    "guardarEsContador": true
+  },
+  "store": {
+    "saveCongelado": true,
+    "updateBudgetItemOriginal": true,
+    "updateMovementOriginal": true,
+    "updateMovementEnElPrototipo": true
+  },
+  "snapshotAntes": {
+    "bytesLocales": 8104,
+    "hashLocales": 1481493643,
+    "hashMemoria": 1481493643,
+    "local": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    },
+    "memoria": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    }
+  },
+  "contadoresAntes": {
+    "setItem": {
+      "control_gastos_mensuales_db_v1": 1
+    },
+    "remoto": {},
+    "storeSave": 0
+  },
+  "t1": {
+    "sesionReal": "read-only-mode",
+    "editExpense": 9,
+    "deleteExpense": 9,
+    "filasGasto": 9,
+    "hijosPorFila": 4,
+    "colTemplate": "733.688px 92px 70.3125px 0px",
+    "movimientosEnEstado": 0
+  },
+  "t1_medidoLector": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "t2_sinReadOnly": {
+    "bodyClass": "",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "t2_conReadOnly": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "error": "Error: excepcion en la pagina: TypeError: Cannot read properties of null (reading 'monto')\n    at <anonymous>:35:69\n    at <anonymous>:36:9\n    at <anonymous>:53:5\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:456:36",
+  "diffSnapshot": [
+    "  NO HUBO SNAPSHOT COMPLETO: falta el de despues"
+  ],
+  "snapshotIdentico": false,
+  "abortar": [
+    "excepcion en el recorrido: Error: excepcion en la pagina: TypeError: Cannot read properties of null (reading 'monto')\n    at <anonymous>:35:69\n    at <anonymous>:36:9\n    at <anonymous>:53:5\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:456:36"
+  ]
+}

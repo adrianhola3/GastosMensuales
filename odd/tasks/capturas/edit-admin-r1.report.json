@@ -1,0 +1,730 @@
+{
+  "label": "r1",
+  "script": "edicion-admin.mjs",
+  "congelamiento": "{\"inyectadoEn\":\"document-start\",\"setItemParcheado\":true,\"hayRemoto\":true,\"remotoCongelado\":true,\"guardarEsContador\":true}",
+  "store": "{\"saveCongelado\":true,\"tieneUpdateBudgetItem\":true,\"tieneUpdateMovement\":true,\"tieneUpdateMovementOriginal\":true}",
+  "snapshotAntes": {
+    "bytesLocales": 8104,
+    "resumenLocal": {
+      "totalGastos": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "activeMonthId": "septiembre-2026",
+      "porColeccion": {
+        "agosto-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "agosto-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "agosto-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "agosto-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "agosto-2026/extras": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 83
+        },
+        "agosto-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "octubre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "octubre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "octubre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "octubre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "octubre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "octubre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "noviembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "noviembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "noviembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "noviembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "noviembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "noviembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "diciembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "diciembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "diciembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "diciembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "diciembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "diciembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "enero-2027/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "enero-2027/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "enero-2027/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "enero-2027/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "enero-2027/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "enero-2027/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    },
+    "resumenMemoria": {
+      "totalGastos": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "activeMonthId": "septiembre-2026",
+      "porColeccion": {
+        "agosto-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "agosto-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "agosto-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "agosto-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "agosto-2026/extras": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 83
+        },
+        "agosto-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "octubre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "octubre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "octubre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "octubre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "octubre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "octubre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "noviembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "noviembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "noviembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "noviembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "noviembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "noviembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "diciembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "diciembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "diciembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "diciembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "diciembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "diciembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        },
+        "enero-2027/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "enero-2027/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "enero-2027/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "enero-2027/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "enero-2027/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "enero-2027/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    }
+  },
+  "contadoresAntes": "{\"setItem\":{\"control_gastos_mensuales_db_v1\":1},\"remoto\":{},\"save\":0,\"storeSave\":0}",
+  "t1_lectorReal": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Editar gasto"
+    },
+    "gastoEliminar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Eliminar gasto"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "cuerpo": "read-only-mode"
+  },
+  "t1_cuentas": "{\"editExpense\":9,\"deleteExpense\":9,\"editTx\":0,\"deleteTx\":0,\"filasGasto\":9,\"filasMov\":0,\"reglaGate\":\"NO ENCONTRADA\"}",
+  "t2_sinReadOnly": "",
+  "t2_sinReadOnly_medido": {
+    "bodyClass": "",
+    "gastoEditar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Editar gasto"
+    },
+    "gastoEliminar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Eliminar gasto"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    }
+  },
+  "t2_readOnly_medido": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Editar gasto"
+    },
+    "gastoEliminar": {
+      "existe": true,
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "esAdmin": true,
+      "glifo": true,
+      "title": "Eliminar gasto"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    }
+  },
+  "t2_bodyAlTerminar": "",
+  "t3_itemReal": {
+    "monthId": "septiembre-2026",
+    "seccion": "servicios/fijos",
+    "item": {
+      "id": "id_92h8zz8mr_1789941040428",
+      "tipo": "Fijo",
+      "monto": 89.9,
+      "estado": "Pendiente",
+      "concepto": "Internet de casa"
+    }
+  },
+  "t3_antesDeAbrir": {
+    "modalExiste": true,
+    "activo": false,
+    "editExpenseItemId": "",
+    "editExpenseConcepto": "",
+    "editExpenseMonto": "",
+    "editExpenseTipoReadonly": "Fijo",
+    "editExpenseRango": ""
+  },
+  "t3_abrir": "click",
+  "t3_precarga": {
+    "modalExiste": true,
+    "activo": true,
+    "editExpenseMonthId": "septiembre-2026",
+    "editExpenseItemId": "id_92h8zz8mr_1789941040428",
+    "editExpenseConcepto": "Internet de casa",
+    "editExpenseMonto": "89.90",
+    "editExpenseTipoReadonly": "Fijo",
+    "editExpenseRango": ""
+  },
+  "t3_rangoVisible": "none",
+  "t3_contraste": [
+    {
+      "sel": "h3",
+      "texto": "Editar gasto",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 17,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Concepto",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Monto (S/)",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Tipo",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "p#editExpenseTipoReadonly.form-readonly-value",
+      "texto": "Fijo",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "p.form-hint",
+      "texto": "El tipo decide en qué lista vive el gast",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 12,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 5.5,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-surface.btn-close-sheet-btn",
+      "texto": "Cancelar",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-primary.btn-lg",
+      "texto": "Guardar cambios",
+      "fg": "rgb(11, 11, 12)",
+      "bg": "rgb(0, 136, 255)",
+      "px": 15,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 5.59,
+      "cumple": true
+    }
+  ],
+  "t3_foco": {
+    "enfocado": true,
+    "focus": true,
+    "focusVisible": true,
+    "borde": "rgba(29, 29, 31, 0.36)",
+    "anillo": "solid 2px rgb(0, 136, 255)",
+    "portador": "#editExpenseConcepto",
+    "seleccion": "0-16",
+    "valor": "Internet de casa"
+  },
+  "t4_antesEsc": [
+    "modalEditExpense"
+  ],
+  "t4_despuesEsc": [],
+  "t4_trasEsc": false,
+  "t5_llenado": "{\"concepto\":\"PRUEBA CONGELADA\",\"monto\":\"123.45\",\"rangoEnviado\":false,\"rango\":null}",
+  "t5_envio": "enviado",
+  "t5_patch": "[{\"monthId\":\"septiembre-2026\",\"id\":\"id_92h8zz8mr_1789941040428\",\"patch\":{\"concepto\":\"PRUEBA CONGELADA\",\"monto\":123.45},\"resultadoEnCopia\":true,\"estadoEnCopia\":{\"id\":\"id_92h8zz8mr_1789941040428\",\"tipo\":\"Fijo\",\"monto\":123.45,\"estado\":\"Pendiente\",\"concepto\":\"PRUEBA CONGELADA\"}}]",
+  "t5_modalCerrado": false,
+  "t6_movReal": {
+    "monthId": "septiembre-2026",
+    "mov": null,
+    "totalMovimientos": 0
+  },
+  "t6_abrir": "no hay boton",
+  "t6_precarga": {
+    "modalExiste": true,
+    "activo": false,
+    "editMovementMonthId": "",
+    "editMovementId": "",
+    "editMovementConcepto": "",
+    "editMovementMonto": "",
+    "editMovementFecha": "",
+    "editMovementFlujoReadonly": "Ingreso"
+  },
+  "t6_contraste": [],
+  "t6_foco": {
+    "enfocado": false,
+    "focus": false,
+    "focusVisible": false,
+    "borde": "rgba(29, 29, 31, 0.12)",
+    "anillo": "NINGUNO",
+    "portador": null,
+    "valor": ""
+  },
+  "t6_antesEsc": [],
+  "t6_despuesEsc": [],
+  "t6_trasEsc": false,
+  "error": "Error: excepcion en la pagina: TypeError: Cannot read properties of null (reading 'click')\n    at <anonymous>:1:62\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:509:3",
+  "diffSnapshot": null,
+  "snapshotIdentico": false,
+  "abortar": [
+    "no hay movimientos para probar",
+    "excepcion en el recorrido: Error: excepcion en la pagina: TypeError: Cannot read properties of null (reading 'click')\n    at <anonymous>:1:62\n    at Cdp.eval (file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/cdp.mjs:95:13)\n    at async file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/odd/tasks/edicion-admin.mjs:509:3"
+  ]
+}

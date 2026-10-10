@@ -1,0 +1,463 @@
+[
+  {
+    "n": 1,
+    "nombre": "Vista Mensual activa al entrar",
+    "ok": true,
+    "detalle": {
+      "mes": true,
+      "panel": false,
+      "rail": true
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 2,
+    "nombre": "Consolidado: cambiar de vista",
+    "ok": true,
+    "detalle": {
+      "mes": false,
+      "panel": true,
+      "rail": true,
+      "filasMatriz": 6,
+      "kpi": 0
+    },
+    "escrituras": {
+      "guardar": 1,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 3,
+    "nombre": "Volver a Vista Mensual",
+    "ok": true,
+    "detalle": {
+      "mes": true,
+      "gruposTotales": 4,
+      "gruposVisibles": 4
+    },
+    "escrituras": {
+      "guardar": 1,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 4,
+    "nombre": "Buscador: filtra y restaura",
+    "ok": true,
+    "detalle": {
+      "antes": 10,
+      "conFiltro": 1,
+      "feedback": "1 resultado encontrado",
+      "conCero": 0,
+      "limpiarConConsulta": "flex",
+      "feedbackConConsulta": "flex",
+      "feedbackCero": "0 resultados encontrados",
+      "limpio": 10,
+      "limpiarAlLimpiar": "none",
+      "feedbackAlLimpiar": "none"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 5,
+    "nombre": "Los 6 periodos con uno activo",
+    "ok": true,
+    "detalle": {
+      "total": 6,
+      "activos": 1,
+      "nombres": [
+        "Agosto 2026",
+        "Septiembre 2026",
+        "Octubre 2026",
+        "Noviembre 2026",
+        "Diciembre 2026",
+        "Enero 2027"
+      ]
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 6,
+    "nombre": "Periodo activo coherente con el topbar",
+    "ok": true,
+    "detalle": {
+      "topbar": "Agosto 2026",
+      "activo": "Agosto 2026",
+      "reglas": "rgba(0, 0, 0, 0)"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 7,
+    "nombre": "Click en un periodo re-renderiza",
+    "ok": true,
+    "detalle": {
+      "topbar": "Septiembre 2026",
+      "filas": 9
+    },
+    "escrituras": {
+      "guardar": 2,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 8,
+    "nombre": "Flecha siguiente / anterior",
+    "ok": true,
+    "detalle": {
+      "sig": "Octubre 2026",
+      "ant": "Septiembre 2026",
+      "vuelta": "Agosto 2026"
+    },
+    "escrituras": {
+      "guardar": 6,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 9,
+    "nombre": "Las 4 categorias con su total",
+    "ok": true,
+    "detalle": [
+      {
+        "k": "servicios",
+        "titulo": "Servicios del hogar\n                    6",
+        "cifra": null,
+        "filas": 6,
+        "visible": true
+      },
+      {
+        "k": "personales",
+        "titulo": "Gastos personales\n                    3",
+        "cifra": null,
+        "filas": 3,
+        "visible": true
+      },
+      {
+        "k": "movimientos",
+        "titulo": "Movimientos del mes\n                    0",
+        "cifra": null,
+        "filas": 0,
+        "visible": true
+      },
+      {
+        "k": "extras",
+        "titulo": "Gastos extraordinarios\n                    1",
+        "cifra": null,
+        "filas": 1,
+        "visible": true
+      }
+    ],
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 10,
+    "nombre": "Un acento por categoria, cuatro tics distintos",
+    "ok": true,
+    "detalle": {
+      "total": 7,
+      "distintos": 5,
+      "colores": [
+        "rgb(80, 110, 130)",
+        "rgb(120, 97, 151)",
+        "rgb(74, 116, 93)",
+        "rgb(124, 104, 73)",
+        "rgb(109, 114, 122)",
+        "rgb(109, 114, 122)",
+        "rgb(109, 114, 122)"
+      ]
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 11,
+    "nombre": "Selector de segmentos: apagar y reactivar",
+    "ok": true,
+    "detalle": {
+      "pills": [
+        "all",
+        "servicios",
+        "personales",
+        "movimientos",
+        "extras"
+      ],
+      "apagada": "none",
+      "pillActiva": false,
+      "verTodoInactivo": false,
+      "reactivada": "block"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 12,
+    "nombre": "Encabezado del grupo: colapsa y expande, y lo dice con aria-expanded",
+    "ok": true,
+    "detalle": {
+      "antes": {
+        "alto": 314,
+        "collapsed": false,
+        "aria": "true"
+      },
+      "colapsada": {
+        "alto": 40,
+        "collapsed": true,
+        "aria": "false"
+      },
+      "expandida": {
+        "alto": 314,
+        "collapsed": false,
+        "aria": "true"
+      }
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 13,
+    "nombre": "Cifras del mes: ingresos, presupuesto, balance, cobertura",
+    "ok": true,
+    "detalle": {
+      "ingresos": "S/ 0.00",
+      "egresos": "S/ 699.34",
+      "balance": "S/ 0.00",
+      "estado": "Equilibrado",
+      "cobertura": "0.0%",
+      "pagado": "S/ 0.00",
+      "pendiente": "S/ 699.34",
+      "pct": "0.0% Pagado",
+      "notasIngresos": "0 abonos registrados",
+      "notasGastos": "0 de 10 gastos pagados"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 14,
+    "nombre": "El acento de estado solo va en la cifra del balance",
+    "ok": true,
+    "detalle": {
+      "balance": "rgb(43, 108, 140)",
+      "ingresos": "rgb(29, 29, 31)",
+      "etiqueta": "rgb(101, 105, 114)"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 15,
+    "nombre": "Consolidado: los dos lienzos pintados y con color",
+    "ok": true,
+    "detalle": [
+      {
+        "id": "chartTrendBar",
+        "w": 893,
+        "h": 120,
+        "pintados": 26790,
+        "colores": 71,
+        "conAcento": 6
+      },
+      {
+        "id": "chartCategoryDonut",
+        "w": 420,
+        "h": 280,
+        "pintados": 29400,
+        "colores": 164,
+        "conAcento": 6
+      }
+    ],
+    "escrituras": {
+      "guardar": 1,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 16,
+    "nombre": "Notas: abre con el periodo y cierra",
+    "ok": false,
+    "detalle": {
+      "abierto": false,
+      "sub": "Recordatorios y observaciones del mes.",
+      "cerrado": false
+    },
+    "escrituras": {
+      "guardar": 1,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": true
+  },
+  {
+    "n": 17,
+    "nombre": "Estado de conexion visible",
+    "ok": true,
+    "detalle": {
+      "badge": "En línea",
+      "clase": "conn-badge conn-online",
+      "punto": "rgba(0, 0, 0, 0)"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 18,
+    "nombre": "Modo Lector oculta las acciones de administrador",
+    "ok": true,
+    "detalle": {
+      "total": 29,
+      "visiblesComoLector": 0,
+      "visiblesComoAdmin": 29,
+      "etiqueta": "Solo Lectura"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 19,
+    "nombre": "Modal de pago variable abre SIN escribir",
+    "ok": false,
+    "detalle": {
+      "idx": 5,
+      "abierto": false,
+      "titulo": "Confirmar pago variable"
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 20,
+    "nombre": "Cerrar el modal de pago variable",
+    "ok": true,
+    "detalle": {
+      "cerrados": 0
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  },
+  {
+    "n": 21,
+    "nombre": "prefers-reduced-motion cubre transiciones y keyframes",
+    "ok": true,
+    "detalle": {
+      ".sidebar-nav-tab": {
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      },
+      ".command-search-input": {
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      },
+      ".neo-toast": {
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      },
+      ".modal-sheet": {
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      },
+      ".expense-card-item": {
+        "transition": "1e-05s",
+        "animation": "1e-05s"
+      }
+    },
+    "escrituras": {
+      "guardar": 0,
+      "iniciarSesion": 0,
+      "salirDeSesion": 0,
+      "github": 0
+    },
+    "escribio": false
+  }
+]

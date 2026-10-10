@@ -1,0 +1,51 @@
+﻿escrituras RESIDUALES del arranque de la app: {"guardar":0,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+
+OK     1. Vista Mensual activa al entrar                
+        {"mes":true,"panel":false,"rail":true}
+OK     2. Consolidado: cambiar de vista                   *** 1 ESCRITURA(S) {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        {"mes":false,"panel":true,"rail":true,"filasMatriz":6,"kpi":0}
+OK     3. Volver a Vista Mensual                          *** 1 ESCRITURA(S) {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        {"mes":true,"gruposTotales":4,"gruposVisibles":4}
+OK     4. Buscador: filtra y restaura                   
+        {"antes":10,"conFiltro":1,"feedback":"1 resultado encontrado","conCero":0,"limpiarConConsulta":"flex","feedbackConConsulta":"flex","feedbackCero":"0 resultados encontrados","limpio":10,"limpiarAlLimpiar":"none","feedbackAlLimpiar":"none"}
+OK     5. Los 6 periodos con uno activo                 
+        {"total":6,"activos":1,"nombres":["Agosto 2026","Septiembre 2026","Octubre 2026","Noviembre 2026","Diciembre 2026","Enero 2027"]}
+OK     6. Periodo activo coherente con el topbar        
+        {"topbar":"Agosto 2026","activo":"Agosto 2026","reglas":"rgba(0, 0, 0, 0)"}
+OK     7. Click en un periodo re-renderiza                *** 2 ESCRITURA(S) {"guardar":2,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        {"topbar":"Septiembre 2026","filas":9}
+OK     8. Flecha siguiente / anterior                     *** 6 ESCRITURA(S) {"guardar":6,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        {"sig":"Octubre 2026","ant":"Septiembre 2026","vuelta":"Agosto 2026"}
+OK     9. Las 4 categorias con su total                 
+        [{"k":"servicios","titulo":"Servicios del hogar\n                    6","cifra":null,"filas":6,"visible":true},{"k":"personales","titulo":"Gastos personales\n                    3","cifra":null,"filas":3,"visible":true},{"k":"movimientos","titulo":"Movimientos del mes\n                    0","cifra"
+OK    10. Un acento por categoria, cuatro tics distintos
+        {"total":7,"distintos":5,"colores":["rgb(80, 110, 130)","rgb(120, 97, 151)","rgb(74, 116, 93)","rgb(124, 104, 73)","rgb(109, 114, 122)","rgb(109, 114, 122)","rgb(109, 114, 122)"]}
+OK    11. Selector de segmentos: apagar y reactivar     
+        {"pills":["all","servicios","personales","movimientos","extras"],"apagada":"none","pillActiva":false,"verTodoInactivo":false,"reactivada":"block"}
+OK    12. Encabezado del grupo: colapsa y expande, y lo dice con aria-expanded
+        {"antes":{"alto":314,"collapsed":false,"aria":"true"},"colapsada":{"alto":40,"collapsed":true,"aria":"false"},"expandida":{"alto":314,"collapsed":false,"aria":"true"}}
+OK    13. Cifras del mes: ingresos, presupuesto, balance, cobertura
+        {"ingresos":"S/ 0.00","egresos":"S/ 699.34","balance":"S/ 0.00","estado":"Equilibrado","cobertura":"0.0%","pagado":"S/ 0.00","pendiente":"S/ 699.34","pct":"0.0% Pagado","notasIngresos":"0 abonos registrados","notasGastos":"0 de 10 gastos pagados"}
+OK    14. El acento de estado solo va en la cifra del balance
+        {"balance":"rgb(43, 108, 140)","ingresos":"rgb(29, 29, 31)","etiqueta":"rgb(101, 105, 114)"}
+OK    15. Consolidado: los dos lienzos pintados y con color  *** 1 ESCRITURA(S) {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        [{"id":"chartTrendBar","w":893,"h":120,"pintados":26790,"colores":71,"conAcento":6},{"id":"chartCategoryDonut","w":420,"h":280,"pintados":29400,"colores":164,"conAcento":6}]
+FALLA 16. Notas: abre con el periodo y cierra             *** 1 ESCRITURA(S) {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+        {"abierto":false,"sub":"Recordatorios y observaciones del mes.","cerrado":false}
+OK    17. Estado de conexion visible                    
+        {"badge":"En l├¡nea","clase":"conn-badge conn-online","punto":"rgba(0, 0, 0, 0)"}
+OK    18. Modo Lector oculta las acciones de administrador
+        {"total":29,"visiblesComoLector":0,"visiblesComoAdmin":29,"etiqueta":"Solo Lectura"}
+FALLA 19. Modal de pago variable abre SIN escribir      
+        {"idx":5,"abierto":false,"titulo":"Confirmar pago variable"}
+OK    20. Cerrar el modal de pago variable              
+        {"cerrados":0}
+OK    21. prefers-reduced-motion cubre transiciones y keyframes
+        {".sidebar-nav-tab":{"transition":"1e-05s","animation":"1e-05s"},".command-search-input":{"transition":"1e-05s","animation":"1e-05s"},".neo-toast":{"transition":"1e-05s","animation":"1e-05s"},".modal-sheet":{"transition":"1e-05s","animation":"1e-05s"},".expense-card-item":{"transition":"1e-05s","ani
+
+=== RESUMEN DEL RECORRIDO EN CLARO ===
+pasos: 21   OK: 19   FALLA: 2
+  fallan: 16. Notas: abre con el periodo y cierra | 19. Modal de pago variable abre SIN escribir
+escrituras a Supabase durante el recorrido: 12  en 2. Consolidado: cambiar de vista {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0} | 3. Volver a Vista Mensual {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0} | 7. Click en un periodo re-renderiza {"guardar":2,"iniciarSesion":0,"salirDeSesion":0,"github":0} | 8. Flecha siguiente / anterior {"guardar":6,"iniciarSesion":0,"salirDeSesion":0,"github":0} | 15. Consolidado: los dos lienzos pintados y con color {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0} | 16. Notas: abre con el periodo y cierra {"guardar":1,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+residual del arranque: {"guardar":0,"iniciarSesion":0,"salirDeSesion":0,"github":0}
+console.error: 0   excepciones: 0   red>=400: 1 -> 401 https://bgcgmofroibrxthvdlil.supabase.co/rest/v1/gastos?on_conflict=id

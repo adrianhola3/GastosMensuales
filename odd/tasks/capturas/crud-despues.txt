@@ -1,0 +1,120 @@
+﻿
+==============================================================================
+FIXTURE baseline  ::  Gasto: crear / editar / borrar / marcar pagado
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 27/27, label="Modo Administrador"
+  [PASS ] expense.create.servicios-fijos: UI, memory and disk all gain the row
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.create.variables: the range field appears and is persisted
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.create.extras: extras hides subsection and range, forces tipo Extra
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.edit: concepto + monto change on all three surfaces; the merge preserves tipo/estado
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.edit.variable: the rango field is editable and the merge is scoped to it
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever sees it
+        i app.js:1424 alert("Por favor ingresa un monto valido") is UNREACHABLE through the real UI: input[type=number] refuses non-numeric text (the field goes empty, tripping `required`) and min=0 refuses negatives, so parseFloat on this field can never be NaN or < 0. The guard is dead code from the UI. Not a crash risk - a duplicated concern that will drift.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] expense.edit.rejects-empty-monto: required blocks an empty amount
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [FAIL ] expense.edit.whitespace-concepto: DEFECT - Save does nothing, silently
+        x no alert() either  {"actual":1,"expected":0,"contexto":{"conceptoEnElCampo":"     ","conceptoEnElCampoTrim":"","toastVisible":false,"toastTexto":"Sesi├│n activa. Modo Administrador.","shake":false,"validationMessage":""}}
+        i EXPECTED vs ACTUAL. Expected: the user gets told the concept cannot be blank. Actual: Save is a dead control for whitespace-only input - the click is swallowed by app.js:1422 with no user-visible feedback. Severity: low (no data loss, no wrong value) but it is exactly the "dead control" class the brief asks to eliminate. Fix belongs to T4: add `required` handling on the trimmed value, or reuse the existing modal-shake affordance.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] expense.delete.cancel: the confirm dialog appears and cancelling really cancels
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] expense.delete.confirm: the row leaves UI, memory and disk together
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] expense.toggle.pagado-pendiente: the row chip flips and the store follows
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [INCON] expense.toggle-all: toggleAllBudgetItems has no UI control
+        ? toggleAllBudgetItems cannot be exercised through the UI  -> No button, link or inline handler calls it. Observing its behaviour would require calling window.financialStore.toggleAllBudgetItems directly, which this suite refuses to do because a store-level call is not evidence about the deployed UI.
+        i store.js:611 toggleAllBudgetItems is implemented and has ZERO callers: it is not referenced by js/app.js, js/charts.js, or any inline handler in index.html.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] expense.create.blank-concepto: required blocks a nameless expense
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-13912-9333
+
+==============================================================================
+FIXTURE sinMovimientos  ::  Movimiento: crear / editar / borrar desde un mes con 0 movimientos
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 21/21, label="Modo Administrador"
+  [PASS ] movement.create.ingreso: on a month that starts with zero movements
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [PASS ] movement.create.gasto: the danger button and its minus sign
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [PASS ] movement.edit: concepto, monto and fecha change; the merge keeps the hidden fields
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [PASS ] movement.edit.rejects-negative: blocked by min=0, nothing persisted
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11
+  [PASS ] movement.delete.cancel: the dialog names the movement and cancelling cancels
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11
+  [PASS ] movement.delete.confirm: gone from UI, memory and disk
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [INCON] movement.toggle: toggleMovementStatus has no UI control
+        ? toggleMovementStatus cannot be exercised through the UI  -> No control calls it. Observing it would require a direct store call, which this suite refuses to substitute for UI evidence. Consequence: a movement can be edited and deleted, but its Pagado/Pendiente state is write-only - nothing in the app ever displays or changes it.
+        i store.js:694 toggleMovementStatus is implemented and has ZERO callers. The feed row (app.js:732-783) renders exactly two buttons per movement - edit and delete - and no state control.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-13912-9333
+
+==============================================================================
+FIXTURE baseline  ::  Mes: crear, duplicar, navegar, renombrar, borrar
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 27/27, label="Modo Administrador"
+  [PASS ] month.create.empty: a brand new month with nothing in it
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10
+  [FAIL ] month.create.clone: recurrent expenses copied, fresh ids, all reset to Pendiente
+        x DISK: all 5 fixed+variable expenses were copied  {"actual":6,"expected":5}
+        x DISK: extras were NOT cloned (store.js:736 hardcodes extras: []; index.html:823 documents it)  {"actual":1,"expected":0}
+        x DISK: notas start empty  {"actual":"PRUEBA-ALFA notas de prueba","expected":""}
+        x DISK: the amounts came across unchanged  {"actual":"[111.11,222.22,333.33,444.44,555.55,666.66]","expected":"[111.11,222.22,333.33,444.44,555.55]"}
+        i index.html:823 says the clone copies "los gastos fijos y variables marcados como pendientes", but store.js:727-735 copies ALL of them and then resets every estado to Pendiente. A month with an item already marked Pagado is cloned as Pendiente. That is the behaviour, and it is the sensible one - the hint is imprecise, not the code. Not a defect, a wording nit for T4.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10
+  [PASS ] month.switch: clicking a pill moves the active month and re-renders
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10
+  [PASS ] month.nav.boundaries: prev on the first month and next on the last are inert
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10
+  [INCON] month.rename: there is no rename control anywhere in the UI
+        ? month rename cannot be exercised through the UI  -> The capability does not exist at all: no store method, no control, no contenteditable node. There is nothing to click, so a rename test would be a test of nothing.
+        i Neither js/store.js nor js/app.js has a renameMonth method. addNewMonth derives the id from the nombre, and nothing rewrites an existing nombre afterwards.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [FAIL ] month.delete: deleteMonth has no UI control and its guard alert is unreachable
+        x PROVEN ABSENT: no control anywhere is labelled as deleting a month  {"actual":1,"expected":0,"contexto":{"totalControles":84,"sospechosos":[{"tag":"button","id":"btnDeleteMonth","texto":"Eliminar mes"}],"pillsConBorrar":0}}
+        ? month delete cannot be exercised through the UI  -> No control calls deleteMonth. Exercising it would require a direct store call, which this suite refuses to substitute for UI evidence. Product consequence: the app lets you create periods forever and never remove one, and the "keep at least one month" guard is untestable dead code.
+        i store.js:759 deleteMonth exists and has ZERO callers. Its guard alert("Debes mantener al menos un mes en el sistema.") can therefore never be shown.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-13912-9333
+
+==============================================================================
+FIXTURE baseline  ::  Modales: cancelar, Escape, overlay. Notas: autoguardado.
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 27/27, label="Modo Administrador"
+  [PASS ] modal.cancel-button: closes the sheet and leaves the data untouched
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] modal.escape: a REAL Escape key press closes the sheet and persists nothing
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] modal.overlay-click: a REAL mouse click on the backdrop closes the sheet
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] modal.edit-cancel: cancelling an edit discards the typed changes
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] modal.close-button-x: the header X also discards an in-progress edit
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [INCON] modal.role-picker-is-not-escapable: cannot be exercised in this harness
+        ? Escape-on-role-picker cannot be exercised end to end  -> openRoleSelectModal() is a closure inside the DOMContentLoaded listener, not reachable from the page, and in this sandbox the picker never opens naturally (the role choice is pre-seeded and the stub session resolves admin first). Driving it would mean re-implementing the modal, which would test the harness instead of the product.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] notes.autosave: typing in the notes sheet persists after the debounce
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] notes.close-without-typing: opening and closing the sheet is inert
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-13912-9333
+
+==============================================================================
+T2 crud-suite summary
+==============================================================================
+PASS        : 27
+FAIL        : 3
+INCONCLUSIVE: 4
+total       : 34   (infrastructure failures: 0)
+assertNetworkClean() ran on 34/34 tests; Supabase requests across the whole run: 0
+report: C:\Users\User\Desktop\Web de Gastos Mensuales\odd\tasks\capturas\crud-suite.report.json

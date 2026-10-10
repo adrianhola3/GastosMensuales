@@ -1,0 +1,155 @@
+{
+  "notas": {
+    "idModal": "modalMonthNotes",
+    "estabaActivo": false,
+    "ahoraActivo": true,
+    "velos": [
+      {
+        "id": "modalMonthNotes",
+        "clase": "modal-overlay",
+        "fondo": "rgba(0, 0, 0, 0.32)",
+        "opacidad": "1",
+        "w": 1425,
+        "h": 900
+      }
+    ],
+    "botones": [
+      {
+        "id": null,
+        "texto": "Listo",
+        "fondo": "rgb(0, 136, 255)",
+        "etiqueta": "rgb(11, 11, 12)",
+        "px": 13,
+        "peso": "600",
+        "ratio": 5.59
+      }
+    ],
+    "contraste": [],
+    "pares": 133,
+    "minimo": {
+      "sel": "kbd.search-shortcut-badge",
+      "texto": "/",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(242, 242, 245)",
+      "px": 11,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 4.92,
+      "cumple": true,
+      "gradiente": false
+    },
+    "trasEsc": true,
+    "cerrado": true
+  },
+  "acceso": {
+    "idModal": "modalAdminAuth",
+    "estabaActivo": false,
+    "ahoraActivo": true,
+    "velos": [
+      {
+        "id": "modalAdminAuth",
+        "clase": "modal-overlay",
+        "fondo": "rgba(0, 0, 0, 0.32)",
+        "opacidad": "1",
+        "w": 1425,
+        "h": 900
+      }
+    ],
+    "botones": [
+      {
+        "id": "btnAdminLoginSubmit",
+        "texto": "Entrar",
+        "fondo": "rgb(0, 136, 255)",
+        "etiqueta": "rgb(11, 11, 12)",
+        "px": 15,
+        "peso": "600",
+        "ratio": 5.59
+      }
+    ],
+    "contraste": [],
+    "pares": 137,
+    "minimo": {
+      "sel": "kbd.search-shortcut-badge",
+      "texto": "/",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(242, 242, 245)",
+      "px": 11,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 4.92,
+      "cumple": true,
+      "gradiente": false
+    },
+    "trasEsc": true,
+    "cerrado": false
+  },
+  "pago-variable": {
+    "idModal": "modalPayVariableExpense",
+    "estabaActivo": false,
+    "ahoraActivo": false,
+    "velos": [],
+    "botones": [],
+    "contraste": [],
+    "pares": 130,
+    "minimo": {
+      "sel": "kbd.search-shortcut-badge",
+      "texto": "/",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(242, 242, 245)",
+      "px": 11,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 4.92,
+      "cumple": true,
+      "gradiente": false
+    },
+    "trasEsc": false,
+    "cerrado": false
+  },
+  "nuevo-mes": {
+    "idModal": "modalNewMonth",
+    "estabaActivo": false,
+    "ahoraActivo": true,
+    "velos": [
+      {
+        "id": "modalNewMonth",
+        "clase": "modal-overlay",
+        "fondo": "rgba(0, 0, 0, 0.32)",
+        "opacidad": "1",
+        "w": 1425,
+        "h": 900
+      }
+    ],
+    "botones": [
+      {
+        "id": null,
+        "texto": "Crear período",
+        "fondo": "rgb(0, 136, 255)",
+        "etiqueta": "rgb(11, 11, 12)",
+        "px": 15,
+        "peso": "600",
+        "ratio": 5.59
+      }
+    ],
+    "contraste": [],
+    "pares": 135,
+    "minimo": {
+      "sel": "kbd.search-shortcut-badge",
+      "texto": "/",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(242, 242, 245)",
+      "px": 11,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 4.92,
+      "cumple": true,
+      "gradiente": false
+    },
+    "trasEsc": true,
+    "cerrado": false
+  },
+  "velosAlCerrar": [],
+  "escrituras": "{\"guardar\":1,\"iniciarSesion\":0,\"salirDeSesion\":0,\"github\":0}",
+  "consoleErrors": [],
+  "exceptions": []
+}

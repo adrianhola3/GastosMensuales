@@ -1,0 +1,561 @@
+{
+  "round": "r3",
+  "mes_1440": {
+    "doc": {
+      "scrollW": 1425,
+      "clientW": 1425,
+      "scrollH": 2523,
+      "innerW": 1440,
+      "innerH": 900
+    },
+    "rail": {
+      "x": 0,
+      "y": 0,
+      "w": 236,
+      "h": 900,
+      "top": 0,
+      "bottom": 900,
+      "left": 0,
+      "right": 236
+    },
+    "railScrollableChildren": [],
+    "railHasInternalScroll": false,
+    "railScroll": {
+      "sh": 900,
+      "ch": 900,
+      "overflowY": "hidden"
+    },
+    "dataInRail": [
+      {
+        "sel": "#searchResultsCountText",
+        "txt": "0 coincidencias"
+      }
+    ],
+    "monthsInRail": 0,
+    "metricsRow": {
+      "x": 338.5,
+      "y": 199.6,
+      "w": 984,
+      "h": 112.2,
+      "top": 199.6,
+      "bottom": 311.8,
+      "left": 338.5,
+      "right": 1322.5
+    },
+    "firstExpense": {
+      "x": 338.5,
+      "y": 690.5,
+      "w": 984,
+      "h": 52.7,
+      "top": 690.5,
+      "bottom": 743.2,
+      "left": 338.5,
+      "right": 1322.5
+    },
+    "metricsBeforeFirstExpense": true,
+    "metricsCells": [
+      {
+        "label": "Ingresos y abonos",
+        "value": "S/ 0.00",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "0 abonos registrados",
+        "noteClipped": false
+      },
+      {
+        "label": "Presupuesto de gastos",
+        "value": "S/ 699.34",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "0 de 10 gastos pagados",
+        "noteClipped": false
+      },
+      {
+        "label": "Balance neto",
+        "value": "S/ 0.00",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "Equilibrado (S/ 0.00)",
+        "noteClipped": false
+      },
+      {
+        "label": "Cobertura",
+        "value": "0.0%",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "Ingresos sobre el presupuesto",
+        "noteClipped": false
+      }
+    ],
+    "paymentsStrip": {
+      "x": 338.5,
+      "y": 311.8,
+      "w": 984,
+      "h": 43.6,
+      "top": 311.8,
+      "bottom": 355.4,
+      "left": 338.5,
+      "right": 1322.5
+    },
+    "paymentsText": [
+      "Gastos Pagados: S/ 0.00 de S/ 699.34",
+      "Pendiente: S/ 699.34",
+      "",
+      "0.0% Pagado (0 de 10)"
+    ],
+    "periodBar": {
+      "x": 338.5,
+      "y": 355.4,
+      "w": 984,
+      "h": 60,
+      "top": 355.4,
+      "bottom": 415.4,
+      "left": 338.5,
+      "right": 1322.5
+    },
+    "months": [
+      {
+        "t": "Agosto 2026",
+        "active": true,
+        "pressed": "true",
+        "y": 371.4
+      },
+      {
+        "t": "Septiembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 371.4
+      },
+      {
+        "t": "Octubre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 371.4
+      },
+      {
+        "t": "Noviembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 371.4
+      },
+      {
+        "t": "Diciembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 371.4
+      },
+      {
+        "t": "Enero 2027",
+        "active": false,
+        "pressed": "false",
+        "y": 371.4
+      }
+    ],
+    "periodTrackOverflow": {
+      "sh": 751,
+      "ch": 751,
+      "scrolls": false
+    },
+    "navActive": {
+      "color": "rgb(241, 242, 244)",
+      "weight": "600",
+      "before": "rgb(148, 163, 184)",
+      "beforeH": "16px"
+    },
+    "navInactive": {
+      "color": "rgb(169, 175, 189)",
+      "weight": "400",
+      "before": "rgba(0, 0, 0, 0)"
+    },
+    "brand": {
+      "title": "Gestor Financiero",
+      "titleLines": 1,
+      "titleW": 117.2,
+      "titleScrollW": 117,
+      "sub": "Presupuesto & Gastos",
+      "topbar": "Agosto 2026",
+      "repeatsTopbar": false
+    },
+    "footer": {
+      "x": 0,
+      "y": 803.8,
+      "w": 235,
+      "h": 96.3,
+      "top": 803.8,
+      "bottom": 900,
+      "left": 0,
+      "right": 235
+    },
+    "footerTexts": [
+      {
+        "txt": "En línea",
+        "size": "12px",
+        "color": "rgb(169, 175, 189)"
+      },
+      {
+        "txt": "Solo Lectura",
+        "size": "12px",
+        "color": "rgb(140, 147, 161)"
+      }
+    ],
+    "toggleMode": {
+      "x": 16,
+      "y": 850.4,
+      "w": 203,
+      "h": 33.6,
+      "top": 850.4,
+      "bottom": 884,
+      "left": 16,
+      "right": 219
+    },
+    "toggleInViewport": true,
+    "railMainOverlap": 0,
+    "railContentHeight": 900,
+    "railTopBlocks": [
+      {
+        "sel": "sidebar-brand",
+        "h": 50.2,
+        "y": 16
+      },
+      {
+        "sel": "sidebar-nav",
+        "h": 77.2,
+        "y": 66.2
+      },
+      {
+        "sel": "sidebar-search-section",
+        "h": 56,
+        "y": 143.3
+      },
+      {
+        "sel": "sidebar-footer",
+        "h": 96.3,
+        "y": 803.8
+      }
+    ]
+  },
+  "consolidado_1440": {
+    "doc": {
+      "scrollW": 1425,
+      "clientW": 1425,
+      "scrollH": 1706,
+      "innerW": 1440,
+      "innerH": 900
+    },
+    "rail": {
+      "x": 0,
+      "y": 0,
+      "w": 236,
+      "h": 900,
+      "top": 0,
+      "bottom": 900,
+      "left": 0,
+      "right": 236
+    },
+    "railScrollableChildren": [],
+    "railHasInternalScroll": false,
+    "railScroll": {
+      "sh": 900,
+      "ch": 900,
+      "overflowY": "hidden"
+    },
+    "dataInRail": [
+      {
+        "sel": "#searchResultsCountText",
+        "txt": "0 coincidencias"
+      }
+    ],
+    "monthsInRail": 0,
+    "metricsRow": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0,
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "firstExpense": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0,
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "metricsBeforeFirstExpense": false,
+    "metricsCells": [
+      {
+        "label": "Ingresos y abonos",
+        "value": "S/ 0.00",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "0 abonos registrados",
+        "noteClipped": false
+      },
+      {
+        "label": "Presupuesto de gastos",
+        "value": "S/ 699.34",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "0 de 10 gastos pagados",
+        "noteClipped": false
+      },
+      {
+        "label": "Balance neto",
+        "value": "S/ 0.00",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "Equilibrado (S/ 0.00)",
+        "noteClipped": false
+      },
+      {
+        "label": "Cobertura",
+        "value": "0.0%",
+        "valueSize": "28px",
+        "valueClipped": false,
+        "note": "Ingresos sobre el presupuesto",
+        "noteClipped": false
+      }
+    ],
+    "paymentsStrip": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0,
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "paymentsText": [
+      "Gastos Pagados: S/ 0.00 de S/ 699.34",
+      "Pendiente: S/ 699.34",
+      "",
+      "0.0% Pagado (0 de 10)"
+    ],
+    "periodBar": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0,
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "months": [
+      {
+        "t": "Agosto 2026",
+        "active": true,
+        "pressed": "true",
+        "y": 0
+      },
+      {
+        "t": "Septiembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 0
+      },
+      {
+        "t": "Octubre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 0
+      },
+      {
+        "t": "Noviembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 0
+      },
+      {
+        "t": "Diciembre 2026",
+        "active": false,
+        "pressed": "false",
+        "y": 0
+      },
+      {
+        "t": "Enero 2027",
+        "active": false,
+        "pressed": "false",
+        "y": 0
+      }
+    ],
+    "periodTrackOverflow": {
+      "sh": 0,
+      "ch": 0,
+      "scrolls": false
+    },
+    "navActive": {
+      "color": "rgb(169, 175, 189)",
+      "weight": "400",
+      "before": "rgba(0, 0, 0, 0)",
+      "beforeH": "auto"
+    },
+    "navInactive": {
+      "color": "rgb(241, 242, 244)",
+      "weight": "600",
+      "before": "rgb(148, 163, 184)"
+    },
+    "brand": {
+      "title": "Gestor Financiero",
+      "titleLines": 1,
+      "titleW": 117.2,
+      "titleScrollW": 117,
+      "sub": "Presupuesto & Gastos",
+      "topbar": "Agosto 2026",
+      "repeatsTopbar": false
+    },
+    "footer": {
+      "x": 0,
+      "y": 803.8,
+      "w": 235,
+      "h": 96.3,
+      "top": 803.8,
+      "bottom": 900,
+      "left": 0,
+      "right": 235
+    },
+    "footerTexts": [
+      {
+        "txt": "En línea",
+        "size": "12px",
+        "color": "rgb(169, 175, 189)"
+      },
+      {
+        "txt": "Solo Lectura",
+        "size": "12px",
+        "color": "rgb(140, 147, 161)"
+      }
+    ],
+    "toggleMode": {
+      "x": 16,
+      "y": 850.4,
+      "w": 203,
+      "h": 33.6,
+      "top": 850.4,
+      "bottom": 884,
+      "left": 16,
+      "right": 219
+    },
+    "toggleInViewport": true,
+    "railMainOverlap": 0,
+    "railContentHeight": 900,
+    "railTopBlocks": [
+      {
+        "sel": "sidebar-brand",
+        "h": 50.2,
+        "y": 16
+      },
+      {
+        "sel": "sidebar-nav",
+        "h": 77.2,
+        "y": 66.2
+      },
+      {
+        "sel": "sidebar-search-section",
+        "h": 56,
+        "y": 143.3
+      },
+      {
+        "sel": "sidebar-footer",
+        "h": 96.3,
+        "y": 803.8
+      }
+    ]
+  },
+  "mes_1280": {
+    "doc": {
+      "sw": 1265,
+      "cw": 1265,
+      "sh": 2523
+    },
+    "bodyScrollW": 1265,
+    "innerW": 1280
+  },
+  "mes_1024": {
+    "doc": {
+      "sw": 1009,
+      "cw": 1009,
+      "sh": 2618
+    },
+    "innerW": 1024,
+    "metricsRow": {
+      "x": 32,
+      "y": 183.6,
+      "w": 945,
+      "h": 223.3,
+      "bottom": 407
+    },
+    "periodBar": {
+      "x": 32,
+      "y": 450.6,
+      "w": 945,
+      "h": 60,
+      "bottom": 510.6
+    },
+    "paymentsStrip": {
+      "x": 32,
+      "y": 407,
+      "w": 945,
+      "h": 43.6,
+      "bottom": 450.6
+    },
+    "metricCells": [
+      {
+        "w": 472.5,
+        "h": 111.2,
+        "v": "S/ 0.00",
+        "clipped": false
+      },
+      {
+        "w": 472.5,
+        "h": 111.2,
+        "v": "S/ 699.34",
+        "clipped": false
+      },
+      {
+        "w": 472.5,
+        "h": 111.2,
+        "v": "S/ 0.00",
+        "clipped": false
+      },
+      {
+        "w": 472.5,
+        "h": 111.2,
+        "v": "0.0%",
+        "clipped": false
+      }
+    ],
+    "brandTitleLines": 1,
+    "brandW": 117.2,
+    "brandScrollW": 117,
+    "rail": {
+      "sh": 900,
+      "ch": 900
+    }
+  },
+  "drawer_1024": {
+    "railX": 0,
+    "railW": 236,
+    "railBottom": 900,
+    "toggle": {
+      "y": 850.4,
+      "bottom": 884
+    },
+    "toggleVisible": true
+  },
+  "foco": "ok",
+  "consola": {
+    "errors": [],
+    "exceptions": [],
+    "netFailures": [
+      "401 https://bgcgmofroibrxthvdlil.supabase.co/rest/v1/gastos?on_conflict=id",
+      "401 https://bgcgmofroibrxthvdlil.supabase.co/rest/v1/gastos?on_conflict=id"
+    ]
+  }
+}

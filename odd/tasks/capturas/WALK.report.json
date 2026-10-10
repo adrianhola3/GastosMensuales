@@ -1,0 +1,127 @@
+{
+  "round": "WALK",
+  "freeze": "congelado",
+  "filas": [
+    {
+      "n": "1a Vista Mensual activa + estado activo del rail",
+      "r": true,
+      "d": "viewMes.active=true btnNavMes.active=true tick=rgb(148, 163, 184) peso=600"
+    },
+    {
+      "n": "1b Vista Consolidado activa + estado activo del rail",
+      "r": true,
+      "d": "viewPanel.active=true peso=600 filas=6 cols=9"
+    },
+    {
+      "n": "8a Grafico de barras pintado",
+      "r": true,
+      "d": "{\"w\":984,\"h\":120,\"pixelesPintados\":3363}"
+    },
+    {
+      "n": "8b Grafico donut pintado",
+      "r": true,
+      "d": "{\"w\":420,\"h\":280,\"pixelesPintados\":25924}"
+    },
+    {
+      "n": "3a Los 6 periodos en el selector horizontal",
+      "r": true,
+      "d": "n=6 activos=1 :: Agosto 2026 | Septiembre 2026 | Octubre 2026 | Noviembre 2026 | Diciembre 2026 | Enero 2027"
+    },
+    {
+      "n": "3b Periodo activo = topbar, con regla de acento",
+      "r": true,
+      "d": "selector=\"Septiembre 2026\" topbar=\"Septiembre 2026\" reglas=1 aria-pressed=1"
+    },
+    {
+      "n": "3c Click en un periodo cambia la vista",
+      "r": true,
+      "d": "-> Septiembre 2026 / 9 filas"
+    },
+    {
+      "n": "3d Flechas anterior / siguiente",
+      "r": true,
+      "d": "sig=Octubre 2026 prev=Septiembre 2026"
+    },
+    {
+      "n": "4a Las 4 categorias con su total",
+      "r": true,
+      "d": "servicios:S/ 417.80(6f/3s) personales:S/ 198.54(3f/3s) movimientos:0 movs(0f/0s) extras:S/ 0.00(0f/1s)"
+    },
+    {
+      "n": "4b Un acento distinto por categoria",
+      "r": true,
+      "d": "servicios=rgb(147, 172, 189) personales=rgb(169, 155, 191) movimientos=rgb(143, 183, 163) extras=rgb(195, 179, 152)"
+    },
+    {
+      "n": "5a Presupuesto + balance + cobertura + pagos",
+      "r": true,
+      "d": "pres=S/ 616.34 (0 de 9 gastos pagados) bal=S/ 0.00 (Equilibrado (S/ 0.00)) cob=0.0% pag=0.0% Pagado (0 de 9) pend=Pendiente: S/ 616.34 barra=0%/0px"
+    },
+    {
+      "n": "5b Acento SOLO en la cifra de estado (Balance neto)",
+      "r": true,
+      "d": "balance=rgb(157, 184, 198) ingresos=rgb(241, 242, 244)"
+    },
+    {
+      "n": "5c Ingresos y abonos",
+      "r": true,
+      "d": "S/ 0.00 / 0 abonos registrados"
+    },
+    {
+      "n": "6a Movimientos: feed + 3 filtros conmutando",
+      "r": true,
+      "d": "filtros=all,ingreso,gasto | feed nodos=1 | vacio=\"Sin movimientos registrados.\" (dataset sin movimientos: estado vacio verificado, NO filas con datos)"
+    },
+    {
+      "n": "7 Notas (abre con subtitulo del periodo, cierra)",
+      "r": true,
+      "d": "sub=\"Recordatorios y observaciones de Septiembre 2026\" cerrado=true"
+    },
+    {
+      "n": "2 Buscador (filtra y limpia)",
+      "r": true,
+      "d": "\"1 resultado encontrado\" -> 1 filas; limpiar -> 9 filas; clear=flex feedback=flex"
+    },
+    {
+      "n": "9a Estado de conexion con su punto",
+      "r": true,
+      "d": "\"En línea\" cls=\"conn-badge conn-online\" punto=rgb(169, 175, 189)"
+    },
+    {
+      "n": "9b Modo Lector / Administrador",
+      "r": true,
+      "d": "lector: modo=\"Solo Lectura\" ocultos=17/17 | admin: visibles=17/17 NuevoMes=95.8px Abono=43.7px Gasto=38.5px"
+    },
+    {
+      "n": "10 Modales de edicion abren y cierran",
+      "r": false,
+      "d": "btn-quick-add-service:no-abre btn-quick-add-personal:no-abre btn-quick-add-extra:no-abre btnQuickActionIncome:MISSING:.btnQuickActionIncome btnQuickActionExpense:MISSING:.btnQuickActionExpense btnOpenNewMonthModal:MISSING:.btnOpenNewMonthModal"
+    },
+    {
+      "n": "11 Selector de segmentos",
+      "r": false,
+      "d": "extras apagado=block \"all\" -> 4 tarjetas"
+    },
+    {
+      "n": "12 Acordeon de seccion",
+      "r": true,
+      "d": "alto 619.390625 -> 0 -> 619.390625"
+    },
+    {
+      "n": "13 Anillo de foco visible (Tab real)",
+      "r": false,
+      "d": "4 controles con Tab, 1 sin anillo :: btnNavMes[solid 2px rgb(0, 136, 255)] btnNavPanel[solid 2px rgb(0, 136, 255)] sidebarSearchInput[none 3px rgb(241, 242, 244)] btnToggleAuthMode[solid 2px rgb(0, 136, 255)]"
+    }
+  ],
+  "consola": {
+    "errors": [],
+    "exceptions": [],
+    "netFailures": []
+  },
+  "escriturasIntentadas": {
+    "guardar": 8,
+    "login": 0,
+    "salir": 0,
+    "gh": 0
+  }
+}

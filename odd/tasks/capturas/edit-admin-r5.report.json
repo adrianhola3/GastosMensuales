@@ -1,0 +1,964 @@
+{
+  "label": "r5",
+  "script": "edicion-admin.mjs",
+  "reglaGateEnArchivo": "body.read-only-mode .admin-action-btn { display: none !important }",
+  "prefersColorScheme": 0,
+  "congelamiento": {
+    "inyectadoEn": "document-start",
+    "setItemParcheado": true,
+    "hayRemoto": true,
+    "remotoCongelado": true,
+    "guardarEsContador": true
+  },
+  "store": {
+    "saveCongelado": true,
+    "updateBudgetItemOriginal": true,
+    "updateMovementOriginal": true,
+    "updateMovementEnElPrototipo": true
+  },
+  "snapshotAntes": {
+    "bytesLocales": 8104,
+    "hashLocales": 1481493643,
+    "hashMemoria": 1481493643,
+    "local": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    },
+    "memoria": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    }
+  },
+  "contadoresAntes": {
+    "setItem": {
+      "control_gastos_mensuales_db_v1": 1
+    },
+    "remoto": {},
+    "storeSave": 0
+  },
+  "t1": {
+    "sesionReal": "read-only-mode",
+    "editExpense": 9,
+    "deleteExpense": 9,
+    "filasGasto": 9,
+    "hijosPorFila": 4,
+    "colTemplate": "733.688px 92px 70.3125px 0px",
+    "movimientosEnEstado": 0
+  },
+  "t1_medidoLector": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "t2_sinReadOnly": {
+    "bodyClass": "",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "t2_conReadOnly": {
+    "bodyClass": "read-only-mode",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "none",
+      "opacity": "0",
+      "w": 0,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "falta": true
+    },
+    "movEliminar": {
+      "falta": true
+    },
+    "glifosDistintos": true
+  },
+  "t3_storeAislado": {
+    "updateMovement": {
+      "devolvio": true,
+      "antes": "{\"id\":\"fixture_mov\",\"fecha\":\"2026-09-05\",\"concepto\":\"Original\",\"flujo\":\"Ingreso\",\"categoria\":\"Trabajo\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":100}",
+      "despues": "{\"id\":\"fixture_mov\",\"fecha\":\"2026-09-05\",\"concepto\":\"EDITADO\",\"flujo\":\"Ingreso\",\"categoria\":\"Trabajo\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":55.5}",
+      "montoEsNumero": true,
+      "monto": 55.5,
+      "conservaNoEnviados": true,
+      "llamoSave": 1,
+      "movIdInexistente": false,
+      "mesInexistente": false,
+      "sinGuardarElMonto": 100
+    },
+    "updateBudgetItem": {
+      "devolvio": true,
+      "despues": "{\"id\":\"id_92h8zz8mr_1789941040428\",\"tipo\":\"Fijo\",\"monto\":10.1,\"estado\":\"Pendiente\",\"concepto\":\"GASTO EDITADO\"}",
+      "montoEsNumero": true,
+      "conservaEstadoYRango": true,
+      "idInexistente": false
+    }
+  },
+  "t4a_fijo": {
+    "filaId": "id_92h8zz8mr_1789941040428",
+    "itemEnStore": {
+      "id": "id_92h8zz8mr_1789941040428",
+      "tipo": "Fijo",
+      "monto": 89.9,
+      "estado": "Pendiente",
+      "concepto": "Internet de casa"
+    }
+  },
+  "t4a_precarga": {
+    "modalExiste": true,
+    "activo": true,
+    "editExpenseMonthId": "septiembre-2026",
+    "editExpenseItemId": "id_92h8zz8mr_1789941040428",
+    "editExpenseConcepto": "Internet de casa",
+    "editExpenseMonto": "89.90",
+    "editExpenseTipoReadonly": "Fijo",
+    "editExpenseRango": ""
+  },
+  "t4a_rangoDisplay": "none",
+  "t4a_foco": {
+    "enfocado": true,
+    "focus": true,
+    "focusVisible": true,
+    "borde": "rgba(29, 29, 31, 0.36)",
+    "anillo": "solid 2px rgb(0, 136, 255)",
+    "portador": "#editExpenseConcepto",
+    "valor": "Internet de casa"
+  },
+  "t4a_contraste": [
+    {
+      "sel": "h3",
+      "texto": "Editar gasto",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 17,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Concepto",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Monto (S/)",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Tipo",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "p#editExpenseTipoReadonly.form-readonly-value",
+      "texto": "Fijo",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "p.form-hint",
+      "texto": "El tipo decide en qué lista vive el gast",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 12,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 5.5,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-surface.btn-close-sheet-btn",
+      "texto": "Cancelar",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-primary.btn-lg",
+      "texto": "Guardar cambios",
+      "fg": "rgb(11, 11, 12)",
+      "bg": "rgb(0, 136, 255)",
+      "px": 15,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 5.59,
+      "cumple": true
+    }
+  ],
+  "t4a_comparacion": {
+    "idCoincide": true,
+    "conceptoEsperado": "Internet de casa",
+    "conceptoCargado": "Internet de casa",
+    "montoEsperado": "89.90",
+    "montoCargado": "89.90",
+    "tipoEsperado": "Fijo",
+    "tipoCargado": "Fijo",
+    "rangoEsperado": "",
+    "rangoCargado": "",
+    "rangoVisibleSoloSiVariable": true,
+    "todoCoincide": true
+  },
+  "t4a_antesEsc": [
+    "modalEditExpense"
+  ],
+  "t4a_despuesEsc": [],
+  "t4a_sigueActivo": false,
+  "t4b_variable": {
+    "filaId": "id_6xekdzgpu_1789961031869",
+    "itemEnStore": {
+      "id": "id_6xekdzgpu_1789961031869",
+      "tipo": "Variable",
+      "monto": 30,
+      "rango": "20-40",
+      "estado": "Pendiente",
+      "concepto": "Productos de casa: Jabón, shampoo, papel..."
+    }
+  },
+  "t4b_precarga": {
+    "modalExiste": true,
+    "activo": true,
+    "editExpenseMonthId": "septiembre-2026",
+    "editExpenseItemId": "id_6xekdzgpu_1789961031869",
+    "editExpenseConcepto": "Productos de casa: Jabón, shampoo, papel...",
+    "editExpenseMonto": "30.00",
+    "editExpenseTipoReadonly": "Variable",
+    "editExpenseRango": "20-40"
+  },
+  "t4b_rangoDisplay": "block",
+  "t4b_contraste": [
+    {
+      "sel": "h3",
+      "texto": "Editar gasto",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 17,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Concepto",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Monto (S/)",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Rango estimado (opcional)",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Tipo",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "p#editExpenseTipoReadonly.form-readonly-value",
+      "texto": "Variable",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "p.form-hint",
+      "texto": "El tipo decide en qué lista vive el gast",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 12,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 5.5,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-surface.btn-close-sheet-btn",
+      "texto": "Cancelar",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-primary.btn-lg",
+      "texto": "Guardar cambios",
+      "fg": "rgb(11, 11, 12)",
+      "bg": "rgb(0, 136, 255)",
+      "px": 15,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 5.59,
+      "cumple": true
+    }
+  ],
+  "t4b_comparacion": {
+    "tipoEsperado": "Variable",
+    "tipoCargado": "Variable",
+    "rangoEsperado": "20-40",
+    "rangoCargado": "20-40",
+    "rangoVisible": "block",
+    "conceptoEsperado": "Productos de casa: Jabón, shampoo, papel...",
+    "conceptoCargado": "Productos de casa: Jabón, shampoo, papel...",
+    "todoCoincide": true
+  },
+  "t4b_llenado": {
+    "rangoEnviado": "35 - 55"
+  },
+  "t4b_patch": {
+    "monthId": "septiembre-2026",
+    "id": "id_6xekdzgpu_1789961031869",
+    "patch": {
+      "concepto": "Productos de casa: Jabón, shampoo, papel...",
+      "monto": 44.44,
+      "rango": "35 - 55"
+    },
+    "retorno": true,
+    "estadoEnCopia": "{\"id\":\"id_6xekdzgpu_1789961031869\",\"tipo\":\"Variable\",\"monto\":44.44,\"rango\":\"35 - 55\",\"estado\":\"Pendiente\",\"concepto\":\"Productos de casa: Jabón, shampoo, papel...\"}"
+  },
+  "t5_abrir": {
+    "filaId": "id_92h8zz8mr_1789941040428"
+  },
+  "t5_llenado": {
+    "concepto": "PRUEBA CONGELADA",
+    "monto": "123.45",
+    "campoRangoVisible": false,
+    "rango": null
+  },
+  "t5_envio": "enviado",
+  "t5_patch": {
+    "monthId": "septiembre-2026",
+    "id": "id_92h8zz8mr_1789941040428",
+    "patch": {
+      "concepto": "PRUEBA CONGELADA",
+      "monto": 123.45
+    },
+    "retorno": true,
+    "estadoEnCopia": "{\"id\":\"id_92h8zz8mr_1789941040428\",\"tipo\":\"Fijo\",\"monto\":123.45,\"estado\":\"Pendiente\",\"concepto\":\"PRUEBA CONGELADA\"}"
+  },
+  "t5_totalLlamadas": 2,
+  "t5_sigueActivo": false,
+  "t6_sembrar": {
+    "mes": "septiembre-2026",
+    "movimientos": 2
+  },
+  "t6_filas": {
+    "filasMov": 2,
+    "editTx": 2,
+    "deleteTx": 2
+  },
+  "t6_movReal": {
+    "monthId": "septiembre-2026",
+    "mov": {
+      "id": "sintetico_ingreso",
+      "fecha": "2026-09-05",
+      "concepto": "Sueldo (sintetico)",
+      "flujo": "Ingreso",
+      "categoria": "General",
+      "retornable": "No",
+      "estado": "Pagado",
+      "monto": 2450.5
+    },
+    "total": 2
+  },
+  "t6_abrir": "click",
+  "t6_precarga": {
+    "modalExiste": true,
+    "activo": true,
+    "editMovementMonthId": "septiembre-2026",
+    "editMovementId": "sintetico_ingreso",
+    "editMovementConcepto": "Sueldo (sintetico)",
+    "editMovementMonto": "2450.50",
+    "editMovementFecha": "2026-09-05",
+    "editMovementFlujoReadonly": "Ingreso"
+  },
+  "t6_foco": {
+    "enfocado": true,
+    "focus": true,
+    "focusVisible": true,
+    "borde": "rgba(29, 29, 31, 0.36)",
+    "anillo": "solid 2px rgb(0, 136, 255)",
+    "portador": "#editMovementConcepto",
+    "valor": "Sueldo (sintetico)"
+  },
+  "t6_contraste": [
+    {
+      "sel": "h3",
+      "texto": "Editar movimiento",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 17,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Concepto",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Monto (S/)",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Fecha",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "label",
+      "texto": "Tipo de movimiento",
+      "fg": "rgb(91, 95, 103)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 13,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 6.41,
+      "cumple": true
+    },
+    {
+      "sel": "p#editMovementFlujoReadonly.form-readonly-value",
+      "texto": "Ingreso",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "p.form-hint",
+      "texto": "Ingreso o gasto define el signo del movi",
+      "fg": "rgb(101, 105, 114)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 12,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 5.5,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-surface.btn-close-sheet-btn",
+      "texto": "Cancelar",
+      "fg": "rgb(29, 29, 31)",
+      "bg": "rgb(255, 255, 255)",
+      "px": 14,
+      "weight": 400,
+      "min": 4.5,
+      "ratio": 16.83,
+      "cumple": true
+    },
+    {
+      "sel": "button.btn.btn-primary.btn-lg",
+      "texto": "Guardar cambios",
+      "fg": "rgb(11, 11, 12)",
+      "bg": "rgb(0, 136, 255)",
+      "px": 15,
+      "weight": 600,
+      "min": 4.5,
+      "ratio": 5.59,
+      "cumple": true
+    }
+  ],
+  "t6_antesEsc": [
+    "modalEditMovement"
+  ],
+  "t6_despuesEsc": [],
+  "t6_trasEsc": false,
+  "t6_llenado": {
+    "concepto": "MOVIMIENTO PRUEBA",
+    "monto": "777.77",
+    "fecha": "2026-01-15"
+  },
+  "t6_envio": "enviado",
+  "t6_patch": [
+    {
+      "monthId": "septiembre-2026",
+      "id": "sintetico_ingreso",
+      "patch": {
+        "concepto": "MOVIMIENTO PRUEBA",
+        "monto": 777.77,
+        "fecha": "2026-01-15"
+      },
+      "retorno": true,
+      "estadoEnCopia": "{\"id\":\"sintetico_ingreso\",\"fecha\":\"2026-01-15\",\"concepto\":\"MOVIMIENTO PRUEBA\",\"flujo\":\"Ingreso\",\"categoria\":\"General\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":777.77}"
+    }
+  ],
+  "t6_sigueActivo": false,
+  "t7_gasto": {
+    "bodyClass": "",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "1",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "1",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "clases": "btn-ghost-rose btn-edit-tx admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar movimiento",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "movEliminar": {
+      "clases": "btn-ghost-rose btn-delete-tx admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar movimiento",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "glifosDistintos": true
+  },
+  "t7_movimiento": {
+    "bodyClass": "",
+    "gastoEditar": {
+      "clases": "btn-ghost-rose btn-edit-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar gasto",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "gastoEliminar": {
+      "clases": "btn-ghost-rose btn-delete-expense admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "0",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar gasto",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "movEditar": {
+      "clases": "btn-ghost-rose btn-edit-tx admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "1",
+      "w": 24,
+      "glifo": true,
+      "title": "Editar movimiento",
+      "glifoPath": "M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"
+    },
+    "movEliminar": {
+      "clases": "btn-ghost-rose btn-delete-tx admin-action-btn",
+      "esAdmin": true,
+      "display": "flex",
+      "opacity": "1",
+      "w": 24,
+      "glifo": true,
+      "title": "Eliminar movimiento",
+      "glifoPath": "M4.5 4.5l7 7m0-7l-7 7"
+    },
+    "glifosDistintos": true
+  },
+  "t8_restaurar": {
+    "restaurado": true,
+    "memoriaVuelveAlOriginal": true,
+    "movimientos": 0
+  },
+  "snapshotDespues": {
+    "bytesLocales": 8104,
+    "hashLocales": 1481493643,
+    "hashMemoria": 1481493643,
+    "local": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    },
+    "memoria": {
+      "totalGastos": 55,
+      "totalPagados": 0,
+      "totalPendientes": 55,
+      "totalEgresos": 3781.04,
+      "totalMovimientos": 0,
+      "meses": 6,
+      "activeMonthId": "septiembre-2026",
+      "mesActivo": {
+        "septiembre-2026/servicios/fijos": {
+          "cantidad": 5,
+          "porEstado": {
+            "Pendiente": 5
+          },
+          "sumaMonto": 387.8
+        },
+        "septiembre-2026/servicios/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 30
+        },
+        "septiembre-2026/personales/fijos": {
+          "cantidad": 2,
+          "porEstado": {
+            "Pendiente": 2
+          },
+          "sumaMonto": 153.54
+        },
+        "septiembre-2026/personales/variables": {
+          "cantidad": 1,
+          "porEstado": {
+            "Pendiente": 1
+          },
+          "sumaMonto": 45
+        },
+        "septiembre-2026/extras": {
+          "cantidad": 0,
+          "porEstado": {},
+          "sumaMonto": 0
+        },
+        "septiembre-2026/MOVIMIENTOS": {
+          "cantidad": 0
+        }
+      }
+    }
+  },
+  "contadoresDespues": {
+    "setItem": {
+      "control_gastos_mensuales_db_v1": 1
+    },
+    "remoto": {},
+    "storeSave": 2
+  },
+  "llamadas": {
+    "updateBudgetItem": [
+      {
+        "monthId": "septiembre-2026",
+        "id": "id_6xekdzgpu_1789961031869",
+        "patch": {
+          "concepto": "Productos de casa: Jabón, shampoo, papel...",
+          "monto": 44.44,
+          "rango": "35 - 55"
+        },
+        "retorno": true,
+        "estadoEnCopia": "{\"id\":\"id_6xekdzgpu_1789961031869\",\"tipo\":\"Variable\",\"monto\":44.44,\"rango\":\"35 - 55\",\"estado\":\"Pendiente\",\"concepto\":\"Productos de casa: Jabón, shampoo, papel...\"}"
+      },
+      {
+        "monthId": "septiembre-2026",
+        "id": "id_92h8zz8mr_1789941040428",
+        "patch": {
+          "concepto": "PRUEBA CONGELADA",
+          "monto": 123.45
+        },
+        "retorno": true,
+        "estadoEnCopia": "{\"id\":\"id_92h8zz8mr_1789941040428\",\"tipo\":\"Fijo\",\"monto\":123.45,\"estado\":\"Pendiente\",\"concepto\":\"PRUEBA CONGELADA\"}"
+      }
+    ],
+    "updateMovement": [
+      {
+        "monthId": "septiembre-2026",
+        "id": "sintetico_ingreso",
+        "patch": {
+          "concepto": "MOVIMIENTO PRUEBA",
+          "monto": 777.77,
+          "fecha": "2026-01-15"
+        },
+        "retorno": true,
+        "estadoEnCopia": "{\"id\":\"sintetico_ingreso\",\"fecha\":\"2026-01-15\",\"concepto\":\"MOVIMIENTO PRUEBA\",\"flujo\":\"Ingreso\",\"categoria\":\"General\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":777.77}"
+      }
+    ]
+  },
+  "consoleErrors": [],
+  "exceptions": [],
+  "failedRequests": [],
+  "diffSnapshot": [],
+  "snapshotIdentico": true,
+  "abortar": []
+}

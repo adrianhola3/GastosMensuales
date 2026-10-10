@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Gastos &amp; Presupuesto</title>
+  <!-- Sin este link el navegador pide /favicon.ico y da 404 en cada visita,
+       y la pestana muestra el icono generico. Es el mismo glifo de la marca. -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Chart.js para visualización de métricas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- Velo oscuro detrás del rail cuando pasa a ser drawer (≤1024px).
+       Va FUERA de `.app-layout` a propósito: dentro de la retícula sería un
+       ítem más y empujaría el área principal a una segunda fila. -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <div class="app-layout">
+
+    <!-- ==========================================================
+         RAIL LATERAL — 236px, la espina temporal
+         Cuatro cosas, de arriba abajo: marca, las dos vistas, la línea
+         de tiempo de los períodos, y el pie con estado y modo.
+         SIN cifras y SIN buscador: eso son datos, y los datos viven en la
+         barra de comando.
+
+         LA DIVISIÓN QUE ORDENA TODO: EL TIEMPO SE RECORRE EN EL RAIL, LA
+         CATEGORÍA SE FILTRA EN LA BARRA. Un rail de 236px con dos
+         pestañas es un panel ancho para dos botones; con la línea de
+         tiempo es el reloj del presupuesto, y los 236px están
+         trabajando. Esa es la razón por la que el ancho se recuperó, y
+         no una medida de elegancia.
+
+         POR QUÉ LA LÍNEA DE TIEMPO VUELVE AL RAIL, Y POR QUÉ NO ES UNA
+         VUELTA ATRÁS
+         La ronda anterior la sacó del rail por dos razones, y las dos
+         siguen siendo verdaderas; lo que cambia es dónde se resuelven:
+
+         · "224px verticales con scroll propio para 6 meses". En el rail
+           de 236px la lista vive en el bloque que CRECE con los meses
+           (`flex: 1 1 auto` + `min-height: 0`), así que con 6 ocupa
+           180px y con 24 scrollea SOLO la lista. La marca y el pie
+           quedan `flex: 0 0 auto`: el pie ya no puede quedar
+           inalcanzable, que era el fallo exacto del rail viejo (327px
+           de contenido cortado).
+         · "Duplicaba el nombre del topbar". Ya no duplica nada: el
+           topbar no muestra el período, y `#activeMonthHeaderBadge`
+           es el encabezado de esta sección. Encima la lista ALTA es
+           WRAP: la tira horizontal del rail anterior se scrolleaba y
+           con 24 períodos la píldora activa podía quedar fuera de
+           vista. Acá `scrollIntoView` la trae, y en vertical el eje
+           es el que scrollea.
+
+         POR QUÉ NO SE AGRUPA POR AÑO: `mesesOrden` guarda el `nombre`
+         que escribe la persona en el modal "Nuevo mes", que es texto
+         libre ("Febrero 2027", "Mitad de año", "Q1"). Sacarle el año
+         con un parseo sería adivinar, y una lista agrupada por una
+         etiqueta equivocada miente. El nombre que escribió el usuario
+         es el año cuando el usuario escribió un año.
+
+          LO QUE NO CAMBIA: el drawer de <=1024px. Ahí el MISMO elemento
+          es un panel de 236px con todo su texto, y por eso su ancho es
+          un token aparte de `--rail-width`: si compartieran token,
+          angostar el rail angostaría el panel y el breakpoint se rompería
+          en silencio.
+
+          LO QUE T2 LE SACÓ: el filtro de categoría. Este rail tenía la marca,
+          las dos vistas, la línea de tiempo y el pie, y además el filtro
+         Horizontal de la barra. Ahora es el reloj y nada más: la columna de
+          secciones, a su derecha, es la que lleva el conteo y el subtotal.
+          Medido, este rail dejaba ~491px de aire entre la última píldora de
+          período y el bloque de administración con la fixture `baseline`, y
+          ~520px entre y=150 y y=670. Ese aire no se rellenó con la columna:
+          se dejó de tener que atravesarlo para leer una cifra que ahora está
+          al lado.
+          ========================================================== -->
+    <aside id="appSidebar" class="app-sidebar">
+
+      <div class="sidebar-brand">
+        <div class="brand-left">
+          <div class="brand-logo-box"><svg class="ui-icon-img ui-icon-brand ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></div>
+          <div class="brand-texts">
+            <h1 class="brand-title">Gestor Financiero</h1>
+            <span class="brand-sub">Presupuesto &amp; Gastos</span>
+          </div>
+        </div>
+        <button type="button" id="btnCloseSidebar" class="sidebar-close-btn" title="Cerrar panel" aria-label="Cerrar panel"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+
+      <!-- Las dos vistas. Con icono y con texto: en 236px entran los dos, y
+           el texto es lo que hace legible la navegación sin depender del
+           color del acento. -->
+      <nav class="sidebar-nav" aria-label="Vistas">
+        <button type="button" id="btnNavMes" class="sidebar-nav-tab active" title="Vista Mensual">
+          <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="2.5" y="3.5" width="11" height="10" rx="2"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5"/></svg></span>
+          <span>Vista Mensual</span>
+        </button>
+        <button type="button" id="btnNavPanel" class="sidebar-nav-tab" title="Consolidado multimes">
+          <span class="nav-tab-icon"><svg class="ui-icon-img ui-icon-nav ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.25 13.25h11.5M4.25 13.25v-4M6.75 13.25v-6M9.25 13.25v-8.5M11.75 13.25v-2.75"/></svg></span>
+          <span>Consolidado</span>
+        </button>
+      </nav>
+
+      <!-- LA LÍNEA DE TIEMPO. Es el bloque que crece: `flex: 1 1 auto` con
+           `min-height: 0` hace que la lista scrollee y solo la lista.
+           Arriba, el rótulo estático y las dos flechas que recorren la lista.
+           Abajo, las dos acciones que administran períodos, que en modo Lector
+           desaparecen con su bloque entero.
+
+           T4: `#activeMonthHeaderBadge` —el nombre del período activo— YA NO
+           ESTÁ ACÁ. Es el título de página del topbar. En el rail era un
+           nombre más peleando 236px con el rótulo y las flechas, y sobre
+           todo no existía en la Vista Consolidado, que es donde más hace
+           falta saber qué período se está mirando. Lo que queda del
+           encabezado es lo que el rail sí controla: "Período" y sus dos
+           flechas. El nombre vive arriba, en un solo lugar. -->
+      <div class="sidebar-periods">
+        <div class="sidebar-periods-head">
+          <span class="sidebar-section-label">Período</span>
+          <span class="period-nav">
+            <button type="button" id="btnPrevMonth" class="period-arrow" title="Mes anterior" aria-label="Mes anterior"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></button>
+            <button type="button" id="btnNextMonth" class="period-arrow" title="Mes siguiente" aria-label="Mes siguiente"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.5L10.5 8 6 12.5"/></svg></button>
+          </span>
+        </div>
+
+        <div id="monthPillsContainer" class="period-track" role="group" aria-label="Períodos"></div>
+
+        <div class="period-admin">
+          <button type="button" id="btnOpenNewMonthModal" class="period-new admin-action-btn" title="Crear o duplicar un mes">Nuevo mes</button>
+          <button type="button" id="btnDeleteMonth" class="period-new period-new-danger admin-action-btn" title="Eliminar el período activo">Eliminar mes</button>
+        </div>
+      </div>
+
+      <!-- Pie: estado de la sesión. Es META, no navegación: chico, gris,
+           anclado al borde inferior. Sin caja: era el último borde del
+           rail y lo único que delimitaba algo que no es un control. -->
+      <div class="sidebar-footer">
+        <div id="indicadorConexion" class="conn-badge conn-offline"
+          title="Los datos se guardan solo en este navegador">
+          <span class="conn-dot"></span> <span id="indicadorConexionTexto">Sin conexión</span>
+        </div>
+        <button type="button" id="btnToggleAuthMode" class="mode-badge readonly-active"
+          title="Haz clic para ingresar y desbloquear la edición">
+          <span id="authModeIcon"></span> <span id="authModeLabel">Solo Lectura</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ==========================================================
+         COLUMNA DE SECCIONES — ~200px, entre el rail y el contenido
+         Lo que era un renglón de chips en la barra de comando.
+
+         POR QUÉ UNA COLUMNA Y NO UN RENGLÓN MÁS DE LA BANDA
+         ────────────────────────────────────────────────────
+         Medido a 1440: los cinco `.ledger-chips` ocupaban 400px+ de ancho
+         horizontal dentro de una banda de 125.9px que tenía que sostener
+         además la tira de cinco cifras. Eran dos capas de control —la cifra
+         y la navegación— apiladas sobre el dato, y el alto se pagaba en las
+         filas de gasto, que son las que se repiten.
+
+         Y el problema real del que se queja el usuario no era el ancho: era
+         que la información de cada sección —su conteo y su subtotal— sólo se
+         leía al scrollear hasta el encabezado del grupo. El alta de Extras
+         estaba al final de una página larga. Con la columna, la respuesta a
+         "¿cuánto gasté en Servicios?" está a la altura de los ojos y no
+         depende del scroll.
+
+         CADA ENTRADA HACE TRES TRABAJOS, Y POR ESO GANA EL ANCHO
+         ─────────────────────────────────────────────────────────
+         1. Filtrar — comportamiento actual, sin cambios: `data-segment`.
+         2. Navegar — `activarSeccion()` en app.js lleva el grupo a la vista.
+         3. Informar — `[data-rail-count]` y `[data-rail-total]`.
+
+         "Todo" no lleva conteo ni subtotal porque no ES una sección: es el
+         estado del filtro, no una categoría. Le pasa lo que a "Período" en el
+         rail: el rótulo del control, no una fila del libro.
+
+         LO QUE SE CONSERVA DEL DOM
+         ─────────────────────────
+         · `.segment-pill-btn` y `data-segment`: los leen
+           `renderActiveSegments` y `toggleSegment` (app.js) y
+           `adversarial-suite.mjs:1336,1339,1364`. Los cinco siguen, con el
+           mismo `aria-pressed`.
+         · Los glifos: son los mismos de los chips. El ícono no se rediseñó,
+           mudó de columna. Un glifo nuevo aquí sería una segunda identidad
+           para la misma categoría.
+         · `.btn-quick-add-service`, `.btn-quick-add-personal`,
+           `.btn-quick-add-extra`, `#btnQuickActionIncome` y
+           `#btnQuickActionExpense`: `crud-admin.mjs:1012,1076,1095,1115,1140`
+           los pulsa por selector y por id. Siguen en el DOM con las mismas
+           clases, con `admin-action-btn`, y ahora con `.rail-add-btn`.
+
+         POR QUÉ SE SACARON DEL ENCABEZADO DEL GRUPO Y NO SE DUPLICARON
+         ─────────────────────────────────────────────────────────────
+         Dos controles para la misma acción en dos lugares es la forma más
+         cara de equivocarse: uno de los dos se desactualiza y nadie lo nota.
+         El encabezado del grupo queda con su cifra (`#summaryTag*`), que es
+         dato; el alta vive en la navegación, que es control. Es la misma
+         división que sostiene el rail: el tiempo se recorre en el rail, la
+         categoría se filtra en la columna.
+
+         Y el alta de Extras deja de ser `background: transparent` +
+         `--text-secondary` + borde hairline al final de una página: pasa a
+         ser un control de la columna, con la misma altura y el mismo tamaño
+         que los otros tres. La asimetría entre los cuatro botones de alta era
+         el bug reportado, y no se arreglaba con cuatro reglas nuevas: se
+         arreglaba poniéndolos en el mismo lugar.
+
+         LO QUE NO SE PUSO AQUÍ, Y POR QUÉ
+         ───────────────────────────────
+         · El buscador. Un filtro tiene que estar al lado del dato que filtra
+           (#198 ya lo bajó del rail por esto) y la columna no lo tiene.
+         · La línea de tiempo. Es tiempo, y el tiempo se recorre en el rail.
+         · Una sección activa a la vez. Rompería el ver las cuatro cifras de
+           un vistazo y `empty.segment-filters`
+           (adversarial-suite.mjs:1335), que apaga las cuatro y espera el aviso.
+         ========================================================== -->
+    <nav class="section-rail" aria-label="Secciones del mes">
+      <div class="section-rail-head">
+        <span class="sidebar-section-label">Secciones</span>
+      </div>
+
+      <div class="section-rail-list" role="group" aria-label="Categorías visibles">
+
+        <!-- "Todo": el estado del filtro, no una sección. Sin conteo, sin
+             subtotal y sin botón de alta —no hay nada que agregar a "todo"—.
+             Es el mismo criterio que "Período" en el rail: el rótulo de un
+             control, no una fila del libro. -->
+        <div class="rail-entry rail-entry-all">
+          <button type="button" class="segment-pill-btn pill-btn-all" data-segment="all"
+            title="Ver todas las secciones" aria-pressed="true">
+            <svg class="ui-icon-img ui-icon-chip ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5L14 5.5 8 8.5 2 5.5 8 2.5z"/><path d="M2.75 9.5L8 11.75l5.25-2.25"/></svg>
+            <span class="ledger-chip-label">Todo</span>
+          </button>
+        </div>
+
+        <!-- 1. SERVICIOS -->
+        <div class="rail-entry" data-rail-entry="servicios">
+          <button type="button" class="segment-pill-btn" data-segment="servicios"
+            title="Servicios del hogar" aria-pressed="true">
+            <svg class="ui-icon-img ui-icon-chip ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 7.25L8 2.75l5.5 4.5"/><path d="M4.25 6.25v6.75a1 1 0 0 0 1 1h5.5a1 1 0 0 0 1-1V6.25"/></svg>
+            <span class="ledger-chip-label">Servicios</span>
+            <span class="rail-entry-count" data-rail-count>0</span>
+          </button>
+          <!-- El subtotal va FUERA del `<button>`, no dentro. El control es un
+               `display: flex` de una línea con `white-space: nowrap`, así que
+               un tercer hijo se iría a la misma fila y el renglón desbordaría:
+               medido, el botón daba `scrollWidth` 201px en una caja de 183px y
+               "S/ 666.66" se salía cortado. Y no puede ser hermano del
+               `.segment-pill-btn` sin más porque `renderActiveSegments` no lo
+               toca: vive en `.rail-entry`, que es la caja de la sección. -->
+          <span class="rail-entry-total font-mono" data-rail-total>S/ 0.00</span>
+          <button type="button" class="btn btn-sm rail-add-btn btn-quick-add-service admin-action-btn"
+            title="Añadir gasto a Servicios del hogar">Añadir</button>
+        </div>
+
+        <!-- 2. PERSONALES -->
+        <div class="rail-entry" data-rail-entry="personales">
+          <button type="button" class="segment-pill-btn" data-segment="personales"
+            title="Gastos personales" aria-pressed="true">
+            <svg class="ui-icon-img ui-icon-chip ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="2.25"/><path d="M3.5 13.75a4.5 4.5 0 0 1 9 0"/></svg>
+            <span class="ledger-chip-label">Personales</span>
+            <span class="rail-entry-count" data-rail-count>0</span>
+          </button>
+          <span class="rail-entry-total font-mono" data-rail-total>S/ 0.00</span>
+          <button type="button" class="btn btn-sm rail-add-btn btn-quick-add-personal admin-action-btn"
+            title="Añadir gasto a Gastos personales">Añadir</button>
+        </div>
+
+        <!-- 3. MOVIMIENTOS. Único grupo que no es un presupuesto: su total NO
+               es un importe sino el conteo de movimientos, igual que
+               `#summaryTagMovimientos`. Es lo que dice el dato, y la entrada
+               de la columna tiene que decir lo mismo que el encabezado. -->
+        <div class="rail-entry" data-rail-entry="movimientos">
+          <button type="button" class="segment-pill-btn" data-segment="movimientos"
+            title="Movimientos del mes" aria-pressed="true">
+            <svg class="ui-icon-img ui-icon-chip ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 5.5h10M10 2.75L12.75 5.5 10 8.25M13.5 10.5h-10M6 7.75L3.25 10.5 6 13.25"/></svg>
+            <span class="ledger-chip-label">Movimientos</span>
+            <span class="rail-entry-count" data-rail-count>0</span>
+          </button>
+          <span class="rail-entry-total font-mono" data-rail-total>0 movs</span>
+          <!-- Los DOS botones, no uno: ingreso y gasto son dos acciones
+               distintas sobre el mismo grupo, y `crud-suite.mjs:789,818,862`
+               pulsa los dos ids por separado. -->
+          <div class="rail-entry-adds">
+            <button type="button" id="btnQuickActionIncome" class="btn btn-sm rail-add-btn btn-quick-action-income admin-action-btn"
+              title="Registrar un ingreso del mes">Ingreso</button>
+            <button type="button" id="btnQuickActionExpense" class="btn btn-sm rail-add-btn btn-quick-action-expense admin-action-btn"
+              title="Registrar un gasto del mes">Gasto</button>
+          </div>
+        </div>
+
+        <!-- 4. EXTRAS -->
+        <div class="rail-entry" data-rail-entry="extras">
+          <button type="button" class="segment-pill-btn" data-segment="extras"
+            title="Gastos extraordinarios" aria-pressed="true">
+            <svg class="ui-icon-img ui-icon-chip ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.8L9.38 6.5L13.33 6.67L10.24 7.67L11.29 12.93L9.38 10.3L4.71 12.93L6.62 10.3L2.67 6.67L5.76 7.67Z"/></svg>
+            <span class="ledger-chip-label">Extras</span>
+            <span class="rail-entry-count" data-rail-count>0</span>
+          </button>
+          <span class="rail-entry-total font-mono" data-rail-total>S/ 0.00</span>
+          <button type="button" class="btn btn-sm rail-add-btn btn-quick-add-extra admin-action-btn"
+            title="Añadir gasto extraordinario">Añadir</button>
+        </div>
+
+      </div>
+
+      <!-- El pie es META, no navegación, y va anclado al borde inferior con
+           `margin-top: auto` + `flex: 0 0 auto`: el bloque que crece (la lista
+           de secciones, por si una sección gana subsecciones) nunca empuja
+           nada fuera de la pantalla. Sin caja y sin filete de más: sería el
+           último borde de la columna delimitando algo que no es un control. -->
+      <div class="section-rail-foot">
+        <span class="rail-foot-note">Toca una sección para verla y contarla.</span>
+      </div>
+    </nav>
+
+    <!-- ==========================================================
+         SUPERFICIE PRINCIPAL
+         Una superficie continua. Las secciones se separan por
+         filetes horizontales; no hay retícula de columnas ni cajas.
+         ========================================================== -->
+    <div class="app-main-area">
+
+      <header class="app-topbar">
+        <!-- T4 — EL TOPBAR DEJO DE TENER UN HUECO.
+             MEDIDO: con `justify-content: flex-end` y una sola cosa a la
+             derecha, la mitad izquierda eran **1100px de vacío** (captura
+             `revision-2-admin-1440.png`). No era un espacio de respiración:
+             era el lugar del rótulo que faltaba.
+
+             `#activeMonthHeaderBadge` es ese rótulo. Baja del rail y sube
+             acá como TÍTULO DE PÁGINA, a la izquierda, a `--text-lg` (17px):
+             es la respuesta a "¿qué período estoy mirando?", y tiene que
+             estar antes que las cifras, no después.
+
+             POR QUÉ ARRIBA Y NO EN EL RAIL, Y POR QUÉ NO EN LA BARRA
+             · En el rail competía por 236px con el rótulo "Período" y las
+               dos flechas, y quedaba en una línea de 15px sobre una lista.
+             · En la barra de comando competiría por ancho con la tira de
+               cifras, que es lo que quedó apretado.
+             · En el topbar aparece en las DOS vistas. Ése era el fallo que
+              .none lo justificaba: en Consolidado el período no se veía en
+               ninguna parte, y Consolidated es la vista donde más hace falta.
+
+             El rail conserva su trabajo: el rótulo estático "Período", las
+             dos flechas y la lista. `.topbar-left` sigue siendo el contenedor
+             del botón del drawer a <=1024px, con el título detrás. -->
+        <div class="topbar-left">
+          <button type="button" id="btnToggleMobileSidebar" class="btn-hamburger" title="Abrir resumen y navegación"
+            aria-label="Abrir resumen y navegación">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+          </button>
+          <h2 id="activeMonthHeaderBadge" class="topbar-page-title">Período Actual</h2>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-quick-kpi">
+            <span class="kpi-mini-label">Balance</span>
+            <span id="topbarBalanceValue" class="kpi-mini-val font-mono">S/ 0.00</span>
+          </div>
+          <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes"><svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas</button>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- ==========================================================
+             VISTA 1: DETALLE MENSUAL
+             ========================================================== -->
+        <section id="viewMes" class="view-container active">
+
+          <!-- ============================================================
+               BARRA DE COMANDO — una sola banda, y es lo único que
+               queda fijo al scrollear.
+
+               DOS RENGLONES, Y NO TRES — T2 CAMBIÓ EL SEGUNDO
+               ───────────────────────────────────────────────
+               · La tira de CIFRAS: cinco celdas de la misma estructura,
+                 comparables entre sí.
+               · La fila de BÚSQUEDA: el buscador, solo.
+
+               T2 Sacó el filtro de categoría de este renglón y lo subió a
+               la columna de secciones. Antes eran tres bandas de cromo antes
+               de la primera fila de gasto; ahora son dos, y la navegación de
+               categoría tiene su propio eje vertical, que es el que la persona
+               recorre. El buscador se queda: un filtro tiene que estar al lado
+               del dato que filtra, y la columna de secciones no lo tiene al
+               lado.
+
+               `.view-header` no vino, y es la única baja sin reemplazo:
+               "Detalle mensual" + su subtítulo repetían lo que la
+               pestaña del rail ya dice, con 95.6px de alto.
+               ============================================================ -->
+        <div class="ledger-toolbar" role="group" aria-label="Totales del mes y filtro de categoría">
+
+          <!-- ── LA TIRA DE CIFRAS ────────────────────────────────────────
+               CINCO celdas, y el orden es el orden en que se las
+               pregunta:
+
+                 Presupuesto → Pagado → Pendiente → Ingresos → Balance
+
+               Las tres primeras contestan "¿cuánto falta y en qué?"; las
+               dos últimas cierran la cuenta. Todas con la MISMA
+               estructura interna — etiqueta de 11px, importe de 20px, y
+               una tercera línea de nota de 12px donde hay algo que decir
+               — para que las cifras se comparen de un vistazo. Cuando
+               esta fila tuvo DOS renglones con estructuras distintas, los
+               importes quedaban a distinta altura y no se comparaban, y
+               seis medidas quedaron en micro-texto de 9-11px: eso es
+               peo que las cuatro celdas de `.metrics-row` que T1 sacó.
+
+               · PRESUPUESTO lleva debajo la COBERTURA
+                 (`#monthAbonoPercentLabel`), que es ingresos sobre
+                 presupuesto: los dos operandos quedan en la misma tira, y
+                 la nota deja de ser micro-texto suelto.
+               · PAGADO es la ÚNICA fracción de las cinco (pagado sobre
+                 presupuesto), así que es la única que lleva carril. El
+                 denominador (`#monthGastosCount`) va pegado a la izquierda
+                 del carril y el porcentaje a la derecha, que es como se
+                 lee una fracción: base, barra, resultado.
+               · BALANCE sube de la fila de micro-texto porque es el número
+                 que responde "¿estoy bien o mal?". Conserva el color
+                 inline por signo que le escribe app.js, y la palabra del
+                 estado va AL LADO de la cifra, no debajo: estado y número
+                 se leen en un solo vistazo.
+
+               Los textos que las suites comparan contra la cadena literal
+               (`#monthGastosCount`, `#paidPercentBadge`,
+               `#monthIngresosCount`, `#monthBalanceStatusLabel`) se
+               conservan tal cual los escribe app.js. `#paidTextInfo` y
+               `#pendingSummaryLabel` sí bajaron a solo importe: la
+               etiqueta de la celda ya dice "Pagado" y "Pendiente".
+
+               NINGUNO DE ESTOS IDS PUEDE IR EN UN `<details>` CERRADO:
+               `adversarial-suite.mjs:168` exige que `#monthTotalIngresos`,
+               `#monthTotalEgresos`, `#monthBalanceNeto` y
+               `#activeMonthHeaderBadge` pinten texto con `display`
+               distinto de `none`, y los hijos de un `<details>` sin `open`
+               quedan justo en `display: none`. -->
+          <div class="ledger-strip">
+            <div class="ledger-cell">
+              <span class="ledger-cell-label">Presupuesto</span>
+              <span id="monthTotalEgresos" class="ledger-cell-value font-mono">S/ 0.00</span>
+              <span class="ledger-cell-note"><span class="ledger-note-key">Cobertura</span> <span id="monthAbonoPercentLabel" class="font-mono">0.0%</span></span>
+            </div>
+
+            <div class="ledger-cell ledger-cell-paid">
+              <span class="ledger-cell-label">Pagado</span>
+              <span id="paidTextInfo" class="ledger-cell-value font-mono">S/ 0.00</span>
+              <span class="ledger-paid-line">
+                <span id="monthGastosCount" class="ledger-cell-note">0 de 0 gastos pagados</span>
+                <span class="payments-track"><span id="paidBarFill" class="payments-fill" style="width: 0%;"></span></span>
+                <span id="paidPercentBadge" class="ledger-cell-note font-mono">0.0% Pagado</span>
+              </span>
+            </div>
+
+            <div class="ledger-cell">
+              <span class="ledger-cell-label">Pendiente</span>
+              <span id="pendingSummaryLabel" class="ledger-cell-value font-mono">S/ 0.00</span>
+            </div>
+
+            <div class="ledger-cell">
+              <span class="ledger-cell-label">Ingresos</span>
+              <span id="monthTotalIngresos" class="ledger-cell-value font-mono">S/ 0.00</span>
+              <span id="monthIngresosCount" class="ledger-cell-note">0 abonos registrados</span>
+            </div>
+
+            <div class="ledger-cell">
+              <span class="ledger-cell-label">Balance</span>
+              <span class="ledger-balance-line">
+                <span id="monthBalanceNeto" class="ledger-cell-value font-mono">S/ 0.00</span>
+                <span id="monthBalanceStatusLabel" class="ledger-cell-note">Equilibrado</span>
+              </span>
+            </div>
+          </div>
+
+<!-- ── LA FILA DE BÚSQUEDA ────────────────────────────────────────────────
+               ANTES COMPARTÍA RENGÓN CON EL FILTRO DE CATEGORÍA. Ya no:
+               los cinco `.segment-pill-btn` viven en `<nav class="section-rail">`,
+               la columna que quedó entre el rail y el contenido (ver el bloque
+               de T2 más abajo, en el nivel de `.app-layout`).
+
+               POR QUÉ LA COLUMNA Y NO EL RENGÓN QUE QUEDABA LIBRE
+               Los chips ocupaban 400px+ de ancho horizontal para cinco
+               elementos, y el renglón que los sostenía era el segundo de la
+               banda: dos capas de control (la tira de cifras y la navegación)
+               encima del dato. Con la columna, la banda queda con la tira y el
+               buscador —que es el filtro que tiene que estar pegado a los datos
+               que filtra— y la navegación de categoría sube a su propio eje.
+
+               LO QUE NO SE ROMPIÓ: `data-segment` y `.segment-pill-btn`
+               siguen intactos y los cinco botones siguen siendo cinco, ahora
+               en la columna. `renderActiveSegments` y `toggleSegment` leen esos
+               dos atributos y no cambian una línea. El nombre de la clase lo
+               congeló el contrato DOM y, además, ya no es una cápsula de
+               ninguna manera.
+
+               EL BUSCADOR, que bajó del rail en T1. El atajo `/` sigue
+               funcionando: el binding vive en app.js y no depende de dónde esté
+               el input.
+
+               EL RENOMBRE de T1: `sidebarSearchInput` ->
+               `commandSearchInput`, `btnClearSidebarSearch` ->
+               `btnCommandClearSearch`, `sidebarSearchResultsFeedback` ->
+               `commandSearchResultsFeedback`. Un id que dice "sidebar" en
+               un input que no está en el sidebar es una afirmación falsa
+               que alguien va a leer dentro de tres meses. -->
+          <div class="ledger-row ledger-row-nav">
+            <div class="command-search">
+              <div class="command-search-box">
+                <span class="command-search-icon"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="6.8" cy="6.8" r="4.3"/><path d="M10 10l3.4 3.4"/></svg></span>
+                <input type="text" id="commandSearchInput" class="command-search-input" placeholder="Buscar gasto o abono"
+                  aria-label="Buscar gasto o abono" autocomplete="off" spellcheck="false">
+                <button type="button" id="btnCommandClearSearch" class="btn-clear-search" title="Limpiar búsqueda" aria-label="Limpiar búsqueda" style="display: none;"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+                <kbd class="search-shortcut-badge" title="Presiona '/' para buscar">/</kbd>
+              </div>
+              <div id="commandSearchResultsFeedback" class="search-results-feedback" style="display: none;">
+                <span id="searchResultsCountText">0 coincidencias</span>
+              </div>
+</div>
+
+<!-- "Abono" y "Gasto" viven AQUÍ y no en la tira de arriba.
+               POR QUÉ, Y NO ES SOLO ARITMÉTICA:
+               `.ledger-strip` es una tira de CINCO cifras comparables entre
+               sí: Presupuesto, Pagado, Pendiente, Ingresos, Balance. Todas
+               con etiqueta y con importe, todas con el ancho que fija su
+               renglón más ancho. "Abono" y "Gasto" no son cifras — no tienen
+               etiqueta ni importe — y su ancho (110.1px medidos) lo decide el
+               texto más largo, no un dato. Estaban en la tira porque en la
+               versión anterior la banda mezclaba todo; ahora la banda tiene
+               dos renglones con dos trabajos distintos: el de arriba es LEER
+               el mes y el de abajo es ACTUAR sobre el mes y ENCONTRAR en él.
+               El buscador y los dos botones de alta son las dos cosas que se
+               piden juntas —"buscar tal cosa" + "cargar un gasto"— y por eso
+               comparten renglón.
+
+               En modo Lector los oculta `admin-action-btn`. Antes quedaban en
+               la tira de cifras, y con el filete ausente se veía un guion
+               suelto apuntando al aire entre el importe y nada; ahora el
+               filete de `.ledger-row-nav` ya separa los renglones, así que en
+               Lector la fila es sólo el buscador y no hace falta una costura
+               nueva. Medido: con los botones el renglón mide 37px, los mismos
+               que la fila de búsqueda sola, así que los 110.1px de las acciones
+               entran en el aire que ya estaba. -->
+            <div class="ledger-actions">
+              <button type="button" id="btnHeaderAddIncome" class="ledger-action admin-action-btn"
+                title="Registrar nuevo abono">Abono</button>
+              <button type="button" id="btnHeaderAddBudget" class="ledger-action admin-action-btn"
+                title="Añadir nuevo gasto presupuestado">Gasto</button>
+            </div>
+          </div>
+        </div>
+
+<!-- Aquí estaban `.period-bar` (60px) y `.segments-navigation-bar` (69.1px).
+               Los dos bajaron a la barra de comando y después el período
+               volvió al rail, donde es navegación. La categoría también: en T2
+               los cinco `.segment-pill-btn` bajaron del renglón de la barra a
+               `<nav class="section-rail">`, la segunda columna de
+               `.app-layout`. El tiempo se recorre en el rail, la categoría se
+               filtra en la columna. Lo que NO volvió,
+               y es deliberado: los importes por categoría (`#badgeSeg*`) y
+               las minibarras (`#miniBar*`) eran la cuarta y la quinta copia
+               de los subtotales que cada encabezado ya muestra en
+               `#summaryTag*`. app.js los sigue escribiendo detrás de `if`,
+               así que no hay binding roto; si alguna vez hacen falta, vuelve
+               el nodo y hay que escribirle una regla. -->
+
+<!-- ============================================================
+               EL LIBRO — un contenedor, cuatro grupos, un renglón por gasto
+
+               QUÉ SE REEMPLAZA Y POR QUÉ
+               Las cuatro `.content-card-box` se reemplazaron por `#ledgerBody`, y el
+               motivo es una medida, no una preferencia de gusto. A 1440x900
+               la primera fila de gasto estaba en y=315.9 y se veían 11 de las
+               filas disponibles. Medido en la captura, el aire estaba TODO en
+               la navegación del libro, no en el dato:
+
+               · encabezado de tarjeta ≈ 100px (título 21 + descripción de una
+                 línea 18 + padding), y la descripción repetía lo que el ícono
+                 ya decía;
+               · 6 subheads "Gastos fijos" / "Gastos variables" a 33px cada uno;
+               · 7 filas de subtotal a 33px cada una para 10 gastos.
+
+               Eso son ~480px de cromo entre el título de la barra y la primera
+               fila. Un presupuesto de diez gastos no necesita siete subtotales:
+               el desglose es ruido, y el total del GRUPO alcanza. Fijo/Variable
+               no se pierde: pasa a ser la etiqueta que ya tenía cada fila.
+
+               LO QUE SE MANTIENE, Y POR QUÉ NO ES MARCHA ATRÁS
+               · `data-segment-card` sigue en el grupo. `renderActiveSegments`
+                 y `toggleSegment` filtran por ese atributo y no cambian: los
+                 chips de la barra siguen siendo el filtro.
+               · La clase `collapsed` sigue significando lo mismo, y ahora
+                lleva `aria-expanded` con ella.
+               · `.expense-card-item` recibe EXACTAMENTE 4 hijos. La categoría
+                 no es un quinto hijo: es `data-categoria`, atributo.
+               · El encabezado es un `<button>` real. Contraerse es una acción,
+                 y una acción que solo funciona con el ratón no es un control.
+               · `#summaryTag*` sigue siendo la cifra del grupo, y los botones
+                 de añadir rápido siguen siendo los mismos controles.
+
+               LO QUE SE BORRA, Y POR QUÉ NO ES UNA PÉRDIDA
+               Los 5 `list*` y `transactionsFeedList` eran contenedores de
+               render, no de lectura: `renderExpenseCategory` limpiaba y
+               escribía dentro. Ahora escriben directo en `.ledger-group-rows`.
+               Los 7 `#subtotal*` eran el desglose que esta ronda reemplaza. Los
+               dos grupos viven en el contrato DOM de `app.js`; se explica cada
+               uno en el diff.
+               ============================================================ -->
+          <div id="ledgerBody" class="ledger-body">
+
+            <div id="noSegmentsSelectedNotice" class="empty-segments-notice" style="display: none;">
+              Ninguna categoría seleccionada. Activá una arriba para verla.
+            </div>
+
+            <!-- 1. SERVICIOS -->
+            <section class="ledger-group" id="ledgerGroupServicios" data-segment-card="servicios"
+              data-categoria="servicios" data-accent="servicios">
+              <div class="ledger-group-head">
+                <h3 class="ledger-group-heading">
+                  <button type="button" class="ledger-group-toggle" aria-expanded="true"
+                    aria-controls="ledgerRowsServicios" title="Desplegar o contraer el grupo">
+                    <span class="cat-tick" aria-hidden="true"></span>
+                    <svg class="ui-icon-img ui-icon-xs ui-icon-svg ledger-group-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 7.25L8 2.75l5.5 4.5"/><path d="M4.25 6.25v6.75a1 1 0 0 0 1 1h5.5a1 1 0 0 0 1-1V6.25"/></svg>
+                    <span class="ledger-group-name">Servicios del hogar</span>
+                    <span class="ledger-group-count" data-group-count>0</span>
+                    <svg class="ui-glyph ledger-group-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg>
+                  </button>
+                </h3>
+                <!-- T2: `#summaryTagServicios` queda SOLO en el encabezado.
+                     El botón de alta `.btn-quick-add-service` está en la
+                     columna de secciones —misma clase, mismo
+                     `admin-action-btn`, mismo binding en app.js:1421— porque
+                     el encabezado es dato y la columna es control. -->
+                <div class="ledger-group-meta">
+                  <span id="summaryTagServicios" class="ledger-group-subtotal font-mono">S/ 0.00</span>
+                </div>
+              </div>
+              <div class="ledger-group-body">
+                <div class="ledger-group-rows" id="ledgerRowsServicios"></div>
+              </div>
+            </section>
+
+            <!-- 2. PERSONALES -->
+            <section class="ledger-group" id="ledgerGroupPersonales" data-segment-card="personales"
+              data-categoria="personales" data-accent="personales">
+              <div class="ledger-group-head">
+                <h3 class="ledger-group-heading">
+                  <button type="button" class="ledger-group-toggle" aria-expanded="true"
+                    aria-controls="ledgerRowsPersonales" title="Desplegar o contraer el grupo">
+                    <span class="cat-tick" aria-hidden="true"></span>
+                    <svg class="ui-icon-img ui-icon-xs ui-icon-svg ledger-group-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="5" r="2.25"/><path d="M3.5 13.75a4.5 4.5 0 0 1 9 0"/></svg>
+                    <span class="ledger-group-name">Gastos personales</span>
+                    <span class="ledger-group-count" data-group-count>0</span>
+                    <svg class="ui-glyph ledger-group-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg>
+                  </button>
+                </h3>
+                <!-- T2: `.btn-quick-add-personal` vive en la columna de
+                     secciones (app.js:1424 sigue leyéndolo por clase). -->
+                <div class="ledger-group-meta">
+                  <span id="summaryTagPersonales" class="ledger-group-subtotal font-mono">S/ 0.00</span>
+                </div>
+              </div>
+              <div class="ledger-group-body">
+                <div class="ledger-group-rows" id="ledgerRowsPersonales"></div>
+              </div>
+            </section>
+
+            <!-- 3. MOVIMIENTOS. Es el único grupo que no es un presupuesto: entra
+                 igual, con su propio acento, porque también son filas que se
+                 leen y se editan de a una. Los dos botones de alta estaban
+                 sueltos en el cuerpo del grupo, 40px + 33px de cromo antes de
+                 la primera fila. T2 los movió a la COLUMNA DE SECCIONES —son
+                 alta, y el alta es control de navegación— así que el
+                 encabezado de este grupo conserva su cifra y nada más. Los tres
+                 filtros del feed quedan DEBAJO del encabezado, adentro del
+                 grupo: no son una banda propia, porque no son de la vista sino
+                 de este grupo. -->
+            <section class="ledger-group" id="ledgerGroupMovimientos" data-segment-card="movimientos"
+              data-categoria="movimientos" data-accent="movimientos">
+              <div class="ledger-group-head">
+                <h3 class="ledger-group-heading">
+                  <button type="button" class="ledger-group-toggle" aria-expanded="true"
+                    aria-controls="ledgerRowsMovimientos" title="Desplegar o contraer el grupo">
+                    <span class="cat-tick" aria-hidden="true"></span>
+                    <svg class="ui-icon-img ui-icon-xs ui-icon-svg ledger-group-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2.5 5.5h10M10 2.75L12.75 5.5 10 8.25M13.5 10.5h-10M6 7.75L3.25 10.5 6 13.25"/></svg>
+                    <span class="ledger-group-name">Movimientos del mes</span>
+                    <span class="ledger-group-count" data-group-count>0</span>
+                    <svg class="ui-glyph ledger-group-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg>
+                  </button>
+                </h3>
+                <!-- T2: `#btnQuickActionIncome` y `#btnQuickActionExpense`
+                     viven en la columna de secciones, con los mismos ids —los
+                     pulsa `crud-suite.mjs:789,818,862` por id— y con
+                     `admin-action-btn`. El encabezado queda con su conteo de
+                     movimientos. -->
+                <div class="ledger-group-meta">
+                  <span id="summaryTagMovimientos" class="ledger-group-subtotal font-mono">0 movs</span>
+                </div>
+              </div>
+              <div class="ledger-group-body">
+                <div class="ledger-group-filters" role="group" aria-label="Filtrar movimientos">
+                  <button type="button" class="feed-filter-pill active" data-filter="all">Todos</button>
+                  <button type="button" class="feed-filter-pill" data-filter="ingreso">Ingresos</button>
+                  <button type="button" class="feed-filter-pill" data-filter="gasto">Gastos</button>
+                </div>
+                <div class="ledger-group-rows" id="ledgerRowsMovimientos"></div>
+              </div>
+            </section>
+
+            <!-- 4. EXTRAS -->
+            <section class="ledger-group" id="ledgerGroupExtras" data-segment-card="extras"
+              data-categoria="extras" data-accent="extras">
+              <div class="ledger-group-head">
+                <h3 class="ledger-group-heading">
+                  <button type="button" class="ledger-group-toggle" aria-expanded="true"
+                    aria-controls="ledgerRowsExtras" title="Desplegar o contraer el grupo">
+                    <span class="cat-tick" aria-hidden="true"></span>
+                    <svg class="ui-icon-img ui-icon-xs ui-icon-svg ledger-group-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.8L9.38 6.5L13.33 6.67L10.24 7.67L11.29 12.93L9.38 10.3L4.71 12.93L6.62 10.3L2.67 6.67L5.76 7.67Z"/></svg>
+                    <span class="ledger-group-name">Gastos extraordinarios</span>
+                    <span class="ledger-group-count" data-group-count>0</span>
+                    <svg class="ui-glyph ledger-group-chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 6.5l4 4 4-4"/></svg>
+                  </button>
+                </h3>
+                <!-- T2: `.btn-quick-add-extra` vive en la columna de secciones.
+                     Era EL bug reportado: `background: transparent`,
+                     `--text-secondary` y borde hairline lo hacían leer como
+                     texto, y estaba al final de una página larga. Ahora es un
+                     control de navegación con la misma forma que los otros
+                     tres. -->
+                <div class="ledger-group-meta">
+                  <span id="summaryTagExtras" class="ledger-group-subtotal font-mono">S/ 0.00</span>
+                </div>
+              </div>
+              <div class="ledger-group-body">
+                <div class="ledger-group-rows" id="ledgerRowsExtras"></div>
+              </div>
+            </section>
+
+          </div>
+        </section>
+
+        <!-- ==========================================================
+             VISTA 2: CONSOLIDADO
+             ========================================================== -->
+        <section id="viewPanel" class="view-container">
+
+          <div class="view-header">
+            <h2 class="view-heading">Consolidado multimes</h2>
+            <p class="view-subheading">Seguimiento acumulado de todos los períodos del año.</p>
+          </div>
+
+          <div class="metrics-hero-grid">
+            <div class="hero-metric-card card-theme-emerald">
+              <div class="metric-top-row">
+                <span class="metric-label-title">Ingresos acumulados</span>
+              </div>
+              <div id="kpiGlobalIngresos" class="metric-main-value font-mono">S/ 0.00</div>
+              <div class="metric-footer-info">Todos los abonos confirmados</div>
+            </div>
+
+            <div class="hero-metric-card card-theme-cyan">
+              <div class="metric-top-row">
+                <span class="metric-label-title">Balance acumulado</span>
+              </div>
+              <div id="kpiGlobalBalance" class="metric-main-value font-mono">S/ 0.00</div>
+              <div class="metric-footer-info">Ingresos menos gastos realizados</div>
+            </div>
+
+            <div class="hero-metric-card card-theme-amber">
+              <div class="metric-top-row">
+                <span class="metric-label-title">Cumplimiento</span>
+              </div>
+              <div id="kpiGlobalCumplimiento" class="metric-main-value font-mono">0.0%</div>
+              <div class="metric-footer-info">Porcentaje general de cobertura</div>
+            </div>
+          </div>
+
+          <div class="content-card-box matrix-section" data-accent="matrix">
+            <div class="content-card-header">
+              <div class="card-header-left">
+                <span class="cat-tick" aria-hidden="true"></span>
+                <div class="card-header-titles">
+                  <div class="card-title-row"><h3>Matriz mensual</h3></div>
+                  <p>Elegí un período para abrirlo</p>
+                </div>
+              </div>
+            </div>
+            <div class="matrix-table-wrapper">
+              <table class="matrix-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Período</th>
+                    <th scope="col" class="text-right">Servicios</th>
+                    <th scope="col" class="text-right">Personales</th>
+                    <th scope="col" class="text-right">Extras</th>
+                    <th scope="col" class="text-right">Total egresos</th>
+                    <th scope="col" class="text-right">Total ingresos</th>
+                    <th scope="col" class="text-right">Balance neto</th>
+                    <th scope="col" class="text-center">Cobertura</th>
+                    <th scope="col" class="text-center">Progreso</th>
+                  </tr>
+                </thead>
+                <tbody id="globalMatrixBody"></tbody>
+                <tfoot id="globalMatrixFoot"></tfoot>
+              </table>
+            </div>
+          </div>
+
+          <div class="charts-grid-layout">
+            <div class="content-card-box chart-section" data-accent="trend">
+              <div class="content-card-header">
+                <div class="card-header-left">
+                  <span class="cat-tick" aria-hidden="true"></span>
+                  <div class="card-header-titles">
+                    <div class="card-title-row"><h3>Ingresos acumulados frente a balance acumulado</h3></div>
+                    <p>Evolución acumulada período a período</p>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-canvas-container">
+                <canvas id="chartTrendBar" role="img" aria-label="Gráfico de barras de ingresos y balance acumulados por período"></canvas>
+              </div>
+            </div>
+
+            <div class="content-card-box chart-section" data-accent="categories">
+              <div class="content-card-header">
+                <div class="card-header-left">
+                  <span class="cat-tick" aria-hidden="true"></span>
+                  <div class="card-header-titles">
+                    <div class="card-title-row"><h3>Distribución por categoría</h3></div>
+                    <p>Composición de los gastos acumulados</p>
+                  </div>
+                </div>
+              </div>
+              <div class="chart-canvas-container">
+                <canvas id="chartCategoryDonut" role="img" aria-label="Gráfico de anillo de la distribución de gastos por categoría"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+      </main>
+    </div><!-- app-main-area -->
+  </div><!-- app-layout -->
+
+  <!-- ==========================================================
+       MODALES
+       ========================================================== -->
+
+  <!-- Selector de modo inicial -->
+  <div id="modalSessionRoleSelect" class="modal-overlay" style="z-index: 9999;">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3 id="roleSelectTitle">Acceso al gestor financiero</h3>
+        <p class="modal-sheet-subtitle">Elegí cómo querés entrar en esta sesión.</p>
+      </div>
+
+      <div class="modal-sheet-body">
+        <div id="roleSelectStepChoices">
+          <div class="role-choice-grid">
+            <div id="btnChooseReadOnly" class="role-choice-card card-readonly" role="button" tabindex="0">
+              <div class="role-card-titles">
+                <h4>Modo lectura</h4>
+                <p>Consultá balances, el desglose por categoría y los movimientos sin permisos de edición.</p>
+              </div>
+              <div class="role-card-action-btn"><span>Ingresar como lector</span></div>
+            </div>
+
+            <div id="btnChooseAdmin" class="role-choice-card card-admin" role="button" tabindex="0">
+              <div class="role-card-titles">
+                <h4>Administrador</h4>
+                <p>Acceso completo para registrar gastos, abonos, crear períodos y editar datos.</p>
+              </div>
+              <div class="role-card-action-btn"><span>Ver disponibilidad</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="roleSelectStepPending" class="role-step-pending" style="display: none;">
+          <p class="role-step-pending-lead">El modo administrador todavía no está disponible.</p>
+          <p class="role-step-pending-note">El desbloqueo se conectará al servidor, así que nadie puede activarlo desde el navegador. Mientras tanto podés consultar todos los datos en modo solo lectura.</p>
+          <div class="modal-sheet-actions">
+            <button type="button" id="btnBackToRoleChoices" class="btn btn-surface">Volver</button>
+            <button type="button" class="btn btn-primary btn-lg" id="btnEnterAsReader" onclick="document.getElementById('modalSessionRoleSelect').classList.remove('active')">Entrar como lector</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Añadir gasto presupuestado -->
+  <div id="modalAddBudget" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-sheet-header">
+        <h3 id="modalBudgetTitle">Añadir gasto al presupuesto</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formAddBudget">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="budgetSection">Categoría del gasto</label>
+            <select id="budgetSection" class="form-input-lg">
+              <option value="servicios">Servicios del hogar</option>
+              <option value="personales">Gastos personales</option>
+              <option value="extras">Gastos extraordinarios</option>
+            </select>
+          </div>
+
+          <div id="selectBudgetSubsectionField" class="form-field">
+            <label for="budgetSubsection">Tipo de gasto</label>
+            <select id="budgetSubsection" class="form-input-lg">
+              <option value="fijos">Fijo</option>
+              <option value="variables">Variable</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="budgetConcepto">Concepto</label>
+            <input type="text" id="budgetConcepto" class="form-input-lg" placeholder="Agua de casa, consulta médica" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="budgetMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="budgetMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div class="form-field">
+              <label for="budgetEstado">Estado inicial</label>
+              <select id="budgetEstado" class="form-input-lg">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Pagado">Pagado</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="inputBudgetRangeField" class="form-field" style="display: none;">
+            <label for="budgetRango">Rango estimado sugerido (opcional)</label>
+            <input type="text" id="budgetRango" class="form-input-lg font-mono" placeholder="100 - 150">
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Guardar gasto</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Registrar movimiento -->
+  <div id="modalAddMovement" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3 id="modalMovementTitle">Registrar ingreso</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formAddMovement">
+        <input type="hidden" id="movFlujo" value="Ingreso">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="movConcepto">Concepto</label>
+            <input type="text" id="movConcepto" class="form-input-lg" placeholder="Abono quincena 1, pago de luz" required>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="movMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="movMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div class="form-field">
+              <label for="movFecha">Fecha</label>
+              <input type="date" id="movFecha" class="form-input-lg font-mono">
+            </div>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" id="btnSubmitMovement" class="btn btn-success btn-lg">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmar pago de gasto variable -->
+  <div id="modalPayVariableExpense" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3 id="modalPayVarTitle">Confirmar pago variable</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formPayVariableExpense">
+        <input type="hidden" id="payVarItemId" value="">
+        <input type="hidden" id="payVarMonthId" value="">
+        <div class="modal-sheet-body">
+          <div class="pay-var-preview">
+            <div id="payVarItemTitle" class="pay-var-preview-title">Concepto</div>
+            <div class="pay-var-preview-meta">
+              <span id="payVarItemEstimated">Presupuestado: <strong class="font-mono">S/ 0.00</strong></span>
+              <span id="payVarItemRangeBadge" class="tag-badge font-mono">Rango: 20-40</span>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="payVarActualAmount">¿Cuánto se gastó en total? (S/)</label>
+            <input type="number" step="0.01" min="0" id="payVarActualAmount" class="form-input-lg form-input-amount font-mono" placeholder="0.00" required>
+            <p class="form-hint">El monto del gasto y el balance del mes se actualizan con este valor.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-success btn-lg">Confirmar y marcar pagado</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Editar gasto presupuestado (solo administrador) -->
+  <div id="modalEditExpense" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Editar gasto</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formEditExpense">
+        <input type="hidden" id="editExpenseMonthId" value="">
+        <input type="hidden" id="editExpenseItemId" value="">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="editExpenseConcepto">Concepto</label>
+            <input type="text" id="editExpenseConcepto" class="form-input-lg" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="editExpenseMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="editExpenseMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div id="editExpenseRangeField" class="form-field" style="display: none;">
+              <label for="editExpenseRango">Rango estimado (opcional)</label>
+              <input type="text" id="editExpenseRango" class="form-input-lg font-mono" placeholder="100 - 150">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="editExpenseTipoReadonly">Tipo</label>
+            <p id="editExpenseTipoReadonly" class="form-readonly-value">Fijo</p>
+            <p class="form-hint">El tipo decide en qué lista vive el gasto, así que no se cambia desde acá.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Editar movimiento (solo administrador) -->
+  <div id="modalEditMovement" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Editar movimiento</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formEditMovement">
+        <input type="hidden" id="editMovementMonthId" value="">
+        <input type="hidden" id="editMovementId" value="">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="editMovementConcepto">Concepto</label>
+            <input type="text" id="editMovementConcepto" class="form-input-lg" required>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="editMovementMonto">Monto (S/)</label>
+              <input type="number" step="0.01" min="0" id="editMovementMonto" class="form-input-lg font-mono" placeholder="0.00" required>
+            </div>
+            <div class="form-field">
+              <label for="editMovementFecha">Fecha</label>
+              <input type="date" id="editMovementFecha" class="form-input-lg font-mono">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="editMovementFlujoReadonly">Tipo de movimiento</label>
+            <p id="editMovementFlujoReadonly" class="form-readonly-value">Ingreso</p>
+            <p class="form-hint">Ingreso o gasto define el signo del movimiento, así que no se cambia desde acá.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Notas y acuerdos -->
+  <div id="modalMonthNotes" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Notas y acuerdos</h3>
+        <p id="modalNotesSubtitle" class="modal-sheet-subtitle">Recordatorios y observaciones del mes.</p>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <div class="modal-sheet-body">
+        <div class="notes-smart-box">
+          <textarea id="monthNotesTextarea" class="notes-smart-textarea"
+            placeholder="Notas sobre los pagos del mes, acuerdos familiares, abonos pendientes…"></textarea>
+          <div id="notesFeedback" class="notes-feedback-label">Guardado automático en tiempo real</div>
+        </div>
+      </div>
+      <div class="modal-sheet-footer">
+        <button type="button" class="btn btn-primary btn-sm btn-close-sheet-btn">Listo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crear o duplicar período -->
+  <div id="modalNewMonth" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-sheet-header">
+        <h3>Crear o duplicar un período</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <form id="formNewMonth">
+        <div class="modal-sheet-body">
+          <div class="form-field">
+            <label for="newMonthName">Nombre del período</label>
+            <input type="text" id="newMonthName" class="form-input-lg" placeholder="Febrero 2027, Marzo 2027" required>
+          </div>
+          <div class="form-field">
+            <label for="newMonthCloneSelect">Clonar gastos recurrentes de</label>
+            <select id="newMonthCloneSelect" class="form-input-lg"></select>
+            <p class="form-hint">Los gastos fijos y variables del período elegido se copian siempre, con identificadores nuevos y todos en estado Pendiente. Los gastos extra, las notas y los movimientos se copian solo si los marcas abajo.</p>
+          </div>
+          <!-- Las tres casillas solo tienen sentido con un mes real como origen:
+               con "No clonar" el período nuevo arranca vacío. app.js lo muestra y
+               lo esconde; el `display: none` en línea es la misma convención que
+               usa #inputBudgetRangeField. -->
+          <div id="cloneOpcionesRow" class="clone-options" style="display: none;">
+            <span class="clone-options-lead">Copiar además</span>
+            <label class="clone-option">
+              <input type="checkbox" id="cloneIncluirExtras" checked>
+              <span>Copiar también los gastos extra</span>
+            </label>
+            <label class="clone-option">
+              <input type="checkbox" id="cloneIncluirNotas" checked>
+              <span>Copiar también las notas del mes</span>
+            </label>
+            <label class="clone-option">
+              <input type="checkbox" id="cloneIncluirMovimientos">
+              <span>Copiar también los movimientos</span>
+            </label>
+            <p class="form-hint">Los movimientos vienen apagados a propósito: al copiarlos, los ingresos del período de origen vuelven a contar en el nuevo y los totales se duplican. Enciéndelos solo si el período nuevo repite exactamente los mismos movimientos.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" class="btn btn-primary btn-lg">Crear período</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Acceso administrador -->
+  <div id="modalAdminAuth" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3>Acceso administrador</h3>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+
+      <div id="adminAuthAviso" class="modal-sheet-body modal-sheet-body-center">
+        <p class="role-step-pending-lead">La edición de presupuestos y el registro de gastos están en desarrollo.</p>
+        <p class="role-step-pending-note">El desbloqueo se conectará al servidor, así que por ahora no se pide ninguna contraseña.</p>
+      </div>
+
+      <form id="formAdminLogin" style="display: none;">
+        <div class="modal-sheet-body">
+          <p class="form-hint">Iniciá sesión con tu correo y contraseña para poder editar los presupuestos.</p>
+          <div class="form-field">
+            <label for="adminLoginEmail">Correo electrónico</label>
+            <input type="email" id="adminLoginEmail" class="form-input-lg" placeholder="tucorreo@ejemplo.com" autocomplete="username" required>
+          </div>
+          <div class="form-field">
+            <label for="adminLoginPassword">Contraseña</label>
+            <input type="password" id="adminLoginPassword" class="form-input-lg" autocomplete="current-password" required>
+          </div>
+          <p id="adminLoginError" class="login-error-msg" style="display: none;"></p>
+
+          <div class="form-field form-field-spaced">
+            <button type="button" id="btnAdminLoginGithub" class="btn btn-surface btn-lg btn-block"
+              onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGithub!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGithub().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con GitHub.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con GitHub</button>
+            <p class="form-hint form-hint-center">Te lleva a GitHub para confirmar tu identidad. Regresás automáticamente a esta página.</p>
+          </div>
+        </div>
+        <div class="modal-sheet-footer">
+          <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="submit" id="btnAdminLoginSubmit" class="btn btn-primary btn-lg">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="neoToast" class="neo-toast" role="status" aria-live="polite">
+    <span id="toastIcon"></span>
+    <span id="toastText">Operación realizada con éxito</span>
+  </div>
+
+  <!-- El orden importa: config y supabase-store deben existir ANTES que store.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/config.js"></script>
+  <script src="js/supabase-store.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

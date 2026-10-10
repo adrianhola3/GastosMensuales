@@ -1,0 +1,277 @@
+{
+  "label": "s1-despues",
+  "report": {
+    "iconImgTotal": 0,
+    "iconImgVisible": [],
+    "imgTotal": 0,
+    "uiSvgCount": 25,
+    "uiSvgSizes": {
+      "sidebar-close-btn": {
+        "w": 0,
+        "h": 0,
+        "n": 1
+      },
+      "search-box-icon": {
+        "w": 14,
+        "h": 14,
+        "n": 1
+      },
+      "btn-clear-search": {
+        "w": 0,
+        "h": 0,
+        "n": 1
+      },
+      "mini-nav-arrow": {
+        "w": 11,
+        "h": 11,
+        "n": 2
+      },
+      "accordion-chevron-icon": {
+        "w": 11,
+        "h": 11,
+        "n": 4
+      },
+      "btn-ghost-rose btn-delete-expense admin-action-btn": {
+        "w": 0,
+        "h": 0,
+        "n": 10
+      },
+      "btn-close-sheet": {
+        "w": 0,
+        "h": 0,
+        "n": 6
+      }
+    },
+    "cards": [
+      {
+        "seg": "servicios",
+        "title": "Servicios del Hogar",
+        "top": 288,
+        "h": 657,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 657
+      },
+      {
+        "seg": "personales",
+        "title": "Gastos Personales",
+        "top": 288,
+        "h": 657,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 657
+      },
+      {
+        "seg": "movimientos",
+        "title": "Movimientos del Mes",
+        "top": 977,
+        "h": 230,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 230
+      },
+      {
+        "seg": "extras",
+        "title": "Gastos Extraordinarios",
+        "top": 977,
+        "h": 230,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 230
+      }
+    ],
+    "grid": {
+      "alignItems": "stretch",
+      "gridAutoRows": "auto",
+      "gridTemplateColumns": "521.5px 521.5px",
+      "gap": "32px",
+      "rowGap": "32px"
+    },
+    "gridH": 919,
+    "gridRows": [
+      {
+        "row": 0,
+        "top": 288,
+        "heights": [
+          657,
+          657
+        ],
+        "bottoms": [
+          945,
+          945
+        ],
+        "rowHeight": 657,
+        "tallest": 657
+      },
+      {
+        "row": 1,
+        "top": 977,
+        "heights": [
+          230,
+          230
+        ],
+        "bottoms": [
+          1207,
+          1207
+        ],
+        "rowHeight": 230,
+        "tallest": 230
+      }
+    ],
+    "emptyFeed": {
+      "h": 109,
+      "top": 1097,
+      "cardH": 230,
+      "cardBottom": 1207
+    },
+    "movParts": {
+      "cardH": 230,
+      "bodyPadding": "0px",
+      "blocks": [
+        {
+          "sel": ".content-card-header",
+          "h": 73,
+          "top": 979,
+          "display": "flex",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "16px"
+        },
+        {
+          "sel": ".quick-action-buttons-grid",
+          "h": 0,
+          "top": 0,
+          "display": "none",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "16px"
+        },
+        {
+          "sel": "#btnQuickActionIncome",
+          "h": 0,
+          "top": 0,
+          "display": "none",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "4px 16px"
+        },
+        {
+          "sel": "#btnQuickActionExpense",
+          "h": 0,
+          "top": 0,
+          "display": "none",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "4px 16px"
+        },
+        {
+          "sel": ".filter-pills-bar",
+          "h": 44,
+          "top": 1053,
+          "display": "flex",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "8px 16px"
+        },
+        {
+          "sel": "#transactionsFeedList",
+          "h": 109,
+          "top": 1097,
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "0px"
+        },
+        {
+          "sel": ".empty-feed-placeholder",
+          "h": 109,
+          "top": 1097,
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "32px 24px"
+        }
+      ]
+    },
+    "filterTinted": [],
+    "hOverflow": false,
+    "scrollWidth": 1434,
+    "innerWidth": 1440,
+    "docScrollHeight": 1243,
+    "saturated": [],
+    "saturatedCount": 0
+  },
+  "logs": [],
+  "network4xx": [],
+  "targetBefore": [
+    {
+      "id": "7BDCCE2418DA7EFE636F2336FD4256B5",
+      "title": "DaaDota2 Stream - Watch Live on Kick",
+      "url": "https://kick.com/daadota2"
+    },
+    {
+      "id": "28CF7895C6B60B464160CCCE013ACFD2",
+      "title": "(9) WhatsApp",
+      "url": "https://web.whatsapp.com/"
+    },
+    {
+      "id": "CDD449113ECC039A38686F223F2373D8",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "https://adrianhola3.github.io/GastosMensuales/"
+    },
+    {
+      "id": "A3FFFDB882F40215326FD0F76601D9E6",
+      "title": "(887) Kingtekaboss - YouTube",
+      "url": "https://www.youtube.com/@KingtekaOficial/streams"
+    },
+    {
+      "id": "3B241FAE2614590ED4C597D2514B29AC",
+      "title": "UNAC | SGA",
+      "url": "https://sga.unac.edu.pe/security/Login_FS.html"
+    }
+  ],
+  "targetAfter": [
+    {
+      "id": "A734B71CC55C529F98790FF013E42B90",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/index.html"
+    },
+    {
+      "id": "7BDCCE2418DA7EFE636F2336FD4256B5",
+      "title": "DaaDota2 Stream - Watch Live on Kick",
+      "url": "https://kick.com/daadota2"
+    },
+    {
+      "id": "28CF7895C6B60B464160CCCE013ACFD2",
+      "title": "(9) WhatsApp",
+      "url": "https://web.whatsapp.com/"
+    },
+    {
+      "id": "CDD449113ECC039A38686F223F2373D8",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "https://adrianhola3.github.io/GastosMensuales/"
+    },
+    {
+      "id": "A3FFFDB882F40215326FD0F76601D9E6",
+      "title": "(888) Kingtekaboss - YouTube",
+      "url": "https://www.youtube.com/@KingtekaOficial/streams"
+    },
+    {
+      "id": "3B241FAE2614590ED4C597D2514B29AC",
+      "title": "UNAC | SGA",
+      "url": "https://sga.unac.edu.pe/security/Login_FS.html"
+    }
+  ],
+  "shotPath": "C:\\Users\\User\\Desktop\\Web de Gastos Mensuales\\odd\\tasks\\capturas\\s1-despues.png"
+}

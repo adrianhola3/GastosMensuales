@@ -1,0 +1,172 @@
+{
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "rail": {
+    "x": 0,
+    "y": 0,
+    "w": 236,
+    "h": 900,
+    "scrollH": 900,
+    "clientH": 900,
+    "scrollea": false,
+    "hijosRail": [
+      {
+        "sel": "sidebar-brand",
+        "x": 0,
+        "y": 16,
+        "w": 235,
+        "h": 50.2
+      },
+      {
+        "sel": "sidebar-nav",
+        "x": 0,
+        "y": 66.2,
+        "w": 235,
+        "h": 85.2
+      },
+      {
+        "sel": "sidebar-periods",
+        "x": 0,
+        "y": 151.3,
+        "w": 235,
+        "h": 652.4
+      },
+      {
+        "sel": "sidebar-footer",
+        "x": 0,
+        "y": 803.8,
+        "w": 235,
+        "h": 96.3
+      }
+    ],
+    "huecoRail": 0.1,
+    "entre": [
+      "sidebar-periods",
+      "sidebar-footer"
+    ],
+    "alturaUsada": 900
+  },
+  "main": {
+    "x": 236,
+    "y": 48,
+    "w": 1189,
+    "h": 1856.4,
+    "anchoUtil": 1093,
+    "canalIzq": null,
+    "canalDer": 63
+  },
+  "capas": [
+    {
+      "sel": "ledger-toolbar",
+      "x": 284,
+      "y": 48,
+      "w": 1093,
+      "h": 125.9
+    },
+    {
+      "sel": "segments-workspace-container",
+      "x": 284,
+      "y": 173.9,
+      "w": 1093,
+      "h": 1658.5
+    }
+  ],
+  "primeraFilaY": 315.9,
+  "filasVisibles": 9,
+  "alturaFila": {
+    "min": 52.7,
+    "max": 52.7,
+    "media": 53
+  },
+  "filasEnPantalla": 11
+}
+--- CONSOLIDADO ---
+{
+  "rail": {
+    "x": 0,
+    "y": 0,
+    "w": 236,
+    "h": 900,
+    "scrollH": 900,
+    "clientH": 900,
+    "scrollea": false,
+    "hijosRail": [
+      {
+        "sel": "sidebar-brand",
+        "x": 0,
+        "y": 16,
+        "w": 235,
+        "h": 50.2
+      },
+      {
+        "sel": "sidebar-nav",
+        "x": 0,
+        "y": 66.2,
+        "w": 235,
+        "h": 85.2
+      },
+      {
+        "sel": "sidebar-periods",
+        "x": 0,
+        "y": 151.3,
+        "w": 235,
+        "h": 652.4
+      },
+      {
+        "sel": "sidebar-footer",
+        "x": 0,
+        "y": 803.8,
+        "w": 235,
+        "h": 96.3
+      }
+    ],
+    "huecoRail": 0.1,
+    "entre": [
+      "sidebar-periods",
+      "sidebar-footer"
+    ],
+    "alturaUsada": 900
+  },
+  "main": {
+    "x": 236,
+    "y": 48,
+    "w": 1189,
+    "h": 1408.8,
+    "anchoUtil": 0,
+    "canalIzq": null,
+    "canalDer": 1440
+  },
+  "capas": []
+}
+--- 1024 ---
+{
+  "main": {
+    "x": 0,
+    "y": 48,
+    "w": 1009,
+    "h": 1856.4,
+    "anchoUtil": 945,
+    "canalIzq": null,
+    "canalDer": 47
+  },
+  "capas": [
+    {
+      "sel": "ledger-toolbar",
+      "x": 32,
+      "y": 48,
+      "w": 945,
+      "h": 125.9
+    },
+    {
+      "sel": "segments-workspace-container",
+      "x": 32,
+      "y": 173.9,
+      "w": 945,
+      "h": 1658.5
+    }
+  ],
+  "filasVisibles": 9,
+  "filasEnPantalla": 11
+}

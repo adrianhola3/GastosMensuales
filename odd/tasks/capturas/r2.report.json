@@ -1,0 +1,954 @@
+{
+  "tag": "r2",
+  "title": "Control de Gastos & Presupuesto",
+  "criterioA": {
+    "displayContenedor": "block",
+    "columnas": "none",
+    "gap": "normal",
+    "esGrid": false,
+    "secciones": [
+      {
+        "seg": "servicios",
+        "alto": 759,
+        "top": 285,
+        "fondo": "rgba(0, 0, 0, 0)",
+        "bordeTop": "1px rgba(255, 255, 255, 0.09)",
+        "radio": "0px",
+        "sombra": "none"
+      },
+      {
+        "seg": "personales",
+        "alto": 601,
+        "top": 1044,
+        "fondo": "rgba(0, 0, 0, 0)",
+        "bordeTop": "1px rgba(255, 255, 255, 0.09)",
+        "radio": "0px",
+        "sombra": "none"
+      },
+      {
+        "seg": "movimientos",
+        "alto": 301,
+        "top": 1644,
+        "fondo": "rgba(0, 0, 0, 0)",
+        "bordeTop": "1px rgba(255, 255, 255, 0.09)",
+        "radio": "0px",
+        "sombra": "none"
+      },
+      {
+        "seg": "extras",
+        "alto": 290,
+        "top": 1945,
+        "fondo": "rgba(0, 0, 0, 0)",
+        "bordeTop": "1px rgba(255, 255, 255, 0.09)",
+        "radio": "0px",
+        "sombra": "none"
+      }
+    ],
+    "alturas": [
+      759,
+      601,
+      301,
+      290
+    ],
+    "sumaAlturas": 1951,
+    "DiferenciaEntreHermanas": true,
+    "cajasConFondo": 0,
+    "cajasConBordeCompleto": 4,
+    "sombrasDecorativas": 0
+  },
+  "criterioB": {
+    "figuraSeccion": {
+      "sel": "#summaryTagServicios",
+      "px": 32,
+      "peso": "600",
+      "familia": "ui-monospace",
+      "tabular": "tabular-nums",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 163
+    },
+    "tituloSeccion": {
+      "sel": "[data-segment-card=\"servicios\"] h3",
+      "px": 17,
+      "peso": "600",
+      "familia": "system-ui",
+      "tabular": "normal",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 144
+    },
+    "descripcionSeccion": {
+      "sel": "[data-segment-card=\"servicios\"] .card-header-titles p",
+      "px": 13,
+      "peso": "400",
+      "familia": "system-ui",
+      "tabular": "normal",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 378
+    },
+    "cifraFila": {
+      "sel": ".expense-item-amount",
+      "px": 15,
+      "peso": "600",
+      "familia": "ui-monospace",
+      "tabular": "tabular-nums",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 70
+    },
+    "conceptoFila": {
+      "sel": ".expense-item-title",
+      "px": 15,
+      "peso": "600",
+      "familia": "system-ui",
+      "tabular": "normal",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 757
+    },
+    "subtotal": {
+      "sel": ".subtotal-highlight-row",
+      "px": 13,
+      "peso": "400",
+      "familia": "system-ui",
+      "tabular": "tabular-nums",
+      "color": "rgb(169, 175, 189)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 984
+    },
+    "etiquetaTotal": {
+      "sel": ".main-subtotal span",
+      "px": 15,
+      "peso": "600",
+      "familia": "system-ui",
+      "tabular": "tabular-nums",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 165
+    },
+    "titularVista": {
+      "sel": ".view-heading",
+      "px": 32,
+      "peso": "600",
+      "familia": "system-ui",
+      "tabular": "normal",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 984
+    },
+    "cifraRail": {
+      "sel": "#monthTotalEgresos",
+      "px": 24,
+      "peso": "600",
+      "familia": "ui-monospace",
+      "tabular": "tabular-nums",
+      "color": "rgb(207, 154, 158)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 172
+    },
+    "kpiConsolidado": {
+      "sel": "#kpiGlobalIngresos",
+      "px": 40,
+      "peso": "600",
+      "familia": "ui-monospace",
+      "tabular": "tabular-nums",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "primerPlano": 0
+    }
+  },
+  "criterioC": {
+    "total": 22,
+    "noToken": [
+      "rgb(0, 0, 0)",
+      "rgb(10, 11, 14)",
+      "rgb(241, 242, 244)",
+      "rgb(15, 16, 21)",
+      "rgba(0, 0, 0, 0.5)",
+      "rgba(255, 255, 255, 0.09)",
+      "rgb(169, 175, 189)",
+      "rgb(140, 147, 161)",
+      "rgb(23, 24, 31)",
+      "rgb(152, 198, 177)",
+      "rgb(207, 154, 158)",
+      "rgb(157, 184, 198)",
+      "rgb(148, 163, 184)",
+      "rgba(255, 255, 255, 0.17)",
+      "rgba(12, 13, 17, 0.72)",
+      "rgb(116, 180, 150)",
+      "rgb(147, 172, 189)",
+      "rgb(169, 155, 191)",
+      "rgb(143, 183, 163)",
+      "rgb(195, 179, 152)",
+      "rgb(154, 163, 178)",
+      "rgb(170, 180, 194)"
+    ],
+    "pigmentos": [
+      "rgb(0, 0, 0)",
+      "rgb(10, 11, 14)",
+      "rgb(241, 242, 244)",
+      "rgb(15, 16, 21)",
+      "rgba(0, 0, 0, 0.5)",
+      "rgba(255, 255, 255, 0.09)",
+      "rgb(169, 175, 189)",
+      "rgb(140, 147, 161)",
+      "rgb(23, 24, 31)",
+      "rgb(152, 198, 177)",
+      "rgb(207, 154, 158)",
+      "rgb(157, 184, 198)",
+      "rgb(148, 163, 184)",
+      "rgba(255, 255, 255, 0.17)",
+      "rgba(12, 13, 17, 0.72)",
+      "rgb(116, 180, 150)",
+      "rgb(147, 172, 189)",
+      "rgb(169, 155, 191)",
+      "rgb(143, 183, 163)",
+      "rgb(195, 179, 152)",
+      "rgb(154, 163, 178)",
+      "rgb(170, 180, 194)"
+    ]
+  },
+  "criterioD": {
+    "total": 30,
+    "conBorde": 15,
+    "conSombra": 0,
+    "conFondo": 0,
+    "detalle": [
+      "sidebar-metric-card.border-emerald lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "sidebar-metric-card.border-rose lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "sidebar-metric-card.border-cyan lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "content-card-box.card-anim-in lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "subtotal-highlight-row.main-subtotal lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "content-card-box.card-anim-in lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "subtotal-highlight-row.main-subtotal lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "content-card-box.card-anim-in lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "content-card-box.card-anim-in lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "subtotal-highlight-row.main-subtotal lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "hero-metric-card.card-theme-emerald lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "hero-metric-card.card-theme-cyan lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "hero-metric-card.card-theme-amber lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none",
+      "content-card-box.chart-section lados=1 radio=0px fondo=rgba(0, 0, 0, 0) sombra=none"
+    ]
+  },
+  "criterioE": [
+    {
+      "sel": ".empty-feed-placeholder",
+      "nota": "feed de movimientos",
+      "lineas": "Sin movimientos registrados.",
+      "altoPx": 85,
+      "lineHeightPx": 21,
+      "lineasDeTexto": 4,
+      "fontSize": "14px",
+      "color": "rgb(140, 147, 161)",
+      "textAlign": "center",
+      "tieneIcono": false,
+      "anchoFraccion": 0.68
+    },
+    {
+      "sel": "#noSegmentsSelectedNotice",
+      "nota": "aviso de sin segmentos",
+      "lineas": "Ninguna categoría seleccionada. Activá una arriba para verla.",
+      "altoPx": 0,
+      "lineHeightPx": 21,
+      "lineasDeTexto": 0,
+      "fontSize": "14px",
+      "color": "rgb(140, 147, 161)",
+      "textAlign": "center",
+      "tieneIcono": false,
+      "anchoFraccion": 0
+    },
+    {
+      "sel": ".empty-segments-notice",
+      "nota": "mismo aviso",
+      "lineas": "Ninguna categoría seleccionada. Activá una arriba para verla.",
+      "altoPx": 0,
+      "lineHeightPx": 21,
+      "lineasDeTexto": 0,
+      "fontSize": "14px",
+      "color": "rgb(140, 147, 161)",
+      "textAlign": "center",
+      "tieneIcono": false,
+      "anchoFraccion": 0
+    }
+  ],
+  "criterioF": {
+    "anchoRail": 236,
+    "altoRail": 900,
+    "scrollRail": 900,
+    "footerVisible": true,
+    "footerRect": {
+      "top": 782,
+      "bottom": 900
+    },
+    "itemsNav": 2,
+    "navConIcono": 2,
+    "meses": 6,
+    "mesesConCapsula": 0,
+    "mesesComoFila": true,
+    "controlesSegmentados": 8,
+    "deEsosConCapsula": 8,
+    "acentoDelActivo": "rgb(148, 163, 184)",
+    "chipsConFondoOborde": 0,
+    "navTabsFondo": "rgb(10, 11, 14)",
+    "navTabsBorde": "1px"
+  },
+  "conteos": {
+    "metodo": "conteo sobre css/styles.css (cssRules es ilegible sobre file://)",
+    "lineas": 2220,
+    "totalDeclaracionesBorder": 156,
+    "borderCompleto": 14,
+    "borderSinCero": 14,
+    "boxShadow": 1,
+    "usosRadiusPill": 7,
+    "radiosNoToken": 34,
+    "paddingMargenGap1o2px": 27,
+    "textTransformUpper": 0,
+    "transiciones": 22,
+    "transitionAll": 0,
+    "keyframes": 4,
+    "prefersReducedMotion": 1,
+    "prefersColorScheme": 0,
+    "colorMix": 2,
+    "webfonts": 1,
+    "sfPro": 2,
+    "enElDOM": {
+      "emojis": 0,
+      "svgGlyph": 25,
+      "svgIconSvg": 13,
+      "imgs": 0,
+      "backdropFilter": [
+        "app-topbar",
+        "modal-overlay",
+        "modal-overlay",
+        "modal-overlay",
+        "modal-overlay",
+        "modal-overlay",
+        "modal-overlay",
+        "modal-overlay"
+      ]
+    }
+  },
+  "overflow": {
+    "1024": {
+      "scrollWidth": 1009,
+      "innerWidth": 1024,
+      "overflow": false,
+      "scrollHeight": 2291
+    },
+    "1280": {
+      "scrollWidth": 1265,
+      "innerWidth": 1280,
+      "overflow": false,
+      "scrollHeight": 2307
+    },
+    "1440": {
+      "scrollWidth": 1425,
+      "innerWidth": 1440,
+      "overflow": false,
+      "scrollHeight": 2307
+    }
+  },
+  "foco": [
+    {
+      "etiqueta": "month-pill-btn ",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "month-pill-btn ",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "month-pill-btn ",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btnHeaderAddIncome",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btnHeaderAddBudget",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btnToggleAuthMode",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btnOpenNewMonthModal",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btnOpenNotesModal",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "segment-pill-btn pill-btn-all active",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "segment-pill-btn active",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "segment-pill-btn active",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "segment-pill-btn active",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "segment-pill-btn active",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn btn-sm btn-quick-add-service admin-actio",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-status-toggle status-pendiente",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-ghost-rose btn-delete-expense admin-acti",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-status-toggle status-pendiente",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-ghost-rose btn-delete-expense admin-acti",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-status-toggle status-pendiente",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-ghost-rose btn-delete-expense admin-acti",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-status-toggle status-pendiente",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    },
+    {
+      "etiqueta": "btn-ghost-rose btn-delete-expense admin-acti",
+      "tag": "BUTTON",
+      "focusVisible": true,
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "outlineColor": "rgb(0, 136, 255)",
+      "outlineOffset": "2px"
+    }
+  ],
+  "focoResumen": {
+    "total": 22,
+    "conAnillo": 22,
+    "sinAnillo": [],
+    "focusVisibleTrue": 22
+  },
+  "contraste": [
+    {
+      "fg": ".view-heading",
+      "bg": ".view-subheading",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 32,
+      "ratio": 16.96,
+      "minimoAA": 3,
+      "cumple": true
+    },
+    {
+      "fg": ".subheading",
+      "bg": ".view-heading",
+      "existe": false
+    },
+    {
+      "fg": "#summaryTagServicios",
+      "bg": ".card-title-row h3",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 32,
+      "ratio": 16.96,
+      "minimoAA": 3,
+      "cumple": true
+    },
+    {
+      "fg": ".card-header-titles p",
+      "bg": ".accordion-summary-tag",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 13,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".expense-item-title",
+      "bg": ".expense-item-amount",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 15,
+      "ratio": 16.96,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".expense-item-amount",
+      "bg": ".expense-card-item",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 15,
+      "ratio": 16.96,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".tag-badge",
+      "bg": ".expense-card-item",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 11,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".main-subtotal span",
+      "bg": ".main-subtotal",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 15,
+      "ratio": 16.96,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".main-subtotal .font-mono",
+      "bg": ".main-subtotal",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 17,
+      "ratio": 16.96,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".category-subhead",
+      "bg": ".content-card-box",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 12,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".subtotal-highlight-row span",
+      "bg": ".subtotal-highlight-row",
+      "color": "rgb(169, 175, 189)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 13,
+      "ratio": 8.64,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".sidebar-section-label",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 11,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".metric-card-title",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".metric-card-number",
+      "bg": ".app-sidebar",
+      "color": "rgb(152, 198, 177)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 24,
+      "ratio": 10.35,
+      "minimoAA": 3,
+      "cumple": true
+    },
+    {
+      "fg": ".metric-card-detail",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".brand-title",
+      "bg": ".app-sidebar",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 15,
+      "ratio": 17.57,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".brand-sub",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".month-pill-btn",
+      "bg": ".app-sidebar",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 14,
+      "ratio": 17.57,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".month-pill-btn.active",
+      "bg": ".app-sidebar",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 14,
+      "ratio": 17.57,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".sidebar-nav-tab",
+      "bg": ".app-sidebar",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 14,
+      "ratio": 17.57,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".sidebar-nav-tab.active",
+      "bg": ".app-sidebar",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 14,
+      "ratio": 17.57,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".mini-chip",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".search-results-feedback",
+      "bg": ".app-sidebar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 6.38,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": "#btnToggleAuthMode",
+      "bg": ".app-sidebar",
+      "color": "rgb(169, 175, 189)",
+      "fondo": "rgb(10, 11, 14)",
+      "px": 12,
+      "ratio": 8.95,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".kpi-mini-label",
+      "bg": ".app-topbar",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 12,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".segment-count-badge",
+      "bg": ".segment-pill-btn",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(23, 24, 31)",
+      "px": 11,
+      "ratio": 5.73,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".empty-feed-placeholder",
+      "bg": ".content-card-box",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 14,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".matrix-table th",
+      "bg": ".matrix-table",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 12,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".matrix-table td",
+      "bg": ".matrix-table",
+      "existe": false
+    },
+    {
+      "fg": ".feed-filter-pill",
+      "bg": ".accordion-collapsible-body",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(23, 24, 31)",
+      "px": 13,
+      "ratio": 15.8,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".feed-filter-pill.active",
+      "bg": ".accordion-collapsible-body",
+      "color": "rgb(241, 242, 244)",
+      "fondo": "rgb(23, 24, 31)",
+      "px": 13,
+      "ratio": 15.8,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".btn-status-toggle.status-pendiente",
+      "bg": ".expense-card-item",
+      "color": "rgb(140, 147, 161)",
+      "fondo": "rgb(15, 16, 21)",
+      "px": 12,
+      "ratio": 6.16,
+      "minimoAA": 4.5,
+      "cumple": true
+    },
+    {
+      "fg": ".tx-details p",
+      "bg": ".transaction-feed-item",
+      "existe": false
+    }
+  ],
+  "movimientoReducido": [
+    {
+      "que": "transitionDuration",
+      "valor": "1e-05s"
+    },
+    {
+      "que": "animationDuration",
+      "valor": "1e-05s"
+    },
+    {
+      "que": "keyframe card-anim-in",
+      "valor": "1e-05s"
+    },
+    {
+      "que": "keyframe card-anim-out",
+      "valor": "1e-05s"
+    },
+    {
+      "que": "keyframe sheet-in (modal)",
+      "valor": "1e-05s"
+    }
+  ],
+  "geometria": {
+    "rail": {
+      "scroll": 900,
+      "alto": 900
+    },
+    "secciones": [
+      759,
+      601,
+      301,
+      290
+    ],
+    "superficie": {
+      "ancho": 1080,
+      "izq": 291,
+      "der": 1371
+    }
+  },
+  "consolidado": {
+    "activa": true,
+    "filas": 6,
+    "kpi": [
+      "S/ 0.00",
+      "S/ 0.00",
+      "0.0%"
+    ],
+    "graficos": {
+      "chartTrendBar": {
+        "pintados": 0,
+        "ok": false
+      },
+      "chartCategoryDonut": {
+        "pintados": 0,
+        "ok": false
+      }
+    },
+    "tablaDesborda": {
+      "scrollWidth": 999,
+      "clientWidth": 984,
+      "overflow": true
+    },
+    "chartsDisplay": "block",
+    "chartsColumnas": "none",
+    "overflowGlobal": false,
+    "overflow1280": {
+      "pagina": false,
+      "tabla": true,
+      "tablaScroll": 999,
+      "tablaClient": 933
+    }
+  },
+  "consola": {
+    "errores": [],
+    "warnings": [],
+    "excepciones": [],
+    "red": []
+  },
+  "escrituras": 2
+}

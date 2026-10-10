@@ -1,0 +1,503 @@
+{
+  "url": "file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/index.html",
+  "remote": {
+    "existe": true,
+    "configurado": true,
+    "metodos": [
+      "constructor",
+      "__defineGetter__",
+      "__defineSetter__",
+      "hasOwnProperty",
+      "__lookupGetter__",
+      "__lookupSetter__",
+      "isPrototypeOf",
+      "propertyIsEnumerable",
+      "toString",
+      "valueOf",
+      "toLocaleString"
+    ]
+  },
+  "store": {
+    "existe": true,
+    "metodos": [
+      "constructor",
+      "leerLocal",
+      "load",
+      "alCambiarEstado",
+      "notificar",
+      "sanear",
+      "save",
+      "resetToDefault",
+      "getActiveMonth",
+      "getMonth",
+      "getAllMonthsList",
+      "calculateMonthTotals",
+      "calculateGlobalTotals",
+      "addBudgetItem",
+      "updateBudgetItem",
+      "deleteBudgetItem",
+      "toggleBudgetItemStatus",
+      "toggleAllBudgetItems",
+      "addMovement",
+      "deleteMovement",
+      "toggleMovementStatus",
+      "updateNotes",
+      "addNewMonth",
+      "deleteMonth",
+      "exportJSON",
+      "importJSON",
+      "exportCSV"
+    ]
+  },
+  "title": "Control de Gastos & Presupuesto",
+  "modalRoleSelect": {
+    "existe": true,
+    "activo": true,
+    "pasos": [
+      true,
+      true
+    ],
+    "lector": true,
+    "admin": true,
+    "volver": true
+  },
+  "roles": {
+    "bodyReadOnly": true,
+    "authModeLabel": "Solo Lectura",
+    "authModeIcon": "",
+    "btnToggleAuthModeClass": "mode-badge readonly-active",
+    "adminActionBtns": 18,
+    "adminActionVisible": 0,
+    "adminActionsAfterUngating": 18
+  },
+  "conn": {
+    "badge": "conn-badge conn-online",
+    "texto": "En línea"
+  },
+  "viewMes": {
+    "activa": true,
+    "panelActiva": false,
+    "heading": "Detalle mensual",
+    "navMes": "sidebar-nav-tab active",
+    "navPanel": "sidebar-nav-tab"
+  },
+  "months": {
+    "pills": 6,
+    "pillTexts": [
+      "Agosto 2026",
+      "Septiembre 2026",
+      "Octubre 2026",
+      "Noviembre 2026",
+      "Diciembre 2026",
+      "Enero 2027"
+    ],
+    "activa": 1,
+    "badgePeriodo": "Agosto 2026",
+    "prev": true,
+    "next": true,
+    "totalMeses": 6,
+    "clickSecond": {
+      "antes": "Agosto 2026",
+      "despues": "Septiembre 2026",
+      "pillActiva": 1,
+      "filasGastos": 9
+    },
+    "afterNext": "Octubre 2026",
+    "afterPrev": "Septiembre 2026"
+  },
+  "categorias": [
+    {
+      "seg": "servicios",
+      "titulo": "Servicios del hogar",
+      "descripcion": "Luz, internet, telefonía, pasajes y necesidades del hogar",
+      "tag": "S/ 417.80",
+      "filas": 6,
+      "movs": 0,
+      "subtotales": [
+        "Subtotal de fijos S/ 387.80",
+        "Subtotal de variables S/ 30.00",
+        "Total servicios del hogar S/ 417.80"
+      ],
+      "altoPx": 759
+    },
+    {
+      "seg": "personales",
+      "titulo": "Gastos personales",
+      "descripcion": "Gimnasio, suscripciones, salud dermatológica y cuidado personal",
+      "tag": "S/ 198.54",
+      "filas": 3,
+      "movs": 0,
+      "subtotales": [
+        "Subtotal de fijos S/ 153.54",
+        "Subtotal de variables S/ 45.00",
+        "Total gastos personales S/ 198.54"
+      ],
+      "altoPx": 601
+    },
+    {
+      "seg": "movimientos",
+      "titulo": "Movimientos del mes",
+      "descripcion": "Abonos, transferencias bancarias y pagos ejecutados",
+      "tag": "0 movs",
+      "filas": 0,
+      "movs": 0,
+      "subtotales": [],
+      "altoPx": 301
+    },
+    {
+      "seg": "extras",
+      "titulo": "Gastos extraordinarios",
+      "descripcion": "Gastos no recurrentes, matrículas o imprevistos del mes",
+      "tag": "S/ 0.00",
+      "filas": 0,
+      "movs": 0,
+      "subtotales": [
+        "Total gastos extra S/ 0.00"
+      ],
+      "altoPx": 322
+    }
+  ],
+  "segmentPills": [
+    {
+      "seg": "all",
+      "activa": true,
+      "miniBar": "",
+      "miniBarWidth": "100%"
+    },
+    {
+      "seg": "servicios",
+      "activa": true,
+      "badge": "S/ 417.80",
+      "miniBar": "miniBarServicios",
+      "miniBarWidth": "0%"
+    },
+    {
+      "seg": "personales",
+      "activa": true,
+      "badge": "S/ 198.54",
+      "miniBar": "miniBarPersonales",
+      "miniBarWidth": "0%"
+    },
+    {
+      "seg": "movimientos",
+      "activa": true,
+      "badge": "0 movs",
+      "miniBar": "miniBarMovimientos",
+      "miniBarWidth": "0%"
+    },
+    {
+      "seg": "extras",
+      "activa": true,
+      "badge": "S/ 0.00",
+      "miniBar": "miniBarExtras",
+      "miniBarWidth": "0%"
+    }
+  ],
+  "segmentToggle": {
+    "extrasDisplay": "none",
+    "pillActiva": false
+  },
+  "segmentAll": {
+    "visibles": 4,
+    "pillsActivas": 5
+  },
+  "gastos": {
+    "totalFilas": 9,
+    "conTagFijo": 7,
+    "conTagVariable": 2,
+    "conRango": 2,
+    "muestra": [
+      {
+        "titulo": "Internet de casa",
+        "tags": [
+          "Fijo"
+        ],
+        "monto": "\n          S/ 89.90\n        ",
+        "estado": "\n            Pendiente\n          ",
+        "estadoClass": "btn-status-toggle status-pendiente",
+        "hijos": 4
+      },
+      {
+        "titulo": "Celular",
+        "tags": [
+          "Fijo"
+        ],
+        "monto": "\n          S/ 39.90\n        ",
+        "estado": "\n            Pendiente\n          ",
+        "estadoClass": "btn-status-toggle status-pendiente",
+        "hijos": 4
+      },
+      {
+        "titulo": "CIUNAC (Inglés)",
+        "tags": [
+          "Fijo"
+        ],
+        "monto": "\n          S/ 83.00\n        ",
+        "estado": "\n            Pendiente\n          ",
+        "estadoClass": "btn-status-toggle status-pendiente",
+        "hijos": 4
+      },
+      {
+        "titulo": "Pasajes",
+        "tags": [
+          "Fijo"
+        ],
+        "monto": "\n          S/ 150.00\n        ",
+        "estado": "\n            Pendiente\n          ",
+        "estadoClass": "btn-status-toggle status-pendiente",
+        "hijos": 4
+      }
+    ]
+  },
+  "metricas": {
+    "ingresos": "S/ 0.00",
+    "ingresosCount": "0 abonos registrados",
+    "egresos": "S/ 616.34",
+    "gastosCount": "0 de 9 gastos pagados",
+    "balance": "S/ 0.00",
+    "balanceColor": "var(--text-cyan)",
+    "balanceLabel": "Equilibrado (S/ 0.00)",
+    "abonoPct": "0.0%",
+    "paidText": " Gastos Pagados: S/ 0.00 de S/ 616.34",
+    "paidBadge": "0.0% Pagado (0 de 9)",
+    "paidBar": "0%",
+    "pagado": "Pagado: S/ 0.00",
+    "pendiente": "Pendiente: S/ 616.34",
+    "cobertura": "Cobertura: 0.0%",
+    "topbarBalance": "S/ 0.00",
+    "topbarBalanceColor": "var(--accent-emerald)"
+  },
+  "estadosPago": {
+    "total": 9,
+    "textos": {
+      "\n            Pendiente\n          ": 9
+    },
+    "sonButtons": true
+  },
+  "movimientos": {
+    "total": 0,
+    "ingresos": 0,
+    "gastos": 0,
+    "muestra": [],
+    "filtros": [
+      "all*",
+      "ingreso",
+      "gasto"
+    ],
+    "placeholderVacio": true,
+    "filtroGasto": 0,
+    "filtroIngreso": 0,
+    "filtroAll": 0
+  },
+  "notas": {
+    "modalActivo": true,
+    "valor": 0,
+    "subtitulo": "Recordatorios y observaciones de Septiembre 2026",
+    "feedback": "Guardado automático en tiempo real",
+    "btnNotasClass": "btn-topbar-notes",
+    "cerrado": false
+  },
+  "buscador": {
+    "texto": "9 resultados encontrados",
+    "feedbackVisible": "flex",
+    "filasVisibles": 9,
+    "clearVisible": "flex",
+    "trasLimpiar": {
+      "feedback": "none",
+      "visibles": 9
+    }
+  },
+  "modales": {
+    "gastoServicios": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {
+        "budgetSection": true,
+        "budgetSubsection": true,
+        "budgetConcepto": true,
+        "budgetMonto": true,
+        "budgetEstado": true,
+        "budgetRango": true,
+        "inputBudgetRangeField": true,
+        "selectBudgetSubsectionField": true
+      },
+      "cerrado": true
+    },
+    "gastoPersonal": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {},
+      "cerrado": true
+    },
+    "gastoExtra": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {},
+      "cerrado": true
+    },
+    "ingresoRapido": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {
+        "movConcepto": true,
+        "movMonto": true,
+        "movFecha": true,
+        "movFlujo": true,
+        "btnSubmitMovement": true,
+        "modalMovementTitle": true
+      },
+      "titulo": "Registrar Ingreso",
+      "cerrado": true
+    },
+    "gastoRapido": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {},
+      "cerrado": true
+    },
+    "abonoSidebar": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {},
+      "cerrado": true
+    },
+    "presupuestoSidebar": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {},
+      "cerrado": true
+    },
+    "nuevoMes": {
+      "abierto": "OK",
+      "modalActivo": true,
+      "campos": {
+        "newMonthName": true,
+        "newMonthCloneSelect": true
+      },
+      "opcionesClonar": 7,
+      "cerrado": true
+    },
+    "pagoVariable": {
+      "idx": 5,
+      "modalActivo": true,
+      "titulo": "Productos de casa: Jabón, shampoo, papel...",
+      "estimado": "Presupuestado: S/ 30.00",
+      "rangoBadge": "Rango sugerido: 20-40",
+      "rangoVisible": "inline-block",
+      "montoInput": "30.00",
+      "cerrado": true
+    }
+  },
+  "toggleAdmin": {
+    "modalAdmin": true,
+    "aviso": "none",
+    "formLogin": "block",
+    "github": true,
+    "email": true,
+    "pass": true,
+    "submit": true,
+    "error": true
+  },
+  "consolidado": {
+    "activa": true,
+    "mesInactiva": true,
+    "navPanel": "sidebar-nav-tab active",
+    "heading": "Consolidado multimes",
+    "kpiIngresos": "S/ 0.00",
+    "kpiBalance": "S/ 0.00",
+    "kpiCumplimiento": "0.0%",
+    "filasMatriz": 6,
+    "colsMatriz": 9,
+    "pieMatriz": 1,
+    "pieTexto": "Total del año S/ 2,506.80 S/ 1,191.24 S/ 83.00 S/ 3,781.04 S/ 0.00 S/ 0.00 0.0%",
+    "muestraFila": "Agosto 2026 S/ 417.80 S/ 198.54 S/ 83.00 S/ 699.34 S/ 0.00 S/ 0.00 0.0%",
+    "celdaBalance": "font-weight: 600; color: var(--accent-emerald);",
+    "clickMatriz": {
+      "activa": true,
+      "periodo": "Agosto 2026"
+    }
+  },
+  "graficos": {
+    "chartTrendBar": {
+      "existe": true,
+      "w": 984,
+      "h": 120,
+      "pixelesPintados": 0,
+      "ratio": 0,
+      "tieneGrafico": false
+    },
+    "chartCategoryDonut": {
+      "existe": true,
+      "w": 420,
+      "h": 280,
+      "pixelesPintados": 0,
+      "ratio": 0,
+      "tieneGrafico": false
+    }
+  },
+  "geometria": {
+    "scrollWidth": 1425,
+    "innerWidth": 1440,
+    "overflowHorizontal": false,
+    "alturasTarjetas": [
+      759,
+      601,
+      301,
+      290
+    ],
+    "contentCardBox": [
+      "content-card-box card-anim-in",
+      "content-card-box card-anim-in",
+      "content-card-box card-anim-in",
+      "content-card-box"
+    ],
+    "sidebar": {
+      "scroll": 900,
+      "visible": 900
+    },
+    "bodyOverflowX": "visible"
+  },
+  "estructura": {
+    "contentCardBox": 7,
+    "segWorkspaceGrid": {
+      "display": "block",
+      "cols": "none",
+      "rows": "none",
+      "alignItems": "normal",
+      "gap": "normal"
+    },
+    "contentCardBoxesConBorde": 7,
+    "chartsGrid": {
+      "display": "block",
+      "cols": "none"
+    },
+    "filasGasto": 10,
+    "chips": 20,
+    "emojis": 0,
+    "svgGlyph": 25,
+    "svgIconSvg": 13,
+    "imgs": 0,
+    "backdropFilter": [
+      "app-topbar",
+      "modal-overlay",
+      "modal-overlay",
+      "modal-overlay",
+      "modal-overlay",
+      "modal-overlay",
+      "modal-overlay",
+      "modal-overlay"
+    ]
+  },
+  "finallyMes": true,
+  "escrituras": {
+    "guardarBloqueado": 15,
+    "storeSave": 15
+  },
+  "consola": {
+    "errores": [],
+    "warnings": [],
+    "todos": [],
+    "excepciones": [],
+    "red": []
+  }
+}

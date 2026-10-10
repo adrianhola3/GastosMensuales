@@ -1,0 +1,15 @@
+.github_token
+.github_oauth
+.supabase_db_password
+.env
+node_modules/
+.codegraph/
+
+# Archivo fantasma de 3.784 bytes creado el 03/10/2026 por una redireccion
+# `> NUL` hecha desde bash: en vez de escribir al device nulo creo un archivo
+# de verdad. Windows no lo abre ni con el prefijo \\?\ y git si lo lista, asi
+# que commitearlo deja el repo imposible de restaurar en Windows.
+NUL
+
+# Cache del navegador de automatizacion: se regenera solo.
+.playwright-mcp/

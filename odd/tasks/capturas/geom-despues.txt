@@ -1,0 +1,180 @@
+﻿
+=== despues-final :: baseline ===
+{
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "appLayoutCols": "236px 200px 989px",
+  "railW": 236,
+  "railScrollH": 900,
+  "railClientH": 900,
+  "colW": 200,
+  "mainClientWidth": 989,
+  "mainScrollHeight": 926,
+  "mainClientHeight": 926,
+  "pageScrollHeight": 974,
+  "barraY": 48,
+  "barraH": 185.2,
+  "aireEnTrack": 37.1,
+  "itemsPeriodos": 2,
+  "gapTrackAPie": 0,
+  "railAltoLibre": 0,
+  "filas": 6,
+  "movs": 3,
+  "railEntradas": 5,
+  "railCuentas": [
+    "3",
+    "2",
+    "3",
+    "1"
+  ],
+  "railTotales": [
+    "S/ 666.66",
+    "S/ 999.99",
+    "3 movs",
+    "S/ 666.66"
+  ],
+  "altAddButtons": [
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "Ingreso",
+      "w": 81.3,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "Gasto",
+      "w": 75.7,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    }
+  ]
+}
+
+=== despues-final :: periodos24 ===
+{
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "appLayoutCols": "236px 200px 989px",
+  "railW": 236,
+  "railScrollH": 900,
+  "railClientH": 900,
+  "colW": 200,
+  "mainClientWidth": 989,
+  "mainScrollHeight": 926,
+  "mainClientHeight": 926,
+  "pageScrollHeight": 974,
+  "barraY": 48,
+  "barraH": 185.2,
+  "aireEnTrack": 37.1,
+  "itemsPeriodos": 24,
+  "gapTrackAPie": 0,
+  "railAltoLibre": 0,
+  "filas": 6,
+  "movs": 3,
+  "railEntradas": 5,
+  "railCuentas": [
+    "3",
+    "2",
+    "3",
+    "1"
+  ],
+  "railTotales": [
+    "S/ 666.66",
+    "S/ 999.99",
+    "3 movs",
+    "S/ 666.66"
+  ],
+  "altAddButtons": [
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "Ingreso",
+      "w": 81.3,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "Gasto",
+      "w": 75.7,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    },
+    {
+      "t": "A├▒adir",
+      "w": 161,
+      "h": 26,
+      "bg": "rgb(242, 242, 245)",
+      "border": "1px solid rgba(0, 0, 0, 0)",
+      "color": "rgb(29, 29, 31)",
+      "fw": "600",
+      "display": "flex"
+    }
+  ]
+}

@@ -1,0 +1,435 @@
+{
+  "label": "s0-antes",
+  "report": {
+    "iconImgTotal": 17,
+    "iconImgVisible": [
+      {
+        "src": "assets/icons/analitica.jpg",
+        "w": 28,
+        "h": 28
+      },
+      {
+        "src": "assets/icons/calendario.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/analitica.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/notas.jpg",
+        "w": 18,
+        "h": 18
+      },
+      {
+        "src": "assets/icons/vertodo.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/servicios.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/personales.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/movimientos.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/extras.jpg",
+        "w": 20,
+        "h": 20
+      },
+      {
+        "src": "assets/icons/servicios.jpg",
+        "w": 32,
+        "h": 32
+      },
+      {
+        "src": "assets/icons/personales.jpg",
+        "w": 32,
+        "h": 32
+      },
+      {
+        "src": "assets/icons/movimientos.jpg",
+        "w": 32,
+        "h": 32
+      },
+      {
+        "src": "assets/icons/extras.jpg",
+        "w": 32,
+        "h": 32
+      }
+    ],
+    "imgTotal": 17,
+    "uiSvgCount": 25,
+    "uiSvgSizes": {
+      "sidebar-close-btn": {
+        "w": 0,
+        "h": 0,
+        "n": 1
+      },
+      "search-box-icon": {
+        "w": 14,
+        "h": 14,
+        "n": 1
+      },
+      "btn-clear-search": {
+        "w": 0,
+        "h": 0,
+        "n": 1
+      },
+      "mini-nav-arrow": {
+        "w": 11,
+        "h": 11,
+        "n": 2
+      },
+      "accordion-chevron-icon": {
+        "w": 11,
+        "h": 11,
+        "n": 4
+      },
+      "btn-ghost-rose btn-delete-expense admin-action-btn": {
+        "w": 0,
+        "h": 0,
+        "n": 10
+      },
+      "btn-close-sheet": {
+        "w": 0,
+        "h": 0,
+        "n": 6
+      }
+    },
+    "cards": [
+      {
+        "seg": "servicios",
+        "title": "Servicios del Hogar",
+        "top": 288,
+        "h": 657,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 657
+      },
+      {
+        "seg": "personales",
+        "title": "Gastos Personales",
+        "top": 288,
+        "h": 483,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 483
+      },
+      {
+        "seg": "movimientos",
+        "title": "Movimientos del Mes",
+        "top": 977,
+        "h": 294,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 294
+      },
+      {
+        "seg": "extras",
+        "title": "Gastos Extraordinarios",
+        "top": 977,
+        "h": 191,
+        "w": 522,
+        "collapsed": false,
+        "inlineDisplay": "block",
+        "offsetH": 191
+      }
+    ],
+    "grid": {
+      "alignItems": "start",
+      "gridAutoRows": "max-content",
+      "gridTemplateColumns": "521.5px 521.5px",
+      "gap": "32px",
+      "rowGap": "32px"
+    },
+    "gridH": 983,
+    "gridRows": [
+      {
+        "row": 0,
+        "top": 288,
+        "heights": [
+          657,
+          483
+        ],
+        "bottoms": [
+          945,
+          771
+        ],
+        "rowHeight": 657,
+        "tallest": 657
+      },
+      {
+        "row": 1,
+        "top": 977,
+        "heights": [
+          294,
+          191
+        ],
+        "bottoms": [
+          1271,
+          1168
+        ],
+        "rowHeight": 294,
+        "tallest": 294
+      }
+    ],
+    "emptyFeed": {
+      "h": 141,
+      "top": 1129,
+      "cardH": 294,
+      "cardBottom": 1271
+    },
+    "movParts": {
+      "cardH": 294,
+      "bodyPadding": "0px",
+      "blocks": [
+        {
+          "sel": ".content-card-header",
+          "h": 73,
+          "top": 979,
+          "display": "flex",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "16px"
+        },
+        {
+          "sel": ".quick-action-buttons-grid",
+          "h": 32,
+          "top": 1053,
+          "display": "grid",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "16px"
+        },
+        {
+          "sel": "#btnQuickActionIncome",
+          "h": 0,
+          "top": 0,
+          "display": "none",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "4px 16px"
+        },
+        {
+          "sel": "#btnQuickActionExpense",
+          "h": 0,
+          "top": 0,
+          "display": "none",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "4px 16px"
+        },
+        {
+          "sel": ".filter-pills-bar",
+          "h": 44,
+          "top": 1085,
+          "display": "flex",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "8px 16px"
+        },
+        {
+          "sel": "#transactionsFeedList",
+          "h": 141,
+          "top": 1129,
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "0px"
+        },
+        {
+          "sel": ".empty-feed-placeholder",
+          "h": 141,
+          "top": 1129,
+          "display": "block",
+          "visibility": "visible",
+          "opacity": "1",
+          "marginBottom": "0px",
+          "padding": "48px 24px"
+        }
+      ]
+    },
+    "filterTinted": [
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-brand",
+        "filter": "saturate(0.5) contrast(1.04)",
+        "src": "assets/icons/analitica.jpg",
+        "size": "28x28"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-nav",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/calendario.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-nav",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/analitica.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-xs",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/notas.jpg",
+        "size": "18x18"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-pill",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/vertodo.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-pill",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/servicios.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-pill",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/personales.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-pill",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/movimientos.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-pill",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/extras.jpg",
+        "size": "20x20"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-card",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/servicios.jpg",
+        "size": "32x32"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-card",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/personales.jpg",
+        "size": "32x32"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-card",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/movimientos.jpg",
+        "size": "32x32"
+      },
+      {
+        "tag": "IMG",
+        "cls": "ui-icon-img ui-icon-card",
+        "filter": "saturate(0.35) contrast(1.02)",
+        "src": "assets/icons/extras.jpg",
+        "size": "32x32"
+      }
+    ],
+    "hOverflow": false,
+    "scrollWidth": 1434,
+    "innerWidth": 1440,
+    "docScrollHeight": 1307,
+    "saturated": [],
+    "saturatedCount": 0
+  },
+  "logs": [],
+  "network4xx": [],
+  "targetBefore": [
+    {
+      "id": "7BDCCE2418DA7EFE636F2336FD4256B5",
+      "title": "DaaDota2 Stream - Watch Live on Kick",
+      "url": "https://kick.com/daadota2"
+    },
+    {
+      "id": "28CF7895C6B60B464160CCCE013ACFD2",
+      "title": "(8) WhatsApp",
+      "url": "https://web.whatsapp.com/"
+    },
+    {
+      "id": "CDD449113ECC039A38686F223F2373D8",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "https://adrianhola3.github.io/GastosMensuales/"
+    },
+    {
+      "id": "A3FFFDB882F40215326FD0F76601D9E6",
+      "title": "(887) Kingtekaboss - YouTube",
+      "url": "https://www.youtube.com/@KingtekaOficial/streams"
+    },
+    {
+      "id": "3B241FAE2614590ED4C597D2514B29AC",
+      "title": "UNAC | SGA",
+      "url": "https://sga.unac.edu.pe/security/Login_FS.html"
+    }
+  ],
+  "targetAfter": [
+    {
+      "id": "3BBF074AC229E20A2F61FA6BE425E51F",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/index.html"
+    },
+    {
+      "id": "7BDCCE2418DA7EFE636F2336FD4256B5",
+      "title": "DaaDota2 Stream - Watch Live on Kick",
+      "url": "https://kick.com/daadota2"
+    },
+    {
+      "id": "28CF7895C6B60B464160CCCE013ACFD2",
+      "title": "(8) WhatsApp",
+      "url": "https://web.whatsapp.com/"
+    },
+    {
+      "id": "CDD449113ECC039A38686F223F2373D8",
+      "title": "Control de Gastos &amp; Presupuesto",
+      "url": "https://adrianhola3.github.io/GastosMensuales/"
+    },
+    {
+      "id": "A3FFFDB882F40215326FD0F76601D9E6",
+      "title": "(887) Kingtekaboss - YouTube",
+      "url": "https://www.youtube.com/@KingtekaOficial/streams"
+    },
+    {
+      "id": "3B241FAE2614590ED4C597D2514B29AC",
+      "title": "UNAC | SGA",
+      "url": "https://sga.unac.edu.pe/security/Login_FS.html"
+    }
+  ],
+  "shotPath": "C:\\Users\\User\\Desktop\\Web de Gastos Mensuales\\odd\\tasks\\capturas\\s0-antes.png"
+}

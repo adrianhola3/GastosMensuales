@@ -1,0 +1,5984 @@
+{
+  "label": "r4",
+  "script": "crud-admin.mjs",
+  "node": "v24.19.0",
+  "pageUrl": "file:///C:/Users/User/Desktop/Web%20de%20Gastos%20Mensuales/index.html",
+  "generado": "2026-10-03T20:04:06.898Z",
+  "semanticaDeVeredictos": {
+    "regla": "PASS significa siempre que el producto hizo lo correcto. Ningun caso se marca verde por defecto: PASS exige que la funcion del caso devuelva pass:true.",
+    "documentaHueco": "marca las filas cuyo FAIL es el hueco ya documentado (C9, D5, E3-E6). Es documentacion, no una excepcion: la fila sigue en rojo.",
+    "thrownOrMissingControl": "SKIP con motivo, nunca PASS"
+  },
+  "storageKey": "control_gastos_mensuales_db_v1",
+  "isolationPrefix": "finanzas",
+  "fixture": {
+    "version": 1,
+    "activeMonthId": "syn-mes-a",
+    "currentView": "mes",
+    "mesesOrden": [
+      "syn-mes-a",
+      "syn-mes-b"
+    ],
+    "meses": {
+      "syn-mes-a": {
+        "id": "syn-mes-a",
+        "nombre": "SYN Mes A",
+        "corto": "SYN",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "syn_sf_1",
+              "concepto": "SYN-SF-ALPHA",
+              "monto": 100,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "id": "syn_sf_2",
+              "concepto": "SYN-SF-PAGADO",
+              "monto": 50,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pagado"
+            }
+          ],
+          "variables": [
+            {
+              "id": "syn_sv_1",
+              "concepto": "SYN-SV-BETA",
+              "monto": 30,
+              "tipo": "Variable",
+              "rango": "20-40",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [
+            {
+              "id": "syn_pf_1",
+              "concepto": "SYN-PF-GAMMA",
+              "monto": 25,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            }
+          ],
+          "variables": [
+            {
+              "id": "syn_pv_1",
+              "concepto": "SYN-PV-DELTA",
+              "monto": 45,
+              "tipo": "Variable",
+              "rango": "10-80",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "extras": [
+          {
+            "id": "syn_ex_1",
+            "concepto": "SYN-EX-EPSILON",
+            "monto": 83,
+            "tipo": "Extra",
+            "rango": "",
+            "estado": "Pagado"
+          }
+        ],
+        "notas": "SYN notas del mes A",
+        "movimientos": [
+          {
+            "id": "syn_mv_1",
+            "fecha": "2026-08-05",
+            "concepto": "SYN-MV-INGRESO",
+            "flujo": "Ingreso",
+            "categoria": "Trabajo",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 1000
+          },
+          {
+            "id": "syn_mv_2",
+            "fecha": "2026-08-09",
+            "concepto": "SYN-MV-GASTO",
+            "flujo": "Gasto",
+            "categoria": "General",
+            "retornable": "No",
+            "estado": "Pendiente",
+            "monto": 200
+          }
+        ]
+      },
+      "syn-mes-b": {
+        "id": "syn-mes-b",
+        "nombre": "SYN Mes B",
+        "corto": "SYN",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "syn_bf_1",
+              "concepto": "SYN-BF-ZETA",
+              "monto": 12,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            }
+          ],
+          "variables": []
+        },
+        "personales": {
+          "fijos": [],
+          "variables": []
+        },
+        "extras": [],
+        "notas": "SYN notas del mes B",
+        "movimientos": []
+      }
+    }
+  },
+  "aislamiento": {
+    "realLocalStorageAntes": {
+      "keys": [
+        "control_gastos_mensuales_db_v1"
+      ],
+      "appKeyPresent": true,
+      "appKeyBytes": 8100,
+      "appKeyHash": 2457901690,
+      "hashTodasLasClaves": 2654644020,
+      "entradas": [
+        [
+          "control_gastos_mensuales_db_v1",
+          8100
+        ]
+      ]
+    },
+    "alArrancarLaPagina": true,
+    "realLocalStorageDespues": {
+      "keys": [
+        "control_gastos_mensuales_db_v1"
+      ],
+      "appKeyPresent": true,
+      "appKeyBytes": 8100,
+      "appKeyHash": 2457901690,
+      "hashTodasLasClaves": 2654644020,
+      "entradas": [
+        [
+          "control_gastos_mensuales_db_v1",
+          8100
+        ]
+      ]
+    },
+    "hashRealIgual": true,
+    "clavesRealesQueLlegaronAlStorageReal": [],
+    "clavesRealesQuePasaronDeTodo": [
+      "setItem:lswt-0.437765143758048540.11688934747273538",
+      "removeItem:lswt-0.437765143758048540.11688934747273538",
+      "setItem:lswt-0.21602070430459330.6716709655008202",
+      "setItem:lswt-0.21602070430459330.6716709655008202",
+      "removeItem:lswt-0.21602070430459330.6716709655008202",
+      "removeItem:lswt-0.21602070430459330.6716709655008202",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957"
+    ]
+  },
+  "red": {
+    "requestsTotales": 122,
+    "requestsASupabase": 0,
+    "requestsASupabaseMuestra": [],
+    "hosts": [
+      "",
+      "cdn.jsdelivr.net"
+    ]
+  },
+  "contadores": {
+    "setItemRedirigidos": 21,
+    "setItemReales": 78,
+    "removeItemRedirigidos": 0,
+    "removeItemReales": 78,
+    "getItemRedirigidos": 29,
+    "getItemReales": 78,
+    "guardarN": 21,
+    "cargarN": 12,
+    "asignadoPorProducto": 12,
+    "clavesReales": [
+      "setItem:lswt-0.437765143758048540.11688934747273538",
+      "removeItem:lswt-0.437765143758048540.11688934747273538",
+      "setItem:lswt-0.21602070430459330.6716709655008202",
+      "setItem:lswt-0.21602070430459330.6716709655008202",
+      "removeItem:lswt-0.21602070430459330.6716709655008202",
+      "removeItem:lswt-0.21602070430459330.6716709655008202",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "removeItem:lswt-0.169432666954146720.19705297512327558",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "removeItem:lswt-0.31694155285303340.35787968109920265",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "removeItem:lswt-0.8491511375936450.025833953351021455",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "removeItem:lswt-0.75301233852052520.11757396034903955",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "removeItem:lswt-0.91725782508731420.1422955413526421",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "removeItem:lswt-0.40294026480186650.8558420373366494",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "removeItem:lswt-0.89516000622603430.4431445587986317",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "removeItem:lswt-0.86219738598105710.12080808841401336",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "removeItem:lswt-0.4627478104746150.883024896383104",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "setItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957",
+      "removeItem:lswt-0.88191268400376620.4144232957345957"
+    ]
+  },
+  "contadoresPorPagina": [
+    {
+      "etiqueta": "salida:admin",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 1,
+      "setItemRedirigidos": 1,
+      "setItemReales": 1,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 1,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.437765143758048540.11688934747273538",
+        "removeItem:lswt-0.437765143758048540.11688934747273538"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 2,
+        "setItemRedirigidos": 1,
+        "setItemReales": 2,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 2,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.21602070430459330.6716709655008202",
+          "setItem:lswt-0.21602070430459330.6716709655008202",
+          "removeItem:lswt-0.21602070430459330.6716709655008202",
+          "removeItem:lswt-0.21602070430459330.6716709655008202"
+        ]
+      }
+    },
+    {
+      "etiqueta": "A",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 2,
+      "setItemRedirigidos": 1,
+      "setItemReales": 2,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 2,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.21602070430459330.6716709655008202",
+        "setItem:lswt-0.21602070430459330.6716709655008202",
+        "removeItem:lswt-0.21602070430459330.6716709655008202",
+        "removeItem:lswt-0.21602070430459330.6716709655008202"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 3,
+        "setItemRedirigidos": 1,
+        "setItemReales": 3,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 3,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.169432666954146720.19705297512327558",
+          "setItem:lswt-0.169432666954146720.19705297512327558",
+          "setItem:lswt-0.169432666954146720.19705297512327558",
+          "removeItem:lswt-0.169432666954146720.19705297512327558",
+          "removeItem:lswt-0.169432666954146720.19705297512327558",
+          "removeItem:lswt-0.169432666954146720.19705297512327558"
+        ]
+      }
+    },
+    {
+      "etiqueta": "B",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 3,
+      "setItemRedirigidos": 1,
+      "setItemReales": 3,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 3,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.169432666954146720.19705297512327558",
+        "setItem:lswt-0.169432666954146720.19705297512327558",
+        "setItem:lswt-0.169432666954146720.19705297512327558",
+        "removeItem:lswt-0.169432666954146720.19705297512327558",
+        "removeItem:lswt-0.169432666954146720.19705297512327558",
+        "removeItem:lswt-0.169432666954146720.19705297512327558"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 4,
+        "setItemRedirigidos": 1,
+        "setItemReales": 4,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 4,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.31694155285303340.35787968109920265",
+          "setItem:lswt-0.31694155285303340.35787968109920265",
+          "setItem:lswt-0.31694155285303340.35787968109920265",
+          "setItem:lswt-0.31694155285303340.35787968109920265",
+          "removeItem:lswt-0.31694155285303340.35787968109920265",
+          "removeItem:lswt-0.31694155285303340.35787968109920265",
+          "removeItem:lswt-0.31694155285303340.35787968109920265",
+          "removeItem:lswt-0.31694155285303340.35787968109920265"
+        ]
+      }
+    },
+    {
+      "etiqueta": "C",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 4,
+      "setItemRedirigidos": 1,
+      "setItemReales": 4,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 4,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.31694155285303340.35787968109920265",
+        "setItem:lswt-0.31694155285303340.35787968109920265",
+        "setItem:lswt-0.31694155285303340.35787968109920265",
+        "setItem:lswt-0.31694155285303340.35787968109920265",
+        "removeItem:lswt-0.31694155285303340.35787968109920265",
+        "removeItem:lswt-0.31694155285303340.35787968109920265",
+        "removeItem:lswt-0.31694155285303340.35787968109920265",
+        "removeItem:lswt-0.31694155285303340.35787968109920265"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 5,
+        "setItemRedirigidos": 1,
+        "setItemReales": 5,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 5,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.8491511375936450.025833953351021455",
+          "setItem:lswt-0.8491511375936450.025833953351021455",
+          "setItem:lswt-0.8491511375936450.025833953351021455",
+          "setItem:lswt-0.8491511375936450.025833953351021455",
+          "setItem:lswt-0.8491511375936450.025833953351021455",
+          "removeItem:lswt-0.8491511375936450.025833953351021455",
+          "removeItem:lswt-0.8491511375936450.025833953351021455",
+          "removeItem:lswt-0.8491511375936450.025833953351021455",
+          "removeItem:lswt-0.8491511375936450.025833953351021455",
+          "removeItem:lswt-0.8491511375936450.025833953351021455"
+        ]
+      }
+    },
+    {
+      "etiqueta": "C-tras-recargar",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 5,
+      "setItemRedirigidos": 1,
+      "setItemReales": 5,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 5,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.8491511375936450.025833953351021455",
+        "setItem:lswt-0.8491511375936450.025833953351021455",
+        "setItem:lswt-0.8491511375936450.025833953351021455",
+        "setItem:lswt-0.8491511375936450.025833953351021455",
+        "setItem:lswt-0.8491511375936450.025833953351021455",
+        "removeItem:lswt-0.8491511375936450.025833953351021455",
+        "removeItem:lswt-0.8491511375936450.025833953351021455",
+        "removeItem:lswt-0.8491511375936450.025833953351021455",
+        "removeItem:lswt-0.8491511375936450.025833953351021455",
+        "removeItem:lswt-0.8491511375936450.025833953351021455"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 6,
+        "setItemRedirigidos": 1,
+        "setItemReales": 6,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 6,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "setItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955",
+          "removeItem:lswt-0.75301233852052520.11757396034903955"
+        ]
+      }
+    },
+    {
+      "etiqueta": "D",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 6,
+      "setItemRedirigidos": 1,
+      "setItemReales": 6,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 6,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "setItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955",
+        "removeItem:lswt-0.75301233852052520.11757396034903955"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 7,
+        "setItemRedirigidos": 1,
+        "setItemReales": 7,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 7,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421"
+        ]
+      }
+    },
+    {
+      "etiqueta": "E1-admin",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 7,
+      "setItemRedirigidos": 1,
+      "setItemReales": 7,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 7,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "setItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421",
+        "removeItem:lswt-0.91725782508731420.1422955413526421"
+      ]
+    },
+    {
+      "etiqueta": "boot:lector",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "lector",
+        "getItemRedirigidos": 2,
+        "getItemReales": 8,
+        "setItemRedirigidos": 1,
+        "setItemReales": 8,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 8,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494"
+        ]
+      }
+    },
+    {
+      "etiqueta": "E2-lector",
+      "modo": "lector",
+      "getItemRedirigidos": 2,
+      "getItemReales": 8,
+      "setItemRedirigidos": 1,
+      "setItemReales": 8,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 8,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "setItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494",
+        "removeItem:lswt-0.40294026480186650.8558420373366494"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 9,
+        "setItemRedirigidos": 1,
+        "setItemReales": 9,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 9,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "setItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317",
+          "removeItem:lswt-0.89516000622603430.4431445587986317"
+        ]
+      }
+    },
+    {
+      "etiqueta": "F1-F5",
+      "modo": "admin",
+      "getItemRedirigidos": 2,
+      "getItemReales": 9,
+      "setItemRedirigidos": 1,
+      "setItemReales": 9,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 9,
+      "guardarN": 1,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "setItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317",
+        "removeItem:lswt-0.89516000622603430.4431445587986317"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 10,
+        "setItemRedirigidos": 1,
+        "setItemReales": 10,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 10,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "setItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336",
+          "removeItem:lswt-0.86219738598105710.12080808841401336"
+        ]
+      }
+    },
+    {
+      "etiqueta": "salida:admin",
+      "modo": "admin",
+      "getItemRedirigidos": 4,
+      "getItemReales": 10,
+      "setItemRedirigidos": 2,
+      "setItemReales": 10,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 10,
+      "guardarN": 2,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "setItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336",
+        "removeItem:lswt-0.86219738598105710.12080808841401336"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 11,
+        "setItemRedirigidos": 1,
+        "setItemReales": 11,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 11,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "setItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104",
+          "removeItem:lswt-0.4627478104746150.883024896383104"
+        ]
+      }
+    },
+    {
+      "etiqueta": "salida:admin",
+      "modo": "admin",
+      "getItemRedirigidos": 3,
+      "getItemReales": 11,
+      "setItemRedirigidos": 2,
+      "setItemReales": 11,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 11,
+      "guardarN": 2,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "setItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104",
+        "removeItem:lswt-0.4627478104746150.883024896383104"
+      ]
+    },
+    {
+      "etiqueta": "boot:admin",
+      "sesionResuelta": true,
+      "conFixture": true,
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 12,
+        "setItemRedirigidos": 1,
+        "setItemReales": 12,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 12,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "setItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957",
+          "removeItem:lswt-0.88191268400376620.4144232957345957"
+        ]
+      }
+    },
+    {
+      "etiqueta": "final",
+      "modo": "admin",
+      "getItemRedirigidos": 4,
+      "getItemReales": 12,
+      "setItemRedirigidos": 8,
+      "setItemReales": 12,
+      "removeItemRedirigidos": 0,
+      "removeItemReales": 12,
+      "guardarN": 8,
+      "cargarN": 1,
+      "asignadoPorProducto": 1,
+      "clavesReales": [
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "setItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957",
+        "removeItem:lswt-0.88191268400376620.4144232957345957"
+      ]
+    }
+  ],
+  "dialogos": [
+    {
+      "index": 0,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-SF-ALPHA\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 1,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-SF-PAGADO\"?",
+      "policy": "cancel",
+      "accepted": false
+    },
+    {
+      "index": 2,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-PV-DELTA\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 3,
+      "type": "confirm",
+      "message": "¿Eliminar movimiento \"SYN-MV-GASTO\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 4,
+      "type": "confirm",
+      "message": "¿Eliminar movimiento \"SYN-MV-INGRESO\"?",
+      "policy": "cancel",
+      "accepted": false
+    },
+    {
+      "index": 5,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 6,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 7,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-BF-ZETA\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 8,
+      "type": "confirm",
+      "message": "¿Eliminar \"SYN Mes A\"? Se borrarán 2 gastos, 1 movimientos y 1 gastos extra de este período. Esta acción no se puede deshacer.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 9,
+      "type": "confirm",
+      "message": "¿Eliminar \"SYN Mes B\"? Se borrarán 0 gastos, 0 movimientos y 0 gastos extra de este período. Esta acción no se puede deshacer.",
+      "policy": "cancel",
+      "accepted": false
+    },
+    {
+      "index": 10,
+      "type": "confirm",
+      "message": "¿Eliminar \"SYN Mes B\"? Se borrarán 0 gastos, 0 movimientos y 0 gastos extra de este período. Esta acción no se puede deshacer.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 11,
+      "type": "alert",
+      "message": "Debes mantener al menos un mes en el sistema.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 12,
+      "type": "alert",
+      "message": "Por favor ingresa un monto válido.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 13,
+      "type": "alert",
+      "message": "Por favor ingresa un monto válido.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 14,
+      "type": "alert",
+      "message": "El concepto del gasto no puede quedar vacío.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 15,
+      "type": "alert",
+      "message": "Por favor ingresa un monto válido.",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 16,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-SF-PAGADO\"?",
+      "policy": "accept",
+      "accepted": true
+    },
+    {
+      "index": 17,
+      "type": "confirm",
+      "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+      "policy": "accept",
+      "accepted": true
+    }
+  ],
+  "domStorageEvents": [
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.437765143758048540.11688934747273538",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.437765143758048540.11688934747273538",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.21602070430459330.6716709655008202",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.21602070430459330.6716709655008202",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.21602070430459330.6716709655008202",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.21602070430459330.6716709655008202",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.169432666954146720.19705297512327558",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.31694155285303340.35787968109920265",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.8491511375936450.025833953351021455",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.75301233852052520.11757396034903955",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.91725782508731420.1422955413526421",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.40294026480186650.8558420373366494",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.89516000622603430.4431445587986317",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.86219738598105710.12080808841401336",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.4627478104746150.883024896383104",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemAdded",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    },
+    {
+      "event": "domStorageItemRemoved",
+      "key": "lswt-0.88191268400376620.4144232957345957",
+      "area": "localStorage"
+    }
+  ],
+  "domStorageEventsDeApp": [],
+  "domStorageEventsTotales": 154,
+  "huecoDeleteMonth": {
+    "gap": null,
+    "donde": "js/store.js (definicion, 1 menciones), js/app.js (2 callers), index.html (0 referencias literales)",
+    "conteosEnFuente": {
+      "storeJs": 1,
+      "appJs": 2,
+      "indexHtml": 0
+    },
+    "controlesEnHtmlQueHablanDeBorrarMes": [],
+    "controlesEnDom": {
+      "totalControles": 80,
+      "conBorrar": [
+        "#btnDeleteMonth.period-new.period-new-danger.admin-action-btn :: Eliminar el período activo",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+        ".btn-ghost-rose.btn-delete-tx.admin-action-btn :: Eliminar movimiento",
+        ".btn-ghost-rose.btn-delete-tx.admin-action-btn :: Eliminar movimiento",
+        ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto"
+      ],
+      "hayBorrarMes": true
+    },
+    "botonEnElDom": {
+      "existe": true,
+      "title": "Eliminar el período activo",
+      "texto": "Eliminar mes",
+      "clases": "period-new period-new-danger admin-action-btn",
+      "display": "block",
+      "ocupaLayout": true,
+      "adminActionBtn": true
+    },
+    "metodoSobreCopiaDesechable": {
+      "retorno": true,
+      "mesesOrdenAntes": 2,
+      "mesesOrdenDespues": 1,
+      "sigueExistiendoElMes": false,
+      "saves": 1,
+      "storeVivoIntacto": true
+    },
+    "veredicto": "ALCANZABLE: hay un control en la interfaz y el handler llama al store. Los casos B8-B10 lo ejercitan por la UI real."
+  },
+  "probesDefectos": {
+    "R6_parseFloat_ou_0": {
+      "updateBudgetItem_montoNoNumerico": 0,
+      "updateBudgetItem_montoNoNumericoTipo": "number",
+      "InfinitySobreviveEnElStore": true,
+      "InfinityEnElJSONQueSeSube": null,
+      "InfinityEsNullEnElJSON": true,
+      "addMovement_montoNoNumerico": 0,
+      "savesDeLaCopia": {
+        "noNumerico": 1,
+        "infinity": 1,
+        "movimiento": 1
+      }
+    },
+    "R5_trim_sobre_concepto_ausente": {
+      "addBudgetItemSinConcepto": "TypeError: Cannot read properties of undefined (reading 'trim')",
+      "addMovementSinConcepto": "TypeError: Cannot read properties of undefined (reading 'trim')",
+      "addBudgetItemConConceptoEnBlancoLanza": null,
+      "conceptoGuardadoTrasTrim": ""
+    },
+    "R7_localStorage_corrupto_sobreescribe": {
+      "catchDeLeerLocalUsaDefaults": true,
+      "guardaLosDefaultsEncimaDelDato": true,
+      "reproducirEnLaCorrida": "NO: leerLocal() lee la copia REDIRIGIDA a memoria, que por construccion es valida. Sembrarle un blob corrupto exigiria tocar el stub, y la alternativa (corromper el localStorage real) esta prohibida."
+    },
+    "opcionesDeAddNewMonth": {
+      "hayTresIdsDistintos": true,
+      "sinOpciones_igualQueLasTresEnFalse": true,
+      "sinOpciones_igualQueObjetoVacio": true,
+      "diferenciaConLasTresEnFalse": [],
+      "diferenciaConObjetoVacio": [],
+      "formaDelClonSinOpciones": {
+        "servicios": {
+          "fijos": [
+            {
+              "concepto": "SYN-F2-EDIT-RELOAD",
+              "monto": 77.77,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-SF-PAGADO",
+              "monto": 50,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-F1-CREATE-RELOAD",
+              "monto": 66,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            }
+          ],
+          "variables": [
+            {
+              "concepto": "SYN-SV-BETA",
+              "monto": 30,
+              "tipo": "Variable",
+              "rango": "20-40",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [],
+          "variables": [
+            {
+              "concepto": "SYN-PV-DELTA",
+              "monto": 45,
+              "tipo": "Variable",
+              "rango": "10-80",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "extras": [],
+        "notas": "",
+        "movimientos": []
+      },
+      "formaDelClonConLasTresEnFalse": {
+        "servicios": {
+          "fijos": [
+            {
+              "concepto": "SYN-F2-EDIT-RELOAD",
+              "monto": 77.77,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-SF-PAGADO",
+              "monto": 50,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-F1-CREATE-RELOAD",
+              "monto": 66,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            }
+          ],
+          "variables": [
+            {
+              "concepto": "SYN-SV-BETA",
+              "monto": 30,
+              "tipo": "Variable",
+              "rango": "20-40",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [],
+          "variables": [
+            {
+              "concepto": "SYN-PV-DELTA",
+              "monto": 45,
+              "tipo": "Variable",
+              "rango": "10-80",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "extras": [],
+        "notas": "",
+        "movimientos": []
+      },
+      "formaDelClonConObjetoVacio": {
+        "servicios": {
+          "fijos": [
+            {
+              "concepto": "SYN-F2-EDIT-RELOAD",
+              "monto": 77.77,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-SF-PAGADO",
+              "monto": 50,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            },
+            {
+              "concepto": "SYN-F1-CREATE-RELOAD",
+              "monto": 66,
+              "tipo": "Fijo",
+              "rango": "",
+              "estado": "Pendiente"
+            }
+          ],
+          "variables": [
+            {
+              "concepto": "SYN-SV-BETA",
+              "monto": 30,
+              "tipo": "Variable",
+              "rango": "20-40",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [],
+          "variables": [
+            {
+              "concepto": "SYN-PV-DELTA",
+              "monto": 45,
+              "tipo": "Variable",
+              "rango": "10-80",
+              "estado": "Pendiente"
+            }
+          ]
+        },
+        "extras": [],
+        "notas": "",
+        "movimientos": []
+      },
+      "saves": {
+        "sinOpciones": 1,
+        "conFalse": 1,
+        "conVacio": 1
+      },
+      "storeVivoIntacto": true
+    },
+    "notaAlcance": "Estos no se pueden disparar desde la UI: todos los campos de monto son input type=number min=0 required, asi que la validacion nativa los frena antes de que el guard de la app corra. R5 y R6 se miden sobre una copia desechable del estado, nunca sobre el store vivo; R7 solo se verifica por fuente. opcionesDeAddNewMonth mide el parametro opcional de addNewMonth sobre la misma copia desechable, porque la interfaz siempre se lo pasa."
+  },
+  "casos": [
+    {
+      "id": "A1",
+      "bloque": "A",
+      "situacion": "gasto Fijo en servicios/fijos",
+      "aserto": "existe con los 4 campos, estado Pendiente",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "servicios.fijos",
+        "tipo": "Fijo",
+        "estado": "Pendiente",
+        "monto": 100,
+        "rango": "",
+        "id": "string no vacio"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "seccion": "servicios",
+          "subseccion": "fijos",
+          "rangoVisible": "none"
+        },
+        "llenado": {
+          "conceptoEnElCampo": "SYN-A1-FIJO-SERV",
+          "montoEnElCampo": "100.00",
+          "rangoEnElCampo": ""
+        },
+        "envio": {
+          "enviado": true,
+          "viaRequestSubmit": true,
+          "checkValidity": true
+        },
+        "encontrado": {
+          "ruta": "servicios.fijos",
+          "item": {
+            "id": "id_h9jgiu7bi_1791057863962",
+            "concepto": "SYN-A1-FIJO-SERV",
+            "monto": 100,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          }
+        },
+        "filaRenderizada": {
+          "id": "id_h9jgiu7bi_1791057863962",
+          "texto": "SYN-A1-FIJO-SERV Fijo Pendiente S/ 100.00",
+          "tags": [
+            "Fijo"
+          ],
+          "montoTexto": "S/ 100.00",
+          "estadoTexto": "Pendiente",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        }
+      },
+      "extra": {
+        "dialogo": "ninguno esperado"
+      },
+      "ms": 731
+    },
+    {
+      "id": "A2",
+      "bloque": "A",
+      "situacion": "gasto Variable + rango",
+      "aserto": "rango persistido, separador de rango con guion",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "servicios.variables",
+        "tipo": "Variable",
+        "rango": "20 - 40",
+        "tagRenderizada": "Rango: 20 - 40"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "seccion": "servicios",
+          "subseccion": "variables",
+          "rangoVisible": "block"
+        },
+        "lenado": {
+          "conceptoEnElCampo": "SYN-A2-VAR-SERV",
+          "montoEnElCampo": "30.00",
+          "rangoEnElCampo": "20 - 40"
+        },
+        "encontrado": {
+          "ruta": "servicios.variables",
+          "item": {
+            "id": "id_d89kpcsxv_1791057864692",
+            "concepto": "SYN-A2-VAR-SERV",
+            "monto": 30,
+            "tipo": "Variable",
+            "rango": "20 - 40",
+            "estado": "Pendiente"
+          }
+        },
+        "tagRenderizada": "Rango: 20 - 40",
+        "fila": {
+          "id": "id_d89kpcsxv_1791057864692",
+          "texto": "SYN-A2-VAR-SERV Variable Rango: 20 - 40 Pendiente S/ 30.00",
+          "tags": [
+            "Variable",
+            "Rango: 20 - 40"
+          ],
+          "montoTexto": "S/ 30.00",
+          "estadoTexto": "Pendiente",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        }
+      },
+      "extra": null,
+      "ms": 669
+    },
+    {
+      "id": "A3",
+      "bloque": "A",
+      "situacion": "gasto Variable en personales/variables",
+      "aserto": "id unico, no colisiona con A2",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "personales.variables",
+        "tipo": "Variable",
+        "idDistintoDeA2": true
+      },
+      "observado": {
+        "encontrado": {
+          "ruta": "personales.variables",
+          "item": {
+            "id": "id_w0dzyui8t_1791057865360",
+            "concepto": "SYN-A3-VAR-PERS",
+            "monto": 45,
+            "tipo": "Variable",
+            "rango": "10 - 80",
+            "estado": "Pendiente"
+          }
+        },
+        "idA2": "id_d89kpcsxv_1791057864692",
+        "idA3": "id_w0dzyui8t_1791057865360"
+      },
+      "extra": null,
+      "ms": 668
+    },
+    {
+      "id": "A4",
+      "bloque": "A",
+      "situacion": "gasto Fijo en personales/fijos",
+      "aserto": "id unico",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "personales.fijos",
+        "tipo": "Fijo",
+        "idNuevo": true
+      },
+      "observado": {
+        "encontrado": {
+          "ruta": "personales.fijos",
+          "item": {
+            "id": "id_4zx61x7hr_1791057866028",
+            "concepto": "SYN-A4-FIJO-PERS",
+            "monto": 25,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          }
+        }
+      },
+      "extra": null,
+      "ms": 653
+    },
+    {
+      "id": "A5",
+      "bloque": "A",
+      "situacion": "gasto Extra",
+      "aserto": "tipo forzado a 'Extra', queda en el array plano extras",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "extras",
+        "tipo": "Extra"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "seccion": "extras",
+          "subseccion": "fijos",
+          "rangoVisible": "none"
+        },
+        "encontrado": {
+          "ruta": "extras",
+          "item": {
+            "id": "id_31ja2iy0o_1791057866682",
+            "concepto": "SYN-A5-EXTRA",
+            "monto": 83,
+            "tipo": "Extra",
+            "rango": "NO-APLICA",
+            "estado": "Pendiente"
+          }
+        },
+        "enArrayPlanoExtras": [
+          "SYN-EX-EPSILON",
+          "SYN-A5-EXTRA"
+        ]
+      },
+      "extra": null,
+      "ms": 671
+    },
+    {
+      "id": "A6",
+      "bloque": "A",
+      "situacion": "movimiento Ingreso",
+      "aserto": "flujo 'Ingreso', aparece con + en el feed",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "movimientos",
+        "flujo": "Ingreso",
+        "signoEnElFeed": "+",
+        "monto": 1000
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "flujoEnElHidden": "Ingreso",
+          "fechaPorDefecto": "2026-10-03"
+        },
+        "lenado": {
+          "concepto": "SYN-A6-INGRESO",
+          "monto": "1000",
+          "fecha": "2026-08-15",
+          "flujo": "Ingreso"
+        },
+        "encontrado": {
+          "id": "id_smijdn58j_1791057867354",
+          "fecha": "2026-08-15",
+          "concepto": "SYN-A6-INGRESO",
+          "flujo": "Ingreso",
+          "categoria": "Ingreso",
+          "retornable": "No",
+          "estado": "Pagado",
+          "monto": 1000
+        },
+        "fila": {
+          "texto": "SYN-A6-INGRESO 2026-08-15 • Ingreso + S/ 1,000.00",
+          "montoTexto": "+ S/ 1,000.00"
+        },
+        "categoria": "Ingreso",
+        "retornable": "No",
+        "estado": "Pagado",
+        "fecha": "2026-08-15"
+      },
+      "extra": null,
+      "ms": 654
+    },
+    {
+      "id": "A7",
+      "bloque": "A",
+      "situacion": "movimiento Gasto",
+      "aserto": "flujo 'Gasto', aparece con -",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "ruta": "movimientos",
+        "flujo": "Gasto",
+        "signoEnElFeed": "-"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "flujoEnElHidden": "Gasto",
+          "fechaPorDefecto": "2026-10-03"
+        },
+        "lenado": {
+          "concepto": "SYN-A7-GASTO",
+          "monto": "250",
+          "fecha": "2026-08-16",
+          "flujo": "Gasto"
+        },
+        "encontrado": {
+          "id": "id_doyp87acu_1791057868006",
+          "fecha": "2026-08-16",
+          "concepto": "SYN-A7-GASTO",
+          "flujo": "Gasto",
+          "categoria": "Gasto",
+          "retornable": "No",
+          "estado": "Pagado",
+          "monto": 250
+        },
+        "fila": {
+          "texto": "SYN-A7-GASTO 2026-08-16 • Gasto - S/ 250.00",
+          "montoTexto": "- S/ 250.00"
+        },
+        "categoria": "Gasto"
+      },
+      "extra": null,
+      "ms": 672
+    },
+    {
+      "id": "A8",
+      "bloque": "A",
+      "situacion": "mes nuevo sin clonar",
+      "aserto": "existe, mesesOrden crece, corto = primera palabra",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "mesesOrden": "+1 (2 -> 3)",
+        "nombre": "SYN Mes C",
+        "corto": "SYN",
+        "mesActivoTrasCrear": "syn-mes-c-8679",
+        "vueltoAMesA": true
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B"
+          ],
+          "valorClone": "",
+          "nombre": "SYN Mes C",
+          "bloqueOpciones": "none",
+          "casillas": "extras=true notas=true movimientos=false"
+        },
+        "nuevoId": "syn-mes-c-8679",
+        "nombre": "SYN Mes C",
+        "corto": "SYN",
+        "activoAhora": "syn-mes-c-8679",
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": null,
+      "ms": 1515
+    },
+    {
+      "id": "A9",
+      "bloque": "A",
+      "situacion": "mes nuevo clonando con las opciones por defecto",
+      "aserto": "las cuatro colecciones de presupuesto copian con id nuevo y todo Pendiente; extras y notas tambien; los movimientos NO",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "presupuesto": "las 4 colecciones con el mismo largo, ids nuevos y todo Pendiente",
+        "extras": "mismo largo, ids nuevos, todo Pendiente",
+        "notas": "SYN notas del mes A",
+        "movimientos": "NO se copian (la casilla viene apagada por defecto)",
+        "vueltoAMesA": true
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B",
+            "syn-mes-c-8679 :: Clonar gastos recurrentes de SYN Mes C"
+          ],
+          "valorClone": "syn-mes-a",
+          "nombre": "SYN Mes D",
+          "bloqueOpciones": "grid",
+          "casillas": "extras=true notas=true movimientos=false"
+        },
+        "nuevoId": "syn-mes-d-0194",
+        "comparacion": {
+          "servicios.fijos": {
+            "origen": 3,
+            "clon": 3,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-SF-ALPHA",
+              "SYN-SF-PAGADO",
+              "SYN-A1-FIJO-SERV"
+            ],
+            "conceptosClon": [
+              "SYN-SF-ALPHA",
+              "SYN-SF-PAGADO",
+              "SYN-A1-FIJO-SERV"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": [
+              {
+                "concepto": "SYN-SF-PAGADO",
+                "campo": "estado",
+                "origen": "Pagado",
+                "clon": "Pendiente"
+              }
+            ]
+          },
+          "servicios.variables": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-SV-BETA",
+              "SYN-A2-VAR-SERV"
+            ],
+            "conceptosClon": [
+              "SYN-SV-BETA",
+              "SYN-A2-VAR-SERV"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "personales.fijos": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-PF-GAMMA",
+              "SYN-A4-FIJO-PERS"
+            ],
+            "conceptosClon": [
+              "SYN-PF-GAMMA",
+              "SYN-A4-FIJO-PERS"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "personales.variables": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-PV-DELTA",
+              "SYN-A3-VAR-PERS"
+            ],
+            "conceptosClon": [
+              "SYN-PV-DELTA",
+              "SYN-A3-VAR-PERS"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "extras": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-EX-EPSILON",
+              "SYN-A5-EXTRA"
+            ],
+            "conceptosClon": [
+              "SYN-EX-EPSILON",
+              "SYN-A5-EXTRA"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": [
+              {
+                "concepto": "SYN-EX-EPSILON",
+                "campo": "estado",
+                "origen": "Pagado",
+                "clon": "Pendiente"
+              }
+            ]
+          },
+          "movimientos": {
+            "origen": 4,
+            "clon": 0,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-A7-GASTO",
+              "SYN-A6-INGRESO",
+              "SYN-MV-INGRESO",
+              "SYN-MV-GASTO"
+            ],
+            "conceptosClon": [],
+            "estadosClon": [],
+            "diferencias": []
+          }
+        },
+        "presupuesto": {
+          "mismoLargo": true,
+          "idsNuevos": true,
+          "todosPendientes": true
+        },
+        "notasOrigen": "SYN notas del mes A",
+        "notasClon": "SYN notas del mes A",
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": {
+        "porQueMovimientosNo": "un movimiento es una transacción ya registrada: copiarlo puede sumar dos veces los ingresos del período origen, así que el producto lo deja como opt-in explícito.",
+        "defaults": "el caso no pasa `opcionesClone`: mide lo que el marcado declara (extras y notas marcadas, movimientos apagada) después del `formNewMonth.reset()` del opener."
+      },
+      "ms": 1596
+    },
+    {
+      "id": "A10",
+      "bloque": "A",
+      "situacion": "monto \"45.50\" (string del input)",
+      "aserto": "guardado como numero 45.5, no string",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "typeofMonto": "number",
+        "monto": 45.5
+      },
+      "observado": {
+        "valorEnElCampo": "45.50",
+        "tipoEnElStore": "number",
+        "monto": 45.5,
+        "encontrado": {
+          "id": "id_sgm1pc7o1_1791057871790",
+          "concepto": "SYN-A10-MONTO-STRING",
+          "monto": 45.5,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": null,
+      "ms": 655
+    },
+    {
+      "id": "A11",
+      "bloque": "A",
+      "situacion": "monto 0",
+      "aserto": "acepta 0, no lo descarta",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "monto": 0,
+        "elItemExiste": true
+      },
+      "observado": {
+        "valorEnElCampo": "0",
+        "monto": 0,
+        "largoServiciosFijos": 5,
+        "encontrado": {
+          "id": "id_n3j0j79fz_1791057872446",
+          "concepto": "SYN-A11-MONTO-CERO",
+          "monto": 0,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": null,
+      "ms": 654
+    },
+    {
+      "id": "A12",
+      "bloque": "A",
+      "situacion": "concepto con acentos y enye",
+      "aserto": "Café ☕ ñ intacto, sin mojibake",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-A12 Café ☕ ñ",
+        "conceptoEnElStore": "SYN-A12 Café ☕ ñ",
+        "conceptoRenderizado": "SYN-A12 Café ☕ ñ"
+      },
+      "observado": {
+        "valorEnElCampo": "SYN-A12 Café ☕ ñ",
+        "enElStore": "SYN-A12 Café ☕ ñ",
+        "fila": {
+          "id": "id_uuqzlv8n1_1791057873100",
+          "texto": "SYN-A12 Café ☕ ñ Fijo Pendiente S/ 10.00",
+          "tags": [
+            "Fijo"
+          ],
+          "montoTexto": "S/ 10.00",
+          "estadoTexto": "Pendiente",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        }
+      },
+      "extra": null,
+      "ms": 689
+    },
+    {
+      "id": "A13",
+      "bloque": "A",
+      "situacion": "concepto de 500 chars",
+      "aserto": "se guarda entero, la fila no rompe el layout",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "largoConcepto": 500,
+        "filaRenderizada": true
+      },
+      "observado": {
+        "largoGuardado": 500,
+        "largoEsperado": 500,
+        "fila": {
+          "id": "id_v9ri78xnl_1791057873789",
+          "texto": "SYN-A13-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX Fijo Pendiente S/ 11.00",
+          "tags": [
+            "Fijo"
+          ],
+          "montoTexto": "S/ 11.00",
+          "estadoTexto": "Pendiente",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        }
+      },
+      "extra": null,
+      "ms": 653
+    },
+    {
+      "id": "A14",
+      "bloque": "A",
+      "situacion": "concepto con <img src=x onerror=...>",
+      "aserto": "escapado, no se ejecuta, no aparece etiqueta",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "conceptoGuardadoComoTexto": "<img src=x onerror=\"window.__XSS=(window.__XSS||0)+1\">",
+        "xss": 0,
+        "imgEnLaFila": false
+      },
+      "observado": {
+        "enElStore": "<img src=x onerror=\"window.__XSS=(window.__XSS||0)+1\">",
+        "fila": {
+          "id": "id_s4zv29tqx_1791057874442",
+          "texto": "<img src=x onerror=\"window.__XSS=(window.__XSS||0)+1\"> Fijo Pendiente S/ 12.00",
+          "tags": [
+            "Fijo"
+          ],
+          "montoTexto": "S/ 12.00",
+          "estadoTexto": "Pendiente",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        },
+        "xss": {
+          "xss": 0,
+          "imgs": 0
+        }
+      },
+      "extra": null,
+      "ms": 861
+    },
+    {
+      "id": "A15",
+      "bloque": "A",
+      "situacion": "concepto duplicado",
+      "aserto": "acepta, no rompe, no confunde los ids",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "filasTotalesConEseConcepto": ">= 2",
+        "idsDistintos": true,
+        "unaEnServiciosFijosYUnaEnPersonalesFijos": true
+      },
+      "observado": {
+        "serviciosFijos": [
+          {
+            "id": "id_l5y9e79n0_1791057875303",
+            "monto": 13
+          }
+        ],
+        "personalesFijos": [
+          {
+            "id": "id_dmx71m3th_1791057875908",
+            "monto": 14
+          }
+        ],
+        "idsUnicos": 2
+      },
+      "extra": {
+        "nota": "window.__t.buscar devuelve la PRIMERA coincidencia: con duplicados no sirve para afirmar unicidad, por eso el caso mira las dos colecciones completas."
+      },
+      "ms": 1274
+    },
+    {
+      "id": "A16",
+      "bloque": "A",
+      "situacion": "concepto solo espacios",
+      "aserto": "el required / el guard lo frena",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": "sin entrada en la tabla R1-R16: el alta no valida concepto en blanco (store.js:517 solo hace .trim())",
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemsConConceptoEnBlanco": 0,
+        "motivoDelFreno": "required o guard explicito"
+      },
+      "observado": {
+        "largoServiciosFijos": 9,
+        "itemsEnBlanco": [],
+        "validacionNativa": {
+          "valorEnElCampo": "    ",
+          "type": "text",
+          "min": null,
+          "required": true,
+          "valueMissing": false,
+          "rangeUnderflow": false,
+          "rangeOverflow": false,
+          "badInput": false,
+          "formCheckValidity": true
+        },
+        "envio": {
+          "enviado": true,
+          "viaRequestSubmit": true,
+          "checkValidity": true
+        }
+      },
+      "extra": null,
+      "ms": 736
+    },
+    {
+      "id": "A17",
+      "bloque": "A",
+      "situacion": "mes con tilde: Año 2027",
+      "aserto": "el id sale deducible, dos meses iguales no se pisan",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": "R10 (store.js:717 sluguea con [^a-z0-9] y el sufijo son 4 digitos de Date.now())",
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "idsNuevos": 2,
+        "idsConElSlugDeLaTilde": "a-o-2027-<4 digitos>",
+        "dosMesesConElMismoNombre": "conviviendo, no pisados"
+      },
+      "observado": {
+        "nuevos": [
+          "a-o-2027-7828",
+          "a-o-2027-8674"
+        ],
+        "forma1": {
+          "id": "a-o-2027-7828",
+          "nombre": "Año 2027",
+          "corto": "Año",
+          "servicios": {
+            "fijos": [],
+            "variables": []
+          },
+          "personales": {
+            "fijos": [],
+            "variables": []
+          },
+          "extras": [],
+          "notas": "",
+          "movimientos": []
+        },
+        "forma2": {
+          "id": "a-o-2027-8674",
+          "nombre": "Año 2027",
+          "corto": "Año",
+          "servicios": {
+            "fijos": [],
+            "variables": []
+          },
+          "personales": {
+            "fijos": [],
+            "variables": []
+          },
+          "extras": [],
+          "notas": "",
+          "movimientos": []
+        },
+        "deducible": true,
+        "sinColision": true,
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a",
+        "ordenAntes": 4,
+        "ordenDespues": 6,
+        "ordenMedio": 5
+      },
+      "extra": {
+        "notaR10": "store.js:717 hace nombre.toLowerCase().replace(/[^a-z0-9]/g,'-') + '-' + Date.now().slice(-4). La tilde se vuelve guion y el sufijo son 4 digitos: dos meses con el mismo nombre solo NO se pisan si caen en ventanas de ms distintas.",
+        "cortoDelMes": "Año"
+      },
+      "ms": 2953
+    },
+    {
+      "id": "A18",
+      "bloque": "A",
+      "situacion": "clonar con \"gastos extra\" marcado",
+      "aserto": "mismo numero de extras, cada uno con id nuevo y en Pendiente",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "extras": 2,
+        "idsCompartidosConElOrigen": 0,
+        "estado": "todos Pendiente"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B",
+            "syn-mes-c-8679 :: Clonar gastos recurrentes de SYN Mes C",
+            "syn-mes-d-0194 :: Clonar gastos recurrentes de SYN Mes D",
+            "a-o-2027-7828 :: Clonar gastos recurrentes de Año 2027",
+            "a-o-2027-8674 :: Clonar gastos recurrentes de Año 2027"
+          ],
+          "valorClone": "syn-mes-a",
+          "nombre": "SYN Mes E",
+          "bloqueOpciones": "grid",
+          "casillas": "extras=true notas=false movimientos=false"
+        },
+        "nuevoId": "syn-mes-e-0266",
+        "comparacionExtras": {
+          "origen": 2,
+          "clon": 2,
+          "idsCompartidos": 0,
+          "conceptosOrigen": [
+            "SYN-EX-EPSILON",
+            "SYN-A5-EXTRA"
+          ],
+          "conceptosClon": [
+            "SYN-EX-EPSILON",
+            "SYN-A5-EXTRA"
+          ],
+          "estadosClon": [
+            "Pendiente",
+            "Pendiente"
+          ],
+          "diferencias": [
+            {
+              "concepto": "SYN-EX-EPSILON",
+              "campo": "estado",
+              "origen": "Pagado",
+              "clon": "Pendiente"
+            }
+          ]
+        },
+        "extrasOrigen": [
+          {
+            "id": "syn_ex_1",
+            "estado": "Pagado"
+          },
+          {
+            "id": "id_31ja2iy0o_1791057866682",
+            "estado": "Pendiente"
+          }
+        ],
+        "extrasClon": [
+          {
+            "id": "id_sil2mx8z7_1791057880266",
+            "estado": "Pendiente"
+          },
+          {
+            "id": "id_ajmandehn_1791057880266",
+            "estado": "Pendiente"
+          }
+        ],
+        "notasDelClon": "",
+        "movimientosDelClon": 0,
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": {
+        "nota": "un extra es una cuenta pendiente, igual que un gasto de presupuesto: por eso vuelve a Pendiente. Las otras dos banderas estan apagadas en este caso, asi que notas queda vacio y movimientos en 0."
+      },
+      "ms": 1716
+    },
+    {
+      "id": "A19",
+      "bloque": "A",
+      "situacion": "clonar con \"notas del mes\" marcado",
+      "aserto": "las notas se copian textuales, sin transformar",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "notasEnElClon": "SYN notas del mes A",
+        "extras": "no se copian (la casilla esta apagada)"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B",
+            "syn-mes-c-8679 :: Clonar gastos recurrentes de SYN Mes C",
+            "syn-mes-d-0194 :: Clonar gastos recurrentes de SYN Mes D",
+            "a-o-2027-7828 :: Clonar gastos recurrentes de Año 2027",
+            "a-o-2027-8674 :: Clonar gastos recurrentes de Año 2027",
+            "syn-mes-e-0266 :: Clonar gastos recurrentes de SYN Mes E"
+          ],
+          "valorClone": "syn-mes-a",
+          "nombre": "SYN Mes F",
+          "bloqueOpciones": "grid",
+          "casillas": "extras=false notas=true movimientos=false"
+        },
+        "nuevoId": "syn-mes-f-1983",
+        "notasOrigen": "SYN notas del mes A",
+        "notasClon": "SYN notas del mes A",
+        "igualTextual": true,
+        "extrasOrigen": 2,
+        "extrasClon": 0,
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": {
+        "nota": "las notas son texto de ida y vuelta: la comparacion es por identidad de string, sin trim ni normalizacion, asi que cualquier transformacion del store la haria fallar."
+      },
+      "ms": 1758
+    },
+    {
+      "id": "A20",
+      "bloque": "A",
+      "situacion": "clonar con \"movimientos\" marcado",
+      "aserto": "mismo numero de movimientos, ids nuevos y estado/fecha/flujo/monto intactos",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "movimientos": 4,
+        "idsCompartidosConElOrigen": 0,
+        "camposIntactos": [
+          "estado",
+          "fecha",
+          "flujo",
+          "categoria",
+          "retornable",
+          "monto"
+        ],
+        "ingresoDelClon": {
+          "estado": "Pagado",
+          "monto": 1000
+        }
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B",
+            "syn-mes-c-8679 :: Clonar gastos recurrentes de SYN Mes C",
+            "syn-mes-d-0194 :: Clonar gastos recurrentes de SYN Mes D",
+            "a-o-2027-7828 :: Clonar gastos recurrentes de Año 2027",
+            "a-o-2027-8674 :: Clonar gastos recurrentes de Año 2027",
+            "syn-mes-e-0266 :: Clonar gastos recurrentes de SYN Mes E",
+            "syn-mes-f-1983 :: Clonar gastos recurrentes de SYN Mes F"
+          ],
+          "valorClone": "syn-mes-a",
+          "nombre": "SYN Mes G",
+          "bloqueOpciones": "grid",
+          "casillas": "extras=false notas=false movimientos=true"
+        },
+        "nuevoId": "syn-mes-g-3740",
+        "comparacionMovimientos": {
+          "origen": 4,
+          "clon": 4,
+          "idsCompartidos": 0,
+          "conceptosOrigen": [
+            "SYN-A7-GASTO",
+            "SYN-A6-INGRESO",
+            "SYN-MV-INGRESO",
+            "SYN-MV-GASTO"
+          ],
+          "conceptosClon": [
+            "SYN-A7-GASTO",
+            "SYN-A6-INGRESO",
+            "SYN-MV-INGRESO",
+            "SYN-MV-GASTO"
+          ],
+          "estadosClon": [
+            "Pagado",
+            "Pagado",
+            "Pagado",
+            "Pendiente"
+          ],
+          "diferencias": []
+        },
+        "movimientosOrigen": [
+          {
+            "id": "id_doyp87acu_1791057868006",
+            "fecha": "2026-08-16",
+            "concepto": "SYN-A7-GASTO",
+            "flujo": "Gasto",
+            "categoria": "Gasto",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 250
+          },
+          {
+            "id": "id_smijdn58j_1791057867354",
+            "fecha": "2026-08-15",
+            "concepto": "SYN-A6-INGRESO",
+            "flujo": "Ingreso",
+            "categoria": "Ingreso",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 1000
+          },
+          {
+            "id": "syn_mv_1",
+            "fecha": "2026-08-05",
+            "concepto": "SYN-MV-INGRESO",
+            "flujo": "Ingreso",
+            "categoria": "Trabajo",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 1000
+          },
+          {
+            "id": "syn_mv_2",
+            "fecha": "2026-08-09",
+            "concepto": "SYN-MV-GASTO",
+            "flujo": "Gasto",
+            "categoria": "General",
+            "retornable": "No",
+            "estado": "Pendiente",
+            "monto": 200
+          }
+        ],
+        "movimientosClon": [
+          {
+            "id": "id_ejisuajd0_1791057883740",
+            "fecha": "2026-08-16",
+            "concepto": "SYN-A7-GASTO",
+            "flujo": "Gasto",
+            "categoria": "Gasto",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 250
+          },
+          {
+            "id": "id_1onmn4w28_1791057883740",
+            "fecha": "2026-08-15",
+            "concepto": "SYN-A6-INGRESO",
+            "flujo": "Ingreso",
+            "categoria": "Ingreso",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 1000
+          },
+          {
+            "id": "id_o6zupmis0_1791057883740",
+            "fecha": "2026-08-05",
+            "concepto": "SYN-MV-INGRESO",
+            "flujo": "Ingreso",
+            "categoria": "Trabajo",
+            "retornable": "No",
+            "estado": "Pagado",
+            "monto": 1000
+          },
+          {
+            "id": "id_lowvoeje7_1791057883740",
+            "fecha": "2026-08-09",
+            "concepto": "SYN-MV-GASTO",
+            "flujo": "Gasto",
+            "categoria": "General",
+            "retornable": "No",
+            "estado": "Pendiente",
+            "monto": 200
+          }
+        ],
+        "camposConservados": true,
+        "ingresoDelClon": {
+          "id": "id_1onmn4w28_1791057883740",
+          "fecha": "2026-08-15",
+          "concepto": "SYN-A6-INGRESO",
+          "flujo": "Ingreso",
+          "categoria": "Ingreso",
+          "retornable": "No",
+          "estado": "Pagado",
+          "monto": 1000
+        },
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": {
+        "porQueNoSeResetea": "un movimiento es una transaccion ya registrada con su estado y su fecha. Ponerlo en Pendiente cambiaria su significado (un ingreso cobrado volveria a ser un cobro pendiente) y falsearia el balance del clon. Por eso el store copia el objeto tal cual y solo le cambia el id.",
+        "porQueEsOptIn": "copiar movimientos puede sumar dos veces los ingresos del periodo origen en los totales."
+      },
+      "ms": 1779
+    },
+    {
+      "id": "A21",
+      "bloque": "A",
+      "situacion": "clonar con las tres opciones apagadas",
+      "aserto": "solo se copian las cuatro colecciones de presupuesto; extras, notas y movimientos quedan vacios",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "presupuesto": "las 4 colecciones con el mismo largo, ids nuevos y todo Pendiente",
+        "extras": 0,
+        "notas": "",
+        "movimientos": 0,
+        "notaDelEscenario": "el origen SÍ tiene 2 extras y 4 movimientos: que no viajen es decision del clon, no falta de datos"
+      },
+      "observado": {
+        "abierto": {
+          "abierto": true,
+          "opciones": [
+            " :: -- No clonar (mes vacío) --",
+            "syn-mes-a :: Clonar gastos recurrentes de SYN Mes A",
+            "syn-mes-b :: Clonar gastos recurrentes de SYN Mes B",
+            "syn-mes-c-8679 :: Clonar gastos recurrentes de SYN Mes C",
+            "syn-mes-d-0194 :: Clonar gastos recurrentes de SYN Mes D",
+            "a-o-2027-7828 :: Clonar gastos recurrentes de Año 2027",
+            "a-o-2027-8674 :: Clonar gastos recurrentes de Año 2027",
+            "syn-mes-e-0266 :: Clonar gastos recurrentes de SYN Mes E",
+            "syn-mes-f-1983 :: Clonar gastos recurrentes de SYN Mes F",
+            "syn-mes-g-3740 :: Clonar gastos recurrentes de SYN Mes G"
+          ],
+          "valorClone": "syn-mes-a",
+          "nombre": "SYN Mes H",
+          "bloqueOpciones": "grid",
+          "casillas": "extras=false notas=false movimientos=false"
+        },
+        "nuevoId": "syn-mes-h-5519",
+        "comparacion": {
+          "servicios.fijos": {
+            "origen": 9,
+            "clon": 9,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-SF-ALPHA",
+              "SYN-SF-PAGADO",
+              "SYN-A1-FIJO-SERV",
+              "SYN-A10-MONTO-STRING",
+              "SYN-A11-MONTO-CERO",
+              "SYN-A12 Café ☕ ñ",
+              "SYN-A13-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+              "<img src=x onerror=\"window.__XSS=(window.__XSS||0)+1\">",
+              "SYN-A15-DUP"
+            ],
+            "conceptosClon": [
+              "SYN-SF-ALPHA",
+              "SYN-SF-PAGADO",
+              "SYN-A1-FIJO-SERV",
+              "SYN-A10-MONTO-STRING",
+              "SYN-A11-MONTO-CERO",
+              "SYN-A12 Café ☕ ñ",
+              "SYN-A13-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+              "<img src=x onerror=\"window.__XSS=(window.__XSS||0)+1\">",
+              "SYN-A15-DUP"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": [
+              {
+                "concepto": "SYN-SF-PAGADO",
+                "campo": "estado",
+                "origen": "Pagado",
+                "clon": "Pendiente"
+              }
+            ]
+          },
+          "servicios.variables": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-SV-BETA",
+              "SYN-A2-VAR-SERV"
+            ],
+            "conceptosClon": [
+              "SYN-SV-BETA",
+              "SYN-A2-VAR-SERV"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "personales.fijos": {
+            "origen": 3,
+            "clon": 3,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-PF-GAMMA",
+              "SYN-A4-FIJO-PERS",
+              "SYN-A15-DUP"
+            ],
+            "conceptosClon": [
+              "SYN-PF-GAMMA",
+              "SYN-A4-FIJO-PERS",
+              "SYN-A15-DUP"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "personales.variables": {
+            "origen": 2,
+            "clon": 2,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-PV-DELTA",
+              "SYN-A3-VAR-PERS"
+            ],
+            "conceptosClon": [
+              "SYN-PV-DELTA",
+              "SYN-A3-VAR-PERS"
+            ],
+            "estadosClon": [
+              "Pendiente",
+              "Pendiente"
+            ],
+            "diferencias": []
+          },
+          "extras": {
+            "origen": 2,
+            "clon": 0,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-EX-EPSILON",
+              "SYN-A5-EXTRA"
+            ],
+            "conceptosClon": [],
+            "estadosClon": [],
+            "diferencias": []
+          },
+          "movimientos": {
+            "origen": 4,
+            "clon": 0,
+            "idsCompartidos": 0,
+            "conceptosOrigen": [
+              "SYN-A7-GASTO",
+              "SYN-A6-INGRESO",
+              "SYN-MV-INGRESO",
+              "SYN-MV-GASTO"
+            ],
+            "conceptosClon": [],
+            "estadosClon": [],
+            "diferencias": []
+          }
+        },
+        "presupuesto": {
+          "mismoLargo": true,
+          "idsNuevos": true,
+          "todosPendientes": true
+        },
+        "formaDelClon": {
+          "extras": [],
+          "notas": "",
+          "movimientos": []
+        },
+        "extrasOrigen": 2,
+        "movimientosOrigen": 4,
+        "vueltaAlMesA": {
+          "clicked": true
+        },
+        "activoFinal": "syn-mes-a"
+      },
+      "extra": {
+        "guardaDeCompatibilidad": "este caso es el que protege el parametro opcional: con las tres banderas en false el clon tiene que ser identico al clon de antes de que existieran. El equivalente de store (llamar sin `opciones`) se mide aparte, sobre una copia desechable, en `probesDefectos.opcionesDeAddNewMonth`."
+      },
+      "ms": 1747
+    },
+    {
+      "id": "A22",
+      "bloque": "A",
+      "situacion": "el bloque de opciones de clonado solo aplica con un mes real",
+      "aserto": "con \"No clonar\" esta oculto, y al elegir un mes real se muestra",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "bloqueExiste": true,
+        "sinClonar": "oculto",
+        "conMesReal": "visible",
+        "conOtroMesReal": "visible"
+      },
+      "observado": {
+        "abierto": true,
+        "filaExiste": true,
+        "valoresDisponibles": [
+          "",
+          "syn-mes-a",
+          "syn-mes-b",
+          "syn-mes-c-8679",
+          "syn-mes-d-0194",
+          "a-o-2027-7828",
+          "a-o-2027-8674",
+          "syn-mes-e-0266",
+          "syn-mes-f-1983",
+          "syn-mes-g-3740",
+          "syn-mes-h-5519"
+        ],
+        "inicial": {
+          "valor": "syn-mes-a",
+          "display": "grid",
+          "visible": true
+        },
+        "sinClonar": {
+          "valor": "",
+          "display": "none",
+          "visible": false
+        },
+        "conMes": {
+          "valor": "syn-mes-a",
+          "display": "grid",
+          "visible": true
+        },
+        "conOtroMes": {
+          "valor": "syn-mes-b",
+          "display": "grid",
+          "visible": true
+        }
+      },
+      "extra": {
+        "captura": "C:\\Users\\User\\Desktop\\Web de Gastos Mensuales\\odd\\tasks\\capturas\\crud-admin-r4-modal-clonar.png"
+      },
+      "ms": 1249
+    },
+    {
+      "id": "B1",
+      "bloque": "B",
+      "situacion": "borrar gasto, confirm ACEPTAR",
+      "aserto": "el item desaparece, los totales bajan",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "item": "borrado",
+        "totalEgresos": 233,
+        "dialogo": "1 confirm ACEPTADO",
+        "toast": "menciona el concepto borrado"
+      },
+      "observado": {
+        "itemRestante": null,
+        "totalEgresosAntes": 333,
+        "totalEgresosDespues": 233,
+        "dialogos": [
+          {
+            "index": 0,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-SF-ALPHA\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "toast": {
+          "visible": true,
+          "texto": "Gasto \"SYN-SF-ALPHA\" eliminado"
+        },
+        "guardarNDelta": 1
+      },
+      "extra": null,
+      "ms": 1659
+    },
+    {
+      "id": "B2",
+      "bloque": "B",
+      "situacion": "borrar gasto, confirm CANCELAR",
+      "aserto": "el item sigue, y no hubo save()",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "item": "sigue",
+        "totalEgresos": 233,
+        "dialogo": "1 confirm CANCELADO",
+        "guardarNDelta": 0,
+        "setItemRedirigidosDelta": 0
+      },
+      "observado": {
+        "itemRestante": {
+          "id": "syn_sf_2",
+          "concepto": "SYN-SF-PAGADO",
+          "monto": 50,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pagado"
+        },
+        "totalEgresosAntes": 233,
+        "totalEgresosDespues": 233,
+        "dialogos": [
+          {
+            "index": 1,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-SF-PAGADO\"?",
+            "policy": "cancel",
+            "accepted": false
+          }
+        ],
+        "guardarNDelta": 0,
+        "setItemRedirigidosDelta": 0
+      },
+      "extra": null,
+      "ms": 1707
+    },
+    {
+      "id": "B3",
+      "bloque": "B",
+      "situacion": "borrar el ULTIMO item de una coleccion",
+      "aserto": "queda el estado vacio, sin NaN en pantalla",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "largo": 0,
+        "placeholderVacio": true,
+        "nanEnPantalla": 0,
+        "totalEgresos": 188,
+        "subtotalPersonalesVariables": "S/ 0.00"
+      },
+      "observado": {
+        "largo": 0,
+        "vacio": {
+          "tieneVacio": true,
+          "texto": "Sin gastos registrados."
+        },
+        "nan": [],
+        "totalEgresosDespues": 188,
+        "subtotalRenderizado": "S/ 0.00",
+        "dialogos": [
+          {
+            "index": 2,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-PV-DELTA\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ]
+      },
+      "extra": null,
+      "ms": 1728
+    },
+    {
+      "id": "B4",
+      "bloque": "B",
+      "situacion": "borrar movimiento, aceptar",
+      "aserto": "desaparece del feed, totales correctos",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "movimiento": "borrado",
+        "filaEnElFeed": null,
+        "totalEgresosMovimientos": 0
+      },
+      "observado": {
+        "movsRestantes": [
+          "SYN-MV-INGRESO"
+        ],
+        "filaEnElFeed": null,
+        "totalEgresosMovimientosAntes": 200,
+        "despues": 0,
+        "dialogos": [
+          {
+            "index": 3,
+            "type": "confirm",
+            "message": "¿Eliminar movimiento \"SYN-MV-GASTO\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ]
+      },
+      "extra": null,
+      "ms": 1643
+    },
+    {
+      "id": "B5",
+      "bloque": "B",
+      "situacion": "borrar movimiento, cancelar",
+      "aserto": "sigue, sin save()",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "movimiento": "sigue",
+        "totalIngresos": 1000,
+        "dialogo": "1 confirm CANCELADO",
+        "guardarNDelta": 0
+      },
+      "observado": {
+        "movs": [
+          "SYN-MV-INGRESO"
+        ],
+        "totalIngresosAntes": 1000,
+        "despues": 1000,
+        "dialogos": [
+          {
+            "index": 4,
+            "type": "confirm",
+            "message": "¿Eliminar movimiento \"SYN-MV-INGRESO\"?",
+            "policy": "cancel",
+            "accepted": false
+          }
+        ],
+        "guardarNDelta": 0
+      },
+      "extra": null,
+      "ms": 1679
+    },
+    {
+      "id": "B6",
+      "bloque": "B",
+      "situacion": "borrar un id que NO existe",
+      "aserto": "no rompe, y el toast NO dice \"eliminado\"",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": "R1 (app.js:698 descarta el retorno de deleteBudgetItem: el toast afirma \"eliminado\" sin borrar nada)",
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "toast": "NO dice \"eliminado\"",
+        "guardarNDeltaEnElIntentoFallo": 0,
+        "item": "sigue ausente"
+      },
+      "observado": {
+        "toast": {
+          "visible": true,
+          "texto": "No se pudo borrar el gasto \"SYN-PF-GAMMA\": ya no está en los datos."
+        },
+        "dialogos": [
+          {
+            "index": 5,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+            "policy": "accept",
+            "accepted": true
+          },
+          {
+            "index": 6,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "guardarNDeltaEnElIntentoFallo": 0,
+        "guardarNDeltaDelBorradoReal": 1,
+        "itemEnElStore": null
+      },
+      "extra": null,
+      "ms": 3293
+    },
+    {
+      "id": "B7",
+      "bloque": "B",
+      "situacion": "borrar item de un mes NO activo",
+      "aserto": "el mes activo no se entera, el otro queda bien",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "mesVisitado": "syn-mes-b",
+        "mesB_vacio": true,
+        "mesA_intacto": true,
+        "dialogos": 1
+      },
+      "observado": {
+        "mesActivoAlEntrar": "syn-mes-a",
+        "navegacion": {
+          "clicked": true
+        },
+        "mesActivoDuranteElBorrado": "syn-mes-b",
+        "mesB_trasBorrar": [],
+        "mesAIntacto": true,
+        "totalesAIntactos": true,
+        "dialogos": [
+          {
+            "index": 7,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-BF-ZETA\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "guardarNDeltaAlNavegarYBorrar": 1
+      },
+      "extra": {
+        "notaR16": "navegar de mes ejecuta store.save() (app.js:343-347), asi que el delta de guardarN incluye 2 escrituras por navegacion: R16."
+      },
+      "ms": 3170
+    },
+    {
+      "id": "B8",
+      "bloque": "B",
+      "situacion": "borrar el mes ACTIVO, confirm ACEPTAR",
+      "aserto": "el mes sale de meses y mesesOrden, activeMonthId pasa a uno que existe y la vista se redibujo",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "boton": {
+          "existe": true,
+          "adminActionBtn": true,
+          "display": "no none"
+        },
+        "mesesOrden": "sin syn-mes-a (2 -> 1)",
+        "mesBorradoEnElStore": null,
+        "mesActivoAhora": "uno que todavia existe",
+        "dialogo": "1 confirm ACEPTADO que nombra el mes, los 3 numeros y que no se puede deshacer",
+        "reRender": {
+          "pillDelMesBorrado": "ausente",
+          "unaPillActiva": 1,
+          "kpiEgresos": "S/ 0.00"
+        },
+        "toast": "menciona el mes nuevo que quedo activo"
+      },
+      "observado": {
+        "boton": {
+          "existe": true,
+          "title": "Eliminar el período activo",
+          "texto": "Eliminar mes",
+          "clases": "period-new period-new-danger admin-action-btn",
+          "display": "block",
+          "ocupaLayout": true,
+          "adminActionBtn": true
+        },
+        "mesesOrdenAntes": [
+          "syn-mes-a",
+          "syn-mes-b"
+        ],
+        "activoAntes": "syn-mes-a",
+        "pillAntes": [
+          {
+            "texto": "SYN Mes A",
+            "activo": true
+          },
+          {
+            "texto": "SYN Mes B",
+            "activo": false
+          }
+        ],
+        "dialogos": [
+          {
+            "index": 8,
+            "type": "confirm",
+            "message": "¿Eliminar \"SYN Mes A\"? Se borrarán 2 gastos, 1 movimientos y 1 gastos extra de este período. Esta acción no se puede deshacer.",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "textoDelConfirm": "¿Eliminar \"SYN Mes A\"? Se borrarán 2 gastos, 1 movimientos y 1 gastos extra de este período. Esta acción no se puede deshacer.",
+        "confirmNombraElMes": true,
+        "confirmDiceLosCantos": true,
+        "confirmAvisaNoDeshacer": true,
+        "gastosCalculados": 2,
+        "movimientosCalculados": 1,
+        "extrasCalculados": 1,
+        "mesesOrdenDespues": [
+          "syn-mes-b"
+        ],
+        "activoDespues": "syn-mes-b",
+        "formaElMesBorrado": null,
+        "pillDespues": [
+          {
+            "texto": "SYN Mes B",
+            "activo": true
+          }
+        ],
+        "kpiEgresosLeido": "S/ 0.00",
+        "kpiEgresosEsperado": "S/ 0.00",
+        "filaDelMesBorrado": null,
+        "toast": {
+          "visible": true,
+          "texto": "Período \"SYN Mes A\" eliminado. Ahora estás en \"SYN Mes B\"."
+        }
+      },
+      "extra": null,
+      "ms": 1902
+    },
+    {
+      "id": "B9",
+      "bloque": "B",
+      "situacion": "borrar el mes, confirm CANCELAR",
+      "aserto": "no se borra nada, guardar delta 0, y ningun toast afirma el borrado",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "mesesOrden": "sin cambios",
+        "formaDelMes": "sin cambios",
+        "dialogo": "1 confirm CANCELADO",
+        "guardarNDelta": 0,
+        "setItemRedirigidosDelta": 0,
+        "toast": "sin cambios: nada puede afirmar que se elimino"
+      },
+      "observado": {
+        "mesesOrdenAntes": [
+          "syn-mes-b"
+        ],
+        "mesesOrdenDespues": [
+          "syn-mes-b"
+        ],
+        "formaIgual": true,
+        "dialogos": [
+          {
+            "index": 9,
+            "type": "confirm",
+            "message": "¿Eliminar \"SYN Mes B\"? Se borrarán 0 gastos, 0 movimientos y 0 gastos extra de este período. Esta acción no se puede deshacer.",
+            "policy": "cancel",
+            "accepted": false
+          }
+        ],
+        "guardarNDelta": 0,
+        "setItemRedirigidosDelta": 0,
+        "toastAntes": {
+          "visible": true,
+          "texto": "Período \"SYN Mes A\" eliminado. Ahora estás en \"SYN Mes B\"."
+        },
+        "toastDespues": {
+          "visible": false,
+          "texto": "Período \"SYN Mes A\" eliminado. Ahora estás en \"SYN Mes B\"."
+        },
+        "toastIntacto": true,
+        "activoAntes": "syn-mes-b",
+        "activoDespues": "syn-mes-b"
+      },
+      "extra": null,
+      "ms": 1922
+    },
+    {
+      "id": "B10",
+      "bloque": "B",
+      "situacion": "intentar borrar el ULTIMO mes que queda",
+      "aserto": "el store se niega, el mes sigue, guardar delta 0, y no hay toast de exito",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "precondicion": "1 mes en el sistema",
+        "mesesOrden": "sin cambios",
+        "mes": "sigue presente",
+        "mesActivo": "sin cambios",
+        "dialogos": "1 confirm ACEPTADO + 1 alert del store que dice que hay que mantener al menos un mes",
+        "guardarNDelta": 0,
+        "toast": "sin cambios: no puede decir que se elimino"
+      },
+      "observado": {
+        "mesesOrdenAntes": [
+          "syn-mes-b"
+        ],
+        "mesesOrdenDespues": [
+          "syn-mes-b"
+        ],
+        "elMesSigue": true,
+        "formaIgual": true,
+        "activoAntes": "syn-mes-b",
+        "activoDespues": "syn-mes-b",
+        "dialogos": [
+          {
+            "index": 10,
+            "type": "confirm",
+            "message": "¿Eliminar \"SYN Mes B\"? Se borrarán 0 gastos, 0 movimientos y 0 gastos extra de este período. Esta acción no se puede deshacer.",
+            "policy": "accept",
+            "accepted": true
+          },
+          {
+            "index": 11,
+            "type": "alert",
+            "message": "Debes mantener al menos un mes en el sistema.",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "mensajeDelAlert": "Debes mantener al menos un mes en el sistema.",
+        "guardarNDelta": 0,
+        "toastAntes": {
+          "visible": false,
+          "texto": "Período \"SYN Mes A\" eliminado. Ahora estás en \"SYN Mes B\"."
+        },
+        "toastDespues": {
+          "visible": false,
+          "texto": "Período \"SYN Mes A\" eliminado. Ahora estás en \"SYN Mes B\"."
+        },
+        "toastIntacto": true,
+        "afirmaExito": false
+      },
+      "extra": {
+        "porQueImporta": "es el retorno de `deleteMonth` descartado: si el handler no lo mirara, el toast diria \"eliminado\" sobre un mes que sigue ahi. El store ya avisa con `alert()`, asi que un toast ademas seria ruido.",
+        "toastVisibleAlIntentar": false
+      },
+      "ms": 1891
+    },
+    {
+      "id": "C1",
+      "bloque": "C",
+      "situacion": "editar gasto Fijo (concepto + monto)",
+      "aserto": "patch correcto, estado y rango sobreviven",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-C1-EDITADO",
+        "monto": 123.45,
+        "estado": "Pendiente",
+        "rango": "",
+        "tipo": "Fijo",
+        "modalAbierto": false
+      },
+      "observado": {
+        "abrir": {
+          "click": true,
+          "id": "syn_sf_1"
+        },
+        "lenado": {
+          "concepto": "SYN-C1-EDITADO",
+          "monto": "123.45",
+          "rango": "",
+          "rangoVisible": "none",
+          "itemIdEnElForm": "syn_sf_1",
+          "monthIdEnElForm": "syn-mes-a",
+          "tipoReadonly": "Fijo"
+        },
+        "despues": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-C1-EDITADO",
+          "monto": 123.45,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        },
+        "antes": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-SF-ALPHA",
+          "monto": 100,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        },
+        "modalSigueAbierto": false
+      },
+      "extra": null,
+      "ms": 1442
+    },
+    {
+      "id": "C2",
+      "bloque": "C",
+      "situacion": "editar gasto Variable (concepto + monto + rango)",
+      "aserto": "el patch SI lleva rango",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "rango": "35 - 55",
+        "monto": 44.44,
+        "concepto": "SYN-C2-VAR-EDITADO",
+        "estado": "Pendiente"
+      },
+      "observado": {
+        "antes": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-SV-BETA",
+          "monto": 30,
+          "tipo": "Variable",
+          "rango": "20-40",
+          "estado": "Pendiente"
+        },
+        "lenado": {
+          "concepto": "SYN-C2-VAR-EDITADO",
+          "monto": "44.44",
+          "rango": "35 - 55",
+          "rangoVisible": "block",
+          "itemIdEnElForm": "syn_sv_1",
+          "monthIdEnElForm": "syn-mes-a",
+          "tipoReadonly": "Variable"
+        },
+        "despues": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-C2-VAR-EDITADO",
+          "monto": 44.44,
+          "tipo": "Variable",
+          "rango": "35 - 55",
+          "estado": "Pendiente"
+        },
+        "nota": "el rango solo llega si el campo esta visible (app.js:1429-1432), y solo lo esta para tipo Variable"
+      },
+      "extra": null,
+      "ms": 1394
+    },
+    {
+      "id": "C3",
+      "bloque": "C",
+      "situacion": "editar gasto Extra",
+      "aserto": "patch correcto",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-C3-EXTRA-EDITADO",
+        "monto": 99.99,
+        "tipo": "Extra",
+        "estado": "Pagado",
+        "rango": ""
+      },
+      "observado": {
+        "antes": {
+          "id": "syn_ex_1",
+          "concepto": "SYN-EX-EPSILON",
+          "monto": 83,
+          "tipo": "Extra",
+          "rango": "",
+          "estado": "Pagado"
+        },
+        "lenado": {
+          "concepto": "SYN-C3-EXTRA-EDITADO",
+          "monto": "99.99",
+          "rango": "NO-APLICA",
+          "rangoVisible": "none",
+          "itemIdEnElForm": "syn_ex_1",
+          "monthIdEnElForm": "syn-mes-a",
+          "tipoReadonly": "Extra"
+        },
+        "despues": {
+          "id": "syn_ex_1",
+          "concepto": "SYN-C3-EXTRA-EDITADO",
+          "monto": 99.99,
+          "tipo": "Extra",
+          "rango": "",
+          "estado": "Pagado"
+        }
+      },
+      "extra": null,
+      "ms": 1382
+    },
+    {
+      "id": "C4",
+      "bloque": "C",
+      "situacion": "editar movimiento (concepto + monto + fecha)",
+      "aserto": "categoria, retornable, flujo, estado sobreviven",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-C4-MOV-EDITADO",
+        "monto": 1234.56,
+        "fecha": "2026-08-20",
+        "categoria": "Trabajo",
+        "retornable": "No",
+        "flujo": "Ingreso",
+        "estado": "Pagado"
+      },
+      "observado": {
+        "abrir": {
+          "click": true,
+          "botonConDataItemId": false
+        },
+        "precarga": {
+          "concepto": "SYN-MV-INGRESO",
+          "monto": "1000.00",
+          "fecha": "2026-08-05",
+          "flujoReadonly": "Ingreso",
+          "idEnElForm": "syn_mv_1"
+        },
+        "antes": {
+          "id": "syn_mv_1",
+          "fecha": "2026-08-05",
+          "concepto": "SYN-MV-INGRESO",
+          "flujo": "Ingreso",
+          "categoria": "Trabajo",
+          "retornable": "No",
+          "estado": "Pagado",
+          "monto": 1000
+        },
+        "despues": {
+          "id": "syn_mv_1",
+          "fecha": "2026-08-20",
+          "concepto": "SYN-C4-MOV-EDITADO",
+          "flujo": "Ingreso",
+          "categoria": "Trabajo",
+          "retornable": "No",
+          "estado": "Pagado",
+          "monto": 1234.56
+        }
+      },
+      "extra": null,
+      "ms": 1411
+    },
+    {
+      "id": "C5",
+      "bloque": "C",
+      "situacion": "editar con monto \"45.50\"",
+      "aserto": "casteado a numero",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "typeofMonto": "number",
+        "monto": 45.5
+      },
+      "observado": {
+        "tipoEnElStore": "number",
+        "monto": 45.5,
+        "concepto": "SYN-C5-MONTO-STRING"
+      },
+      "extra": null,
+      "ms": 1381
+    },
+    {
+      "id": "C6",
+      "bloque": "C",
+      "situacion": "editar con monto NEGATIVO",
+      "aserto": "bloqueado con aviso, no guardado",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemSinCambios": true,
+        "montoNoGuardado": true
+      },
+      "observado": {
+        "envio": {
+          "enviado": true,
+          "viaRequestSubmit": true,
+          "checkValidity": false
+        },
+        "validacionNativa": {
+          "valorEnElCampo": "-10",
+          "type": "number",
+          "min": "0",
+          "required": true,
+          "valueMissing": false,
+          "rangeUnderflow": true,
+          "rangeOverflow": false,
+          "badInput": false,
+          "formCheckValidity": false
+        },
+        "modalSigueAbierto": true,
+        "dialogosDelFlujoReal": [],
+        "toast": {
+          "visible": true,
+          "texto": "Gasto \"SYN-C5-MONTO-STRING\" actualizado"
+        },
+        "despues": {
+          "id": "syn_pf_1",
+          "concepto": "SYN-C5-MONTO-STRING",
+          "monto": 45.5,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": {
+        "frenoReal": "validacion NATIVA (input type=number min=0); el alert de app.js:1424 no llega a ejecutarse por esta via",
+        "submitCrudoSinValidacionNativa": {
+          "dialogos": [
+            {
+              "index": 12,
+              "type": "alert",
+              "message": "Por favor ingresa un monto válido.",
+              "policy": "accept",
+              "accepted": true
+            }
+          ],
+          "itemDespues": {
+            "id": "syn_pf_1",
+            "concepto": "SYN-C5-MONTO-STRING",
+            "monto": 45.5,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          },
+          "monto": 45.5
+        }
+      },
+      "ms": 2293
+    },
+    {
+      "id": "C7",
+      "bloque": "C",
+      "situacion": "editar con monto NO NUMERICO",
+      "aserto": "bloqueado con aviso",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemSinCambios": true
+      },
+      "observado": {
+        "valorEnElCampo": "",
+        "envio": {
+          "enviado": true,
+          "viaRequestSubmit": true,
+          "checkValidity": false
+        },
+        "validacionNativa": {
+          "valorEnElCampo": "",
+          "type": "number",
+          "min": "0",
+          "required": true,
+          "valueMissing": true,
+          "rangeUnderflow": false,
+          "rangeOverflow": false,
+          "badInput": false,
+          "formCheckValidity": false
+        },
+        "modalSigueAbierto": true,
+        "dialogosDelFlujoReal": [],
+        "despues": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-C2-VAR-EDITADO",
+          "monto": 44.44,
+          "tipo": "Variable",
+          "rango": "35 - 55",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": {
+        "nota": "un input type=number NO puede contener \"abc\": el navegador lo deja en \"\". Asi que el caso prueba el dato de verdad y el guard de la app queda enmascarado por la validacion nativa.",
+        "submitCrudoSinValidacionNativa": {
+          "dialogos": [
+            {
+              "index": 13,
+              "type": "alert",
+              "message": "Por favor ingresa un monto válido.",
+              "policy": "accept",
+              "accepted": true
+            }
+          ],
+          "monto": 44.44,
+          "itemDespues": {
+            "id": "syn_sv_1",
+            "concepto": "SYN-C2-VAR-EDITADO",
+            "monto": 44.44,
+            "tipo": "Variable",
+            "rango": "35 - 55",
+            "estado": "Pendiente"
+          }
+        }
+      },
+      "ms": 2795
+    },
+    {
+      "id": "C8",
+      "bloque": "C",
+      "situacion": "editar con concepto VACIO",
+      "aserto": "bloqueado, y el modal AVISA (hoy cierra en silencio)",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": "R4 (app.js:1422 y 1475: `if (!concepto) return` silencioso, sin aviso)",
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemSinCambios": true,
+        "avisoVisible": true
+      },
+      "observado": {
+        "vacioEstrico": {
+          "envio": {
+            "enviado": true,
+            "viaRequestSubmit": true,
+            "checkValidity": false
+          },
+          "validacionNativa": {
+            "valorEnElCampo": "",
+            "type": "text",
+            "min": null,
+            "required": true,
+            "valueMissing": true,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "badInput": false,
+            "formCheckValidity": false
+          },
+          "toast": {
+            "visible": false,
+            "texto": "Gasto \"SYN-C5-MONTO-STRING\" actualizado"
+          },
+          "itemSinCambios": true
+        },
+        "soloEspacios": {
+          "validacionNativa": {
+            "valorEnElCampo": "    ",
+            "type": "text",
+            "min": null,
+            "required": true,
+            "valueMissing": false,
+            "rangeUnderflow": false,
+            "rangeOverflow": false,
+            "badInput": false,
+            "formCheckValidity": true
+          },
+          "toast": {
+            "visible": false,
+            "texto": "Gasto \"SYN-C5-MONTO-STRING\" actualizado"
+          },
+          "itemSinCambios": true,
+          "dialogos": [
+            {
+              "index": 14,
+              "type": "alert",
+              "message": "El concepto del gasto no puede quedar vacío.",
+              "policy": "accept",
+              "accepted": true
+            }
+          ]
+        },
+        "modalSigueAbierto": true,
+        "dialogos": [
+          {
+            "index": 14,
+            "type": "alert",
+            "message": "El concepto del gasto no puede quedar vacío.",
+            "policy": "accept",
+            "accepted": true
+          }
+        ],
+        "hayAviso": true
+      },
+      "extra": null,
+      "ms": 2873
+    },
+    {
+      "id": "C9",
+      "bloque": "C",
+      "situacion": "editar un id que NO existe",
+      "aserto": "la app no debe decir \"actualizado\" si no cambio nada",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": "R2 (app.js:1436-1438: cierra el modal y muestra \"actualizado\" aunque updateBudgetItem devuelva false)",
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemSinCambios": true,
+        "toast": "NO afirma \"actualizado\"",
+        "guardarNDelta": 0,
+        "modal": "informativo, cualquiera de los dos estados es valido"
+      },
+      "observado": {
+        "idForzado": {
+          "campo": "editExpenseItemId",
+          "valor": "syn_no_existe"
+        },
+        "antes": {
+          "id": "syn_sf_2",
+          "concepto": "SYN-SF-PAGADO",
+          "monto": 50,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pagado"
+        },
+        "despues": {
+          "id": "syn_sf_2",
+          "concepto": "SYN-SF-PAGADO",
+          "monto": 50,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pagado"
+        },
+        "toast": {
+          "visible": true,
+          "texto": "El gasto que intentas editar ya no existe."
+        },
+        "modalAbierto": false,
+        "afirmaExito": false,
+        "guardarNDelta": 0
+      },
+      "extra": null,
+      "ms": 2045
+    },
+    {
+      "id": "C10",
+      "bloque": "C",
+      "situacion": "editar y RECARGAR",
+      "aserto": "el cambio sigue ahi",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-C10-SOBREVIVE",
+        "monto": 321
+      },
+      "observado": {
+        "antesDeRecargar": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-C10-SOBREVIVE",
+          "monto": 321,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        },
+        "despuesDeRecargar": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-C10-SOBREVIVE",
+          "monto": 321,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": null,
+      "ms": 10497
+    },
+    {
+      "id": "D1",
+      "bloque": "D",
+      "situacion": "toggle Fijo Pendiente -> Pagado",
+      "aserto": "cambia, totales de pagado suben",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "estado": "Pagado",
+        "pagadosCount": 3,
+        "montoPagadoPresupuesto": 233
+      },
+      "observado": {
+        "click": {
+          "click": true,
+          "id": "syn_sf_1"
+        },
+        "antes": {
+          "pagadosCount": 2,
+          "montoPagadoPresupuesto": 133
+        },
+        "despues": {
+          "pagadosCount": 3,
+          "montoPagadoPresupuesto": 233
+        },
+        "fila": {
+          "id": "syn_sf_1",
+          "texto": "SYN-SF-ALPHA Fijo Pagado S/ 100.00",
+          "tags": [
+            "Fijo"
+          ],
+          "montoTexto": "S/ 100.00",
+          "estadoTexto": "Pagado",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        },
+        "toast": {
+          "visible": true,
+          "texto": "Gasto marcado como \"Pagado\""
+        }
+      },
+      "extra": null,
+      "ms": 824
+    },
+    {
+      "id": "D2",
+      "bloque": "D",
+      "situacion": "toggle Variable Pendiente",
+      "aserto": "abre el modal de pago variable, no hace toggle directo",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "modalPagoVariable": "abierto",
+        "itemSinCambios": true,
+        "montoPrecargado": "30.00"
+      },
+      "observado": {
+        "click": {
+          "click": true,
+          "id": "syn_sv_1"
+        },
+        "modalAbierto": true,
+        "camposDelModal": {
+          "montoEnElCampo": "999",
+          "modalAbierto": true,
+          "titulo": "SYN-SV-BETA",
+          "estimado": "Presupuestado: S/ 30.00",
+          "badgeRango": "Rango sugerido: 20-40",
+          "itemId": "syn_sv_1"
+        },
+        "antes": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-SV-BETA",
+          "monto": 30,
+          "tipo": "Variable",
+          "rango": "20-40",
+          "estado": "Pendiente"
+        },
+        "despues": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-SV-BETA",
+          "monto": 30,
+          "tipo": "Variable",
+          "rango": "20-40",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": null,
+      "ms": 843
+    },
+    {
+      "id": "D3",
+      "bloque": "D",
+      "situacion": "pagar variable con monto valido",
+      "aserto": "monto actualizado Y estado Pagado",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "monto": 37.77,
+        "estado": "Pagado",
+        "modal": "cerrado"
+      },
+      "observado": {
+        "item": {
+          "id": "syn_sv_1",
+          "concepto": "SYN-SV-BETA",
+          "monto": 37.77,
+          "tipo": "Variable",
+          "rango": "20-40",
+          "estado": "Pagado"
+        },
+        "modalAbierto": false,
+        "toast": {
+          "visible": true,
+          "texto": "Gasto pagado por S/ 37.77"
+        },
+        "fila": {
+          "id": "syn_sv_1",
+          "texto": "SYN-SV-BETA Variable Rango: 20-40 Pagado S/ 37.77",
+          "tags": [
+            "Variable",
+            "Rango: 20-40"
+          ],
+          "montoTexto": "S/ 37.77",
+          "estadoTexto": "Pagado",
+          "tieneImg": false,
+          "ancho": 984,
+          "alto": 53
+        }
+      },
+      "extra": null,
+      "ms": 896
+    },
+    {
+      "id": "D4",
+      "bloque": "D",
+      "situacion": "pagar variable con monto NEGATIVO",
+      "aserto": "bloqueado",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemSinCambios": true,
+        "montoNoGuardado": true
+      },
+      "observado": {
+        "validacionNativa": {
+          "valorEnElCampo": "-5",
+          "type": "number",
+          "min": "0",
+          "required": true,
+          "valueMissing": false,
+          "rangeUnderflow": true,
+          "rangeOverflow": false,
+          "badInput": false,
+          "formCheckValidity": false
+        },
+        "dialogosDelFlujoReal": [],
+        "modalSigueAbierto": true,
+        "antes": {
+          "id": "syn_pv_1",
+          "concepto": "SYN-PV-DELTA",
+          "monto": 45,
+          "tipo": "Variable",
+          "rango": "10-80",
+          "estado": "Pendiente"
+        },
+        "despues": {
+          "id": "syn_pv_1",
+          "concepto": "SYN-PV-DELTA",
+          "monto": 45,
+          "tipo": "Variable",
+          "rango": "10-80",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": {
+        "frenoReal": "validacion NATIVA (type=number min=0); el alert de app.js:1324 queda enmascarado",
+        "submitCrudoSinValidacionNativa": {
+          "dialogos": [
+            {
+              "index": 15,
+              "type": "alert",
+              "message": "Por favor ingresa un monto válido.",
+              "policy": "accept",
+              "accepted": true
+            }
+          ],
+          "itemDespues": {
+            "id": "syn_pv_1",
+            "concepto": "SYN-PV-DELTA",
+            "monto": 45,
+            "tipo": "Variable",
+            "rango": "10-80",
+            "estado": "Pendiente"
+          }
+        }
+      },
+      "ms": 2379
+    },
+    {
+      "id": "D5",
+      "bloque": "D",
+      "situacion": "toggle de un id INEXISTENTE",
+      "aserto": "no rompe y no deja estado = null en memoria",
+      "tipo": "requerimiento",
+      "documentaHueco": true,
+      "defecto": "R3 (app.js:677-678: toggleBudgetItemStatus devuelve null en un fallo y el handler hace item.estado = null)",
+      "notaDefecto": "El aserto de la matriz es \"no rompe\"; el criterio de este caso agrega que tampoco debe corromper el estado. Se mide sobre una fila desfasada (vista vieja), la unica forma real de llegar al fallo.",
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "excepcion": 0,
+        "estadoEnElObjeto": "no puede quedar en null",
+        "toast": "no puede decir \"null\"",
+        "totalesSinTocarPorElToggleDesfasado": true
+      },
+      "observado": {
+        "excepciones": 0,
+        "excepcionesTrasElBorradoReal": 0,
+        "estadoEnElItemViejo": "\"Pagado\"",
+        "toast": {
+          "visible": true,
+          "texto": "No se pudo cambiar el estado: el gasto ya no existe."
+        },
+        "afirmaNull": false,
+        "itemEnElStore": null,
+        "totalesDespuesDelBorrado": 290.77,
+        "totalesDespuesDelToggleDesfasado": 290.77,
+        "totalesIntactos": true,
+        "dialogos": [
+          {
+            "index": 16,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-SF-PAGADO\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ]
+      },
+      "extra": null,
+      "ms": 3902
+    },
+    {
+      "id": "E1",
+      "bloque": "E",
+      "situacion": "sesion admin REAL",
+      "aserto": ".admin-action-btn visibles: agregar, mes, editar, eliminar",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "readOnlyMode": false,
+        "adminVisibles": "todos los .admin-action-btn",
+        "displays": "ninguno en none"
+      },
+      "observado": {
+        "displays": {
+          "#btnHeaderAddBudget": "block",
+          "#btnHeaderAddIncome": "block",
+          "#btnOpenNewMonthModal": "block",
+          ".btn-quick-add-service": "flex",
+          ".btn-quick-add-personal": "flex",
+          ".btn-quick-add-extra": "flex",
+          ".btn-edit-expense": "flex",
+          ".btn-delete-expense": "flex",
+          ".btn-edit-tx": "flex",
+          ".btn-delete-tx": "flex"
+        },
+        "adminTotal": 25,
+        "adminVisibles": 25,
+        "bodyClass": "",
+        "labelModo": "Modo Administrador",
+        "sesion": {
+          "porFuncion": {
+            "rol": "admin",
+            "configurado": true
+          },
+          "directa": {
+            "rol": "admin",
+            "configurado": true
+          },
+          "isAdminEsPrivadoDelClosure": true
+        }
+      },
+      "extra": {
+        "sesion": "obtenerSesion() es alcanzable (funcion top-level de app.js); `sesionActual` es binding de script y tambien se lee; `isAdmin` es let dentro del closure de DOMContentLoaded y NO es observable: se reporta por sus dos efectos observables, body.read-only-mode y #authModeLabel."
+      },
+      "ms": 3
+    },
+    {
+      "id": "E2",
+      "bloque": "E",
+      "situacion": "sesion lector",
+      "aserto": "los .admin-action-btn ocultos",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "readOnlyMode": true,
+        "adminVisibles": 0,
+        "displays": "todos en none"
+      },
+      "observado": {
+        "displays": {
+          "#btnHeaderAddBudget": "none",
+          "#btnOpenNewMonthModal": "none",
+          ".btn-quick-add-service": "none",
+          ".btn-edit-expense": "none",
+          ".btn-delete-expense": "none",
+          ".btn-edit-tx": "none",
+          ".btn-delete-tx": "none"
+        },
+        "adminTotal": 25,
+        "adminVisibles": 0,
+        "bodyClass": "read-only-mode",
+        "labelModo": "Solo Lectura",
+        "sesion": {
+          "porFuncion": {
+            "rol": "lector",
+            "configurado": true
+          },
+          "directa": {
+            "rol": "lector",
+            "configurado": true
+          },
+          "isAdminEsPrivadoDelClosure": true
+        }
+      },
+      "extra": null,
+      "ms": 2
+    },
+    {
+      "id": "E3",
+      "bloque": "E",
+      "situacion": "lector CAMBIA PLATA por el modal de pago variable",
+      "aserto": "el gate deberia cerrarlo; la matriz documenta que hoy no esta gateado",
+      "tipo": "requerimiento",
+      "documentaHueco": true,
+      "defecto": "G2 - Hallazgos/Gate de admin: el .btn-status-toggle no lleva admin-action-btn, asi que el lector abre el modal de pago y cambia monto + estado",
+      "notaDefecto": "La matriz documenta que hoy NO esta gateado. El caso se escribe contra el comportamiento correcto, asi que observar al lector escribiendo es un FAIL honesto y no una expectativa mal puesta.",
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "lectorCambiaPlata": false,
+        "lectorCambiaEstado": false,
+        "toggleOculto": "si el gate fuera real"
+      },
+      "observado": {
+        "displayDelToggle": "none",
+        "abrioModal": false,
+        "montoAntes": 30,
+        "montoDespues": 30,
+        "estadoAntes": "Pendiente",
+        "estadoDespues": "Pendiente",
+        "cambioDinero": false,
+        "cambioEstado": false,
+        "toast": {
+          "visible": true,
+          "texto": "Solo el administrador puede registrar el pago de un gasto variable."
+        },
+        "bodyClass": "read-only-mode",
+        "guardarN": 1
+      },
+      "extra": {
+        "holes": "G2 (modal de pago variable sin gate)"
+      },
+      "ms": 1635
+    },
+    {
+      "id": "E4",
+      "bloque": "E",
+      "situacion": "lector hace TOGGLE de estado",
+      "aserto": "el gate deberia cerrarlo; la matriz documenta que hoy no esta gateado",
+      "tipo": "requerimiento",
+      "documentaHueco": true,
+      "defecto": "G1 - Hallazgos/Gate de admin: .btn-status-toggle no lleva admin-action-btn",
+      "notaDefecto": "La matriz documenta que hoy NO esta gateado, y el caso se escribe contra el comportamiento correcto: la fila queda en FAIL.",
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "estadoCambiado": false
+      },
+      "observado": {
+        "displayDelToggle": "none",
+        "estadoAntes": "Pendiente",
+        "estadoDespues": "Pendiente",
+        "cambio": false,
+        "toast": {
+          "visible": true,
+          "texto": "Solo el administrador puede cambiar el estado de un gasto."
+        },
+        "bodyClass": "read-only-mode"
+      },
+      "extra": {
+        "holes": "G1 (toggle de estado sin gate)"
+      },
+      "ms": 849
+    },
+    {
+      "id": "E5",
+      "bloque": "E",
+      "situacion": "lector EDITA LAS NOTAS del mes",
+      "aserto": "el gate deberia cerrarlo; la matriz documenta que hoy no esta gateado",
+      "tipo": "requerimiento",
+      "documentaHueco": true,
+      "defecto": "G3 - Hallazgos/Gate de admin: #btnOpenNotesModal (class btn-topbar-notes) no lleva admin-action-btn y store.updateNotes no tiene guard",
+      "notaDefecto": "La matriz documenta que hoy NO esta gateado. El guardado es real: se comprueba tambien contra la nube simulada.",
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "notasSinCambios": true
+      },
+      "observado": {
+        "displayDelBotonNotas": "none",
+        "abrioModal": {
+          "abierto": false,
+          "valor": "SYN notas del mes A"
+        },
+        "escritura": {
+          "valor": "SYN-NOTAS-ESCRITAS-POR-LECTOR",
+          "feedback": "Guardando notas..."
+        },
+        "notasAntes": "SYN notas del mes A",
+        "notasDespues": "SYN notas del mes A",
+        "cambio": false,
+        "persistidoEnLaNubeSimulada": false,
+        "bodyClass": "read-only-mode"
+      },
+      "extra": {
+        "holes": "G3 (notas del mes sin gate)"
+      },
+      "ms": 2401
+    },
+    {
+      "id": "E6",
+      "bloque": "E",
+      "situacion": "lector envia el form de agregar movimiento",
+      "aserto": "el boton esta gateado, pero el form no; la matriz documenta que hoy no esta gateado",
+      "tipo": "requerimiento",
+      "documentaHueco": true,
+      "defecto": "G4/G6 - Hallazgos/Gate de admin: los forms de alta/edicion solo ocultan el boton (body.read-only-mode .admin-action-btn); el form no tiene guard",
+      "notaDefecto": "La matriz documenta que hoy NO esta gateado. Como el boton esta oculto de verdad, el caso envia el form directamente: es lo que harian los 6 forms de la app si el boton no estuviera oculto.",
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "movimientoCreado": false
+      },
+      "observado": {
+        "displayDelBoton": "none",
+        "botonRealmenteOculto": true,
+        "movimientosAntes": 2,
+        "movimientosDespues": 2,
+        "creadoPorElForm": false,
+        "toast": {
+          "visible": true,
+          "texto": "Solo el administrador puede registrar un movimiento."
+        },
+        "bodyClass": "read-only-mode",
+        "creado": []
+      },
+      "extra": {
+        "holes": "G4/G6 (form de alta/edicion sin guard: el boton se oculta, el form no)"
+      },
+      "ms": 847
+    },
+    {
+      "id": "E7",
+      "bloque": "E",
+      "situacion": "lector fuerza el click en #btnDeleteMonth",
+      "aserto": "el boton esta oculto y el click forzado no borra nada ni guarda",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "display": "none",
+        "ocupaLayout": false,
+        "esAdminActionBtn": true,
+        "mesesOrden": "sin cambios",
+        "guardarNDelta": 0,
+        "dialogos": 0,
+        "toast": "solo el administrador puede eliminar un período"
+      },
+      "observado": {
+        "boton": {
+          "existe": true,
+          "title": "Eliminar el período activo",
+          "texto": "Eliminar mes",
+          "clases": "period-new period-new-danger admin-action-btn",
+          "display": "none",
+          "ocupaLayout": false,
+          "adminActionBtn": true
+        },
+        "mesesOrdenAntes": [
+          "syn-mes-a",
+          "syn-mes-b"
+        ],
+        "mesesOrdenDespues": [
+          "syn-mes-a",
+          "syn-mes-b"
+        ],
+        "formaIgual": true,
+        "activoAntes": "syn-mes-a",
+        "activoDespues": "syn-mes-a",
+        "dialogos": [],
+        "guardarNDelta": 0,
+        "toast": {
+          "visible": true,
+          "texto": "Solo el administrador puede eliminar un período."
+        },
+        "avisaElGate": true,
+        "bodyClass": "read-only-mode"
+      },
+      "extra": {
+        "porQueNoHayConfirm": "exigirAdmin() corta antes del confirm: si el gate fallara, el caso veria 1 confirm y el store intentaria borrar."
+      },
+      "ms": 1912
+    },
+    {
+      "id": "F1",
+      "bloque": "F",
+      "situacion": "crear y recargar",
+      "aserto": "sigue ahi",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "mismoItemAntesYDespues": true,
+        "concepto": "SYN-F1-CREATE-RELOAD"
+      },
+      "observado": {
+        "antes": {
+          "ruta": "servicios.fijos",
+          "item": {
+            "id": "id_zzrakanp5_1791058007183",
+            "concepto": "SYN-F1-CREATE-RELOAD",
+            "monto": 66,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          }
+        },
+        "despues": {
+          "ruta": "servicios.fijos",
+          "item": {
+            "id": "id_zzrakanp5_1791058007183",
+            "concepto": "SYN-F1-CREATE-RELOAD",
+            "monto": 66,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          }
+        }
+      },
+      "extra": null,
+      "ms": 9937
+    },
+    {
+      "id": "F2",
+      "bloque": "F",
+      "situacion": "editar y recargar",
+      "aserto": "el cambio sigue",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "concepto": "SYN-F2-EDIT-RELOAD",
+        "monto": 77.77
+      },
+      "observado": {
+        "antes": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-F2-EDIT-RELOAD",
+          "monto": 77.77,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        },
+        "despues": {
+          "id": "syn_sf_1",
+          "concepto": "SYN-F2-EDIT-RELOAD",
+          "monto": 77.77,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        }
+      },
+      "extra": null,
+      "ms": 10591
+    },
+    {
+      "id": "F3",
+      "bloque": "F",
+      "situacion": "borrar y recargar",
+      "aserto": "sigue borrado",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "itemAntes": "presente",
+        "itemDespuesDeBorrar": null,
+        "itemDespuesDeRecargar": null,
+        "largo": "1 -> 0 -> 0"
+      },
+      "observado": {
+        "itemAntes": {
+          "id": "syn_pf_1",
+          "concepto": "SYN-PF-GAMMA",
+          "monto": 25,
+          "tipo": "Fijo",
+          "rango": "",
+          "estado": "Pendiente"
+        },
+        "largoAntes": 1,
+        "itemTrasBorrar": null,
+        "largoTrasBorrar": 0,
+        "itemTrasRecargar": null,
+        "largoTrasRecargar": 0,
+        "dialogos": [
+          {
+            "index": 17,
+            "type": "confirm",
+            "message": "¿Eliminar gasto \"SYN-PF-GAMMA\"?",
+            "policy": "accept",
+            "accepted": true
+          }
+        ]
+      },
+      "extra": null,
+      "ms": 10756
+    },
+    {
+      "id": "F4",
+      "bloque": "F",
+      "situacion": "los graficos y las KPIs",
+      "aserto": "coinciden con los totales recalculados",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "kpis": {
+          "ingresos": "S/ 1,000.00",
+          "egresos": "S/ 351.77",
+          "balance": "S/ 667.00",
+          "pct": "100.0%",
+          "pagos": "2 de 6 gastos pagados"
+        },
+        "renderGlobalCharts": true,
+        "lienzosPintados": ">= 2"
+      },
+      "observado": {
+        "kpisEsperados": {
+          "ingresos": "S/ 1,000.00",
+          "egresos": "S/ 351.77",
+          "balance": "S/ 667.00",
+          "pct": "100.0%",
+          "pagos": "2 de 6 gastos pagados"
+        },
+        "kpisLeidos": {
+          "ingresos": "S/ 1,000.00",
+          "egresos": "S/ 351.77",
+          "balance": "S/ 667.00",
+          "pct": "100.0%",
+          "pagos": "2 de 6 gastos pagados"
+        },
+        "graficos": {
+          "existeRenderGlobalCharts": true,
+          "lienzos": [
+            {
+              "id": "chartTrendBar",
+              "w": 984,
+              "h": 280,
+              "vacio": 26070
+            },
+            {
+              "id": "chartCategoryDonut",
+              "w": 420,
+              "h": 280,
+              "vacio": 25646
+            },
+            {
+              "id": "globalBarChart",
+              "falta": true
+            },
+            {
+              "id": "globalDonutChart",
+              "falta": true
+            }
+          ],
+          "viewPanelActiva": true
+        },
+        "lienzosConPixeles": [
+          "chartTrendBar",
+          "chartCategoryDonut"
+        ]
+      },
+      "extra": {
+        "nota": "el KPI se compara contra window.formatCurrency del propio producto: lo que se verifica es que el DOM y calculateMonthTotals no se contradicen.",
+        "notaLienzos": "los ids globalBarChart / globalDonutChart que charts.js consulta como alternativa NO existen en index.html; los dos lienzos reales son chartTrendBar y chartCategoryDonut. No es un fallo: charts.js:189,284 ya resuelve el primero que exista."
+      },
+      "ms": 2142
+    },
+    {
+      "id": "F5",
+      "bloque": "F",
+      "situacion": "dos meses, tocar uno",
+      "aserto": "el otro no se mueve",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "elItemSoloEnElMesTocado": true,
+        "mesAIntacto": true
+      },
+      "observado": {
+        "activoEnB": "syn-mes-b",
+        "itemEnB": {
+          "ruta": "servicios.fijos",
+          "item": {
+            "id": "id_f8sgzvl52_1791058041456",
+            "concepto": "SYN-F5-SOLO-EN-B",
+            "monto": 500,
+            "tipo": "Fijo",
+            "rango": "",
+            "estado": "Pendiente"
+          }
+        },
+        "mesAIntacto": true,
+        "totalesAIntactos": true,
+        "servFijosEnB": [
+          "SYN-BF-ZETA",
+          "SYN-F5-SOLO-EN-B"
+        ]
+      },
+      "extra": null,
+      "ms": 2609
+    },
+    {
+      "id": "F6",
+      "bloque": "F",
+      "situacion": "toda la corrida",
+      "aserto": "0 excepciones, 0 console.error, 0 respuestas >= 400",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "excepciones": 0,
+        "consoleError": 0,
+        "respuestas400": 0
+      },
+      "observado": {
+        "excepciones": [],
+        "consoleError": [],
+        "respuestas400": []
+      },
+      "extra": null,
+      "ms": 0
+    },
+    {
+      "id": "F7",
+      "bloque": "F",
+      "situacion": "hash del localStorage REAL",
+      "aserto": "identico antes y despues (aislamiento probado)",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "hashRealAntes": 2457901690,
+        "hashRealDespues": 2457901690,
+        "escriturasRealesDeLaClaveDeLaApp": 0,
+        "eventosDOMStorageDeLaApp": 0
+      },
+      "observado": {
+        "hashRealAntes": 2457901690,
+        "hashRealDespues": 2457901690,
+        "bytesAntes": 8100,
+        "bytesDespues": 8100,
+        "clavesAntes": [
+          "control_gastos_mensuales_db_v1"
+        ],
+        "clavesDespues": [
+          "control_gastos_mensuales_db_v1"
+        ],
+        "escriturasRealesDeLaClaveDeLaApp": [],
+        "eventosDOMStorageDeLaApp": [],
+        "setItemRedirigidos": 21,
+        "note": "setItemRedirigidos > 0 prueba que la app SI intento persistir: sin eso el aislamiento no probaria nada."
+      },
+      "extra": null,
+      "ms": 0
+    },
+    {
+      "id": "F8",
+      "bloque": "F",
+      "situacion": "escrituras a Supabase",
+      "aserto": "0 (el stub intercepta guardar y nunca abre un socket)",
+      "tipo": "requerimiento",
+      "documentaHueco": false,
+      "defecto": null,
+      "notaDefecto": null,
+      "verdict": "PASS",
+      "motivo": null,
+      "esperado": {
+        "requestsA_supabase_co": 0,
+        "elProductoIntentoAsignar_gastosRemoto_y_elSetterLoTrago": "si (>0)"
+      },
+      "observado": {
+        "requestsASupabase": {
+          "requestsTotales": 122,
+          "requestsASupabase": 0,
+          "requestsASupabaseMuestra": [],
+          "hosts": [
+            "",
+            "cdn.jsdelivr.net"
+          ]
+        },
+        "guardarInterceptados": 21,
+        "cargarInterceptados": 12,
+        "asignacionesTragadasPorElSetter": 12,
+        "metodoDeLaPropiedad": "{\"getterDevuelveElStub\":true,\"haySupabaseCliente\":true}"
+      },
+      "extra": {
+        "cadenaDePrueba": [
+          "1. el getter de window.gastosRemoto SIEMPRE devuelve el stub y el setter traga la asignacion de supabase-store.js:372",
+          "2. cada store.save() termina en guardar() del stub, que solo cuenta y actualiza una nube en memoria",
+          "3. 0 requests a *.supabase.co en toda la corrida (Network.requestWillBeSent)",
+          "4. el localStorage real de la clave de la app quedo con el mismo hash (DOMStorage, leido desde node)"
+        ]
+      },
+      "ms": 0
+    }
+  ],
+  "resumen": {
+    "A": {
+      "total": 22,
+      "PASS": 22,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    "B": {
+      "total": 10,
+      "PASS": 10,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    "C": {
+      "total": 10,
+      "PASS": 10,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    "D": {
+      "total": 5,
+      "PASS": 5,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    "E": {
+      "total": 7,
+      "PASS": 7,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    "F": {
+      "total": 8,
+      "PASS": 8,
+      "FAIL": 0,
+      "SKIP": 0
+    }
+  },
+  "totales": {
+    "total": 62,
+    "PASS": 62,
+    "FAIL": 0,
+    "SKIP": 0
+  },
+  "hallazgos": {
+    "sesionAdmin": {
+      "porFuncion": {
+        "rol": "admin",
+        "configurado": true
+      },
+      "directa": {
+        "rol": "admin",
+        "configurado": true
+      },
+      "isAdminEsPrivadoDelClosure": true,
+      "dom": {
+        "bodyClass": "",
+        "readOnly": false,
+        "filasGasto": 6,
+        "filasMov": 2,
+        "adminTotal": 25,
+        "adminVisibles": 25,
+        "modalRolActivo": true,
+        "labelModo": "Modo Administrador",
+        "kpiIngresos": "S/ 1,000.00",
+        "kpiEgresos": "S/ 333.00",
+        "kpiBalance": "S/ 667.00",
+        "kpiPct": "100.0%",
+        "pagosLabel": "2 de 6 gastos pagados",
+        "subtotalPersVar": "S/ 45.00",
+        "subtotalExtras": "S/ 83.00"
+      },
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 2,
+        "setItemRedirigidos": 1,
+        "setItemReales": 2,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 2,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.21602070430459330.6716709655008202",
+          "setItem:lswt-0.21602070430459330.6716709655008202",
+          "removeItem:lswt-0.21602070430459330.6716709655008202",
+          "removeItem:lswt-0.21602070430459330.6716709655008202"
+        ]
+      }
+    },
+    "sesionAdminReal": {
+      "sesion": {
+        "porFuncion": {
+          "rol": "admin",
+          "configurado": true
+        },
+        "directa": {
+          "rol": "admin",
+          "configurado": true
+        },
+        "isAdminEsPrivadoDelClosure": true
+      },
+      "dom": {
+        "bodyClass": "",
+        "readOnly": false,
+        "filasGasto": 6,
+        "filasMov": 2,
+        "adminTotal": 25,
+        "adminVisibles": 25,
+        "modalRolActivo": true,
+        "labelModo": "Modo Administrador",
+        "kpiIngresos": "S/ 1,000.00",
+        "kpiEgresos": "S/ 333.00",
+        "kpiBalance": "S/ 667.00",
+        "kpiPct": "100.0%",
+        "pagosLabel": "2 de 6 gastos pagados",
+        "subtotalPersVar": "S/ 45.00",
+        "subtotalExtras": "S/ 83.00"
+      },
+      "contadores": {
+        "modo": "admin",
+        "getItemRedirigidos": 2,
+        "getItemReales": 7,
+        "setItemRedirigidos": 1,
+        "setItemReales": 7,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 7,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "setItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421",
+          "removeItem:lswt-0.91725782508731420.1422955413526421"
+        ]
+      }
+    },
+    "roleModalAbreEnSesionAdmin": {
+      "observado": true,
+      "nota": "app.js:232-236 programa openRoleSelectModal() a los 60 ms sin mirar la sesion; aplicarSesion() (l.165-170) la cierra antes. El setTimeout vuelve a abrirla. Visible para el usuario con sesion admin real.",
+      "comoLoOcultaElArnes": "HIDE_ROLE_MODAL lo oculta por CSS. Ninguna aserto depende de ese modal."
+    },
+    "sesionLectorReal": {
+      "sesion": {
+        "porFuncion": {
+          "rol": "lector",
+          "configurado": true
+        },
+        "directa": {
+          "rol": "lector",
+          "configurado": true
+        },
+        "isAdminEsPrivadoDelClosure": true
+      },
+      "dom": {
+        "bodyClass": "read-only-mode",
+        "readOnly": true,
+        "filasGasto": 6,
+        "filasMov": 2,
+        "adminTotal": 25,
+        "adminVisibles": 0,
+        "modalRolActivo": true,
+        "labelModo": "Solo Lectura",
+        "kpiIngresos": "S/ 1,000.00",
+        "kpiEgresos": "S/ 333.00",
+        "kpiBalance": "S/ 667.00",
+        "kpiPct": "100.0%",
+        "pagosLabel": "2 de 6 gastos pagados",
+        "subtotalPersVar": "S/ 45.00",
+        "subtotalExtras": "S/ 83.00"
+      },
+      "contadores": {
+        "modo": "lector",
+        "getItemRedirigidos": 2,
+        "getItemReales": 8,
+        "setItemRedirigidos": 1,
+        "setItemReales": 8,
+        "removeItemRedirigidos": 0,
+        "removeItemReales": 8,
+        "guardarN": 1,
+        "cargarN": 1,
+        "asignadoPorProducto": 1,
+        "clavesReales": [
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "setItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494",
+          "removeItem:lswt-0.40294026480186650.8558420373366494"
+        ]
+      }
+    }
+  },
+  "casoFaltante": [],
+  "matrizEsperada": {
+    "A": [
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+      "A9",
+      "A10",
+      "A11",
+      "A12",
+      "A13",
+      "A14",
+      "A15",
+      "A16",
+      "A17",
+      "A18",
+      "A19",
+      "A20",
+      "A21",
+      "A22"
+    ],
+    "B": [
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8",
+      "B9",
+      "B10"
+    ],
+    "C": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "C10"
+    ],
+    "D": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+    ],
+    "E": [
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "E5",
+      "E6",
+      "E7"
+    ],
+    "F": [
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8"
+    ]
+  },
+  "casosFaltantesDeLaMatriz": []
+}

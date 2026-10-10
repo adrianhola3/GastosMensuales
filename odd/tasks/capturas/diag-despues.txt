@@ -1,0 +1,183 @@
+﻿
+=== 0. CONTROLES DE ESCRITURA EN MODO LECTOR (display) ===
+{
+  "bodyReadOnly": true,
+  "altaServicios": "none",
+  "altaPersonales": "none",
+  "altaExtras": "none",
+  "altaGastoHeader": "none",
+  "altaIngresoHeader": "none",
+  "altaIngresoMov": "none",
+  "altaGastoMov": "none",
+  "nuevoMes": "none",
+  "nota": "none",
+  "toggleFila": "none"
+}
+
+=== 1. ALTA DE EXTRAS (modo admin) ===
+{
+  "existe": true,
+  "texto": "A├▒adir",
+  "colorTexto": "rgb(29, 29, 31)",
+  "fondo": "rgb(242, 242, 245)",
+  "rect": {
+    "x": 266,
+    "y": 379.1,
+    "w": 161,
+    "h": 26
+  },
+  "dentroDelViewport": true,
+  "grupoY": 807.1,
+  "grupoH": 94.7,
+  "ordenEnDoc": [
+    "noSegmentsSelectedNotice",
+    "ledgerGroupServicios",
+    "ledgerGroupPersonales",
+    "ledgerGroupMovimientos",
+    "ledgerGroupExtras"
+  ]
+}
+
+=== 2. CLICK EN EL BOTON DE EXTRAS ===
+{
+  "modalActivo": true,
+  "tituloModal": "A├▒adir gasto al presupuesto",
+  "seccionSeleccionada": "extras",
+  "subCampoDisplay": "none",
+  "rangoCampoDisplay": "none"
+}
+
+=== 3. FLUJO COMPLETO DE ALTA EN EXTRAS ===
+{
+  "modalCerrado": true,
+  "extrasEnStore": [
+    "PRUEBA-ALFA Extra|666.66|Extra",
+    "PRUEBA EXTRA DIAGNOSTICO|42.5|Extra"
+  ],
+  "filasExtrasRenderizadas": 2,
+  "conteoGrupoExtras": "2",
+  "subtotalExtras": "S/ 709.16"
+}
+
+=== 4. GEOMETRIA ===
+{
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "mainScrollHeight": 971,
+  "mainClientHeight": 971,
+  "scrollTotalPagina": 1019,
+  "barraY": 48,
+  "barraH": 185.2,
+  "grupos": [
+    {
+      "grupo": "ledgerGroupServicios",
+      "headY": 241.2,
+      "primeraFilaY": 273.2,
+      "filas": 3
+    },
+    {
+      "grupo": "ledgerGroupPersonales",
+      "headY": 427.3,
+      "primeraFilaY": 459.3,
+      "filas": 2
+    },
+    {
+      "grupo": "ledgerGroupMovimientos",
+      "headY": 567.6,
+      "primeraFilaY": 644.7,
+      "filas": 3
+    },
+    {
+      "grupo": "ledgerGroupExtras",
+      "headY": 824.1,
+      "primeraFilaY": 856.1,
+      "filas": 2
+    }
+  ]
+}
+
+=== 5. DESALINEACION HORIZONTAL (distancia del centro, px) ===
+nodos de texto visibles: 103 | desalineados >6px: 77
+ÔöîÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö¼ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÉ
+Ôöé (index) Ôöé sel                          Ôöé texto                      Ôöé align    Ôöé padre                        Ôöé pAlign   Ôöé offset Ôöé
+Ôö£ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö╝ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöñ
+Ôöé 0       Ôöé 'span.'                      Ôöé 'Vista Mensual'            Ôöé 'left'   Ôöé '#btnNavMes'                 Ôöé 'left'   Ôöé 19.6   Ôöé
+Ôöé 1       Ôöé 'span.'                      Ôöé 'Consolidado'              Ôöé 'left'   Ôöé '#btnNavPanel'               Ôöé 'left'   Ôöé 26.1   Ôöé
+Ôöé 2       Ôöé 'span.sidebar-section-label' Ôöé 'Per├¡odo'                  Ôöé 'start'  Ôöé 'div.sidebar-periods-head'   Ôöé 'start'  Ôöé 81.8   Ôöé
+Ôöé 3       Ôöé 'span.'                      Ôöé 'PRUEBA-ALFA 2026'         Ôöé 'left'   Ôöé 'button.month-pill-btn'      Ôöé 'left'   Ôöé 25.3   Ôöé
+Ôöé 4       Ôöé 'span.'                      Ôöé 'PRUEBA-BETA 2026'         Ôöé 'left'   Ôöé 'button.month-pill-btn'      Ôöé 'left'   Ôöé 25.9   Ôöé
+Ôöé 5       Ôöé '#btnOpenNewMonthModal'      Ôöé 'Nuevo mes'                Ôöé 'center' Ôöé 'div.period-admin'           Ôöé 'start'  Ôöé 68.9   Ôöé
+Ôöé 6       Ôöé '#btnDeleteMonth'            Ôöé 'Eliminar mes'             Ôöé 'center' Ôöé 'div.period-admin'           Ôöé 'start'  Ôöé 32.6   Ôöé
+Ôöé 7       Ôöé '#indicadorConexionTexto'    Ôöé 'En l├¡nea'                 Ôöé 'start'  Ôöé '#indicadorConexion'         Ôöé 'start'  Ôöé 65.3   Ôöé
+Ôöé 8       Ôöé '#authModeLabel'             Ôöé 'Modo Administrador'       Ôöé 'left'   Ôöé '#btnToggleAuthMode'         Ôöé 'left'   Ôöé 29.7   Ôöé
+Ôöé 9       Ôöé 'span.sidebar-section-label' Ôöé 'Secciones'                Ôöé 'start'  Ôöé 'div.section-rail-head'      Ôöé 'start'  Ôöé 57     Ôöé
+Ôöé 10      Ôöé 'span.ledger-chip-label'     Ôöé 'Todo'                     Ôöé 'left'   Ôöé 'button.segment-pill-btn'    Ôöé 'left'   Ôöé 45.7   Ôöé
+Ôöé 11      Ôöé 'span.ledger-chip-label'     Ôöé 'Servicios'                Ôöé 'left'   Ôöé 'button.segment-pill-btn'    Ôöé 'left'   Ôöé 30     Ôöé
+Ôöé 12      Ôöé 'span.rail-entry-total'      Ôöé 'S/ 666.66'                Ôöé 'start'  Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 37.9   Ôöé
+Ôöé 13      Ôöé 'button.btn'                 Ôöé 'A├▒adir'                   Ôöé 'center' Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 11     Ôöé
+Ôöé 14      Ôöé 'span.ledger-chip-label'     Ôöé 'Personales'               Ôöé 'left'   Ôöé 'button.segment-pill-btn'    Ôöé 'left'   Ôöé 23.9   Ôöé
+Ôöé 15      Ôöé 'span.rail-entry-total'      Ôöé 'S/ 999.99'                Ôöé 'start'  Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 37.9   Ôöé
+Ôöé 16      Ôöé 'button.btn'                 Ôöé 'A├▒adir'                   Ôöé 'center' Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 11     Ôöé
+Ôöé 17      Ôöé 'span.ledger-chip-label'     Ôöé 'Movimientos'              Ôöé 'left'   Ôöé 'button.segment-pill-btn'    Ôöé 'left'   Ôöé 17.9   Ôöé
+Ôöé 18      Ôöé 'span.rail-entry-total'      Ôöé '3 movs'                   Ôöé 'start'  Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 48.4   Ôöé
+Ôöé 19      Ôöé '#btnQuickActionIncome'      Ôöé 'Ingreso'                  Ôöé 'center' Ôöé 'div.rail-entry-adds'        Ôöé 'start'  Ôöé 39.8   Ôöé
+Ôöé 20      Ôöé '#btnQuickActionExpense'     Ôöé 'Gasto'                    Ôöé 'center' Ôöé 'div.rail-entry-adds'        Ôöé 'start'  Ôöé 42.6   Ôöé
+Ôöé 21      Ôöé 'span.ledger-chip-label'     Ôöé 'Extras'                   Ôöé 'left'   Ôöé 'button.segment-pill-btn'    Ôöé 'left'   Ôöé 40.1   Ôöé
+Ôöé 22      Ôöé 'span.rail-entry-total'      Ôöé 'S/ 709.16'                Ôöé 'start'  Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 37.9   Ôöé
+Ôöé 23      Ôöé 'button.btn'                 Ôöé 'A├▒adir'                   Ôöé 'center' Ôöé 'div.rail-entry'             Ôöé 'start'  Ôöé 11     Ôöé
+Ôöé 24      Ôöé '#activeMonthHeaderBadge'    Ôöé 'PRUEBA-ALFA 2026'         Ôöé 'start'  Ôöé 'div.topbar-left'            Ôöé 'start'  Ôöé 224    Ôöé
+Ôöé 25      Ôöé 'span.kpi-mini-label'        Ôöé 'Balance'                  Ôöé 'start'  Ôöé 'div.topbar-quick-kpi'       Ôöé 'start'  Ôöé 40.9   Ôöé
+Ôöé 26      Ôöé '#topbarBalanceValue'        Ôöé 'S/ 333.34'                Ôöé 'start'  Ôöé 'div.topbar-quick-kpi'       Ôöé 'start'  Ôöé 26.6   Ôöé
+Ôöé 27      Ôöé '#btnOpenNotesModal'         Ôöé 'Notas'                    Ôöé 'center' Ôöé 'div.topbar-right'           Ôöé 'start'  Ôöé 81     Ôöé
+Ôöé 28      Ôöé 'span.ledger-note-key'       Ôöé 'Cobertura'                Ôöé 'center' Ôöé 'span.ledger-cell-note'      Ôöé 'center' Ôöé 19.3   Ôöé
+Ôöé 29      Ôöé '#monthAbonoPercentLabel'    Ôöé '60.8%'                    Ôöé 'center' Ôöé 'span.ledger-cell-note'      Ôöé 'center' Ôöé 30.3   Ôöé
+Ôöé 30      Ôöé '#monthGastosCount'          Ôöé '2 de 7 gastos pagados'    Ôöé 'center' Ôöé 'span.ledger-paid-line'      Ôöé 'center' Ôöé 86.2   Ôöé
+Ôöé 31      Ôöé '#paidPercentBadge'          Ôöé '37.4% Pagado'             Ôöé 'center' Ôöé 'span.ledger-paid-line'      Ôöé 'center' Ôöé 108.5  Ôöé
+Ôöé 32      Ôöé '#monthBalanceNeto'          Ôöé 'S/ 333.34'                Ôöé 'center' Ôöé 'span.ledger-balance-line'   Ôöé 'center' Ôöé 41.2   Ôöé
+Ôöé 33      Ôöé '#monthBalanceStatusLabel'   Ôöé 'Saldo a favor'            Ôöé 'center' Ôöé 'span.ledger-balance-line'   Ôöé 'center' Ôöé 54.9   Ôöé
+Ôöé 34      Ôöé '#btnHeaderAddIncome'        Ôöé 'Abono'                    Ôöé 'center' Ôöé 'div.ledger-actions'         Ôöé 'start'  Ôöé 28.5   Ôöé
+Ôöé 35      Ôöé '#btnHeaderAddBudget'        Ôöé 'Gasto'                    Ôöé 'center' Ôöé 'div.ledger-actions'         Ôöé 'start'  Ôöé 30.6   Ôöé
+Ôöé 36      Ôöé 'span.ledger-group-name'     Ôöé 'Servicios del hogar'      Ôöé 'left'   Ôöé 'button.ledger-group-toggle' Ôöé 'left'   Ôöé 256.1  Ôöé
+Ôöé 37      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Internet'     Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 210.1  Ôöé
+Ôöé 38      Ôöé 'button.btn-status-toggle'   Ôöé 'Pendiente'                Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 9.6    Ôöé
+Ôöé 39      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 111.11'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 40      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Celular'      Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 212.7  Ôöé
+Ôöé 41      Ôöé 'button.btn-status-toggle'   Ôöé 'Pagado'                   Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 16.1   Ôöé
+Ôöé 42      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 222.22'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 43      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Limpieza'     Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 206    Ôöé
+Ôöé 44      Ôöé 'span.tag-badge'             Ôöé 'Variable'                 Ôöé 'start'  Ôöé 'div.expense-item-tags'      Ôöé 'start'  Ôöé 49.1   Ôöé
+Ôöé 45      Ôöé 'span.tag-badge'             Ôöé 'Rango: 100-400'           Ôöé 'start'  Ôöé 'div.expense-item-tags'      Ôöé 'start'  Ôöé 25     Ôöé
+Ôöé 46      Ôöé 'button.btn-status-toggle'   Ôöé 'Pendiente'                Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 9.6    Ôöé
+Ôöé 47      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 333.33'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 48      Ôöé 'span.ledger-group-name'     Ôöé 'Gastos personales'        Ôöé 'left'   Ôöé 'button.ledger-group-toggle' Ôöé 'left'   Ôöé 258.6  Ôöé
+Ôöé 49      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Gimnasio'     Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 204.6  Ôöé
+Ôöé 50      Ôöé 'button.btn-status-toggle'   Ôöé 'Pendiente'                Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 9.6    Ôöé
+Ôöé 51      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 444.44'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 52      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Cremas'       Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 210.4  Ôöé
+Ôöé 53      Ôöé 'span.tag-badge'             Ôöé 'Variable'                 Ôöé 'start'  Ôöé 'div.expense-item-tags'      Ôöé 'start'  Ôöé 42.7   Ôöé
+Ôöé 54      Ôöé 'span.tag-badge'             Ôöé 'Rango: 10-99'             Ôöé 'start'  Ôöé 'div.expense-item-tags'      Ôöé 'start'  Ôöé 25.1   Ôöé
+Ôöé 55      Ôöé 'button.btn-status-toggle'   Ôöé 'Pendiente'                Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 9.6    Ôöé
+Ôöé 56      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 555.55'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 57      Ôöé 'span.ledger-group-name'     Ôöé 'Movimientos del mes'      Ôöé 'left'   Ôöé 'button.ledger-group-toggle' Ôöé 'left'   Ôöé 265    Ôöé
+Ôöé 58      Ôöé 'button.feed-filter-pill'    Ôöé 'Todos'                    Ôöé 'center' Ôöé 'div.ledger-group-filters'   Ôöé 'start'  Ôöé 410.6  Ôöé
+Ôöé 59      Ôöé 'button.feed-filter-pill'    Ôöé 'Ingresos'                 Ôöé 'center' Ôöé 'div.ledger-group-filters'   Ôöé 'start'  Ôöé 323.2  Ôöé
+Ôöé 60      Ôöé 'button.feed-filter-pill'    Ôöé 'Gastos'                   Ôöé 'center' Ôöé 'div.ledger-group-filters'   Ôöé 'start'  Ôöé 233.5  Ôöé
+Ôöé 61      Ôöé 'span.font-mono'             Ôöé '2026-08-01'               Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 42.6   Ôöé
+Ôöé 62      Ôöé 'span.'                      Ôöé 'Ingreso'                  Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 33.2   Ôöé
+Ôöé 63      Ôöé 'div.tx-amount'              Ôöé '+ S/ 1,111.11'            Ôöé 'start'  Ôöé 'div.tx-right'               Ôöé 'start'  Ôöé 40     Ôöé
+Ôöé 64      Ôöé 'span.font-mono'             Ôöé '2026-08-05'               Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 45.3   Ôöé
+Ôöé 65      Ôöé 'span.'                      Ôöé 'Gasto'                    Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 25.5   Ôöé
+Ôöé 66      Ôöé 'div.tx-amount'              Ôöé '- S/ 222.22'              Ôöé 'start'  Ôöé 'div.tx-right'               Ôöé 'start'  Ôöé 40     Ôöé
+Ôöé 67      Ôöé 'span.font-mono'             Ôöé '2026-08-09'               Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 38.6   Ôöé
+Ôöé 68      Ôöé 'span.'                      Ôöé 'Ingreso'                  Ôöé 'start'  Ôöé 'p.'                         Ôöé 'start'  Ôöé 37.2   Ôöé
+Ôöé 69      Ôöé 'div.tx-amount'              Ôöé '+ S/ 333.33'              Ôöé 'start'  Ôöé 'div.tx-right'               Ôöé 'start'  Ôöé 40     Ôöé
+Ôöé 70      Ôöé 'span.ledger-group-name'     Ôöé 'Gastos extraordinarios'   Ôöé 'left'   Ôöé 'button.ledger-group-toggle' Ôöé 'left'   Ôöé 242.1  Ôöé
+Ôöé 71      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA-ALFA Extra'        Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 219.5  Ôöé
+Ôöé 72      Ôöé 'button.btn-status-toggle'   Ôöé 'Pagado'                   Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 16.1   Ôöé
+Ôöé 73      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 666.66'                Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 322.9  Ôöé
+Ôöé 74      Ôöé 'div.expense-item-title'     Ôöé 'PRUEBA EXTRA DIAGNOSTICO' Ôöé 'start'  Ôöé 'div.expense-item-info'      Ôöé 'start'  Ôöé 185.4  Ôöé
+Ôöé 75      Ôöé 'button.btn-status-toggle'   Ôöé 'Pendiente'                Ôöé 'center' Ôöé 'div.expense-item-state'     Ôöé 'start'  Ôöé 9.6    Ôöé
+Ôöé 76      Ôöé 'div.expense-item-amount'    Ôöé 'S/ 42.50'                 Ôöé 'right'  Ôöé 'div.expense-card-item'      Ôöé 'start'  Ôöé 327.3  Ôöé
+ÔööÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔö┤ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÿ

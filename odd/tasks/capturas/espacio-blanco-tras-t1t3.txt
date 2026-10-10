@@ -1,0 +1,158 @@
+{
+  "viewport": {
+    "w": 1440,
+    "h": 900
+  },
+  "rail": {
+    "x": 0,
+    "y": 0,
+    "w": 64,
+    "h": 900,
+    "scrollH": 900,
+    "clientH": 900,
+    "scrollea": false,
+    "hijosRail": [
+      {
+        "sel": "sidebar-brand",
+        "x": 0,
+        "y": 16,
+        "w": 63,
+        "h": 38
+      },
+      {
+        "sel": "sidebar-nav",
+        "x": 0,
+        "y": 54,
+        "w": 63,
+        "h": 88
+      },
+      {
+        "sel": "sidebar-footer",
+        "x": 0,
+        "y": 827,
+        "w": 63,
+        "h": 73
+      }
+    ],
+    "huecoRail": 685,
+    "entre": [
+      "sidebar-nav",
+      "sidebar-footer"
+    ],
+    "alturaUsada": 900
+  },
+  "main": {
+    "x": 84.5,
+    "y": 48,
+    "w": 1320,
+    "h": 1912,
+    "anchoUtil": 1224,
+    "canalIzq": null,
+    "canalDer": 84
+  },
+  "capas": [
+    {
+      "sel": "ledger-toolbar",
+      "x": 132.5,
+      "y": 96,
+      "w": 1224,
+      "h": 133.4
+    },
+    {
+      "sel": "segments-workspace-container",
+      "x": 132.5,
+      "y": 229.4,
+      "w": 1224,
+      "h": 1658.6
+    }
+  ],
+  "primeraFilaY": 371.4,
+  "filasVisibles": 10,
+  "alturaFila": {
+    "min": 52.7,
+    "max": 52.7,
+    "media": 53
+  },
+  "filasEnPantalla": 10
+}
+--- CONSOLIDADO ---
+{
+  "rail": {
+    "x": 0,
+    "y": 0,
+    "w": 64,
+    "h": 900,
+    "scrollH": 900,
+    "clientH": 900,
+    "scrollea": false,
+    "hijosRail": [
+      {
+        "sel": "sidebar-brand",
+        "x": 0,
+        "y": 16,
+        "w": 63,
+        "h": 38
+      },
+      {
+        "sel": "sidebar-nav",
+        "x": 0,
+        "y": 54,
+        "w": 63,
+        "h": 88
+      },
+      {
+        "sel": "sidebar-footer",
+        "x": 0,
+        "y": 827,
+        "w": 63,
+        "h": 73
+      }
+    ],
+    "huecoRail": 685,
+    "entre": [
+      "sidebar-nav",
+      "sidebar-footer"
+    ],
+    "alturaUsada": 900
+  },
+  "main": {
+    "x": 84.5,
+    "y": 48,
+    "w": 1320,
+    "h": 1408.8,
+    "anchoUtil": 0,
+    "canalIzq": null,
+    "canalDer": 1440
+  },
+  "capas": []
+}
+--- 1024 ---
+{
+  "main": {
+    "x": 0,
+    "y": 48,
+    "w": 1009,
+    "h": 1923.1,
+    "anchoUtil": 945,
+    "canalIzq": null,
+    "canalDer": 47
+  },
+  "capas": [
+    {
+      "sel": "ledger-toolbar",
+      "x": 32,
+      "y": 80,
+      "w": 945,
+      "h": 160.5
+    },
+    {
+      "sel": "segments-workspace-container",
+      "x": 32,
+      "y": 240.5,
+      "w": 945,
+      "h": 1658.6
+    }
+  ],
+  "filasVisibles": 10,
+  "filasEnPantalla": 9
+}

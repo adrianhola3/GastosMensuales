@@ -1,0 +1,3497 @@
+{
+  "suite": "crud-suite",
+  "generatedAt": "2026-10-10T18:34:25.895Z",
+  "storageKey": "control_gastos_mensuales_db_v1",
+  "network": [
+    {
+      "test": "expense.create.servicios-fijos: UI, memory and disk all gain the row",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.create.variables: the range field appears and is persisted",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.create.extras: extras hides subsection and range, forces tipo Extra",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.edit: concepto + monto change on all three surfaces; the merge preserves tipo/estado",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.edit.variable: the rango field is editable and the merge is scoped to it",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever sees it",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.edit.rejects-empty-monto: required blocks an empty amount",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.edit.whitespace-concepto: DEFECT - Save does nothing, silently",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.delete.cancel: the confirm dialog appears and cancelling really cancels",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.delete.confirm: the row leaves UI, memory and disk together",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.toggle.pagado-pendiente: the row chip flips and the store follows",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.toggle-all: toggleAllBudgetItems has no UI control",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "expense.create.blank-concepto: required blocks a nameless expense",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.create.ingreso: on a month that starts with zero movements",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.create.gasto: the danger button and its minus sign",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.edit: concepto, monto and fecha change; the merge keeps the hidden fields",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.edit.rejects-negative: blocked by min=0, nothing persisted",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.delete.cancel: the dialog names the movement and cancelling cancels",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.delete.confirm: gone from UI, memory and disk",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "movement.toggle: toggleMovementStatus has no UI control",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.create.empty: a brand new month with nothing in it",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.create.clone: recurrent expenses copied, fresh ids, all reset to Pendiente",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.switch: clicking a pill moves the active month and re-renders",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.nav.boundaries: prev on the first month and next on the last are inert",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.rename: there is no rename control anywhere in the UI",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "month.delete: deleteMonth has no UI control and its guard alert is unreachable",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.cancel-button: closes the sheet and leaves the data untouched",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.escape: a REAL Escape key press closes the sheet and persists nothing",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.overlay-click: a REAL mouse click on the backdrop closes the sheet",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.edit-cancel: cancelling an edit discards the typed changes",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.close-button-x: the header X also discards an in-progress edit",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "modal.role-picker-is-not-escapable: cannot be exercised in this harness",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "notes.autosave: typing in the notes sheet persists after the debounce",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    },
+    {
+      "test": "notes.close-without-typing: opening and closing the sheet is inert",
+      "supabaseRequests": 0,
+      "tripwire": 0
+    }
+  ],
+  "results": [
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.create.servicios-fijos: UI, memory and disk all gain the row",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "20 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the real topbar \"add expense\" button opens the sheet",
+          "detail": {
+            "modal": "modalAddBudget"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the category select accepts \"servicios\"",
+          "detail": {
+            "actual": true,
+            "expected": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "the type select accepts \"fijos\"",
+          "detail": {
+            "actual": true,
+            "expected": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the range field stays hidden for a fixed expense (the sheet reacts to the select)",
+          "detail": {
+            "actual": "none",
+            "expected": "none"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the concepto was typed with real key events, not assigned",
+          "detail": {
+            "ok": true,
+            "valor": "PRUEBA-CRUD Nuevo Fijo",
+            "tag": "input",
+            "type": "text",
+            "viaTeclado": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "the amount field holds 123.45",
+          "detail": {
+            "actual": "123.45",
+            "expected": "123.45"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the real submit button passes HTML5 validation",
+          "detail": {
+            "ok": true,
+            "valido": true,
+            "invalidos": [],
+            "hayRequestSubmit": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closes after a successful submit",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: a rendered expense row shows the new concepto",
+          "detail": {
+            "antesUI": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: localStorage holds the new row",
+          "detail": {
+            "count": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: window.financialStore holds the new row",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto persisted as a number, not a string",
+          "detail": {
+            "actual": 123.45,
+            "expected": 123.45
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: tipo derived from the chosen subsection",
+          "detail": {
+            "actual": "Fijo",
+            "expected": "Fijo"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado persisted",
+          "detail": {
+            "actual": "Pendiente",
+            "expected": "Pendiente"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: monto matches DISK",
+          "detail": {
+            "actual": 123.45,
+            "expected": 123.45
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: exactly one row was added",
+          "detail": {
+            "actual": 7,
+            "expected": 7
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the target list grew by one",
+          "detail": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one create",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "no NaN/undefined/Infinity on screen",
+          "detail": {
+            "offenders": []
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 21
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.create.variables: the range field appears and is persisted",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "8 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "UI: choosing \"variables\" reveals the range field",
+          "detail": {
+            "actual": "block",
+            "expected": "block"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the row landed in servicios.variables",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: rango persisted",
+          "detail": {
+            "actual": "30-60",
+            "expected": "30-60"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: tipo is Variable",
+          "detail": {
+            "actual": "Variable",
+            "expected": "Variable"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto persisted as a number",
+          "detail": {
+            "actual": 45.5,
+            "expected": 45.5
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row is rendered",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: the Variable tag renders",
+          "detail": {
+            "chip": {
+              "titulo": "PRUEBA-CRUD Variable Rango",
+              "importe": "S/ 45.50",
+              "estado": "Pendiente",
+              "estadoClass": "btn-status-toggle status-pendiente",
+              "tipoTags": [
+                "Variable",
+                "Rango: 30-60"
+              ]
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 31
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.create.extras: extras hides subsection and range, forces tipo Extra",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "UI: extras hides the subsection field",
+          "detail": {
+            "actual": "none",
+            "expected": "none"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: extras hides the range field",
+          "detail": {
+            "actual": "none",
+            "expected": "none"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the row landed in extras",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: tipo forced to Extra",
+          "detail": {
+            "actual": "Extra",
+            "expected": "Extra"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row is rendered",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 41
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.edit: concepto + monto change on all three surfaces; the merge preserves tipo/estado",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "21 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "fixture precondition: the target expense exists",
+          "detail": {
+            "ITEM": "i-prueba-alfa-2026-sf1"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the row edit button is reachable and was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-edit-expense",
+            "antes": {
+              "titulo": "PRUEBA-ALFA Internet",
+              "importe": "\n          S/ 111.11\n        ",
+              "estado": "\n            Pendiente\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the edit sheet opens",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the sheet is prefilled with the real concepto",
+          "detail": {
+            "actual": "PRUEBA-ALFA Internet",
+            "expected": "PRUEBA-ALFA Internet"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet is prefilled with the real monto at 2 decimals",
+          "detail": {
+            "actual": "111.11",
+            "expected": "111.11"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the read-only tipo shows the real tipo",
+          "detail": {
+            "actual": "Fijo",
+            "expected": "Fijo"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the hidden item id is the clicked item",
+          "detail": {
+            "actual": "i-prueba-alfa-2026-sf1",
+            "expected": "i-prueba-alfa-2026-sf1"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the hidden month id is the active month",
+          "detail": {
+            "actual": "prueba-alfa-2026",
+            "expected": "prueba-alfa-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: a fixed expense hides the range field",
+          "detail": {
+            "actual": "none",
+            "expected": "none"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the edit sheet closes after saving",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: the row now shows the edited concepto",
+          "detail": {
+            "ui": {
+              "titulo": "PRUEBA-CRDF Internet EDITADO",
+              "importe": "S/ 222.99",
+              "estado": "Pendiente",
+              "estadoClass": "btn-status-toggle status-pendiente",
+              "tipoTags": [
+                "Fijo"
+              ]
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row amount re-rendered to the edited value",
+          "detail": {
+            "actual": "S/ 222.99",
+            "expected": "S/ 222.99"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the state chip did not change",
+          "detail": {
+            "actual": "Pendiente",
+            "expected": "Pendiente"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the same id is still present (a patch, not delete+insert)",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: concepto changed",
+          "detail": {
+            "actual": "PRUEBA-CRDF Internet EDITADO",
+            "expected": "PRUEBA-CRDF Internet EDITADO"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto changed and stayed a number",
+          "detail": {
+            "actual": 222.99,
+            "expected": 222.99
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado survived the merge (the form never sends it)",
+          "detail": {
+            "actual": "Pendiente",
+            "expected": "Pendiente"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: tipo survived the merge (declared read-only)",
+          "detail": {
+            "actual": "Fijo",
+            "expected": "Fijo"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: matches DISK",
+          "detail": {
+            "enMemoria": {
+              "id": "i-prueba-alfa-2026-sf1",
+              "concepto": "PRUEBA-CRDF Internet EDITADO",
+              "monto": 222.99,
+              "tipo": "Fijo",
+              "estado": "Pendiente"
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one edit",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 51
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.edit.variable: the rango field is editable and the merge is scoped to it",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "7 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "UI: a variable expense shows the range field",
+          "detail": {
+            "actual": "block",
+            "expected": "block"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: still the same id",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: rango changed",
+          "detail": {
+            "actual": "380-420",
+            "expected": "380-420"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto changed",
+          "detail": {
+            "actual": 399.99,
+            "expected": 399.99
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado untouched",
+          "detail": {
+            "actual": "Pendiente",
+            "expected": "Pendiente"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row re-rendered",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 61
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever sees it",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "12 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the amount field really holds -10 (paste-equivalent transport)",
+          "detail": {
+            "actual": "-10",
+            "expected": "-10"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the real submit button was pressed",
+          "detail": {
+            "ok": true,
+            "valido": false,
+            "invalidos": [
+              {
+                "id": "editExpenseMonto",
+                "tag": "input",
+                "valor": "-10",
+                "flags": {
+                  "badInput": false,
+                  "customError": false,
+                  "patternMismatch": false,
+                  "rangeOverflow": false,
+                  "rangeUnderflow": true,
+                  "stepMismatch": false,
+                  "tooLong": false,
+                  "tooShort": false,
+                  "typeMismatch": false,
+                  "valueMissing": false,
+                  "valid": false
+                }
+              }
+            ],
+            "hayRequestSubmit": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "HTML5 constraint validation rejects monto = -10",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "#editExpenseMonto is the only invalid field",
+          "detail": {
+            "invalidos": [
+              {
+                "id": "editExpenseMonto",
+                "tag": "input",
+                "valor": "-10",
+                "flags": {
+                  "badInput": false,
+                  "customError": false,
+                  "patternMismatch": false,
+                  "rangeOverflow": false,
+                  "rangeUnderflow": true,
+                  "stepMismatch": false,
+                  "tooLong": false,
+                  "tooShort": false,
+                  "typeMismatch": false,
+                  "valueMissing": false,
+                  "valid": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "the ValidityState flag is rangeUnderflow (value is BELOW min=0)",
+          "detail": {
+            "actual": true,
+            "expected": true,
+            "contexto": {
+              "flags": {
+                "badInput": false,
+                "customError": false,
+                "patternMismatch": false,
+                "rangeOverflow": false,
+                "rangeUnderflow": true,
+                "stepMismatch": false,
+                "tooLong": false,
+                "tooShort": false,
+                "typeMismatch": false,
+                "valueMissing": false,
+                "valid": false
+              }
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "and it is not valueMissing: the field is not empty",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "no alert() was raised: the browser stopped the submit before app.js:1423 could run",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet stays open, so nothing was saved",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: the monto is unchanged",
+          "detail": {
+            "actual": 222.22,
+            "expected": 222.22
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row still shows the original concepto",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "a rejected submit persists nothing",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 71
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "app.js:1424 alert(\"Por favor ingresa un monto valido\") is UNREACHABLE through the real UI: input[type=number] refuses non-numeric text (the field goes empty, tripping `required`) and min=0 refuses negatives, so parseFloat on this field can never be NaN or < 0. The guard is dead code from the UI. Not a crash risk - a duplicated concern that will drift.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.edit.rejects-empty-monto: required blocks an empty amount",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "8 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the amount field is genuinely empty",
+          "detail": {
+            "actual": "",
+            "expected": ""
+          }
+        },
+        {
+          "pass": true,
+          "label": "a blank amount fails required",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "the failure is validity.valueMissing on #editExpenseMonto",
+          "detail": {
+            "invalidos": [
+              {
+                "id": "editExpenseMonto",
+                "tag": "input",
+                "valor": "",
+                "flags": {
+                  "badInput": false,
+                  "customError": false,
+                  "patternMismatch": false,
+                  "rangeOverflow": false,
+                  "rangeUnderflow": false,
+                  "stepMismatch": false,
+                  "tooLong": false,
+                  "tooShort": false,
+                  "typeMismatch": false,
+                  "valueMissing": true,
+                  "valid": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "no alert(): the browser blocked it first",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet stays open",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto unchanged",
+          "detail": {
+            "actual": 222.22,
+            "expected": 222.22
+          }
+        },
+        {
+          "pass": true,
+          "label": "nothing persisted",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 81
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.edit.whitespace-concepto: DEFECT - Save does nothing, silently",
+      "fixture": "baseline",
+      "verdict": "FAIL",
+      "observation": "failed -> no alert() either",
+      "checks": [
+        {
+          "pass": true,
+          "label": "OBSERVED: HTML5 `required` accepts a whitespace-only value, so the browser lets the submit through",
+          "detail": {
+            "actual": true,
+            "expected": true,
+            "contexto": {
+              "invalidos": [],
+              "vacio": {
+                "conceptoEnElCampo": "     ",
+                "conceptoEnElCampoTrim": "",
+                "toastVisible": false,
+                "toastTexto": "Sesión activa. Modo Administrador.",
+                "shake": false,
+                "validationMessage": ""
+              }
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the app sees an empty string after trim()",
+          "detail": {
+            "actual": "",
+            "expected": ""
+          }
+        },
+        {
+          "pass": true,
+          "label": "DEFECT: no toast explains why nothing happened",
+          "detail": {
+            "actual": false,
+            "expected": false,
+            "contexto": {
+              "conceptoEnElCampo": "     ",
+              "conceptoEnElCampoTrim": "",
+              "toastVisible": false,
+              "toastTexto": "Sesión activa. Modo Administrador.",
+              "shake": false,
+              "validationMessage": ""
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "DEFECT: the sheet is not shaken to signal a rejection",
+          "detail": {
+            "actual": false,
+            "expected": false,
+            "contexto": {
+              "conceptoEnElCampo": "     ",
+              "conceptoEnElCampoTrim": "",
+              "toastVisible": false,
+              "toastTexto": "Sesión activa. Modo Administrador.",
+              "shake": false,
+              "validationMessage": ""
+            }
+          }
+        },
+        {
+          "pass": false,
+          "label": "no alert() either",
+          "detail": {
+            "actual": 1,
+            "expected": 0,
+            "contexto": {
+              "conceptoEnElCampo": "     ",
+              "conceptoEnElCampoTrim": "",
+              "toastVisible": false,
+              "toastTexto": "Sesión activa. Modo Administrador.",
+              "shake": false,
+              "validationMessage": ""
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet silently stays open",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: nothing was persisted (so no data was lost)",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row is unchanged",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 91
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "EXPECTED vs ACTUAL. Expected: the user gets told the concept cannot be blank. Actual: Save is a dead control for whitespace-only input - the click is swallowed by app.js:1422 with no user-visible feedback. Severity: low (no data loss, no wrong value) but it is exactly the \"dead control\" class the brief asks to eliminate. Fix belongs to T4: add `required` handling on the trimmed value, or reuse the existing modal-shake affordance.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.delete.cancel: the confirm dialog appears and cancelling really cancels",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "11 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the row delete button was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-delete-expense",
+            "antes": {
+              "titulo": "PRUEBA-ALFA Internet",
+              "importe": "\n          S/ 111.11\n        ",
+              "estado": "\n            Pendiente\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "OBSERVED: exactly one real confirm() dialog was raised over CDP",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the dialog type is confirm",
+          "detail": {
+            "actual": "confirm",
+            "expected": "confirm"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the message names the operation",
+          "detail": {
+            "message": "¿Eliminar gasto \"PRUEBA-ALFA Internet\"?"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the message carries the real concepto",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the harness answered \"Cancel\"",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the expense survived the cancelled delete",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: the row is still rendered",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: the whole persisted document is byte-identical",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "a cancelled delete persists nothing",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 101
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.delete.confirm: the row leaves UI, memory and disk together",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "10 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the row delete button was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-delete-expense",
+            "antes": {
+              "titulo": "PRUEBA-ALFA Internet",
+              "importe": "\n          S/ 111.11\n        ",
+              "estado": "\n            Pendiente\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one confirm dialog was raised",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the harness answered \"OK\"",
+          "detail": {
+            "actual": true,
+            "expected": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the expense is gone",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: the expense is gone",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: one row fewer",
+          "detail": {
+            "actual": 5,
+            "expected": 5
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the target list shrank by one",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the deleted row is no longer rendered",
+          "detail": {
+            "actual": null,
+            "expected": null
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one delete",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 111
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.toggle.pagado-pendiente: the row chip flips and the store follows",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "9 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the row status toggle was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-status-toggle",
+            "antes": {
+              "titulo": "PRUEBA-ALFA Internet",
+              "importe": "\n          S/ 111.11\n        ",
+              "estado": "\n            Pendiente\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the chip reads \"Pagado\"",
+          "detail": {
+            "actual": "Pagado",
+            "expected": "Pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the chip class matches the new state",
+          "detail": {
+            "estadoClass": "btn-status-toggle status-pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "a fixed expense toggles without any dialog",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado flipped",
+          "detail": {
+            "actual": "Pagado",
+            "expected": "Pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: estado flipped",
+          "detail": {
+            "actual": "Pagado",
+            "expected": "Pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one toggle",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the live KPI re-rendered",
+          "detail": {
+            "kpi": "3 de 6 gastos pagados"
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 121
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.toggle-all: toggleAllBudgetItems has no UI control",
+      "fixture": "baseline",
+      "verdict": "INCONCLUSIVE",
+      "observation": "observed but untestable -> toggleAllBudgetItems cannot be exercised through the UI",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the fixture month does hold 6 expenses, so the case is not vacuous",
+          "detail": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: all 6 render as expense rows",
+          "detail": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "the ONLY status control is the per-row chip: exactly one per row, no bulk equivalent",
+          "detail": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: there is no .btn-status-toggle anywhere outside an expense row, which is the only shape a \"mark all\" toggle could take",
+          "detail": {
+            "actual": 0,
+            "expected": 0,
+            "contexto": {
+              "totalControles": 111
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: outside the rows, the only control that talks about \"pagado\" is the single-item pay-variable submit. \"Todos\" and \"Ver todo\" are segment filters, not paid actions.",
+          "detail": {
+            "fueraDeFilaConEstado": [
+              {
+                "tag": "button",
+                "id": null,
+                "etiqueta": "Confirmar y marcar pagado",
+                "dentroDeFormPago": true
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 131
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "label": "toggleAllBudgetItems cannot be exercised through the UI",
+          "why": "No button, link or inline handler calls it. Observing its behaviour would require calling window.financialStore.toggleAllBudgetItems directly, which this suite refuses to do because a store-level call is not evidence about the deployed UI."
+        }
+      ],
+      "notes": [
+        "store.js:611 toggleAllBudgetItems is implemented and has ZERO callers: it is not referenced by js/app.js, js/charts.js, or any inline handler in index.html.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Gasto: crear / editar / borrar / marcar pagado",
+      "name": "expense.create.blank-concepto: required blocks a nameless expense",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "a blank concepto fails required",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "the offending field is #budgetConcepto with validity.valueMissing",
+          "detail": {
+            "invalidos": [
+              {
+                "id": "budgetConcepto",
+                "tag": "input",
+                "valor": "",
+                "flags": {
+                  "badInput": false,
+                  "customError": false,
+                  "patternMismatch": false,
+                  "rangeOverflow": false,
+                  "rangeUnderflow": false,
+                  "stepMismatch": false,
+                  "tooLong": false,
+                  "tooShort": false,
+                  "typeMismatch": false,
+                  "valueMissing": true,
+                  "valid": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet stays open",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: no row appeared",
+          "detail": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "nothing persisted",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 141
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.create.ingreso: on a month that starts with zero movements",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "24 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "fixture precondition: the active month renders zero movement rows",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "fixture precondition: 0 movements on disk",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the empty-state placeholder is shown before any movement exists",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the real quick-action button opens the movement sheet",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the sheet title reflects the requested flujo",
+          "detail": {
+            "actual": "Registrar Ingreso",
+            "expected": "Registrar Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the concepto was typed with real key events",
+          "detail": {
+            "ok": true,
+            "valor": "PRUEBA-CRUD Abono Nuevo",
+            "tag": "input",
+            "type": "text",
+            "viaTeclado": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closes after saving",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: a feed row shows the new concepto",
+          "detail": {
+            "antesUI": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: an ingreso renders with a leading +",
+          "detail": {
+            "importe": "+ S/ 1,500.00"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the amount uses the es-PE thousands format",
+          "detail": {
+            "concepto": "PRUEBA-CRUD Abono Nuevo",
+            "importe": "+ S/ 1,500.00",
+            "fecha": "2026-08-15"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the date is rendered next to the concept",
+          "detail": {
+            "actual": "2026-08-15",
+            "expected": "2026-08-15"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the empty-state placeholder is gone",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the movement is persisted",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: the movement is in the store",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto is a number",
+          "detail": {
+            "actual": 1500,
+            "expected": 1500
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: flujo persisted",
+          "detail": {
+            "actual": "Ingreso",
+            "expected": "Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: fecha persisted",
+          "detail": {
+            "actual": "2026-08-15",
+            "expected": "2026-08-15"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado defaults to Pagado",
+          "detail": {
+            "actual": "Pagado",
+            "expected": "Pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: categoria is derived from flujo",
+          "detail": {
+            "actual": "Ingreso",
+            "expected": "Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: monto matches DISK",
+          "detail": {
+            "actual": 1500,
+            "expected": 1500
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: exactly one feed row added",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one create",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "no NaN/undefined/Infinity on screen",
+          "detail": {
+            "offenders": []
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 22
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.create.gasto: the danger button and its minus sign",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "9 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the title flips to Registrar Gasto",
+          "detail": {
+            "actual": "Registrar Gasto",
+            "expected": "Registrar Gasto"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the hidden flujo field carries Gasto",
+          "detail": {
+            "actual": "Gasto",
+            "expected": "Gasto"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the submit button switches to the danger variant",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: the feed row renders",
+          "detail": {
+            "ui": {
+              "concepto": "PRUEBA-CRUD Gasto Nuevo",
+              "importe": "- S/ 88.80",
+              "fecha": "2026-08-20"
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: a gasto renders with a leading \"-\"",
+          "detail": {
+            "importe": "- S/ 88.80"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: persisted",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: flujo is Gasto",
+          "detail": {
+            "actual": "Gasto",
+            "expected": "Gasto"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: categoria is Gasto",
+          "detail": {
+            "actual": "Gasto",
+            "expected": "Gasto"
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 33
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.edit: concepto, monto and fecha change; the merge keeps the hidden fields",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "23 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "fixture precondition: 0 movements",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "the movement to edit was created through the real UI",
+          "detail": {
+            "creado": {
+              "id": "id_qvzuoeba2_1791657188279",
+              "fecha": "2026-08-10",
+              "concepto": "PRUEBA-CRUD Abono Base",
+              "flujo": "Ingreso",
+              "categoria": "Ingreso",
+              "retornable": "No",
+              "estado": "Pagado",
+              "monto": 1000
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the feed edit button was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-edit-tx",
+            "antes": {
+              "concepto": "PRUEBA-CRUD Abono Base",
+              "importe": "\n            + S/ 1,000.00\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the edit-movement sheet opens",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the sheet is prefilled with the real concepto",
+          "detail": {
+            "actual": "PRUEBA-CRUD Abono Base",
+            "expected": "PRUEBA-CRUD Abono Base"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the read-only flujo shows the real flujo",
+          "detail": {
+            "actual": "Ingreso",
+            "expected": "Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the hidden id is the clicked movement",
+          "detail": {
+            "actual": "id_qvzuoeba2_1791657188279",
+            "expected": "id_qvzuoeba2_1791657188279"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the hidden month id is the active month",
+          "detail": {
+            "actual": "prueba-alfa-2026",
+            "expected": "prueba-alfa-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closes after saving",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: the feed row shows the edited concepto",
+          "detail": {
+            "ui": {
+              "concepto": "PRUEBA-CRUD Abono EDITADO",
+              "importe": "+ S/ 1,999.49",
+              "fecha": "2026-08-22"
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the amount re-rendered to the edited value",
+          "detail": {
+            "concepto": "PRUEBA-CRUD Abono EDITADO",
+            "importe": "+ S/ 1,999.49",
+            "fecha": "2026-08-22"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the date re-rendered to the edited value",
+          "detail": {
+            "actual": "2026-08-22",
+            "expected": "2026-08-22"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the same id is still present (a patch, not a replace)",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: concepto changed",
+          "detail": {
+            "actual": "PRUEBA-CRUD Abono EDITADO",
+            "expected": "PRUEBA-CRUD Abono EDITADO"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto changed and stayed numeric",
+          "detail": {
+            "actual": 1999.49,
+            "expected": 1999.49
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: fecha changed",
+          "detail": {
+            "actual": "2026-08-22",
+            "expected": "2026-08-22"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: flujo survived the merge",
+          "detail": {
+            "actual": "Ingreso",
+            "expected": "Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: categoria survived the merge",
+          "detail": {
+            "actual": "Ingreso",
+            "expected": "Ingreso"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: retornable survived the merge",
+          "detail": {
+            "actual": "No",
+            "expected": "No"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: estado survived the merge",
+          "detail": {
+            "actual": "Pagado",
+            "expected": "Pagado"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: matches DISK",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one edit",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 44
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.edit.rejects-negative: blocked by min=0, nothing persisted",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "HTML5 min=0 rejects monto = -5",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "the offending field is #editMovementMonto with validity.rangeUnderflow",
+          "detail": {
+            "invalidos": [
+              {
+                "id": "editMovementMonto",
+                "tag": "input",
+                "valor": "-5",
+                "flags": {
+                  "badInput": false,
+                  "customError": false,
+                  "patternMismatch": false,
+                  "rangeOverflow": false,
+                  "rangeUnderflow": true,
+                  "stepMismatch": false,
+                  "tooLong": false,
+                  "tooShort": false,
+                  "typeMismatch": false,
+                  "valueMissing": false,
+                  "valid": false
+                }
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet stays open",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: monto unchanged",
+          "detail": {
+            "actual": 42,
+            "expected": 42
+          }
+        },
+        {
+          "pass": true,
+          "label": "nothing persisted",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 55
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.delete.cancel: the dialog names the movement and cancelling cancels",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "9 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the feed delete button was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-delete-tx",
+            "antes": {
+              "concepto": "PRUEBA-CRUD Cancelar",
+              "importe": "\n            - S/ 77.00\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one confirm dialog was raised",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the message names the operation",
+          "detail": {
+            "message": "¿Eliminar movimiento \"PRUEBA-CRUD Cancelar\"?"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the message carries the real concepto",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the harness answered \"Cancel\"",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the movement survived",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: row count unchanged",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "nothing persisted",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 66
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.delete.confirm: gone from UI, memory and disk",
+      "fixture": "sinMovimientos",
+      "verdict": "PASS",
+      "observation": "8 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the feed delete button was clicked",
+          "detail": {
+            "ok": true,
+            "pulsado": ".btn-delete-tx",
+            "antes": {
+              "concepto": "PRUEBA-CRUD Borrar",
+              "importe": "\n            + S/ 88.00\n          "
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one confirm dialog was raised",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the movement is gone",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: the movement is gone",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "UI: one row fewer",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row is no longer rendered",
+          "detail": {
+            "actual": null,
+            "expected": null
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one delete",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 77
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Movimiento: crear / editar / borrar desde un mes con 0 movimientos",
+      "name": "movement.toggle: toggleMovementStatus has no UI control",
+      "fixture": "sinMovimientos",
+      "verdict": "INCONCLUSIVE",
+      "observation": "observed but untestable -> toggleMovementStatus cannot be exercised through the UI",
+      "checks": [
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: no status toggle exists in any feed row",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "the fixture does render movement rows, so the absence is not vacuous",
+          "detail": {
+            "filas": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "each feed row has exactly two controls (edit, delete) - nothing else",
+          "detail": {
+            "botonesPorFila": [
+              [
+                {
+                  "clase": "btn-ghost-rose btn-edit-tx admin-action-btn",
+                  "titulo": "Editar movimiento"
+                },
+                {
+                  "clase": "btn-ghost-rose btn-delete-tx admin-action-btn",
+                  "titulo": "Eliminar movimiento"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "every movement has exactly one row",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 88
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "label": "toggleMovementStatus cannot be exercised through the UI",
+          "why": "No control calls it. Observing it would require a direct store call, which this suite refuses to substitute for UI evidence. Consequence: a movement can be edited and deleted, but its Pagado/Pendiente state is write-only - nothing in the app ever displays or changes it."
+        }
+      ],
+      "notes": [
+        "store.js:694 toggleMovementStatus is implemented and has ZERO callers. The feed row (app.js:732-783) renders exactly two buttons per movement - edit and delete - and no state control.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.create.empty: a brand new month with nothing in it",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "18 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the real \"Nuevo mes\" button opens the sheet",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the clone select offers a \"do not clone\" option",
+          "detail": {
+            "opciones": [
+              "",
+              "prueba-alfa-2026",
+              "prueba-beta-2026"
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "the clone select offers every existing month",
+          "detail": {
+            "actual": 2,
+            "expected": 2,
+            "contexto": {
+              "opciones": [
+                "",
+                "prueba-alfa-2026",
+                "prueba-beta-2026"
+              ]
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closes after creating",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: a month with that nombre exists",
+          "detail": {
+            "nuevoId": "prueba-crud-gamma-2026-1791657213618",
+            "orden": [
+              "prueba-alfa-2026",
+              "prueba-beta-2026",
+              "prueba-crud-gamma-2026-1791657213618"
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: mesesOrden grew by one",
+          "detail": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: mesesOrden grew by one",
+          "detail": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the new month has zero expenses (nothing cloned)",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the new month has zero movements",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: notas start empty",
+          "detail": {
+            "actual": "",
+            "expected": ""
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the new month became the active one",
+          "detail": {
+            "actual": "prueba-crud-gamma-2026-1791657213618",
+            "expected": "prueba-crud-gamma-2026-1791657213618"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: a month pill shows the new name",
+          "detail": {
+            "pills": [
+              {
+                "texto": "PRUEBA-ALFA 2026",
+                "activa": false,
+                "ariaPressed": "false"
+              },
+              {
+                "texto": "PRUEBA-BETA 2026",
+                "activa": false,
+                "ariaPressed": "false"
+              },
+              {
+                "texto": "PRUEBA-CRUD Gamma 2026",
+                "activa": true,
+                "ariaPressed": "true"
+              }
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: one pill was added",
+          "detail": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: exactly one pill is marked active",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the header badge shows the new month",
+          "detail": {
+            "actual": "PRUEBA-CRUD Gamma 2026",
+            "expected": "PRUEBA-CRUD Gamma 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "three persisted writes: addNewMonth save, then switchView saves for activeMonthId and for currentView",
+          "detail": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "no NaN/undefined/Infinity on the empty month",
+          "detail": {
+            "offenders": []
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 21
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.create.clone: recurrent expenses copied, fresh ids, all reset to Pendiente",
+      "fixture": "baseline",
+      "verdict": "FAIL",
+      "observation": "failed -> DISK: all 5 fixed+variable expenses were copied; DISK: extras were NOT cloned (store.js:736 hardcodes extras: []; index.html:823 documents it); DISK: notas start empty; DISK: the amounts came across unchanged",
+      "checks": [
+        {
+          "pass": true,
+          "label": "fixture precondition: the source has an extra, to prove it is NOT cloned",
+          "detail": {
+            "extrasOrigen": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "fixture precondition: the source has movements",
+          "detail": {
+            "movsOrigen": 3
+          }
+        },
+        {
+          "pass": true,
+          "label": "the source month can be chosen in the clone select",
+          "detail": {
+            "actual": true,
+            "expected": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the clone exists",
+          "detail": {
+            "nuevoId": "prueba-crud-delta-2026-1791657217401"
+          }
+        },
+        {
+          "pass": false,
+          "label": "DISK: all 5 fixed+variable expenses were copied",
+          "detail": {
+            "actual": 6,
+            "expected": 5
+          }
+        },
+        {
+          "pass": false,
+          "label": "DISK: extras were NOT cloned (store.js:736 hardcodes extras: []; index.html:823 documents it)",
+          "detail": {
+            "actual": 1,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: movements were NOT cloned (store.js:738)",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": false,
+          "label": "DISK: notas start empty",
+          "detail": {
+            "actual": "PRUEBA-ALFA notas de prueba",
+            "expected": ""
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: every cloned item was reset to Pendiente",
+          "detail": {
+            "estados": [
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente",
+              "Pendiente"
+            ]
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: no cloned item kept the source id (fresh generateId)",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": false,
+          "label": "DISK: the amounts came across unchanged",
+          "detail": {
+            "actual": "[111.11,222.22,333.33,444.44,555.55,666.66]",
+            "expected": "[111.11,222.22,333.33,444.44,555.55]"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the cloned month renders every cloned row",
+          "detail": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "pass": true,
+          "label": "no NaN/undefined/Infinity after cloning",
+          "detail": {
+            "offenders": []
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 31
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "index.html:823 says the clone copies \"los gastos fijos y variables marcados como pendientes\", but store.js:727-735 copies ALL of them and then resets every estado to Pendiente. A month with an item already marked Pagado is cloned as Pendiente. That is the behaviour, and it is the sensible one - the hint is imprecise, not the code. Not a defect, a wording nit for T4.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.switch: clicking a pill moves the active month and re-renders",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "11 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "precondition: we start on PRUEBA-ALFA",
+          "detail": {
+            "actual": "prueba-alfa-2026",
+            "expected": "prueba-alfa-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the PRUEBA-BETA 2026 pill was clicked",
+          "detail": {
+            "ok": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: activeMonthId changed",
+          "detail": {
+            "actual": "prueba-beta-2026",
+            "expected": "prueba-beta-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the header badge follows",
+          "detail": {
+            "actual": "PRUEBA-BETA 2026",
+            "expected": "PRUEBA-BETA 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: exactly one pill is active",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the right pill is the active one",
+          "detail": {
+            "actual": "PRUEBA-BETA 2026",
+            "expected": "PRUEBA-BETA 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the active pill also announces aria-pressed=true (the pill is a real toggle)",
+          "detail": {
+            "actual": "true",
+            "expected": "true"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the subtotals were recomputed for the newly active month",
+          "detail": {
+            "actual": "S/ 666.66",
+            "expected": "S/ 666.66",
+            "contexto": {
+              "esperado": 666.66
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the movement count tag reflects the empty month we switched to",
+          "detail": {
+            "actual": "0 movs",
+            "expected": "0 movs"
+          }
+        },
+        {
+          "pass": true,
+          "label": "two persisted writes (switchView saves twice)",
+          "detail": {
+            "actual": 2,
+            "expected": 2
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 41
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.nav.boundaries: prev on the first month and next on the last are inert",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "7 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "DISK: prev on the first month does not move the active month",
+          "detail": {
+            "actual": "prueba-alfa-2026",
+            "expected": "prueba-alfa-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: a toast explains that this is the first month",
+          "detail": {
+            "actual": true,
+            "expected": true,
+            "contexto": {
+              "toast": "Estás en el primer mes registrado"
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the boundary click persists nothing",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "next moves from ALFA to BETA",
+          "detail": {
+            "actual": "prueba-beta-2026",
+            "expected": "prueba-beta-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: next on the last month does not move",
+          "detail": {
+            "actual": "prueba-beta-2026",
+            "expected": "prueba-beta-2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the one real move persisted",
+          "detail": {
+            "writes": 2
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 51
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.rename: there is no rename control anywhere in the UI",
+      "fixture": "baseline",
+      "verdict": "INCONCLUSIVE",
+      "observation": "observed but untestable -> month rename cannot be exercised through the UI",
+      "checks": [
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: no control anywhere is labelled as renaming a month",
+          "detail": {
+            "actual": 0,
+            "expected": 0,
+            "contexto": {
+              "totalControles": 109,
+              "sospechosos": [],
+              "pills": 2,
+              "pillsEditable": 0
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: month pills are not contenteditable",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the nombre is unchanged",
+          "detail": {
+            "actual": "PRUEBA-BETA 2026",
+            "expected": "PRUEBA-BETA 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 61
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "label": "month rename cannot be exercised through the UI",
+          "why": "The capability does not exist at all: no store method, no control, no contenteditable node. There is nothing to click, so a rename test would be a test of nothing."
+        }
+      ],
+      "notes": [
+        "Neither js/store.js nor js/app.js has a renameMonth method. addNewMonth derives the id from the nombre, and nothing rewrites an existing nombre afterwards.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Mes: crear, duplicar, navegar, renombrar, borrar",
+      "name": "month.delete: deleteMonth has no UI control and its guard alert is unreachable",
+      "fixture": "baseline",
+      "verdict": "FAIL",
+      "observation": "failed -> PROVEN ABSENT: no control anywhere is labelled as deleting a month",
+      "checks": [
+        {
+          "pass": false,
+          "label": "PROVEN ABSENT: no control anywhere is labelled as deleting a month",
+          "detail": {
+            "actual": 1,
+            "expected": 0,
+            "contexto": {
+              "totalControles": 84,
+              "sospechosos": [
+                {
+                  "tag": "button",
+                  "id": "btnDeleteMonth",
+                  "texto": "Eliminar mes"
+                }
+              ],
+              "pillsConBorrar": 0
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "PROVEN ABSENT: the month pills contain no nested button",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the month list is unchanged",
+          "detail": {
+            "actual": 2,
+            "expected": 2
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 71
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "label": "month delete cannot be exercised through the UI",
+          "why": "No control calls deleteMonth. Exercising it would require a direct store call, which this suite refuses to substitute for UI evidence. Product consequence: the app lets you create periods forever and never remove one, and the \"keep at least one month\" guard is untestable dead code."
+        }
+      ],
+      "notes": [
+        "store.js:759 deleteMonth exists and has ZERO callers. Its guard alert(\"Debes mantener al menos un mes en el sistema.\") can therefore never be shown.",
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.cancel-button: closes the sheet and leaves the data untouched",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the real Cancel button was clicked",
+          "detail": {
+            "ok": true,
+            "texto": "Cancelar"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closed",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: the typed expense was NOT persisted",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the whole persisted document is byte-identical",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 21
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.escape: a REAL Escape key press closes the sheet and persists nothing",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "5 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "precondition: the sheet is open",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "OBSERVED: the real CDP Escape key event closed the sheet",
+          "detail": {
+            "modales": []
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the persisted document is byte-identical",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 31
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.overlay-click: a REAL mouse click on the backdrop closes the sheet",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "found a viewport point where elementFromPoint IS the overlay, outside the sheet",
+          "detail": {
+            "ok": true,
+            "x": 4,
+            "y": 4,
+            "hitId": "modalAddBudget",
+            "hitClass": "modal-overlay active",
+            "sheet": {
+              "left": 453,
+              "top": 142,
+              "right": 973,
+              "bottom": 758
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the real click target was the modal overlay itself",
+          "detail": {
+            "actual": "modalAddBudget",
+            "expected": "modalAddBudget",
+            "contexto": {
+              "ok": true,
+              "x": 4,
+              "y": 4,
+              "hitId": "modalAddBudget",
+              "hitClass": "modal-overlay active",
+              "sheet": {
+                "left": 453,
+                "top": 142,
+                "right": 973,
+                "bottom": 758
+              }
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "OBSERVED: the backdrop click closed the sheet",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: the persisted document is byte-identical",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 41
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.edit-cancel: cancelling an edit discards the typed changes",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "6 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the real Cancel button of the edit sheet was clicked",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the edit sheet closed",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: byte-identical, the edit was discarded",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the row still shows the ORIGINAL concepto",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 51
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.close-button-x: the header X also discards an in-progress edit",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "5 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the header X of the edit sheet was clicked",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "the sheet closed",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: byte-identical",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 61
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "modal.role-picker-is-not-escapable: cannot be exercised in this harness",
+      "fixture": "baseline",
+      "verdict": "INCONCLUSIVE",
+      "observation": "observed but untestable -> Escape-on-role-picker cannot be exercised end to end",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the role picker node exists in the document",
+          "detail": {
+            "existe": true,
+            "clases": "modal-overlay",
+            "tieneSheet": true,
+            "esModalOverlay": true,
+            "abierto": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "it carries .modal-overlay, the exact class app.js:1633 filters on",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "it is not open during a normal admin session, as expected",
+          "detail": {
+            "actual": false,
+            "expected": false
+          }
+        },
+        {
+          "pass": true,
+          "label": "reading the DOM changed nothing",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 71
+          }
+        }
+      ],
+      "gaps": [
+        {
+          "label": "Escape-on-role-picker cannot be exercised end to end",
+          "why": "openRoleSelectModal() is a closure inside the DOMContentLoaded listener, not reachable from the page, and in this sandbox the picker never opens naturally (the role choice is pre-seeded and the stub session resolves admin first). Driving it would mean re-implementing the modal, which would test the harness instead of the product."
+        }
+      ],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "notes.autosave: typing in the notes sheet persists after the debounce",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "11 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the real notes button opens the sheet",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "the textarea is prefilled with the stored notas",
+          "detail": {
+            "actual": "PRUEBA-ALFA notas de prueba",
+            "expected": "PRUEBA-ALFA notas de prueba"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the subtitle names the active month",
+          "detail": {
+            "actual": "Recordatorios y observaciones de PRUEBA-ALFA 2026",
+            "expected": "Recordatorios y observaciones de PRUEBA-ALFA 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the feedback label shows the debounced save in flight",
+          "detail": {
+            "feedback": "Guardando notas..."
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: not persisted yet - the save is debounced, not immediate",
+          "detail": {
+            "actual": "PRUEBA-ALFA notas de prueba",
+            "expected": "PRUEBA-ALFA notas de prueba"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the notes were persisted after ~400 ms, accents intact",
+          "detail": {
+            "actual": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026",
+            "expected": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: the notes are in the store",
+          "detail": {
+            "actual": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026",
+            "expected": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the feedback label confirms the save",
+          "detail": {
+            "feedback": "Guardado automáticamente"
+          }
+        },
+        {
+          "pass": true,
+          "label": "exactly one persisted write for one debounced save",
+          "detail": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the notes button keeps its has-notes marker",
+          "detail": {
+            "actual": true,
+            "expected": true
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 81
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    },
+    {
+      "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
+      "name": "notes.close-without-typing: opening and closing the sheet is inert",
+      "fixture": "baseline",
+      "verdict": "PASS",
+      "observation": "4 checks passed across UI + memory + disk + network",
+      "checks": [
+        {
+          "pass": true,
+          "label": "the sheet closed",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: byte-identical, open+close writes nothing",
+          "detail": {
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+          }
+        },
+        {
+          "pass": true,
+          "label": "no write at all",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "NETWORK: nothing reached a Supabase host",
+          "detail": {
+            "supabaseRequests": 0,
+            "tripwireAttempts": 0,
+            "totalRequests": 91
+          }
+        }
+      ],
+      "gaps": [],
+      "notes": [
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+      ],
+      "network": "CLEAN (supabase=0, tripwire=0)",
+      "thrown": null
+    }
+  ]
+}

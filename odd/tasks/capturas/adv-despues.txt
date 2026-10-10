@@ -1,0 +1,145 @@
+﻿sandbox fixtures available: baseline, sinMovimientos, sinGastos, unSoloMes, mesVacio, periodos24
+
+==============================================================================
+FIXTURE mesVacio  ::  Estados vacios: un mes sin gastos, sin movimientos, sin nada
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [PASS ] empty.month-with-no-data: every KPI renders a real number, no NaN, no blank
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] empty.every-section-shows-an-empty-state: every group + the feed, none blank
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] empty.admin-buttons-are-absent-not-dead: no dangling controls in an empty month
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE sinGastos  ::  Estado vacio: 0 gastos pero con movimientos
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 15/15
+  [PASS ] empty.zero-expenses-with-movements: the feed still works and the KPIs are sane
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE sinMovimientos  ::  Estado vacio: 0 movimientos
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 21/21
+  [PASS ] empty.zero-movements: creating the only movement, then deleting it, leaves a clean state
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE unSoloMes  ::  Un solo mes en todo el sistema
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 27/27
+  [PASS ] empty.only-one-month: navigation degrades honestly with a single period
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE mesVacio  ::  Importes extremos: 0, negativos, decimales largos, Infinity, NaN, texto
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [PASS ] amount.zero: 0 is accepted, stored and rendered as a real amount
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.negative: rejected by min=0 with the browser pointing at the field
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.half-cent: 0.005 is BLOCKED by step=0.01, which the display layer would have rounded
+        i FINDING (the input layer disagrees with the display layer). 0.005 cannot be entered, yet formatCurrency(store.js:826) would render it as "S/ 0.01", and sanear() does not round, so a JSON import carrying 0.005 would display as S/ 0.01 while the UI refuses to let the user type it. Blocking sub-cent precision in a soles field is defensible; the inconsistency is the defect. T4: either accept and round on input, or state the 2-decimal rule in the field hint.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.fifteen-decimals: also blocked by step=0.01, never truncated in silence
+        i Worth stating plainly because it looks like a defect and is not: high-precision decimals are NOT silently truncated. The browser refuses the submit and the store is never asked, so the data stays intact. The rejection is quiet (no toast, no inline message), which is the only complaint here and it is the same complaint as the whitespace-concepto case.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.infinity-1e309: the NUMBER FIELD refuses it, so the || 0 bug is unreachable
+        i CORRECTION to an earlier hypothesis, stated because the correction is the useful part. `parseFloat("1e309") || 0` at app.js:1253 (same pattern at app.js:1532, store.js:518 and store.js:644) WOULD map Infinity to 0 and report success - but that branch is UNREACHABLE from this UI, because the browser never lets an overflowing literal sit in the field. So the `|| 0` is latent, not observable. It only matters for programmatic callers such as a future import path. T4 should still fix it, as hardening, and must not be reported as a user-visible repair.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.nan-text: non-numeric text never reaches the store as a string
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.comma-decimal: "12,34" is discarded silently, while "1e3" is honoured
+        i DEFECT (silent rejection of the local number format). For a Peruvian user "12,34" is the natural way to type a decimal, and the field discards it with no message beyond the browser bubble. Meanwhile EVERY rendered amount uses es-PE grouping ("S/ 1,000.00"), so the format the app displays is not a format the app accepts. Severity: medium - this is the most likely real-world input mistake and it fails without explanation. T4 should normalise a comma to a dot before validating.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] amount.huge-value: a realistic nine-figure amount survives intact
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [INCON] amount.reload-persistence: NOT testable in this harness, and that is stated not faked
+        ? "the stored value survives a reload" cannot be tested in this harness  -> sandbox.mjs writes the fixture into localStorage on every navigation (sandbox.mjs:402), so a reload wipes any mutation. Testing real reload persistence needs a harness option that seeds ONCE and then reloads without re-seeding. Until that exists the raw-bytes assertions are the ceiling, and they are asserted everywhere else in this suite.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 20
+  [PASS ] hostile.script-tag: escaped, not executed
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] hostile.img-onerror: escaped, no element created, no handler fired
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] hostile.quotes-backticks: stored and shown exactly, no markup created
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] hostile.javascript-url-and-markup-attributes: inert text
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] hostile.emoji-accents-cjk: stored and displayed without corruption
+        i The RTL override U+202E is stored and rendered as a literal character. It is NOT stripped. That is a deliberate non-goal for this app - the data belongs to the user and no text is filtered - but it does mean a hostile month/expense name can visually reverse what follows it. Recorded as a known limitation, not a defect in escaping.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] hostile.500-chars: renders truncated-with-ellipsis without breaking the layout
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE mesVacio  ::  Importacion JSON: sin superficie de UI (hallazgo)
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [INCON] import.no-ui-surface: importJSON is unreachable, proven by enumerating controls
+        ? Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, null, deeply nested garbage, export->import round trip) is UNTESTABLE through the UI  -> importJSON has no caller and no control. The only way to observe it would be to call window.financialStore.importJSON(...), which is precisely the store-level shortcut this suite refuses to pass off as UI evidence. This is reported as a product finding instead: README.md:20 advertises "copia de seguridad en JSON" and CSV export, and neither feature is reachable. T4 has to add the UI before these cases can be tested at all.
+        i js/store.js:787 importJSON(jsonString) and js/store.js:774 exportJSON() and js/store.js:802 exportCSV() are implemented. js/app.js never calls any of them, and index.html has no button, no <input type=file> and no inline handler for them.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE mesVacio  ::  Exportacion CSV: sin superficie de UI (hallazgo)
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [INCON] export.no-ui-surface: exportCSV / exportJSON are unreachable
+        ? The CSV-injection and escaping case is UNTESTABLE through the UI  -> exportCSV has no caller and no control. Observed statically (documented above): the hostile-text vectors never reach it, so the residual risk is confined to the month nombre, which is quoted but not prefixed against =, +, - or @. That is a real, if narrow, finding - and it is exactly the kind of thing a test written against the unreachable method would have hidden behind a green tick.
+        i js/store.js:802 exportCSV builds a Blob and clicks a synthetic <a download>, but nothing in the UI ever calls it. Note also what it would emit: the header is "MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE" and each row contains r.nombre plus totals.toFixed(2). `concepto` is NOT part of exportCSV at all, so hostile expense text can never reach a CSV cell through this path. The only free-text injection surface would be the month `nombre`, which is wrapped in double quotes but not formula-guarded.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE mesVacio  ::  Destruccion en el limite: el ultimo elemento, el unico mes, con un modal abierto
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [PASS ] destroy.last-expense-in-section: the empty state returns and the KPIs stay real
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] destroy.last-movement: the feed returns to its empty state
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [INCON] destroy.delete-while-a-modal-is-open: NOT REACHABLE, and that is proven, not assumed
+        ? "Delete while a modal is open" as literally specified  -> Not reachable: the modal overlay covers the page (proven above by hit test). Proving behaviour the user cannot trigger would be theatre. The nearest reachable hazard - a pending autosave surviving a close - IS tested above and it failed.
+        i This is a genuine conflict with the acceptance criterion "modal cancel leaves data untouched". The notes sheet is documented as autosaving (index.html:798 "Guardado automatico en tiempo real"), so persisting is defensible - but then Escape is NOT a cancel and the sheet must say so. Right now it is indistinguishable from a cancel. T4 decision needed: either cancel the pending timer on close, or stop presenting the close button as a cancel.
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11
+  [PASS ] destroy.delete-while-edit-sheet-open: the edit sheet survives and still saves correctly
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  [PASS ] destroy.reopen-edit-sheet-after-delete: a stale sheet cannot resurrect a deleted row
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE mesVacio  ::  Filtros de segmento sobre el estado vacio
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 9/9
+  [PASS ] empty.segment-filters: toggling every segment off shows the honest notice
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+FIXTURE baseline  ::  El libro agrupado: encabezado, conteo y buscador
+==============================================================================
+  admin gate OK: read-only-mode=false, .admin-action-btn 27/27
+  [PASS ] ledger.search-hides-empty-groups: a group with no visible rows goes with them
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  [PASS ] ledger.search-counts-are-honest: a partially matched group says "N de M"
+        i observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10
+  throwaway profile deleted: true -> C:\Users\User\AppData\Local\Temp\opencode\gastos-sandbox-21872-9333
+
+==============================================================================
+T3 adversarial-suite summary
+==============================================================================
+PASS        : 27
+FAIL        : 0
+INCONCLUSIVE: 4
+total       : 31   (infrastructure failures: 0)
+assertNetworkClean() ran on 31/31 tests; Supabase requests across the whole run: 0
+report: C:\Users\User\Desktop\Web de Gastos Mensuales\odd\tasks\capturas\adversarial-suite.report.json

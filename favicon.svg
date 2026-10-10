@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Gestor Financiero">
+  <!--
+    Mismo glifo que la marca del rail, escalado x2 desde su viewBox de 16:
+    linea base + 4 barras de altura creciente. Fondo con el acento de accion
+    (#0088ff, el systemBlue medido de apple.com en apple-com-tokens.md §7) y
+    marca en blanco, que es la combinacion que mejor se lee a 16px en la pestana.
+  -->
+  <rect width="32" height="32" rx="7" fill="#0088ff"/>
+  <g fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round">
+    <path d="M6 25h20"/>
+    <path d="M9.5 25v-7"/>
+    <path d="M14.5 25v-11"/>
+    <path d="M19.5 25v-16"/>
+    <path d="M23.5 25v-4.5"/>
+  </g>
+</svg>

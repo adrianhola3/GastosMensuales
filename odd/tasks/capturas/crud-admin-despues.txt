@@ -1,0 +1,431 @@
+﻿
+=== AISLAMIENTO: baseline del localStorage REAL (leido desde node por CDP DOMStorage) ===
+{
+ "keys": [
+  "control_gastos_mensuales_db_v1",
+  "sb-bgcgmofroibrxthvdlil-auth-token-code-verifier",
+  "sb-bgcgmofroibrxthvdlil-auth-token-flow-0eb35a00e6bfc1619b38834063e47f96-code-verifier",
+  "sb-bgcgmofroibrxthvdlil-auth-token-flows-code-verifier"
+ ],
+ "appKeyPresent": true,
+ "appKeyBytes": 8100,
+ "appKeyHash": 2457901690,
+ "hashTodasLasClaves": 4111618696,
+ "entradas": [
+  [
+   "control_gastos_mensuales_db_v1",
+   8100
+  ],
+  [
+   "sb-bgcgmofroibrxthvdlil-auth-token-code-verifier",
+   114
+  ],
+  [
+   "sb-bgcgmofroibrxthvdlil-auth-token-flow-0eb35a00e6bfc1619b38834063e47f96-code-verifier",
+   114
+  ],
+  [
+   "sb-bgcgmofroibrxthvdlil-auth-token-flows-code-verifier",
+   36
+  ]
+ ]
+}
+
+=== BLOQUE A - CREAR / SUBIR ===
+  sesion admin medida: {"porFuncion":{"rol":"admin","configurado":true},"directa":{"rol":"admin","configurado":true},"isAdminEsPrivadoDelClosure":true,"dom":{"bodyClass":"","readOnly":false,"filasGasto":6,"filasMov":2,"adminTotal":25,"adminVisibles":25,"modalRolActivo":true,"labelModo":"Modo Administrador","kpiIngresos":"S/ 1,000.00","kpiEgresos":"S/ 333.00","kpiBalance":"S/ 667.00","kpiPct":"100.0%","pagosLabel":"2 de 6 gastos pagados","subtotalPersonales":"S/ 70.00","subtotalExtras":"S/ 83.00"},"contadores":{"modo":"admin","getItemRedirigidos":2,"getItemReales":2,"setItemRedirigidos":1,"setItemReales":2,"removeItemRedirigidos":0,"removeItemReales":2,"guardarN":1,"cargarN":1,"asignadoPorProducto":1,"clavesReales":["setItem:lswt-0.32508850096447440.9753439210139745","setItem:lswt-0.32508850096447440.9753439210139745","removeItem:lswt-0.32508850096447440.9753439210139745","removeItem:lswt-0.32508850096447440.9753439210139745"]}}
+  PASS  A1   gasto Fijo en servicios/fijos
+  PASS  A2   gasto Variable + rango
+  PASS  A3   gasto Variable en personales/variables
+  PASS  A4   gasto Fijo en personales/fijos
+  PASS  A5   gasto Extra
+  PASS  A6   movimiento Ingreso
+  PASS  A7   movimiento Gasto
+  PASS  A8   mes nuevo sin clonar
+  PASS  A9   mes nuevo clonando con las opciones por defecto
+  PASS  A10  monto "45.50" (string del input)
+  PASS  A11  monto 0
+  PASS  A12  concepto con acentos y enye
+  PASS  A13  concepto de 500 chars
+  PASS  A14  concepto con <img src=x onerror=...>
+  PASS  A15  concepto duplicado
+  PASS  A16  concepto solo espacios
+  PASS  A17  mes con tilde: A├▒o 2027
+  PASS  A18  clonar con "gastos extra" marcado
+  PASS  A19  clonar con "notas del mes" marcado
+  PASS  A20  clonar con "movimientos" marcado
+  PASS  A21  clonar con las tres opciones apagadas
+  PASS  A22  el bloque de opciones de clonado solo aplica con un mes real
+
+=== BLOQUE B - BORRAR ===
+  PASS  B1   borrar gasto, confirm ACEPTAR
+  PASS  B2   borrar gasto, confirm CANCELAR
+  PASS  B3   borrar el ULTIMO item de una coleccion
+  PASS  B4   borrar movimiento, aceptar
+  PASS  B5   borrar movimiento, cancelar
+  PASS  B6   borrar un id que NO existe
+  PASS  B7   borrar item de un mes NO activo
+  PASS  B8   borrar el mes ACTIVO, confirm ACEPTAR
+  PASS  B9   borrar el mes, confirm CANCELAR
+  PASS  B10  intentar borrar el ULTIMO mes que queda
+
+=== BLOQUE C - EDITAR ===
+  PASS  C1   editar gasto Fijo (concepto + monto)
+  PASS  C2   editar gasto Variable (concepto + monto + rango)
+  PASS  C3   editar gasto Extra
+  PASS  C4   editar movimiento (concepto + monto + fecha)
+  PASS  C5   editar con monto "45.50"
+  PASS  C6   editar con monto NEGATIVO
+  PASS  C7   editar con monto NO NUMERICO
+  PASS  C8   editar con concepto VACIO
+  PASS  C9   editar un id que NO existe
+  PASS  C10  editar y RECARGAR
+
+=== BLOQUE D - TOGGLE / PAGO VARIABLE ===
+  PASS  D1   toggle Fijo Pendiente -> Pagado
+  PASS  D2   toggle Variable Pendiente
+  PASS  D3   pagar variable con monto valido
+  PASS  D4   pagar variable con monto NEGATIVO
+  PASS  D5   toggle de un id INEXISTENTE
+
+=== BLOQUE E - GATE DE ADMIN (sesion real, no CSS a mano) ===
+  [admin] sesion={"porFuncion":{"rol":"admin","configurado":true},"directa":{"rol":"admin","configurado":true},"isAdminEsPrivadoDelClosure":true} body="" label="Modo Administrador" adminVisibles=25/25 modalRol=true
+  PASS  E1   sesion admin REAL
+  [lector] sesion={"porFuncion":{"rol":"lector","configurado":true},"directa":{"rol":"lector","configurado":true},"isAdminEsPrivadoDelClosure":true} body="read-only-mode" label="Solo Lectura" adminVisibles=0/25
+  PASS  E2   sesion lector
+  PASS  E3   lector CAMBIA PLATA por el modal de pago variable
+  PASS  E4   lector hace TOGGLE de estado
+  PASS  E5   lector EDITA LAS NOTAS del mes
+  PASS  E6   lector envia el form de agregar movimiento
+  PASS  E7   lector fuerza el click en #btnDeleteMonth
+
+=== BLOQUE F - PERSISTENCIA / INTEGRIDAD (F1-F5) ===
+  PASS  F1   crear y recargar
+  PASS  F2   editar y recargar
+  PASS  F3   borrar y recargar
+  PASS  F4   los graficos y las KPIs
+  PASS  F5   dos meses, tocar uno
+
+=== BLOQUE F - F6 / F7 / F8 (sobre toda la corrida) ===
+  PASS  F6   toda la corrida
+  PASS  F7   hash del localStorage REAL
+  PASS  F8   escrituras a Supabase
+
+
+================ RESUMEN POR BLOQUE ================
+  A A - crear / subir            total 22   PASS 22   FAIL  0   SKIP  0
+  B B - borrar                   total 10   PASS 10   FAIL  0   SKIP  0
+  C C - editar                   total 10   PASS 10   FAIL  0   SKIP  0
+  D D - toggle / pago variable   total  5   PASS  5   FAIL  0   SKIP  0
+  E E - gate de admin            total  7   PASS  7   FAIL  0   SKIP  0
+  F F - persistencia / integridad total  8   PASS  8   FAIL  0   SKIP  0
+  TOTAL                          total 62   PASS 62   FAIL  0   SKIP  0
+
+================ FALLOS ================
+  ninguno
+
+================ SKIPS ================
+  ninguno
+
+================ AISLAMIMIENTO MEDIDO ================
+  hash del localStorage REAL (clave control_gastos_mensuales_db_v1), leido desde node por CDP DOMStorage:
+    antes:  2457901690  (8100 bytes, claves: ["control_gastos_mensuales_db_v1","sb-bgcgmofroibrxthvdlil-auth-token-code-verifier","sb-bgcgmofroibrxthvdlil-auth-token-flow-0eb35a00e6bfc1619b38834063e47f96-code-verifier","sb-bgcgmofroibrxthvdlil-auth-token-flows-code-verifier"])
+    despues: 2457901690  (8100 bytes, claves: ["control_gastos_mensuales_db_v1","sb-bgcgmofroibrxthvdlil-auth-token-code-verifier","sb-bgcgmofroibrxthvdlil-auth-token-flow-0eb35a00e6bfc1619b38834063e47f96-code-verifier","sb-bgcgmofroibrxthvdlil-auth-token-flows-code-verifier"])
+    identico: true
+  setItem redirigidos a memoria (la app SI intento persistir): 21
+  setItem que llegaron al localStorage REAL, de la clave de la app: 0  []
+  eventos DOMStorage del navegador sobre la clave de la app: 0
+  otras escrituras reales (libros de Brave, no datos): ["setItem:lswt-0.96509869240827350.3493581379963514","removeItem:lswt-0.96509869240827350.3493581379963514","setItem:lswt-0.32508850096447440.9753439210139745","removeItem:lswt-0.32508850096447440.9753439210139745","setItem:lswt-0.190763679920393780.8424119575431246","removeItem:lswt-0.190763679920393780.8424119575431246","setItem:lswt-0.123914703360065940.6517691110879532","removeItem:lswt-0.123914703360065940.6517691110879532","setItem:lswt-0.51528166248821350.5401470153187262","removeItem:lswt-0.51528166248821350.5401470153187262","setItem:lswt-0.071676457607213530.07902060411301093","removeItem:lswt-0.071676457607213530.07902060411301093","setItem:lswt-0.493076092062712630.6805521409972385","removeItem:lswt-0.493076092062712630.6805521409972385","setItem:lswt-0.69406749935134380.7160475500459902","removeItem:lswt-0.69406749935134380.7160475500459902","setItem:lswt-0.1199119826793440.765082820256269","removeItem:lswt-0.1199119826793440.765082820256269","setItem:lswt-0.337692649260224350.899569020458522","removeItem:lswt-0.337692649260224350.899569020458522","setItem:lswt-0.42542458608074550.03105522509527392","removeItem:lswt-0.42542458608074550.03105522509527392","setItem:lswt-0.44401441073073820.40998559484117025","removeItem:lswt-0.44401441073073820.40998559484117025"]
+  guardar() interceptados por el stub: 21   cargar() interceptados: 12
+  asignaciones de window.gastosRemoto tragadas por el setter: 12
+  requests totales: 122   a *.supabase.co: 0
+  hosts contactados: ["","cdn.jsdelivr.net"]
+
+================ ERRORES DE TODA LA CORRIDA (F6) ================
+  excepciones: 0 []
+  console.error: 0 []
+  respuestas >= 400: 0 []
+
+================ DIALOGOS ================
+  total: 18
+  confirm/accept: 10
+      "┬┐Eliminar gasto "SYN-SF-ALPHA"?"
+      "┬┐Eliminar gasto "SYN-PV-DELTA"?"
+      "┬┐Eliminar movimiento "SYN-MV-GASTO"?"
+      "┬┐Eliminar gasto "SYN-PF-GAMMA"?"
+      "┬┐Eliminar gasto "SYN-PF-GAMMA"?"
+      "┬┐Eliminar gasto "SYN-BF-ZETA"?"
+      ... y 4 mas
+  confirm/cancel: 3
+      "┬┐Eliminar gasto "SYN-SF-PAGADO"?"
+      "┬┐Eliminar movimiento "SYN-MV-INGRESO"?"
+      "┬┐Eliminar "SYN Mes B"? Se borrar├ín 0 gastos, 0 movimientos y 0 gastos extra de este per├¡odo. Esta acci├│n no se puede deshacer."
+  alert/accept: 5
+      "Debes mantener al menos un mes en el sistema."
+      "Por favor ingresa un monto v├ílido."
+      "Por favor ingresa un monto v├ílido."
+      "El concepto del gasto no puede quedar vac├¡o."
+      "Por favor ingresa un monto v├ílido."
+
+================ E1-E7: GATE DE ADMIN ================
+  E1 PASS  sesion admin REAL
+  E2 PASS  sesion lector
+  E3 PASS  lector CAMBIA PLATA por el modal de pago variable
+  E4 PASS  lector hace TOGGLE de estado
+  E5 PASS  lector EDITA LAS NOTAS del mes
+  E6 PASS  lector envia el form de agregar movimiento
+  E7 PASS  lector fuerza el click en #btnDeleteMonth
+  [admin]  sesion={"porFuncion":{"rol":"admin","configurado":true},"directa":{"rol":"admin","configurado":true},"isAdminEsPrivadoDelClosure":true} body="" #authModeLabel="Modo Administrador"
+  [lector] sesion={"porFuncion":{"rol":"lector","configurado":true},"directa":{"rol":"lector","configurado":true},"isAdminEsPrivadoDelClosure":true} body="read-only-mode" #authModeLabel="Solo Lectura"
+
+================ BORRAR MES: ALCANZABILIDAD MEDIDA ================
+{
+ "gap": null,
+ "donde": "js/store.js (definicion, 1 menciones), js/app.js (2 callers), index.html (0 referencias literales)",
+ "conteosEnFuente": {
+  "storeJs": 1,
+  "appJs": 2,
+  "indexHtml": 0
+ },
+ "controlesEnHtmlQueHablanDeBorrarMes": [],
+ "controlesEnDom": {
+  "totalControles": 84,
+  "conBorrar": [
+   "#btnDeleteMonth.period-new.period-new-danger.admin-action-btn :: Eliminar el per├¡odo activo",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto",
+   ".btn-ghost-rose.btn-delete-tx.admin-action-btn :: Eliminar movimiento",
+   ".btn-ghost-rose.btn-delete-tx.admin-action-btn :: Eliminar movimiento",
+   ".btn-ghost-rose.btn-delete-expense.admin-action-btn :: Eliminar gasto"
+  ],
+  "hayBorrarMes": true
+ },
+ "botonEnElDom": {
+  "existe": true,
+  "title": "Eliminar el per├¡odo activo",
+  "texto": "Eliminar mes",
+  "clases": "period-new period-new-danger admin-action-btn",
+  "display": "block",
+  "ocupaLayout": true,
+  "adminActionBtn": true
+ },
+ "metodoSobreCopiaDesechable": {
+  "retorno": true,
+  "mesesOrdenAntes": 2,
+  "mesesOrdenDespues": 1,
+  "sigueExistiendoElMes": false,
+  "saves": 1,
+  "storeVivoIntacto": true
+ },
+ "veredicto": "ALCANZABLE: hay un control en la interfaz y el handler llama al store. Los casos B8-B10 lo ejercitan por la UI real."
+}
+
+================ HALLAZGO FUERA DE LA MATRIZ ================
+  el modal de seleccion de rol se abre igual con sesion admin real:
+    app.js:232-236 programa openRoleSelectModal() a los 60 ms sin mirar la sesion.
+    aplicarSesion() (l.165-170) lo cierra ANTES, y el setTimeout lo vuelve a abrir.
+    observado por el arnes: true
+    como lo oculta este arnes: HIDE_ROLE_MODAL lo oculta por CSS. Ninguna aserto depende de ese modal.
+
+================ PROBES DE DEFECTOS NO ALCANZABLES POR LA UI ================
+{
+ "R6_parseFloat_ou_0": {
+  "updateBudgetItem_montoNoNumerico": 0,
+  "updateBudgetItem_montoNoNumericoTipo": "number",
+  "InfinitySobreviveEnElStore": true,
+  "InfinityEnElJSONQueSeSube": null,
+  "InfinityEsNullEnElJSON": true,
+  "addMovement_montoNoNumerico": 0,
+  "savesDeLaCopia": {
+   "noNumerico": 1,
+   "infinity": 1,
+   "movimiento": 1
+  }
+ },
+ "R5_trim_sobre_concepto_ausente": {
+  "addBudgetItemSinConcepto": "TypeError: Cannot read properties of undefined (reading 'trim')",
+  "addMovementSinConcepto": "TypeError: Cannot read properties of undefined (reading 'trim')",
+  "addBudgetItemConConceptoEnBlancoLanza": null,
+  "conceptoGuardadoTrasTrim": ""
+ },
+ "R7_localStorage_corrupto_sobreescribe": {
+  "catchDeLeerLocalUsaDefaults": true,
+  "guardaLosDefaultsEncimaDelDato": true,
+  "reproducirEnLaCorrida": "NO: leerLocal() lee la copia REDIRIGIDA a memoria, que por construccion es valida. Sembrarle un blob corrupto exigiria tocar el stub, y la alternativa (corromper el localStorage real) esta prohibida."
+ },
+ "opcionesDeAddNewMonth": {
+  "hayTresIdsDistintos": true,
+  "sinOpciones_igualQueLasTresEnFalse": true,
+  "sinOpciones_igualQueObjetoVacio": true,
+  "diferenciaConLasTresEnFalse": [],
+  "diferenciaConObjetoVacio": [],
+  "formaDelClonSinOpciones": {
+   "servicios": {
+    "fijos": [
+     {
+      "concepto": "SYN-F2-EDIT-RELOAD",
+      "monto": 77.77,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-SF-PAGADO",
+      "monto": 50,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-F1-CREATE-RELOAD",
+      "monto": 66,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     }
+    ],
+    "variables": [
+     {
+      "concepto": "SYN-SV-BETA",
+      "monto": 30,
+      "tipo": "Variable",
+      "rango": "20-40",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "personales": {
+    "fijos": [],
+    "variables": [
+     {
+      "concepto": "SYN-PV-DELTA",
+      "monto": 45,
+      "tipo": "Variable",
+      "rango": "10-80",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "extras": [],
+   "notas": "",
+   "movimientos": []
+  },
+  "formaDelClonConLasTresEnFalse": {
+   "servicios": {
+    "fijos": [
+     {
+      "concepto": "SYN-F2-EDIT-RELOAD",
+      "monto": 77.77,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-SF-PAGADO",
+      "monto": 50,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-F1-CREATE-RELOAD",
+      "monto": 66,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     }
+    ],
+    "variables": [
+     {
+      "concepto": "SYN-SV-BETA",
+      "monto": 30,
+      "tipo": "Variable",
+      "rango": "20-40",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "personales": {
+    "fijos": [],
+    "variables": [
+     {
+      "concepto": "SYN-PV-DELTA",
+      "monto": 45,
+      "tipo": "Variable",
+      "rango": "10-80",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "extras": [],
+   "notas": "",
+   "movimientos": []
+  },
+  "formaDelClonConObjetoVacio": {
+   "servicios": {
+    "fijos": [
+     {
+      "concepto": "SYN-F2-EDIT-RELOAD",
+      "monto": 77.77,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-SF-PAGADO",
+      "monto": 50,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     },
+     {
+      "concepto": "SYN-F1-CREATE-RELOAD",
+      "monto": 66,
+      "tipo": "Fijo",
+      "rango": "",
+      "estado": "Pendiente"
+     }
+    ],
+    "variables": [
+     {
+      "concepto": "SYN-SV-BETA",
+      "monto": 30,
+      "tipo": "Variable",
+      "rango": "20-40",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "personales": {
+    "fijos": [],
+    "variables": [
+     {
+      "concepto": "SYN-PV-DELTA",
+      "monto": 45,
+      "tipo": "Variable",
+      "rango": "10-80",
+      "estado": "Pendiente"
+     }
+    ]
+   },
+   "extras": [],
+   "notas": "",
+   "movimientos": []
+  },
+  "saves": {
+   "sinOpciones": 1,
+   "conFalse": 1,
+   "conVacio": 1
+  },
+  "storeVivoIntacto": true
+ },
+ "notaAlcance": "Estos no se pueden disparar desde la UI: todos los campos de monto son input type=number min=0 required, asi que la validacion nativa los frena antes de que el guard de la app corra. R5 y R6 se miden sobre una copia desechable del estado, nunca sobre el store vivo; R7 solo se verifica por fuente. opcionesDeAddNewMonth mide el parametro opcional de addNewMonth sobre la misma copia desechable, porque la interfaz siempre se lo pasa."
+}
+
+================ CASOS FALTANTES DE LA MATRIZ ================
+  ninguno: la matriz completa se ejecuto
+
+Reporte: C:\Users\User\Desktop\Web de Gastos Mensuales\odd\tasks\capturas\crud-admin-r1.report.json
+Salida: 0 FAIL -> codigo de salida 0

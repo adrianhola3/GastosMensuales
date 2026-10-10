@@ -172,28 +172,45 @@ console.log('\nT3 - montos: se rechazan, no se coaccionan');
   check('addBudgetItem rechaza los montos inválidos', aceptados.length === 0, `aceptados: ${JSON.stringify(aceptados)}`);
 
   const item = store.addBudgetItem(mesId, 'servicios', 'fijos', { concepto: 'Internet', monto: '89.90' });
-  check('addBudgetItem acepta un monto válido como texto', !!item && item.monto === 89.90, JSON.stringify(item));
+  check('addBudgetItem acepta un monto válido como texto', !!item && item.montoEstimado === 89.90, JSON.stringify(item));
 
   // Nada de Infinity ni de ceros silenciosos en lo que quedó persistido.
+  // El presupuesto y los movimientos ya no comparten el nombre del campo: el
+  // presupuesto guarda `montoEstimado` y `montoReal`, y los movimientos siguen
+  // con `monto` (D8). Por eso la comprobación se hace sobre cada uno por
+  // separado en vez de con un `every` único.
   const persistido = JSON.parse(almacen.datos.control_gastos_mensuales_db_v1);
   const todosItems = Object.values(persistido.meses).flatMap(m => [
     ...m.servicios.fijos, ...m.servicios.variables,
     ...m.personales.fijos, ...m.personales.variables, ...m.extras, ...m.movimientos
   ]);
-  check('ningún monto persistido es Infinity', todosItems.every(i => i.monto !== Infinity));
-  check('ningún monto persistido es null/NaN', todosItems.every(i => typeof i.monto === 'number' && Number.isFinite(i.monto)));
+  const listaMontos = (m) => [
+    ...m.servicios.fijos, ...m.servicios.variables,
+    ...m.personales.fijos, ...m.personales.variables, ...m.extras
+  ];
+  const todosMeses = Object.values(persistido.meses);
+  const presupuestoPersistido = todosMeses.flatMap(listaMontos);
+  const movimientosPersistidos = todosMeses.flatMap(m => m.movimientos);
+  check('ningún monto persistido es Infinity',
+    presupuestoPersistido.every(i => i.montoEstimado !== Infinity && i.montoReal !== Infinity)
+    && movimientosPersistidos.every(i => i.monto !== Infinity));
+  check('ningún monto persistido es null/NaN',
+    presupuestoPersistido.every(i => typeof i.montoEstimado === 'number' && Number.isFinite(i.montoEstimado))
+    && movimientosPersistidos.every(i => typeof i.monto === 'number' && Number.isFinite(i.monto)));
+  check('el monto real persistido es un número o null', presupuestoPersistido
+    .every(i => i.montoReal === null || (typeof i.montoReal === 'number' && Number.isFinite(i.montoReal))));
   check('no se creó ningún ítem espurio', todosItems.filter(i => i.concepto === 'X').length === 0);
 
   // Updates: el parche inválido no debe pisar el monto anterior.
-  const montoOriginal = item.monto;
+  const montoOriginal = item.montoEstimado;
   const idItem = item.id;
   check('updateBudgetItem rechaza "1e309"', store.updateBudgetItem(mesId, idItem, { monto: '1e309' }) === false);
   check('updateBudgetItem rechaza "12abc"', store.updateBudgetItem(mesId, idItem, { monto: '12abc' }) === false);
   check('updateBudgetItem rechaza NaN', store.updateBudgetItem(mesId, idItem, { monto: NaN }) === false);
   check('updateBudgetItem rechaza Infinity', store.updateBudgetItem(mesId, idItem, { monto: Infinity }) === false);
-  check('el monto original quedó intacto', store.getMonth(mesId).servicios.fijos.find(i => i.id === idItem).monto === montoOriginal);
+  check('el monto original quedó intacto', store.getMonth(mesId).servicios.fijos.find(i => i.id === idItem).montoEstimado === montoOriginal);
   check('updateBudgetItem acepta un monto válido', store.updateBudgetItem(mesId, idItem, { monto: '120.50' }) === true);
-  check('el monto nuevo se aplicó', store.getMonth(mesId).servicios.fijos.find(i => i.id === idItem).monto === 120.50);
+  check('el monto nuevo se aplicó', store.getMonth(mesId).servicios.fijos.find(i => i.id === idItem).montoEstimado === 120.50);
 
   const mov = store.addMovement(mesId, { concepto: 'Sueldo', monto: '1500', flujo: 'Ingreso' });
   check('addMovement acepta un monto válido', !!mov && mov.monto === 1500);
@@ -252,7 +269,7 @@ console.log('\nT6 - los updates no reescriben el id');
   const guardado = store.getMonth(mesId).servicios.fijos.find(i => i.id === idOriginal);
   check('el id del ítem no cambió', !!guardado && guardado.id === idOriginal);
   check('no hay ítems con el id "otro"', store.getMonth(mesId).servicios.fijos.every(i => i.id !== 'otro'));
-  check('el resto de los campos sí se aplicó', guardado && guardado.monto === 41);
+  check('el resto de los campos sí se aplicó', guardado && guardado.montoEstimado === 41);
 
   const mov = store.addMovement(mesId, { concepto: 'Abono', monto: 100, flujo: 'Ingreso' });
   const movId = mov.id;

@@ -327,8 +327,14 @@ function renderGlobalCharts() {
           },
           // Con total 0 no se pinta nada: `sinDatos` ya pone su mensaje y dos
           // textos en el mismo lugar se pisan.
+          // El anillo reparte por categoría los MONTOS ESTIMADOS del gasto (los
+          // subtotales por sección, que ahora suman `montoEstimado`). Antes de
+          // la Fase 1 el número del centro era el mismo, pero se llamaba
+          // "Total de egresos", que sugiere plata ya gastada. Se renombra la
+          // etiqueta y NO el gráfico: el dato que ya se mostraba, con el
+          // nombre que le corresponde.
           'gastos-total-centro': {
-            etiqueta: 'Total de egresos',
+            etiqueta: 'Total estimado',
             valor: totalGastos > 0 && window.formatCurrency
               ? window.formatCurrency(totalGastos)
               : ''

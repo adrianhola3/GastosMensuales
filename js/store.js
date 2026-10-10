@@ -69,27 +69,106 @@ function esEstadoValido(data) {
   });
 }
 
+/**
+ * Migra UN ítem de presupuesto del modelo viejo (`monto` + `estado`) al nuevo
+ * (`montoEstimado` + `montoReal`).
+ *
+ * D5 — ningún número cambia de valor:
+ *   · `Pagado`    → estimado = real = el `monto` viejo (mismo número: en el
+ *     modelo anterior no había diferencia entre lo estimado y lo pagado).
+ *   · `Pendiente` → estimado = el `monto` viejo, real = null.
+ *
+ * D2 — el `estado` desaparece: la cobertura se deduce de `montoReal`, así que
+ * el texto no se copia a ninguna parte.
+ *
+ * IDEMPOTENTE — en la segunda pasada no encuentra ni `monto` ni `estado`, y los
+ * dos campos nuevos ya están en su forma final, así que no toca nada. Por eso
+ * volver a correr la migración no puede cambiar un solo dígito, y `sanear()`
+ * puede seguir usándola como criterio de "hay que volver a guardar".
+ *
+ * @param {object} item el ítem, que se muta en el sitio.
+ * @param {function} marca se llama solo si hubo un cambio real.
+ */
+function migrarItemPresupuesto(item, marca) {
+  if (item.monto !== undefined) {
+    const viejo = normalizarMonto(item.monto);
+    item.montoEstimado = viejo === null ? 0 : viejo;
+    delete item.monto;
+    marca();
+  }
+
+  if (item.estado !== undefined) {
+    // El `estado` viejo era lo único que decía que un gasto ya se había pagado.
+    // Pasa a ser un monto real con el valor del estimado. Si el ítem ya
+    // tuviera un `montoReal` propio, ese manda: no se pisa un dato nuevo con
+    // uno viejo.
+    if (item.montoReal === undefined) {
+      item.montoReal = item.estado === 'Pagado' ? item.montoEstimado : null;
+    }
+    delete item.estado;
+    marca();
+  }
+
+  if (item.montoEstimado === undefined || item.montoEstimado === null) {
+    item.montoEstimado = 0;
+    marca();
+  }
+
+  // Un `montoReal` que no se puede leer como número cuenta como `null`, o sea
+  // como pendiente. La alternativa —dejarlo tal cual o coercionarlo a 0— mete
+  // un NaN en un total o finge un pago que nadie registró.
+  const real = normalizarMonto(item.montoReal);
+  if (real === null) {
+    if (item.montoReal !== null) { item.montoReal = null; marca(); }
+  } else if (item.montoReal !== real) {
+    item.montoReal = real;
+    marca();
+  }
+}
+
+/**
+ * Copia un ítem de presupuesto para un mes nuevo (D4).
+ *
+ * Se copian `concepto`, `montoEstimado`, `tipo` y `rango`. `montoReal` arranca
+ * en `null`: lo que se pagó el mes pasado no puede heredarse al siguiente, o
+ * un mes recién creado aparecería con todo cubierto.
+ *
+ * Los movimientos NO pasan por acá: son montos reales y no tienen estimado (D8).
+ *
+ * @returns {object} el ítem del clon, con id nuevo.
+ */
+function clonarItemPresupuesto(item) {
+  return {
+    id: generateId(),
+    concepto: item.concepto,
+    montoEstimado: Number(item.montoEstimado) || 0,
+    montoReal: null,
+    tipo: item.tipo,
+    rango: item.rango || ''
+  };
+}
+
 // Datos iniciales idénticos a los del Excel del usuario
 function getDefaultData() {
   const baseServiciosFijos = [
-    { id: generateId(), concepto: 'Internet de casa', monto: 89.90, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'Celular', monto: 39.90, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'CIUNAC (Inglés)', monto: 83.00, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'Pasajes', monto: 150.00, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'Corte de cabello', monto: 25.00, tipo: 'Fijo', estado: 'Pendiente' }
+    { id: generateId(), concepto: 'Internet de casa', montoEstimado: 89.90, montoReal: null, tipo: 'Fijo' },
+    { id: generateId(), concepto: 'Celular', montoEstimado: 39.90, montoReal: null, tipo: 'Fijo' },
+    { id: generateId(), concepto: 'CIUNAC (Inglés)', montoEstimado: 83.00, montoReal: null, tipo: 'Fijo' },
+    { id: generateId(), concepto: 'Pasajes', montoEstimado: 150.00, montoReal: null, tipo: 'Fijo' },
+    { id: generateId(), concepto: 'Corte de cabello', montoEstimado: 25.00, montoReal: null, tipo: 'Fijo' }
   ];
 
   const baseServiciosVariables = [
-    { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, papel...', monto: 30.00, tipo: 'Variable', rango: '20-40', estado: 'Pendiente' }
+    { id: generateId(), concepto: 'Productos de casa: Jabón, shampoo, papel...', montoEstimado: 30.00, montoReal: null, tipo: 'Variable', rango: '20-40' }
   ];
 
   const basePersonalesFijos = [
-    { id: generateId(), concepto: 'Gimnasio', monto: 103.54, tipo: 'Fijo', estado: 'Pendiente' },
-    { id: generateId(), concepto: 'Consulta dermatólogo', monto: 50.00, tipo: 'Fijo', estado: 'Pendiente' }
+    { id: generateId(), concepto: 'Gimnasio', montoEstimado: 103.54, montoReal: null, tipo: 'Fijo' },
+    { id: generateId(), concepto: 'Consulta dermatólogo', montoEstimado: 50.00, montoReal: null, tipo: 'Fijo' }
   ];
 
   const basePersonalesVariables = [
-    { id: generateId(), concepto: 'Productos dermatológicos: Jabón cerave...', monto: 45.00, tipo: 'Variable', rango: '10-80', estado: 'Pendiente' }
+    { id: generateId(), concepto: 'Productos dermatológicos: Jabón cerave...', montoEstimado: 45.00, montoReal: null, tipo: 'Variable', rango: '10-80' }
   ];
 
   const mesesTemplate = [
@@ -116,7 +195,7 @@ function getDefaultData() {
 
     if (m.id === 'agosto-2026') {
       extras = [
-        { id: generateId(), concepto: 'Matrícula 2026-B de la universidad', monto: 83.00, tipo: 'Extra', estado: 'Pagado' }
+        { id: generateId(), concepto: 'Matrícula 2026-B de la universidad', montoEstimado: 83.00, montoReal: 83.00, tipo: 'Extra' }
       ];
       notas = 'Matrícula 2026-B universitaria pagada. Controlar compras dermatológicas del mes.';
       movimientos = [];
@@ -362,14 +441,29 @@ class FinancialStore {
 
       // Tipos mínimos que asertan los cálculos: sin esto un import corrupto
       // rompe el .reduce() de montos y deja la pantalla en blanco.
-      const listas = [
+      //
+      // Presupuesto y movimientos se sanean con reglas DISTINTAS y por eso van
+      // en listas separadas. El presupuesto usa `montoEstimado`/`montoReal` y
+      // se migra con `migrarItemPresupuesto()` (D1/D5). Los movimientos siguen
+      // con `monto`/`estado`: son montos reales, nunca tuvieron un estimado que
+      // confundir, y tocarlos acá los rompería (D8).
+      const listasPresupuesto = [
         ...Object.values(m.servicios),
         ...Object.values(m.personales),
-        m.extras,
-        m.movimientos
+        m.extras
       ].filter(Array.isArray);
 
-      listas.forEach(lista => {
+      listasPresupuesto.forEach(lista => {
+        lista.forEach(item => {
+          if (!item || typeof item !== 'object') return;
+          if (typeof item.concepto !== 'string') { item.concepto = ''; cambios = true; }
+          migrarItemPresupuesto(item, () => { cambios = true; });
+        });
+      });
+
+      const listasMovimientos = [m.movimientos].filter(Array.isArray);
+
+      listasMovimientos.forEach(lista => {
         lista.forEach(item => {
           if (!item || typeof item !== 'object') return;
           if (typeof item.concepto !== 'string') { item.concepto = ''; cambios = true; }
@@ -448,25 +542,57 @@ class FinancialStore {
     return this.data.mesesOrden.map(id => this.data.meses[id]).filter(Boolean);
   }
 
+/**
+   * ¿Está cubierto este gasto? (D2)
+   *
+   * La respuesta es exactamente `montoReal !== null`, y vive en un solo
+   * método a propósito: la regla de cobertura se lee y se corrige en una línea
+   * en vez de estar repetida en diez shedios distintos.
+   *
+   * @param {object} item un ítem de presupuesto.
+   * @returns {boolean} true si ya tiene un monto real registrado.
+   */
+  estaCubierto(item) {
+    return !!item && item.montoReal !== null && item.montoReal !== undefined;
+  }
+
   // --- CÁLCULOS POR MES ---
   calculateMonthTotals(monthId) {
     const m = this.getMonth(monthId);
     if (!m) return null;
 
+    // Suma de estimados. Es la UNICA base de los subtotales por sección: la
+    // cobertura se mide contra lo que se planeó, no contra lo que se pagó (D3).
+    const estimadosDe = lista => (lista || [])
+      .reduce((sum, item) => sum + (Number(item.montoEstimado) || 0), 0);
+
+    // Estimados de los ítems YA cubiertos: es `totalCubierto` acotado a una
+    // lista, que es lo que necesitan las minibarras por categoría.
+    const cubiertosDe = lista => (lista || [])
+      .filter(item => this.estaCubierto(item))
+      .reduce((sum, item) => sum + (Number(item.montoEstimado) || 0), 0);
+
+    // Montos reales de los ítems cubiertos. Distinto de `cubiertosDe` a
+    // propósito: acá entra plata que efectivamente salió, y comparar esa
+    // cifra contra el estimado es justamente el desvío (D3).
+    const realesDe = lista => (lista || [])
+      .filter(item => this.estaCubierto(item))
+      .reduce((sum, item) => sum + (Number(item.montoReal) || 0), 0);
+
     // Servicios
-    const subtotalServiciosFijos = (m.servicios.fijos || []).reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
-    const subtotalServiciosVariables = (m.servicios.variables || []).reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
+    const subtotalServiciosFijos = estimadosDe(m.servicios.fijos);
+    const subtotalServiciosVariables = estimadosDe(m.servicios.variables);
     const subtotalServicios = subtotalServiciosFijos + subtotalServiciosVariables;
 
     // Personales
-    const subtotalPersonalesFijos = (m.personales.fijos || []).reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
-    const subtotalPersonalesVariables = (m.personales.variables || []).reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
+    const subtotalPersonalesFijos = estimadosDe(m.personales.fijos);
+    const subtotalPersonalesVariables = estimadosDe(m.personales.variables);
     const subtotalPersonales = subtotalPersonalesFijos + subtotalPersonalesVariables;
 
     // Extras
-    const subtotalExtras = (m.extras || []).reduce((sum, item) => sum + (Number(item.monto) || 0), 0);
+    const subtotalExtras = estimadosDe(m.extras);
 
-    // Total General Presupuestado (Egresos)
+    // Total General presupuestado (Egresos)
     const totalEgresos = subtotalServicios + subtotalPersonales + subtotalExtras;
 
     // Movimientos (Administrador de Ingresos y Egresos del mes)
@@ -488,16 +614,51 @@ class FinancialStore {
       ...(m.extras || [])
     ];
     const totalItemsPresupuesto = allPresupuestoItems.length;
-    const pagadosCount = allPresupuestoItems.filter(i => i.estado === 'Pagado').length;
-    const montoPagadoPresupuesto = allPresupuestoItems
-      .filter(i => i.estado === 'Pagado')
-      .reduce((s, i) => s + (Number(i.monto) || 0), 0);
-    const montoPendientePresupuesto = Math.max(0, totalEgresos - montoPagadoPresupuesto);
-    const porcentajePagado = totalEgresos > 0 ? (montoPagadoPresupuesto / totalEgresos) * 100 : 0;
+    const pagadosCount = allPresupuestoItems.filter(i => this.estaCubierto(i)).length;
     const pendientesCount = totalItemsPresupuesto - pagadosCount;
 
+    // --- D3: LA COBERTURA SE MIDE CONTRA EL ESTIMADO ---
+    //
+    // `totalCubierto` y `totalFaltante` son la MISMA suma (`montoEstimado` de
+    // todos los ítems) partida en dos: los que tienen `montoReal` van al
+    // primero, los que no al segundo. Por construcción no se solapan y no se
+    // pierde nada, así que la identidad
+    //
+    //     totalCubierto + totalFaltante === totalEstimado
+    //
+    // se cumple siempre por construcción, no por conviene.
+    const totalEstimado = totalEgresos;
+    const totalReal = realesDe(allPresupuestoItems);
+    const totalCubierto = cubiertosDe(allPresupuestoItems);
+    let totalFaltante = totalEstimado - totalCubierto;
+
+    // `totalCubierto` se recorre entero y `totalFaltante` sale por resta: son
+    // dos operaciones de coma flotante sobre la misma lista y pueden diferir en
+    // la última cifra. Cuando la diferencia es solo eso se ajusta, para que la
+    // identidad se cumpla también al mostrar los tres números juntos. Un desvío
+    // de un céntimo REAL no se toca: acá solo se.Absorbe el ruido de coma
+    // flotante.
+    if (totalFaltante !== 0 && Math.abs(totalCubierto + totalFaltante - totalEstimado) < 1e-6) {
+      totalFaltante = Math.round((totalEstimado - totalCubierto) * 100) / 100;
+    }
+
+    // `desvio` = real menos estimado. Positivo es pasarse, negativo es ahorrar.
+    const desvio = totalReal - totalEstimado;
+    // Progreso de cobertura sobre el estimado, como fracción 0..1.
+    const progresoCubierto = totalEstimado > 0 ? totalCubierto / totalEstimado : 0;
+
+    // Alias que ya existían y que la interfaz sigue leyendo. Ahora apuntan a
+    // las cifras nuevas, no a un concepto nuevo: `montoPagadoPresupuesto` es la
+    // parte del PLANTAJE que está cubierta, y `montoPendientePresupuesto` la
+    // que falta.
+    const montoPagadoPresupuesto = totalCubierto;
+    const montoPendientePresupuesto = totalFaltante;
+    const porcentajePagado = progresoCubierto * 100;
+
     // --- Fuentes de egresos: SON INDEPENDIENTES entre sí, no son el mismo dato ---
-    // 1) montoPagadoPresupuesto: ítems del PRESUPUESTO PLANEADO marcados como Pagado.
+    // 1) totalReal: lo que SALIÓ de verdad del presupuesto (lo que el usuario
+    //    registró como pagado, que ya no es el estimado: por eso es `totalReal`
+    //    y no `totalCubierto`).
     // 2) totalEgresosMovimientos: gastos sueltos anotados en el FLUJO DE CAJA (el feed).
     //
     // Evidencia de que no hay doble conteo estructural:
@@ -514,30 +675,30 @@ class FinancialStore {
     // una duplicación manual del usuario, no un defecto de la fórmula, y la app no
     // enlaza ambos registros. Se documenta para no confundirlo con un bug.
     //
-    // La suma es correcta; lo engañoso era el nombre "totalGastadoReal", que sugería
-    // que una sola cifra reflejaba "lo real". Se renombra a totalDesembolsado.
-    const totalDesembolsado = montoPagadoPresupuesto + totalEgresosMovimientos;
+    // `totalDesembolsado` usa `totalReal` y no `totalCubierto` a propósito: es
+    // plata que salió de la billetera, y mezclar ahí un estimado falsearía el
+    // balance. Con los datos migrados las dos coinciden (D5 le pone el mismo
+    // número a estimado y real), así que este cambio no mueve ni un centavo de
+    // lo que la app mostraba antes.
+    const totalDesembolsado = totalReal + totalEgresosMovimientos;
 
     // Balance Neto = ingresos del feed - todo lo desembolsado (presupuesto pagado + gastos del feed)
     const balanceNeto = totalIngresos - totalDesembolsado;
 
     // Cumplimiento (% de abonos sobre total egresos presupuestados)
-    const porcentajeAvance = totalEgresos > 0 ? Math.min(100, (totalIngresos / totalEgresos) * 100) : 0;
+    const porcentajeAvance = totalEstimado > 0 ? Math.min(100, (totalIngresos / totalEstimado) * 100) : 0;
 
     // Progreso individual por categoría (para las minibarras en los botones de segmentos)
     const itemsServicios = [...(m.servicios.fijos || []), ...(m.servicios.variables || [])];
-    const pagadosServicios = itemsServicios.filter(i => i.estado === 'Pagado');
-    const montoPagadoServicios = pagadosServicios.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const montoPagadoServicios = cubiertosDe(itemsServicios);
     const pctPagadoServicios = subtotalServicios > 0 ? Math.min(100, (montoPagadoServicios / subtotalServicios) * 100) : 0;
 
     const itemsPersonales = [...(m.personales.fijos || []), ...(m.personales.variables || [])];
-    const pagadosPersonales = itemsPersonales.filter(i => i.estado === 'Pagado');
-    const montoPagadoPersonales = pagadosPersonales.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const montoPagadoPersonales = cubiertosDe(itemsPersonales);
     const pctPagadoPersonales = subtotalPersonales > 0 ? Math.min(100, (montoPagadoPersonales / subtotalPersonales) * 100) : 0;
 
     const itemsExtras = m.extras || [];
-    const pagadosExtras = itemsExtras.filter(i => i.estado === 'Pagado');
-    const montoPagadoExtras = pagadosExtras.reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    const montoPagadoExtras = cubiertosDe(itemsExtras);
     const pctPagadoExtras = subtotalExtras > 0 ? Math.min(100, (montoPagadoExtras / subtotalExtras) * 100) : 0;
 
     const pagadosMovs = movs.filter(x => x.estado === 'Pagado' || x.flujo === 'Gasto');
@@ -569,7 +730,14 @@ class FinancialStore {
       pctPagadoPersonales,
       montoPagadoExtras,
       pctPagadoExtras,
-      pctPagadoMovimientos
+      pctPagadoMovimientos,
+      // D3 — las cuatro cifras del modelo nuevo, con nombre propio.
+      totalEstimado,
+      totalReal,
+      totalCubierto,
+      totalFaltante,
+      desvio,
+      progresoCubierto
     };
   }
 
@@ -630,20 +798,36 @@ class FinancialStore {
     const m = this.getMonth(monthId);
     if (!m) return false;
 
-    const monto = normalizarMonto(item.monto);
+    const entrada = item || {};
+
+    // Se acepta `monto` como alias de `montoEstimado` para no romper a quien
+    // todavía nombre el campo viejo; lo que se GUARDA es siempre el modelo
+    // nuevo, con las dos caras del número separadas.
+    const montoEstimado = normalizarMonto(
+      entrada.montoEstimado !== undefined ? entrada.montoEstimado : entrada.monto
+    );
     // Un monto que no es un número no se corrige a cero: se rechaza el alta
     // entera. Guardarlo como 0 silenciosamente convertía "1e309" o "abc" en
     // un total que después ya no cuadraba con lo que el usuario escribió.
-    if (monto === null) return false;
+    if (montoEstimado === null) return false;
 
     const newItem = {
       id: generateId(),
-      concepto: item.concepto.trim(),
-      monto: monto,
-      tipo: item.tipo || 'Fijo',
-      rango: item.rango || '',
-      estado: item.estado || 'Pendiente'
+      concepto: entrada.concepto.trim(),
+      montoEstimado: montoEstimado,
+      montoReal: normalizarMonto(entrada.montoReal),
+      tipo: entrada.tipo || 'Fijo',
+      rango: entrada.rango || ''
     };
+
+    // El formulario todavía ofrece elegir el "estado inicial", y ese control
+    // no se toca en esta fase. Se traduce a un monto real con el valor del
+    // estimado, que es EXACTAMENTE lo que hace la migración con un `Pagado`
+    // viejo: un alta pagada y un dato migrado significan lo mismo, y ninguno
+    // de los dos guarda un texto de estado (D2).
+    if (newItem.montoReal === null && entrada.estado === 'Pagado') {
+      newItem.montoReal = montoEstimado;
+    }
 
     if (section === 'servicios') {
       if (subsection === 'fijos') m.servicios.fijos.push(newItem);
@@ -675,7 +859,7 @@ class FinancialStore {
     for (const coll of collections) {
       const idx = coll.findIndex(x => x.id === itemId);
       if (idx !== -1) {
-        const campos = this.camposEditables(updatedFields);
+        const campos = this.camposEditables(updatedFields, true);
         if (!campos) return false;
 
         coll[idx] = { ...coll[idx], ...campos };
@@ -689,21 +873,52 @@ class FinancialStore {
   /**
    * Prepara los campos de un parche de actualización.
    *
-   * Dos cosas que antes se colaban:
+   * Tres cosas que antes se colaban:
    *  · `id`: no es un campo editable. Si el parche lo traía, el ítem quedaba
    *    con el id de otro, los dos findIndex lo encontraban siempre al primero
    *    y el segundo se volvía inoperable. Se descarta siempre.
    *  · `monto`: se valida con normalizarMonto(). Si no es un número finito en
    *    rango se devuelve null y el llamador rechaza el parche entero en vez de
    *    dejar un 0 donde el usuario puso otra cosa.
+   *  · `estado`: con el modelo nuevo NO es un campo del ítem. Un texto de
+   *    estado sería un segundo lugar donde vive la cobertura, y la cobertura se
+   *    deduce de `montoReal` (D2). Se descarta siempre.
    *
+   * `esPresupuesto` separa las dos formas porque `updateMovement` comparte esta
+   * función: un movimiento SÍ tiene `monto` y SÍ tiene `estado` (D8), así que
+   * sin el flag el movimiento se renombraría a `montoEstimado` y quedaría roto.
+   *
+   * @param {object} updatedFields el parche crudo que manda el formulario.
+   * @param {boolean} esPresupuesto true para ítems de presupuesto.
    * @returns {?object} los campos limpios, o null si hay que rechazar el parche.
    */
-  camposEditables(updatedFields) {
+  camposEditables(updatedFields, esPresupuesto = false) {
     const campos = { ...(updatedFields || {}) };
     delete campos.id;
 
-    if (campos.monto !== undefined) {
+    if (esPresupuesto) {
+      // Alias del nombre viejo: un parche que dice `monto` se guarda como
+      // `montoEstimado`. `estado` NO tiene alias a propósito, por lo que
+      // explica la nota de arriba.
+      if (campos.monto !== undefined && campos.montoEstimado === undefined) {
+        campos.montoEstimado = campos.monto;
+      }
+      delete campos.monto;
+      delete campos.estado;
+
+      if (campos.montoEstimado !== undefined) {
+        const estimado = normalizarMonto(campos.montoEstimado);
+        if (estimado === null) return null;
+        campos.montoEstimado = estimado;
+      }
+
+      // El monto real se valida por separado porque `null` es un valor
+      // legítimo —quitar el pago es escribir null— y no debe rechazar el
+      // parche. Lo ilegible se cae a `null`, igual que en la migración.
+      if (campos.montoReal !== undefined) {
+        campos.montoReal = normalizarMonto(campos.montoReal);
+      }
+    } else if (campos.monto !== undefined) {
       const monto = normalizarMonto(campos.monto);
       if (monto === null) return null;
       campos.monto = monto;
@@ -735,7 +950,25 @@ class FinancialStore {
     return false;
   }
 
-  toggleBudgetItemStatus(monthId, itemId) {
+  /**
+   * Paga o deja de pagar un gasto (D2).
+   *
+   * No hay estado que alternar: pagar ES escribir `montoReal` y quitar el pago
+   * es borrarlo. El ítem vuelve a quedar pendiente solo, sin segunda escritura.
+   *
+   * Con qué importe se paga lo elige quien paga —la fila abre el modal—, así que
+   * acá el valor por defecto es el estimado: es el número con el que el gasto ya
+   * estaba registrado, y por eso un fijo pagado a un clic queda en su estimado
+   * en vez de inventarse otro.
+   *
+   * @param {string} monthId
+   * @param {string} itemId
+   * @param {?number} montoReal importe a registrar; null o ilegible = estimado.
+   * @returns {string|false|null} 'Pagado' o 'Pendiente'; false si el mes no
+   *   existe y null si el ítem ya no está. Los dos se conservan porque el
+   *   llamador los distingue para poder avisar "el gasto ya no existe".
+   */
+  toggleBudgetItemStatus(monthId, itemId, montoReal = null) {
     const m = this.getMonth(monthId);
     if (!m) return false;
 
@@ -750,14 +983,27 @@ class FinancialStore {
     for (const coll of collections) {
       const item = coll.find(x => x.id === itemId);
       if (item) {
-        item.estado = item.estado === 'Pagado' ? 'Pendiente' : 'Pagado';
+        if (this.estaCubierto(item)) {
+          item.montoReal = null;
+        } else {
+          const importe = normalizarMonto(montoReal);
+          item.montoReal = importe === null ? (Number(item.montoEstimado) || 0) : importe;
+        }
         this.save();
-        return item.estado;
+        return this.estaCubierto(item) ? 'Pagado' : 'Pendiente';
       }
     }
     return null;
   }
 
+  /**
+   * Paga o deja de pagar TODOS los gastos del mes de una vez.
+   *
+   * No tiene control en la interfaz: se mantiene porque el store es la capa de
+   * datos y la regla se deriva de la misma fuente que el toggle individual.
+   * Al pagar en bloque no hay importe por ítem, así que cada uno toma su
+   * estimado, que es lo único que se conoce.
+   */
   toggleAllBudgetItems(monthId) {
     const m = this.getMonth(monthId);
     if (!m) return;
@@ -770,12 +1016,18 @@ class FinancialStore {
       ...m.extras
     ];
 
-    const hasPending = all.some(i => i.estado === 'Pendiente');
-    const targetState = hasPending ? 'Pagado' : 'Pendiente';
+    const hayPendientes = all.some(i => !this.estaCubierto(i));
+    const objetivo = hayPendientes ? 'Pagado' : 'Pendiente';
 
-    all.forEach(i => i.estado = targetState);
+    all.forEach(i => {
+      if (objetivo === 'Pendiente') {
+        i.montoReal = null;
+      } else if (!this.estaCubierto(i)) {
+        i.montoReal = Number(i.montoEstimado) || 0;
+      }
+    });
     this.save();
-    return targetState;
+    return objetivo;
   }
 
   // --- MUTACIONES DE MOVIMIENTOS (FLUJO DE CAJA) ---
@@ -902,17 +1154,17 @@ class FinancialStore {
         nombre,
         corto,
         servicios: {
-          fijos: base.servicios.fijos.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' })),
-          variables: base.servicios.variables.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' }))
+          fijos: base.servicios.fijos.map(i => clonarItemPresupuesto(i)),
+          variables: base.servicios.variables.map(i => clonarItemPresupuesto(i))
         },
         personales: {
-          fijos: base.personales.fijos.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' })),
-          variables: base.personales.variables.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' }))
+          fijos: base.personales.fijos.map(i => clonarItemPresupuesto(i)),
+          variables: base.personales.variables.map(i => clonarItemPresupuesto(i))
         },
         // Un extra es una cuenta pendiente, igual que un gasto de presupuesto:
-        // se copia con id nuevo y vuelve a Pendiente.
+        // se copia con id nuevo y `montoReal` en null.
         extras: opciones.extras
-          ? base.extras.map(i => ({ ...i, id: generateId(), estado: 'Pendiente' }))
+          ? base.extras.map(i => clonarItemPresupuesto(i))
           : [],
         notas: opciones.notas ? base.notas : '',
         // Un movimiento NO se resetea a Pendiente, a diferencia de los gastos.

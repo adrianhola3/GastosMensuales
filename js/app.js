@@ -451,7 +451,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const ingresosCount = movs.filter(x => x.flujo === 'Ingreso').length;
     document.getElementById('monthIngresosCount').textContent = `${ingresosCount} abono${ingresosCount === 1 ? '' : 's'} registrado${ingresosCount === 1 ? '' : 's'}`;
 
-    document.getElementById('monthTotalEgresos').textContent = window.formatCurrency(totals.totalEgresos);
+    // "Estimado" va con su nombre: la etiqueta de la celda dice "Presupuesto",
+    // pero lo que se muestra es la estimación del mes, no lo gastado.
+    document.getElementById('monthTotalEgresos').textContent = `Estimado ${window.formatCurrency(totals.totalEstimado)}`;
     document.getElementById('monthGastosCount').textContent = `${totals.pagadosCount} de ${totals.totalItemsPresupuesto} gastos pagados`;
 
     const balanceEl = document.getElementById('monthBalanceNeto');
@@ -558,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elIngresosCount) elIngresosCount.textContent = `${ingresosCount} abono${ingresosCount === 1 ? '' : 's'} registrado${ingresosCount === 1 ? '' : 's'}`;
 
     const elEgresos = document.getElementById('monthTotalEgresos');
-    if (elEgresos) elEgresos.textContent = window.formatCurrency(totals.totalEgresos);
+    if (elEgresos) elEgresos.textContent = `Estimado ${window.formatCurrency(totals.totalEstimado)}`;
     const elGastosCount = document.getElementById('monthGastosCount');
     if (elGastosCount) elGastosCount.textContent = `${totals.pagadosCount} de ${totals.totalItemsPresupuesto} gastos pagados`;
 
@@ -586,34 +588,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const elAbonoPercent = document.getElementById('monthAbonoPercentLabel');
     if (elAbonoPercent) elAbonoPercent.textContent = `${totals.porcentajeAvance.toFixed(1)}%`;
 
-    // Las cifras de la tira de la barra de comando
+    // Las cifras de la tira de la barra de comando.
     //
-    // `#paidTextInfo` y `#pendingSummaryLabel` escriben SOLO el importe. Antes
-    // decían "Gastos Pagados: S/ 0.00" y "Pendiente: S/ 0.00", y en la tira
-    // esas dos palabras ya son la etiqueta de su celda. Se quedan las
-    // etiquetas y los nodos bajan a un valor, con la misma regla de la ronda
-    // anterior: la etiqueta dice el qué, el nodo dice el número.
+    // Las TRES celdas de presupuesto pasaron de `Presupuesto / Pagado /
+    // Pendiente` a `Estimado / Real / Cubierto + Falta`:
+    //   · "Presupuesto"  -> Estimado, lo que se planeó para el mes.
+    //   · "Pagado"       -> Real, la plata que salió de verdad.
+    //   · "Pendiente"    -> Cubierto + Falta, la partición del estimado. Van
+    //     juntos en la misma celda porque son la mitad y el resto del MISMO
+    //     número: juntos suman el estimado, que es la identidad que sostiene
+    //     toda la barra.
+    //
+    // Cada cifra va CON SU NOMBRE. Las etiquetas de celda viven en index.html
+    // (y no se tocan en esta fase), y bajo la palabra "Pagado" un número a secas
+    // se lee como lo pagado cuando puede ser lo cubierto. Nombrarlas es lo que
+    // impide mezclar estimado con real sin avisar.
     //
     // `#monthGastosCount` ("3 de 9 gastos pagados") y `#paidPercentBadge`
     // ("0.0% Pagado") NO se tocan: las suites los comparan contra la cadena
     // literal (`adversarial-suite.mjs:376-377`), y `#monthGastosCount` es el
-    // denominador del carril, así que su lugar natural es pegado a él.
-    const pctPagado = (totals.porcentajePagado || 0).toFixed(1);
+    // denominador del carril, así que su lugar natural es pegado a él. Los dos
+    // siguen siendo ciertos en el modelo nuevo: el conteo es de ítems con
+    // monto real, y el porcentaje es el progreso de cobertura sobre el estimado.
+    const pctCubierto = ((totals.progresoCubierto || 0) * 100).toFixed(1);
+    const elTotalEgresos = document.getElementById('monthTotalEgresos');
+    if (elTotalEgresos) {
+      elTotalEgresos.textContent = `Estimado ${window.formatCurrency(totals.totalEstimado)}`;
+    }
     const elPaidTextInfo = document.getElementById('paidTextInfo');
     if (elPaidTextInfo) {
-      elPaidTextInfo.textContent = window.formatCurrency(totals.montoPagadoPresupuesto);
+      elPaidTextInfo.textContent = `Real ${window.formatCurrency(totals.totalReal)}`;
     }
     const elPaidPercentBadge = document.getElementById('paidPercentBadge');
     if (elPaidPercentBadge) {
-      elPaidPercentBadge.textContent = `${pctPagado}% Pagado`;
+      elPaidPercentBadge.textContent = `${pctCubierto}% Pagado`;
     }
     const elPaidBarFill = document.getElementById('paidBarFill');
     if (elPaidBarFill) {
-      elPaidBarFill.style.width = `${Math.min(100, totals.porcentajePagado || 0)}%`;
+      elPaidBarFill.style.width = `${Math.min(100, (totals.progresoCubierto || 0) * 100)}%`;
     }
     const elPendingSummaryLabel = document.getElementById('pendingSummaryLabel');
     if (elPendingSummaryLabel) {
-      elPendingSummaryLabel.textContent = window.formatCurrency(totals.montoPendientePresupuesto);
+      /* Dos renglones y no uno con "·": en una sola línea la celda se hace más
+         ancha que las otras y empuja "Balance" a una segunda fila de la tira.
+         Apiladas caben en la misma columna y las dos cifras siguen leyéndose
+         juntas, que es lo que pide la identidad. */
+      elPendingSummaryLabel.innerHTML =
+        `<div>Cubierto ${window.formatCurrency(totals.totalCubierto)}</div>` +
+        `<div>Falta ${window.formatCurrency(totals.totalFaltante)}</div>`;
     }
 
     // Actualizar indicador en topbar
@@ -795,6 +817,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /**
+   * Dibuja el importe de una fila de gasto.
+   *
+   * El estimado se muestra siempre, porque es lo que el mes planificó.
+   * Cuando ya hay un monto real se muestra también, con su diferencia contra
+   * el estimado: esa diferencia es la única forma de ver que se gastó más (o
+   * menos) de lo que se iba a pagar. Antes el pago SOBRESCRIBÍA el estimado y
+   * esa comparación no existía.
+   *
+   * Vive afuera de `renderExpenseCategory` a propósito: la usan tanto el render
+   * inicial como la actualización en el lugar que hace el modal de pago, que no
+   * repinta la lista entera para no perder el scroll.
+   */
+  function pintarImporteFila(item, fila) {
+    const celda = fila && fila.querySelector('.expense-item-amount');
+    if (!celda) return;
+
+    const estimado = Number(item.montoEstimado) || 0;
+    const real = item.montoReal;
+
+    if (real === null || real === undefined) {
+      celda.innerHTML = `<div>${window.formatCurrency(estimado)}</div>`;
+      return;
+    }
+
+    const diferencia = Number(real) - estimado;
+    const signo = diferencia > 0 ? '+' : (diferencia < 0 ? '-' : '');
+    celda.innerHTML =
+      `<div>${window.formatCurrency(estimado)}</div>` +
+      `<div>Real ${window.formatCurrency(real)} (${signo}${window.formatCurrency(Math.abs(diferencia))})</div>`;
+  }
+
   // Renderizador de filas amplias de gastos
   function renderExpenseCategory(containerId, items, monthId, categoria) {
     const container = document.getElementById(containerId);
@@ -820,7 +874,9 @@ document.addEventListener('DOMContentLoaded', () => {
        * son. Un quinto hijo haría gastar a las 4 columnas de la retícula una
        * posición para un dato que ya está escrito arriba. */
       row.dataset.categoria = categoria;
-      const isPaid = item.estado === 'Pagado';
+      // D2: la cobertura no se lee de un texto de estado, se deduce de que el
+      // ítem tenga un monto real. Un solo lugar decide qué es "pagado".
+      const isPaid = store.estaCubierto(item);
 
       // ORDEN DE LOS 4 HIJOS (contrato DOM: `.expense-card-item` recibe exactamente 4).
 // Concepto · Estado · Importe · Borrar. El importe va tercero a propósito: en el
@@ -844,9 +900,7 @@ row.innerHTML = `
           </button>
         </div>
 
-        <div class="expense-item-amount font-mono">
-          ${window.formatCurrency(item.monto)}
-        </div>
+        <div class="expense-item-amount font-mono"></div>
 
         <div class="item-actions">
           <button type="button" class="btn-ghost-rose btn-edit-expense admin-action-btn" data-item-id="${escaparHTML(item.id)}" title="Editar gasto">
@@ -858,29 +912,44 @@ row.innerHTML = `
         </div>
       `;
 
-      // Evento: Alternar estado en el lugar SIN salto de scroll ni recrear el DOM
+      // El importe se dibuja después de que la fila está en el documento, con la
+      // misma función que usa el modal de pago para actualizarla en el lugar.
+      pintarImporteFila(item, row);
+
+      // Evento: Pagar o dejar de pagar, en el lugar, SIN salto de scroll
       const toggleBtn = row.querySelector('.btn-status-toggle');
       toggleBtn.addEventListener('click', () => {
         if (!exigirAdmin('cambiar el estado de un gasto')) return;
-        if (item.tipo === 'Variable' && item.estado !== 'Pagado') {
-          // Si es gasto variable y está pendiente, solicitar el monto efectivamente gastado
-          openPayVariableModal(monthId, item, row);
-        } else {
-          const newState = store.toggleBudgetItemStatus(monthId, item.id);
-          /* El store devuelve null (o false) si el id ya no está: la fila es
-             vieja, de otra pestaña o de un re-render concurrente. Escribir
-             `item.estado = newState` a ciegas dejaba el estado en memoria
-             desincronizado y el toast anunciaba un "null". */
-          if (!newState) {
-            showToast('No se pudo cambiar el estado: el gasto ya no existe.', '');
-            return;
-          }
-          item.estado = newState;
-          toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
-          toggleBtn.textContent = newState === 'Pagado' ? 'Pagado' : 'Pendiente';
-          updateLiveProgressAndTotals(monthId);
-          showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '' : '');
+
+        if (!store.estaCubierto(item)) {
+          /* Pagar PIDE el importe real, y lo pide para fijo y para variable por
+             igual. Lo que cambia entre los dos es el valor por defecto: el
+             campo arranca con el estimado, así que un fijo se confirma sin
+             escribir nada y un variable se corrige con lo que salió de verdad.
+             En los dos casos el estimado queda a la vista mientras se decide, y
+             en ninguno se escribe encima: es el estimado el que sobrevivía
+             antes de este cambio. */
+          openPayModal(monthId, item, row);
+          return;
         }
+
+        // Quitar el pago no pregunta nada: solo borra el monto real, y el ítem
+        // vuelve a quedar pendiente por sí solo, sin una segunda escritura.
+        const newState = store.toggleBudgetItemStatus(monthId, item.id);
+        /* El store devuelve null (o false) si el id ya no está: la fila es
+           vieja, de otra pestaña o de un re-render concurrente. Escribir a
+           ciegas dejaba la memoria desincronizada y el toast anunciaba un
+           "null". */
+        if (!newState) {
+          showToast('No se pudo cambiar el estado: el gasto ya no existe.', '');
+          return;
+        }
+        item.montoReal = null;
+        toggleBtn.className = `btn-status-toggle ${newState === 'Pagado' ? 'status-pagado' : 'status-pendiente'}`;
+        toggleBtn.textContent = newState === 'Pagado' ? 'Pagado' : 'Pendiente';
+        pintarImporteFila(item, row);
+        updateLiveProgressAndTotals(monthId);
+        showToast(`Gasto marcado como "${newState}"`, newState === 'Pagado' ? '' : '');
       });
 
       // Evento: Editar gasto
@@ -1611,9 +1680,12 @@ tr.innerHTML = `
 
       const guardado = store.addBudgetItem(store.data.activeMonthId, section, subsection, {
         concepto,
-        monto,
+        montoEstimado: monto,
         tipo,
         rango,
+        // El select de "estado inicial" sigue en el formulario porque `index.html`
+        // está fuera del alcance de esta fase. El store lo traduce a un monto
+        // real con el valor del estimado, o a `null`; no se guarda el texto.
         estado
       });
 
@@ -1632,12 +1704,22 @@ tr.innerHTML = `
     });
   }
 
-  // --- MODAL: CONFIRMAR PAGO DE GASTO VARIABLE CON MONTO REAL ---
+// --- MODAL: CONFIRMAR EL PAGO CON EL MONTO REAL ---
   let currentVariableRowTarget = null;
   let currentVariableItemTarget = null;
 
-  function openPayVariableModal(monthId, item, row) {
-    if (!exigirAdmin('registrar el pago de un gasto variable')) return;
+  /**
+   * Abre el modal de pago de un gasto.
+   *
+   * Lo usan los fijos y los variables por igual, y esa es la decisión: el
+   * importe real SIEMPRE lo escribe quien paga. Para un fijo el campo arranca
+   * con el estimado, así que se confirma sin escribir nada; para un variable se
+   * corrige con lo que salió de verdad. Lo que no se puede en ninguno de los dos
+   * casos es perder el estimado, y por eso queda escrito a la vista mientras se
+   * decide.
+   */
+  function openPayModal(monthId, item, row) {
+    if (!exigirAdmin('registrar el pago de un gasto')) return;
     const modal = document.getElementById('modalPayVariableExpense');
     if (!modal) return;
 
@@ -1646,8 +1728,8 @@ tr.innerHTML = `
     document.getElementById('payVarItemTitle').textContent = item.concepto;
     // El color y el cuerpo los pone `.pay-var-preview-meta strong` en la hoja.
 // Acá no se escribe ningún estilo inline: si se escribiera, ganaría a la hoja y
-// volvería a haber dos verdades sobre el mismo texto.
-    document.getElementById('payVarItemEstimated').innerHTML = `Presupuestado: <strong class="font-mono">${window.formatCurrency(item.monto)}</strong>`;
+    // volvería a haber dos verdades sobre el mismo texto.
+    document.getElementById('payVarItemEstimated').innerHTML = `Estimado: <strong class="font-mono">${window.formatCurrency(item.montoEstimado)}</strong>`;
 
     const rangeBadge = document.getElementById('payVarItemRangeBadge');
     if (rangeBadge) {
@@ -1660,7 +1742,8 @@ tr.innerHTML = `
     }
 
     const inputAmount = document.getElementById('payVarActualAmount');
-    inputAmount.value = Number(item.monto).toFixed(2);
+    // El estimado es el valor por defecto, no una decisión sobre lo que se pagó.
+    inputAmount.value = Number(item.montoEstimado).toFixed(2);
 
     currentVariableRowTarget = row;
     currentVariableItemTarget = item;
@@ -1676,7 +1759,7 @@ tr.innerHTML = `
   if (formPayVar) {
     formPayVar.addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!exigirAdmin('registrar el pago de un gasto variable')) return;
+      if (!exigirAdmin('registrar el pago de un gasto')) return;
       const monthId = document.getElementById('payVarMonthId').value;
       const itemId = document.getElementById('payVarItemId').value;
       const inputAmount = document.getElementById('payVarActualAmount');
@@ -1687,8 +1770,12 @@ tr.innerHTML = `
         return;
       }
 
-      // Actualizar monto real y estado Pagado en la base de datos
-      const pagado = store.updateBudgetItem(monthId, itemId, { monto: realAmount, estado: 'Pagado' });
+      /* Se escribe `montoReal` y NADA MÁS. Antes esta misma línea pisaba
+         `monto`, y con eso el estimado del mes desaparecía para siempre: el
+         pago era la única copia que quedaba del número. Ahora el estimado
+         sigue intacto y los dos conviven, que es lo que hace posible después ver
+         la diferencia entre lo que se planeó y lo que salió. */
+      const pagado = store.updateBudgetItem(monthId, itemId, { montoReal: realAmount });
 
       /* El store rechaza montos fuera de rango (por ejemplo "1e309", que entra
          como Infinity y pasa el isNaN de arriba). Sin este chequeo la fila se
@@ -1699,10 +1786,9 @@ tr.innerHTML = `
         return;
       }
 
-      // Actualizar el estado del ítem en memoria local
+      // Reflejar el pago en el objeto que ya tiene la fila en memoria.
       if (currentVariableItemTarget) {
-        currentVariableItemTarget.monto = realAmount;
-        currentVariableItemTarget.estado = 'Pagado';
+        currentVariableItemTarget.montoReal = realAmount;
       }
 
       // Actualizar visualmente la fila en el DOM inmediatamente
@@ -1712,10 +1798,7 @@ tr.innerHTML = `
           toggleBtn.className = 'btn-status-toggle status-pagado';
           toggleBtn.textContent = 'Pagado';
         }
-        const amountEl = currentVariableRowTarget.querySelector('.expense-item-amount');
-        if (amountEl) {
-          amountEl.textContent = window.formatCurrency(realAmount);
-        }
+        pintarImporteFila(currentVariableItemTarget, currentVariableRowTarget);
       }
 
       // Actualizar métricas vivas y subtotales
@@ -1765,7 +1848,10 @@ tr.innerHTML = `
     const fieldRango = document.getElementById('editExpenseRangeField');
 
     inputConcepto.value = item.concepto;
-    inputMonto.value = Number(item.monto).toFixed(2);
+    // El campo de importe edita el ESTIMADO, no lo que ya se pagó. Cambiar la
+    // estimación no toca la cobertura (D2): un gasto pagado sigue pagado aunque
+    // se le corrija el número con el que se planeó.
+    inputMonto.value = Number(item.montoEstimado).toFixed(2);
     if (readonlyTipo) readonlyTipo.textContent = item.tipo || 'Fijo';
 
     /* El rango solo tiene sentido en un variable: es el mismo criterio que usa
@@ -1805,7 +1891,11 @@ tr.innerHTML = `
         return;
       }
 
-      const patch = { concepto, monto };
+      /* Solo el estimado. El parche NO lleva `montoReal` ni `estado`: el store
+         descarta `estado` por diseño y el merge deja el monto real intacto, que
+         es justo el comportamiento pedido: corregir la estimación de un gasto ya
+         pagado no lo des-paga (D2). */
+      const patch = { concepto, montoEstimado: monto };
       const fieldRango = document.getElementById('editExpenseRangeField');
       if (fieldRango && fieldRango.style.display !== 'none') {
         patch.rango = document.getElementById('editExpenseRango').value.trim();

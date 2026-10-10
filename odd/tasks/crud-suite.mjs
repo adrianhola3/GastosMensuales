@@ -435,10 +435,10 @@ test('expense.create.servicios-fijos: UI, memory and disk all gain the row', asy
   p.ok(!!enDisco, 'DISK: localStorage holds the new row', { count: d.meses[A].servicios.fijos.length });
   p.ok(!!enMemoria, 'MEMORY: window.financialStore holds the new row');
   if (enDisco) {
-    p.equal(enDisco.monto, 123.45, 'DISK: monto persisted as a number, not a string');
+    p.equal(enDisco.montoEstimado, 123.45, 'DISK: monto persisted as a number, not a string');
     p.equal(enDisco.tipo, 'Fijo', 'DISK: tipo derived from the chosen subsection');
-    p.equal(enDisco.estado, 'Pendiente', 'DISK: estado persisted');
-    p.equal(enMemoria.monto, 123.45, 'MEMORY: monto matches DISK');
+    p.equal(enDisco.montoReal, null, 'DISK: a new expense starts uncovered (montoReal = null, not an "estado" text)');
+    p.equal(enMemoria.montoEstimado, 123.45, 'MEMORY: monto matches DISK');
   }
   p.equal(await conteoGastos(sb), antesUI + 1, 'UI: exactly one row was added');
   p.equal(d.meses[A].servicios.fijos.length, antesDisco + 1, 'DISK: the target list grew by one');
@@ -465,7 +465,7 @@ test('expense.create.variables: the range field appears and is persisted', async
   if (it) {
     p.equal(it.rango, '30-60', 'DISK: rango persisted');
     p.equal(it.tipo, 'Variable', 'DISK: tipo is Variable');
-    p.equal(it.monto, 45.5, 'DISK: monto persisted as a number');
+    p.equal(it.montoEstimado, 45.5, 'DISK: monto persisted as a number');
   }
   p.ok((await textoFilaGasto(sb, 'PRUEBA-CRUD Variable Rango')) !== null, 'UI: the row is rendered');
   const chip = await textoFilaGasto(sb, 'PRUEBA-CRUD Variable Rango');
@@ -495,7 +495,10 @@ test('expense.edit: concepto + monto change on all three surfaces; the merge pre
   const ITEM = 'i-prueba-alfa-2026-sf1';
   const orig = buscarGasto(mesDe(await disk(sb), A), ITEM);
   p.ok(!!orig, 'fixture precondition: the target expense exists', { ITEM });
-  const origEstado = orig.estado, origTipo = orig.tipo;
+  /* La cobertura ya no es un texto: se deduce de `montoReal`. Lo que este test
+   * quiere demostrar es que editar NO la toca, así que se guarda el valor real
+   * de entrada y se compara al final. */
+  const origCubierto = orig.montoReal !== null, origReal = orig.montoReal, origTipo = orig.tipo;
 
   const pulso = await sb.eval(PULSAR_EN_GASTO('PRUEBA-ALFA Internet', '.btn-edit-expense'));
   p.ok(pulso.ok, 'the row edit button is reachable and was clicked', pulso);
@@ -527,15 +530,15 @@ test('expense.edit: concepto + monto change on all three surfaces; the merge pre
   p.ok(ui !== null, 'UI: the row now shows the edited concepto', { ui });
   if (ui) {
     p.equal(ui.importe, 'S/ 222.99', 'UI: the row amount re-rendered to the edited value');
-    p.equal(ui.estado, origEstado, 'UI: the state chip did not change');
+    p.equal(ui.estado, origCubierto ? 'Pagado' : 'Pendiente', 'UI: the state chip did not change');
   }
   const d = await disk(sb); const mo = await mem(sb);
   const enDisco = buscarGasto(mesDe(d, A), ITEM);
   p.ok(!!enDisco, 'DISK: the same id is still present (a patch, not delete+insert)');
   if (enDisco) {
     p.equal(enDisco.concepto, 'PRUEBA-CRDF Internet EDITADO', 'DISK: concepto changed');
-    p.equal(enDisco.monto, 222.99, 'DISK: monto changed and stayed a number');
-    p.equal(enDisco.estado, origEstado, 'DISK: estado survived the merge (the form never sends it)');
+    p.equal(enDisco.montoEstimado, 222.99, 'DISK: monto changed and stayed a number');
+    p.equal(enDisco.montoReal, origReal, 'DISK: coverage survived the edit (the form never sends montoReal)');
     p.equal(enDisco.tipo, origTipo, 'DISK: tipo survived the merge (declared read-only)');
   }
   const enMemoria = buscarGasto(mesDe(mo, A), ITEM);
@@ -560,15 +563,15 @@ test('expense.edit.variable: the rango field is editable and the merge is scoped
   p.ok(!!it, 'DISK: still the same id');
   if (it) {
     p.equal(it.rango, '380-420', 'DISK: rango changed');
-    p.equal(it.monto, 399.99, 'DISK: monto changed');
-    p.equal(it.estado, 'Pendiente', 'DISK: estado untouched');
+    p.equal(it.montoEstimado, 399.99, 'DISK: monto changed');
+    p.equal(it.montoReal, null, 'DISK: coverage untouched');
   }
   p.ok((await textoFilaGasto(sb, 'PRUEBA-CRDF Limpieza EDITADA')) !== null, 'UI: the row re-rendered');
 });
 
 test('expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever sees it', async (sb, p) => {
   const ITEM = 'i-prueba-alfa-2026-sf2';
-  const antesMonto = buscarGasto(mesDe(await disk(sb), A), ITEM).monto;
+  const antesMonto = buscarGasto(mesDe(await disk(sb), A), ITEM).montoEstimado;
   await sb.eval(PULSAR_EN_GASTO('PRUEBA-ALFA Celular', '.btn-edit-expense'));
   await sb.pump(2); await sleep(250);
   await escribirConTeclado(sb, '#editExpenseConcepto', 'PRUEBA-CRDF Celular NEGATIVO');
@@ -588,7 +591,7 @@ test('expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever se
   p.equal(ctx.dialogs.length, 0,
     'no alert() was raised: the browser stopped the submit before app.js:1423 could run');
   p.ok(await modalAbierto(sb, 'modalEditExpense'), 'the sheet stays open, so nothing was saved');
-  p.equal(buscarGasto(mesDe(await disk(sb), A), ITEM).monto, antesMonto, 'DISK: the monto is unchanged');
+  p.equal(buscarGasto(mesDe(await disk(sb), A), ITEM).montoEstimado, antesMonto, 'DISK: the monto is unchanged');
   p.ok((await textoFilaGasto(sb, 'PRUEBA-ALFA Celular')) !== null,
     'UI: the row still shows the original concepto');
   p.equal((await sb.writeCount()).writes, 0, 'a rejected submit persists nothing');
@@ -600,7 +603,7 @@ test('expense.edit.rejects-negative: HTML5 min=0 blocks it before app.js ever se
 
 test('expense.edit.rejects-empty-monto: required blocks an empty amount', async (sb, p) => {
   const ITEM = 'i-prueba-alfa-2026-sf2';
-  const antesMonto = buscarGasto(mesDe(await disk(sb), A), ITEM).monto;
+  const antesMonto = buscarGasto(mesDe(await disk(sb), A), ITEM).montoEstimado;
   await sb.eval(PULSAR_EN_GASTO('PRUEBA-ALFA Celular', '.btn-edit-expense'));
   await sb.pump(2); await sleep(250);
   await escribirConTeclado(sb, '#editExpenseConcepto', 'PRUEBA-CRDF Celular SIN MONTO');
@@ -613,7 +616,7 @@ test('expense.edit.rejects-empty-monto: required blocks an empty amount', async 
     'the failure is validity.valueMissing on #editExpenseMonto', { invalidos: envio.invalidos });
   p.equal(ctx.dialogs.length, 0, 'no alert(): the browser blocked it first');
   p.ok(await modalAbierto(sb, 'modalEditExpense'), 'the sheet stays open');
-  p.equal(buscarGasto(mesDe(await disk(sb), A), ITEM).monto, antesMonto, 'DISK: monto unchanged');
+  p.equal(buscarGasto(mesDe(await disk(sb), A), ITEM).montoEstimado, antesMonto, 'DISK: monto unchanged');
   p.equal((await sb.writeCount()).writes, 0, 'nothing persisted');
 });
 
@@ -698,22 +701,62 @@ test('expense.delete.confirm: the row leaves UI, memory and disk together', asyn
   p.equal((await sb.writeCount()).writes, 1, 'exactly one persisted write for one delete');
 });
 
-test('expense.toggle.pagado-pendiente: the row chip flips and the store follows', async (sb, p) => {
+/* Fase 1: la cobertura ya no es un texto que se alterna, es un `montoReal` que
+ * se escribe o se borra. Por eso pagar PIDE el importe (es la única forma de que
+ * el real pueda diferir del estimado sin destruirlo) y quitar el pago NO pide
+ * nada (solo borra). El test sigue las dos mitades del mismo par. */
+test('expense.toggle.pagado-pendiente: paying writes the real amount and leaves the estimate alone', async (sb, p) => {
   const ITEM = 'i-prueba-alfa-2026-sf1';
-  const antesEstado = buscarGasto(mesDe(await disk(sb), A), ITEM).estado;
+  const antes = buscarGasto(mesDe(await disk(sb), A), ITEM);
+  p.equal(antes.montoReal, null, 'precondition: the fixture expense starts uncovered');
+  const estimadoAntes = antes.montoEstimado;
+
+  // --- PAGAR: pide el importe real, con el estimado a la vista ---
   const pulso = await sb.eval(PULSAR_EN_GASTO('PRUEBA-ALFA Internet', '.btn-status-toggle'));
   p.ok(pulso.ok, 'the row status toggle was clicked', pulso);
   await sb.pump(2); await sleep(350);
-  const esperado = antesEstado === 'Pagado' ? 'Pendiente' : 'Pagado';
-  const ui = await textoFilaGasto(sb, 'PRUEBA-ALFA Internet');
-  p.equal(ui && ui.estado, esperado, `UI: the chip reads "${esperado}"`);
-  p.ok(!!ui && ui.estadoClass.indexOf(esperado === 'Pagado' ? 'status-pagado' : 'status-pendiente') >= 0,
-    'UI: the chip class matches the new state', { estadoClass: ui && ui.estadoClass });
-  p.equal(ctx.dialogs.length, 0, 'a fixed expense toggles without any dialog');
-  const d = await disk(sb); const mo = await mem(sb);
-  p.equal(buscarGasto(mesDe(d, A), ITEM).estado, esperado, 'DISK: estado flipped');
-  p.equal(buscarGasto(mesDe(mo, A), ITEM).estado, esperado, 'MEMORY: estado flipped');
-  p.equal((await sb.writeCount()).writes, 1, 'exactly one persisted write for one toggle');
+
+  p.ok(await modalAbierto(sb, 'modalPayVariableExpense'), 'UI: paying asks for the real amount');
+  p.equal(ctx.dialogs.length, 0, 'no dialog was raised: it is a sheet, not a confirm');
+  const mostrado = await sb.eval(`document.getElementById('payVarItemEstimated').textContent`);
+  p.ok(new RegExp(String(Number(estimadoAntes).toFixed(2))).test(mostrado || ''),
+    'UI: the estimate stays on screen while the real amount is decided', { mostrado });
+  p.equal(await sb.eval(`document.getElementById('payVarActualAmount').value`),
+    Number(estimadoAntes).toFixed(2), 'UI: the field defaults the real amount to the estimate');
+  p.equal(buscarGasto(mesDe(await disk(sb), A), ITEM).montoReal, null,
+    'DISK: opening the sheet changed nothing');
+
+  // Se paga distinto del estimado: ese es justo el caso que el modelo viejo no
+  // podía representar.
+  await escribirValor(sb, '#payVarActualAmount', '150.00');
+  await sb.eval(PULSAR_SUBMIT_DE('formPayVariableExpense'));
+  await sb.pump(2); await sleep(400);
+
+  const pagado = buscarGasto(mesDe(await disk(sb), A), ITEM);
+  p.equal(pagado.montoReal, 150, 'DISK: the real amount was recorded');
+  p.equal(pagado.montoEstimado, estimadoAntes, 'DISK: paying did NOT destroy the estimate');
+  p.equal(buscarGasto(mesDe(await mem(sb), A), ITEM).montoReal, 150, 'MEMORY: the real amount was recorded');
+  p.ok(!(await modalAbierto(sb, 'modalPayVariableExpense')), 'UI: the sheet closes after saving');
+
+  const uiPagado = await textoFilaGasto(sb, 'PRUEBA-ALFA Internet');
+  p.equal(uiPagado && uiPagado.estado, 'Pagado', 'UI: the chip reads "Pagado"');
+  p.ok(!!uiPagado && uiPagado.estadoClass.indexOf('status-pagado') >= 0,
+    'UI: the chip class matches the new state', { estadoClass: uiPagado && uiPagado.estadoClass });
+  p.ok(/150\.00/.test(uiPagado && uiPagado.importe || ''),
+    'UI: the row shows the real amount next to the estimate', { importe: uiPagado && uiPagado.importe });
+  p.equal(ctx.dialogs.length, 0, 'the payment itself raised no dialog');
+
+  // --- DESPAYAR: borra el monto real, no pregunta nada ---
+  await sb.eval(PULSAR_EN_GASTO('PRUEBA-ALFA Internet', '.btn-status-toggle'));
+  await sb.pump(2); await sleep(350);
+
+  p.ok(!(await modalAbierto(sb, 'modalPayVariableExpense')), 'UI: unpaying asks nothing');
+  const pendiente = buscarGasto(mesDe(await disk(sb), A), ITEM);
+  p.equal(pendiente.montoReal, null, 'DISK: the real amount was erased');
+  p.equal(pendiente.montoEstimado, estimadoAntes, 'DISK: the estimate survived the round trip');
+  const uiPendiente = await textoFilaGasto(sb, 'PRUEBA-ALFA Internet');
+  p.equal(uiPendiente && uiPendiente.estado, 'Pendiente', 'UI: the chip reads "Pendiente"');
+
   const kpi = await sb.eval(`document.getElementById('monthGastosCount').textContent`);
   p.ok(/de .* gastos pagados/.test(kpi), 'the live KPI re-rendered', { kpi });
 });
@@ -1118,12 +1161,12 @@ test('month.create.clone: recurrent expenses copied, fresh ids, all reset to Pen
     'DISK: extras were NOT cloned (store.js:736 hardcodes extras: []; index.html:823 documents it)');
   p.equal((clonado.movimientos || []).length, 0, 'DISK: movements were NOT cloned (store.js:738)');
   p.equal(clonado.notas, '', 'DISK: notas start empty');
-  p.ok(items.every(i => i.estado === 'Pendiente'), 'DISK: every cloned item was reset to Pendiente',
-    { estados: items.map(i => i.estado) });
+  p.ok(items.every(i => i.montoReal === null), 'DISK: every cloned item starts uncovered (montoReal = null)',
+    { reales: items.map(i => i.montoReal) });
   p.equal(items.filter(i => recurrentes.some(o => o.id === i.id)).length, 0,
     'DISK: no cloned item kept the source id (fresh generateId)');
-  p.equal(JSON.stringify(items.map(i => i.monto).sort()),
-    JSON.stringify(recurrentes.map(i => i.monto).sort()),
+  p.equal(JSON.stringify(items.map(i => i.montoEstimado).sort()),
+    JSON.stringify(recurrentes.map(i => i.montoEstimado).sort()),
     'DISK: the amounts came across unchanged');
   p.equal(await conteoGastos(sb), items.length, 'UI: the cloned month renders every cloned row');
   p.ok((await erroresVisibles(sb)).length === 0, 'no NaN/undefined/Infinity after cloning',
@@ -1148,7 +1191,7 @@ test('month.switch: clicking a pill moves the active month and re-renders', asyn
   const d = await disk(sb);
   const esperado = mesDe(d, B);
   const subtotalServicios = [...esperado.servicios.fijos, ...esperado.servicios.variables]
-    .reduce((s, i) => s + (Number(i.monto) || 0), 0);
+    .reduce((s, i) => s + (Number(i.montoEstimado) || 0), 0);
   p.equal(d.activeMonthId, B, 'DISK: activeMonthId changed');
   p.equal(await sb.eval(`document.getElementById('activeMonthHeaderBadge').textContent`),
     'PRUEBA-BETA 2026', 'UI: the header badge follows');

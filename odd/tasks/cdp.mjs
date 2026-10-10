@@ -43,6 +43,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawn } from 'node:child_process';
 
 const HOST = '127.0.0.1';
 const PORT = 9222;
@@ -61,6 +62,199 @@ function httpJson(p) {
     req.on('error', reject);
     req.setTimeout(8000, () => { req.destroy(new Error('timeout en ' + p)); });
   });
+}
+
+/* =====================================================================
+ * RED DE SEGURIDAD DE SALIDA
+ * ---------------------------------------------------------------------
+ * PROBLEMA QUE RESUELVE
+ * Cada script que usa `openPage()` cierra en su `finally`, y eso cubre la
+ * salida limpia, que es la que nunca falla. La fuga pasa por el otro lado:
+ * si el proceso MUERE antes de llegar al `finally`, la ventana que este
+ * arnes abrio en el navegador del usuario queda abierta PARA SIEMPRE, con el
+ * `<title>` de la pagina: "Control de Gastos & Presupuesto".
+ *
+ * Los motivos de muerte mas comunes no son bugs del script:
+ *   · un Ctrl+C
+ *   · un timeout del agente que mata el comando a la mitad
+ *   · un cierre de sesion de OpenCode
+ * Ninguno de esos ejecuta un `finally`. Antes de este bloque, esas tres
+ * cosas dejaban ventanas huerfanas y la unica salida era acordarse de
+ * correr `cerrar-ventanas.mjs` a mano.
+ *
+ * QUE HACE
+ * 1. `objetivosAbiertos` lleva cada target que este proceso abrio.
+ * 2. En SIGINT / SIGTERM / uncaughtException / unhandledRejection hay tiempo
+ *    para un cierre PROPIO: se manda `Target.closeTarget` y recien ahi se
+ *    sale. Son los caminos que podemos limpiar sin apuro.
+ * 3. En `exit` no hay event loop: ninguna promesa llega a resolverse. Por eso
+ *    la red de emergencia es un hijo DESACOPLADO que sobrevive al padre y
+ *    cierra por HTTP (`/json/close/<id>`, un GET plano del protocolo DevTools
+ *    que no necesita WebSocket). El padre muere igual; la ventana no.
+ * ===================================================================== */
+
+/* =====================================================================
+ * RED DE SEGURIDAD: que ninguna ventana sobreviva a este proceso
+ * ---------------------------------------------------------------------
+ * EL PROBLEMA
+ * Cada script que usa `openPage()` cierra en su `finally`, y eso cubre la
+ * salida limpia, que es la que nunca falla. La fuga pasa por el otro lado:
+ * si el proceso MUERE antes de llegar al `finally`, la ventana que este
+ * arnes abrio en el navegador del usuario queda abierta PARA SIEMPRE, con el
+ * `<title>` de la pagina: "Control de Gastos & Presupuesto".
+ *
+ * Los motivos de muerte mas comunes no son bugs de los scripts:
+ *   · el timeout del shell que corta el comando a la mitad
+ *   · un Ctrl+C
+ *   · el cierre de la sesion de OpenCode
+ *
+ * TRES ARQUITECTURAS DESCARTADAS, CON EVIDENCIA
+ *
+ * 1. `process.on('exit')` que lanzaba un hijo para cerrar. NO FUNCIONA:
+ *    `taskkill /F` no ejecuta un solo handler.
+ *
+ * 2. Un guardIAN hijo directo con `detached: true`. NO FUNCIONA, y esta es
+ *    la trampa importante: `detached` crea un GRUPO de procesos nuevo, pero
+ *    el hijo sigue siendo descendiente en la tabla de procesos. `taskkill
+ *    /T` recorre el arbol hacia abajo y lo alcanza igual. Medido: el
+ *    guardian se detuvo en el tick 6, justo despues del taskkill del padre.
+ *
+ * 3. Un guardIAN lanzado por `cmd /c start`. SI FUNCIONA, y por una razon
+ *    que conviene no olvidar: `start` deja al proceso CORTO de vida que lo
+ *    lanza, asi que el guardian queda huerfano. Un huerfano no es
+ *    descendiente de node, y `taskkill /T` sobre node ya no lo alcanza.
+ *
+ * DE AHI LA ESTRUCTURA DE DOS ETAPAS: node lanza un lanzador que dura ~50 ms
+ * y que a su vez lanza al guardian desacoplado. Al morir node, el lanzador
+ * ya no existe, el guardian quedo huerfano y sobrevive para cerrar.
+ * La ventana de vulnerabilidad son esos ~50 ms, y solo al abrir la ventana.
+ *
+ * EL GUARDIAN SE RETIRA SOLO
+ * Si la ventana ya no esta (la cerro el `finally`, o el propio script), la
+ * deja de encontrar en `/json/list` y termina. Ademas tiene un tope de ~30
+ * minutos. Asi no se acumulan procesos huerfanos.
+ * ===================================================================== */
+
+const objetivosAbiertos = new Set();
+let redDeSeguridadInstalada = false;
+
+const GUARDIAN = 'guardi-ventanas.js';
+
+/* Se escribe una vez por proceso. Un archivo y no `-e` porque pasar codigo
+ * multilinea por la linea de comandos con `cmd /c start` es fragile con las
+ * comillas, y esto corre justo en el escenario donde no puede fallar. */
+function rutaGuardian() {
+  return path.join(process.env.LOCALAPPDATA || process.cwd(), 'Temp', 'opencode', GUARDIAN);
+}
+
+function escribirGuardian() {
+  const destino = rutaGuardian();
+  if (fs.existsSync(destino)) return destino;
+  const codigo = `
+/* Generado por cdp.mjs. Se borra solo si el directorio no existe.
+ * Guardiana UNA ventana. Si el proceso que la abrio desaparece, la cierra. */
+const http = require('node:http');
+const fs = require('node:fs');
+const PPID   = Number(process.env.GASTOS_PPID || 0);
+const TARGET = process.env.GASTOS_TARGET || '';
+const HOST = process.env.GASTOS_HOST || '127.0.0.1';
+const PORT = Number(process.env.GASTOS_PORT || 9222);
+const dormir = ms => new Promise(r => setTimeout(r, ms));
+const get = ruta => new Promise(res => {
+  const req = http.get({ host: HOST, port: PORT, path: ruta }, r => {
+    let d = ''; r.setEncoding('utf8');
+    r.on('data', c => d += c);
+    r.on('end', () => res(d));
+  });
+  req.on('error', () => res(null));
+  req.setTimeout(2500, () => { req.destroy(); res(null); });
+});
+(async () => {
+  for (let i = 0; i < 2600; i++) {            // tope: ~30 minutos
+    await dormir(700);
+    let padreVivo = true;
+    try { process.kill(PPID, 0); } catch (e) { padreVivo = false; }
+    if (!padreVivo) {
+      const r = await get('/json/close/' + TARGET);
+      if (process.env.GASTOS_CDP_DEBUG) {
+        try { fs.appendFileSync(process.env.GASTOS_CDP_DEBUG,
+          '[guardian] padre muerto, cierre pedido -> ' + JSON.stringify(String(r).slice(0, 60)) + '\\n'); } catch {}
+      }
+      process.exit(0);
+    }
+    const lista = await get('/json/list');
+    if (lista === null) continue;
+    try {
+      const arr = JSON.parse(lista);
+      if (!arr.some(t => t.id === TARGET)) process.exit(0);   // ya no esta
+    } catch { /* ilegible: seguir vigilando */ }
+  }
+  process.exit(0);
+})();
+`;
+  try {
+    fs.mkdirSync(path.dirname(destino), { recursive: true });
+    fs.writeFileSync(destino, codigo, 'utf8');
+  } catch { /* sin guardian written: el finally sigue siendo la red */
+    return null;
+  }
+  return destino;
+}
+
+function armarGuardian(ppid, targetId) {
+  const archivo = escribirGuardian();
+  if (!archivo) return;
+
+  /* ETAPA 1: el lanzador. Vive ~50 ms y se va. */
+  const lanzador = `
+    const { spawn } = require('node:child_process');
+    const h = spawn(process.execPath, [${JSON.stringify(archivo)}], {
+      detached: true, stdio: 'ignore', windowsHide: true,
+      env: { ...process.env, GASTOS_PPID: ${ppid}, GASTOS_TARGET: ${JSON.stringify(targetId)} },
+    });
+    h.unref();
+  `;
+  try {
+    const hijo = spawn(process.execPath, ['-e', lanzador], {
+      detached: true, stdio: 'ignore', windowsHide: true,
+    });
+    hijo.unref();
+  } catch (e) {
+    console.error('armarGuardian fallo: ' + e.message);
+  }
+}
+
+function instalarRedDeSeguridad() {
+  if (redDeSeguridadInstalada) return;
+  redDeSeguridadInstalada = true;
+
+  /* Camino blando: hay event loop, asi que se cierra bien y despues se sale. */
+  const salidaSuave = etiqueta => {
+    for (const { browser, targetId } of objetivosAbiertos) {
+      try { browser.send('Target.closeTarget', { targetId }); } catch { /* ya cerrado */ }
+      try { browser.close(); } catch { /* ya cerrado */ }
+    }
+    objetivosAbiertos.clear();
+    if (etiqueta) process.exitCode = 1;
+  };
+
+  process.on('SIGINT', () => { salidaSuave('SIGINT'); process.exit(130); });
+  process.on('SIGTERM', () => { salidaSuave('SIGTERM'); process.exit(143); });
+  process.on('uncaughtException', err => {
+    console.error('uncaughtException: ' + (err && err.stack ? err.stack : err));
+    salidaSuave('uncaughtException');
+    process.exit(1);
+  });
+  process.on('unhandledRejection', err => {
+    console.error('unhandledRejection: ' + (err && err.stack ? err.stack : err));
+    salidaSuave('unhandledRejection');
+    process.exit(1);
+  });
+
+  /* Camino duro: `taskkill /F` no ejecuta NINGUN handler, ni siquiera `exit`.
+     Para eso esta el guardian, que ya se armo al abrir la ventana. Este bloque
+     solo cubre las salidas limpias que todavia da tiempo a limpiar. */
+  process.on('exit', () => objetivosAbiertos.clear());
 }
 
 /* ---------- cliente WebSocket del protocolo ----------
@@ -124,6 +318,7 @@ class Cdp {
 
 /* ---------- sesion sobre un target propio ---------- */
 export async function openPage({ width = 1440, height = 900 } = {}) {
+  instalarRedDeSeguridad();
   const ver = await httpJson('/json/version');
   const wsUrl = ver.webSocketDebuggerUrl;
   if (!wsUrl || !/:\d+\//.test(wsUrl)) throw new Error('webSocketDebuggerUrl sin puerto: ' + wsUrl);
@@ -137,11 +332,25 @@ export async function openPage({ width = 1440, height = 900 } = {}) {
 
   const { targetId } = await browser.send('Target.createTarget', { url: 'about:blank', newWindow: true });
   let closed = false;
+  /* Queda anotado apenas se crea: desde este punto la ventana existe en el
+     navegador del usuario, y cualquier muerte del proceso tiene que llevarsela
+     por delante. Ver la RED DE SEGURIDAD DE SALIDA, mas arriba. */
+  objetivosAbiertos.add({ browser, targetId });
+  /* El guardian se arma ACA, en el momento de abrir la ventana, y no al
+     salir: es la unica forma de que sobreviva a una muerte que no ejecuta
+     handlers. Se auto-retira solo cuando ve que la ventana ya no esta. */
+  armarGuardian(process.pid, targetId);
+  const cerrarAnotado = () => {
+    for (const o of objetivosAbiertos) {
+      if (o.targetId === targetId) objetivosAbiertos.delete(o);
+    }
+  };
   const close = async () => {
     if (closed) return;
     closed = true;
     try { await browser.send('Target.closeTarget', { targetId }); } catch { /* ya cerrado */ }
     browser.close();
+    cerrarAnotado();
   };
 
   try {

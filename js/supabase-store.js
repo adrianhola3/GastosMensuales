@@ -376,6 +376,39 @@
       .catch(e => ({ ok: false, error: traducirError(e) }));
   }
 
+  /**
+   * Entrar con Google. Es el camino pensado para el padre: un botón, usa la
+   * cuenta de Google que ya tiene y el navegador lo recuerda. No tiene que
+   * escribir un correo en un formulario nuestro ni manejar una contraseña de
+   * esta aplicación.
+   *
+   * REQUIERE CONFIGURACIÓN EN GOOGLE CLOUD. Hasta que el proyecto de Supabase
+   * tenga Client ID y Client Secret del proveedor 'google', Supabase responde
+   * con un error y esta función lo traduce. No es un problema de esta app.
+   */
+  function iniciarSesionConGoogle() {
+    const cli = obtenerCliente();
+    if (!cli) {
+      return Promise.resolve({
+        ok: false,
+        error: 'La nube no está configurada. Completá los datos en js/config.js.'
+      });
+    }
+
+    return cli.auth
+      .signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: urlDeRetornoLimpia() }
+      })
+      .then(({ data, error }) => {
+        if (error) return { ok: false, error: traducirError(error) };
+        if (!data || !data.url) return { ok: false, error: 'No se pudo iniciar el acceso con Google.' };
+        window.location.href = data.url;
+        return { ok: true, error: null };
+      })
+      .catch(e => ({ ok: false, error: traducirError(e) }));
+  }
+
   /** Cierra la sesión. Nunca rechaza. */
   function salirDeSesion() {
     const cli = obtenerCliente();
@@ -459,6 +492,7 @@
     guardar,
     iniciarSesion,
     iniciarSesionConGithub,
+    iniciarSesionConGoogle,
     salirDeSesion,
     haySesion,
     obtenerRol,

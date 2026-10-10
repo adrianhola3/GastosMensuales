@@ -1202,6 +1202,12 @@
               onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGithub!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGithub().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con GitHub.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con GitHub</button>
             <p class="form-hint form-hint-center">Te lleva a GitHub para confirmar tu identidad. Regresás automáticamente a esta página.</p>
           </div>
+
+          <div class="form-field form-field-spaced">
+            <button type="button" id="btnAdminLoginGoogle" class="btn btn-surface btn-lg btn-block"
+              onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGoogle!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGoogle().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con Google.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con Google</button>
+            <p class="form-hint form-hint-center">Te lleva a Google y regresás automáticamente. Es el camino más cómodo: no hay que escribir nada acá.</p>
+          </div>
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>

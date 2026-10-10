@@ -2,27 +2,13 @@
 -- 01-seguridad.sql
 -- Quién puede escribir en la tabla de gastos.
 --
--- QUE HACE ESTO
--- Hoy la tabla "gastos" tiene UNA fila compartida y las políticas permiten
--- que cualquier cuenta autenticada lea Y escriba. Eso está al revés de lo que
--- hace falta: el padre tiene que VER los gastos del hijo, no cambiarlos.
---
--- Después de correr este texto:
---   · Cualquier usuario autenticado LEE (padre y hijo ven lo mismo).
---   · SOLO el usuario con el rol 'admin' en app_metadata ESCRIBE.
---   · El padre puede esquivarse todos los botones que quiera desde la consola
---     del navegador: la base lo rechaza igual.
---
--- DONDE CORRERLO
--- Panel de Supabase -> SQL Editor -> New query -> pegar -> Run.
---
--- POR QUE app_metadata Y NO user_metadata
--- app_metadata solo la puede cambiar un administrador del panel.
--- user_metadata la puede cambiar el propio usuario desde el navegador.
--- Si el rol estuviera en user_metadata, el padre podría escribirse
--- role: 'admin' a sí mismo con dos líneas en la consola y quedarse con
--- permiso de escritura. El rol tiene que estar en app_metadata.
+-- Va dentro de una transacción a propósito. Si algo falla a medio camino, se
+-- deshace todo: es preferible quedarse con las políticas viejas (inseguras pero
+-- funcionales) que con la tabla sin ninguna política, que la dejaría sin
+-- lectura ni escritura para nadie.
 -- =====================================================================
+
+begin;
 
 -- ---------------------------------------------------------------------
 -- 1. La función que responde "¿este usuario es administrador?"
@@ -47,9 +33,15 @@ $$;
 --    Son las que dejan escribir a cualquiera: "usando (true)" sin mirar
 --    quién es el que escribe.
 -- ---------------------------------------------------------------------
-drop policy if exists "gastos: leer autenticados"     on public.gastos;
-drop policy if exists "gastos: escribir autenticados" on public.gastos;
+drop policy if exists "gastos: leer autenticados"      on public.gastos;
+drop policy if exists "gastos: escribir autenticados"  on public.gastos;
 drop policy if exists "gastos: actualizar autenticados" on public.gastos;
+
+-- Esta NO estaba en el esquema documentado y se encontró al verificar:.allow
+-- SELECT a {anon, authenticated}. `anon` es el rol de quien NO tiene sesión,
+-- o sea que cualquier persona con el enlace podia leer los gastos sin cuenta
+-- ni contraseña. Se elimina acá porque la lectura de más abajo la cubre.
+drop policy if exists "gastos: lectura publica" on public.gastos;
 
 -- ---------------------------------------------------------------------
 -- 3. Políticas nuevas.
@@ -73,6 +65,8 @@ create policy "gastos: actualizar solo admin"
 create policy "gastos: borrar solo admin"
   on public.gastos for delete to authenticated
   using (public.es_admin());
+
+commit;
 
 -- ---------------------------------------------------------------------
 -- COMO ASIGNAR LOS ROLES (esto NO es SQL, se hace en el panel)

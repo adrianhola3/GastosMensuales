@@ -139,14 +139,33 @@
 
   function credenciales() {
     const cfg = window.GASTOS_CONFIG || {};
+    /* `modoLocal` gana por encima de las credenciales: es la forma de trabajar
+       sobre el diseño sin que una sola escritura llegue a la base real. Las
+       claves siguen ahí, no se borran; lo que se apaga es el uso. */
+    if (cfg.modoLocal) return { url: '', key: '' };
     return {
       url: String(cfg.supabaseUrl || '').trim(),
       key: String(cfg.supabaseAnonKey || '').trim()
     };
   }
 
+  let avisoModoLocal = false;
+
   /** ¿Están los dos datos de conexión completos? */
   function estaConfigurado() {
+    const cfg = window.GASTOS_CONFIG || {};
+    if (cfg.modoLocal) {
+      /* Una sola vez por carga, y solo en consola: no se toca la interfaz para
+         no interferir con el diseño que se está trabajando. */
+      if (!avisoModoLocal) {
+        avisoModoLocal = true;
+        console.warn(
+          '[modo local] Supabase está desactivado por `modoLocal: true` en config.js. ' +
+          'Todo se guarda en este navegador y no sale nada a la red.'
+        );
+      }
+      return false;
+    }
     const { url, key } = credenciales();
     return url.length > 0 && key.length > 0;
   }

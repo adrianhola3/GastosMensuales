@@ -21,6 +21,19 @@
  */
 
 window.GASTOS_CONFIG = {
+  /* MODO LOCAL: mientras esté en `true`, la app se comporta como si Supabase
+     NO estuviera configurado. `estaConfigurado()` devuelve false, el store no
+     intenta ninguna conexión de red y todo se guarda en el navegador
+     (localStorage).
+     *
+     * Sirve para trabajar en el diseño sin que cada prueba termine escribiendo
+     * en la base de datos real.
+     *
+     * PONER EN `false` ANTES DE PUBLICAR. Con esta bandera en `true` el sitio
+     * publicado también se quedaría sin nube, en silencio y sin avisar.
+     */
+  modoLocal: true,
+
   supabaseUrl: 'https://bgcgmofroibrxthvdlil.supabase.co',
   supabaseAnonKey: 'sb_publishable_1PIXKBVWdxOx5RnDLkEskQ_nS5TiqU7'
 };

@@ -1591,7 +1591,11 @@ tr.innerHTML = `
       const elSub = document.getElementById('budgetSubsection');
       const subsection = elSub ? elSub.value : 'fijos';
       const concepto = document.getElementById('budgetConcepto').value.trim();
-      const monto = parseFloat(document.getElementById('budgetMonto').value) || 0;
+      /* El monto viaja como texto, no como `parseFloat(...) || 0`. Esa forma
+         convertía en cero todo lo que no entendía y el store recibía un 0
+         perfectamente válido: "abc" terminaba guardado como un gasto de $0.
+         El store normaliza y rechaza; acá solo se le pasa lo que se escribió. */
+      const monto = document.getElementById('budgetMonto').value.trim();
       const elRango = document.getElementById('budgetRango');
       const rango = elRango ? elRango.value.trim() : '';
       const elEstado = document.getElementById('budgetEstado');
@@ -1605,13 +1609,21 @@ tr.innerHTML = `
         return;
       }
 
-      store.addBudgetItem(store.data.activeMonthId, section, subsection, {
+      const guardado = store.addBudgetItem(store.data.activeMonthId, section, subsection, {
         concepto,
         monto,
         tipo,
         rango,
         estado
       });
+
+      /* Si el store rechaza el alta no se cierra el modal: anunciarlo como
+         agregado cuando no se guardó nada es la forma más rápida de perder la
+         confianza en los números. */
+      if (guardado === false) {
+        showToast('El monto no es un número válido. No se guardó nada.', '');
+        return;
+      }
 
       const modal = document.getElementById('modalAddBudget');
       if (modal) modal.classList.remove('active');
@@ -1676,7 +1688,16 @@ tr.innerHTML = `
       }
 
       // Actualizar monto real y estado Pagado en la base de datos
-      store.updateBudgetItem(monthId, itemId, { monto: realAmount, estado: 'Pagado' });
+      const pagado = store.updateBudgetItem(monthId, itemId, { monto: realAmount, estado: 'Pagado' });
+
+      /* El store rechaza montos fuera de rango (por ejemplo "1e309", que entra
+         como Infinity y pasa el isNaN de arriba). Sin este chequeo la fila se
+         pintaba como Pagada con un monto que nunca se guardó, y la pantalla
+         acababa mostrando un número que no estaba en los datos. */
+      if (pagado === false) {
+        alert('El monto quedó fuera de rango. No se registró el pago.');
+        return;
+      }
 
       // Actualizar el estado del ítem en memoria local
       if (currentVariableItemTarget) {
@@ -1920,7 +1941,9 @@ tr.innerHTML = `
       e.preventDefault();
       if (!exigirAdmin('registrar un movimiento')) return;
       const concepto = document.getElementById('movConcepto').value.trim();
-      const monto = parseFloat(document.getElementById('movMonto').value) || 0;
+      /* Mismo criterio que en el alta de gastos: el monto llega como texto para que
+         sea el store quien decida si es un número. */
+      const monto = document.getElementById('movMonto').value.trim();
       const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
       const fecha = inputMovFecha.value;
 
@@ -1931,7 +1954,7 @@ tr.innerHTML = `
         return;
       }
 
-      store.addMovement(store.data.activeMonthId, {
+      const registrado = store.addMovement(store.data.activeMonthId, {
         concepto,
         monto,
         flujo,
@@ -1940,6 +1963,11 @@ tr.innerHTML = `
         estado: 'Pagado',
         fecha
       });
+
+      if (registrado === false) {
+        showToast('El monto no es un número válido. No se registró nada.', '');
+        return;
+      }
 
       modalAddMovement.classList.remove('active');
       renderMonthView();

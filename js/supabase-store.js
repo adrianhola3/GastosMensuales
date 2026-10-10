@@ -195,6 +195,28 @@
     return sesionEnMemoria;
   }
 
+  /**
+   * El rol real del usuario, leído de `app_metadata`.
+   *
+   * POR QUE NO BASTA CON "HAY SESION"
+   * Antes la app deduce `hay ? 'admin' : 'lector'`: cualquiera que hubiera
+   * iniciado sesión quedaba como administrador y se le mostraban todos los
+   * botones de edición. Con dos personas usando la app eso está mal: el padre
+   * vería controles que al pulsarlos la base rechaza.
+   *
+   * El rol tiene que venir de `app_metadata` y no de `user_metadata` porque
+   * `user_metadata` la puede editar el propio usuario desde el navegador. Con
+   * el rol ahí, cualquiera podría escribirse 'admin' a sí mismo. Solo
+   * `app_metadata` la modifica un administrador del panel.
+   *
+   * @returns {'admin'|'lector'}
+   */
+  function obtenerRol() {
+    const user = sesionEnMemoria && sesionEnMemoria.user;
+    const meta = user && user.app_metadata;
+    return meta && meta.role === 'admin' ? 'admin' : 'lector';
+  }
+
   function notificarSesion() {
     oyentesSesion.forEach(cb => {
       try { cb(haySesion()); } catch (e) { console.error('Error en listener de sesión:', e); }
@@ -439,6 +461,7 @@
     iniciarSesionConGithub,
     salirDeSesion,
     haySesion,
+    obtenerRol,
     alCambiarSesion,
     esperarSesion,
     // Expuesto solo para diagnóstico en la consola del navegador.

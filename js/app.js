@@ -43,7 +43,13 @@ function refrescarSesion() {
     .then(() => (typeof remoto.esperarSesion === 'function' ? remoto.esperarSesion() : remoto.haySesion()))
     .catch(() => false)
     .then((hay) => {
-      sesionActual = { rol: hay ? 'admin' : 'lector', configurado: true };
+      /* El rol NO se deduce de "hay sesión". Antes sí: `hay ? 'admin' : 'lector'`,
+         así que cualquier persona que iniciara sesión veía los 27 botones de
+         edición. Con el padre mirando la misma app, eso le mostraba controles que
+         la base iba a rechazar. Ahora el rol sale de `app_metadata`, que solo
+         edita un administrador del panel. */
+      const rol = (hay && typeof remoto.obtenerRol === 'function') ? remoto.obtenerRol() : 'lector';
+      sesionActual = { rol, configurado: true };
       return sesionActual;
     });
 }
@@ -312,10 +318,19 @@ document.addEventListener('DOMContentLoaded', () => {
       remoto.iniciarSesion(email, password)
         .then(resultado => {
           if (resultado && resultado.ok) {
-            sesionActual = { rol: 'admin', configurado: true };
-            sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+            /* Haber iniciado sesión no significa ser administrador. El rol lo dice
+               `app_metadata`; sin mirarlo, cualquiera que entrara con su cuenta
+               veía la app completa de edición. */
+            const rol = typeof remoto.obtenerRol === 'function' ? remoto.obtenerRol() : 'lector';
+            sesionActual = { rol, configurado: true };
+            sessionStorage.setItem(ELECCION_ROL_KEY, rol);
             aplicarSesion();
-            showToast('Sesión iniciada. Modo Administrador activo.', '');
+            showToast(
+              rol === 'admin'
+                ? 'Sesión iniciada. Modo Administrador activo.'
+                : 'Sesión iniciada. Acceso de solo lectura.',
+              ''
+            );
           } else {
             // Se muestra el mensaje real de Supabase, ya traducido al español.
             mostrarErrorLogin(resultado && resultado.error
@@ -2257,9 +2272,14 @@ tr.innerHTML = `
     remoto.alCambiarSesion(() => {
       // Un cambio de sesión fuera de este flujo (por ejemplo, cerrar sesión en
       // otra pestaña) se respeta igual.
+      //
+      // El rol sale de `app_metadata`, no de "hay sesión". Si se dejara así,
+      // con que el padre iniciara sesión entraba como administrador y se le
+      // escribía 'admin' en el sessionStorage de su navegador.
+      const rol = typeof remoto.obtenerRol === 'function' ? remoto.obtenerRol() : 'lector';
       if (remoto.haySesion()) {
-        sesionActual = { rol: 'admin', configurado: true };
-        sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+        sesionActual = { rol, configurado: true };
+        sessionStorage.setItem(ELECCION_ROL_KEY, rol);
       } else {
         sesionActual = { rol: 'lector', configurado: remoto.estaConfigurado() };
         sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');

@@ -885,45 +885,132 @@
 }
 
 @media (max-width: 640px) {
+  /* ==========================================================================
+     LA BANDA DE SECCIONES EN EL TELÉFONO: UNA FRANJA, NO UN MURO
+     --------------------------------------------------------------------------
+     MEDIDO ANTES: 201px de alto, 24% de una pantalla de 844, antes de la barra
+     superior, antes de la cifra protagonista y antes del primer gasto. La
+     primera fila del libro caía en y=617, o sea que en la primera pantalla
+     entran una fila y un poco de la segunda.
+
+     POR QUÉ NO SE ESCONDE, Y ESTO ES LO IMPORTANTE
+     --------------------------------------------------------------------------
+     Escondida, la navegación de categoría desaparecería entera del teléfono:
+     no habría forma de apagar una sección ni de volver a encender una apagada,
+     y `renderActiveSegments` escribe el estado con `style.display` inline sobre
+     `.ledger-group` — un filtro que no tiene dónde encenderse de nuevo es un
+     filtro que no se puede usar. Los encabezados del libro navegAN, pero no
+     FILTRAN: plegar "Servicios del hogar" esconde sus filas, no las de los
+     otros tres grupos. Son dos funciones distintas y quedarse con una sola es
+     perder una.
+
+     POR QUÉ EN UNA FILA Y NO EN UNA TARJETA DE DOS RENGLONES
+     --------------------------------------------------------------------------
+     La entrada anterior era una rejilla `nombre` arriba y `subtotal + alta`
+     abajo, con un ancho mínimo de 124px y dos por renglón. Medido, ocupaba
+     201px para cinco filtros y cinco altas.
+
+     El subtotal sale, y esa es la mitad del problema: el encabezado del grupo
+     lo muestra a 20px tabular, en el libro, y en el teléfono el mismo número
+     dos veces, una encima de la otra, es exactamente el muro que se está
+     desarmando. Y el alto lo sube el botón de alta, que en un filtro de
+     lectura es la pieza menos importante de la entrada.
+
+     QUEDA UNA LÍNEA QUE SCROLLEA, Y POR QUÉ ESO NO ES EL DEFECTO QUE ERA ANTES
+     --------------------------------------------------------------------------
+     La objeción de la ronda anterior —"dejar Extras fuera de la vista es
+     reintroducir el defecto"— era contra un renglón que salía CORTADO sin
+     señal. Un renglón scrolleable corta al meio, se ve que sigue, y además el
+     libro de abajo nombra las cuatro secciones con su propio encabezado: la
+     franja no tiene que ser el índice completo, tiene que apagar lo que no se
+     está mirando. Que a 320 no entren las cinco es aceptable; que no se vea
+     dónde acaba no lo es.
+
+     MEDIDO DESPUÉS
+     --------------------------------------------------------------------------
+     47px en vez de 201px: 7% de la pantalla en vez de 24%. La primera fila del
+     libro sube de y=617 a y=463.
+
+     Ojo con lo que eso NO significa: el conteo de filas COMPLETAS visibles en
+     una pantalla de 844px no cambia, sigue siendo 3. Los 154px que ganó la
+     banda se los comen los 18px de alto que ganó cada fila de gasto (los
+     botones a 36px y el renglón del detalle "Real", ambos en
+     `css/libro.css`). Lo que cambia es que ahora entra la primera fila entera
+     *y* se ve un fragmento de la segunda, en vez de empezar a leerse a media
+     pantalla. Si alguna vez hay que recuperar filas, el precio está en
+     `libro.css`, no acá: esta banda ya dio todo lo que tenía.
+
+     Las cinco entradas miden 832px con los botones de alta y 784px sin ellos, y
+     la franja scrollea en los dos casos: a 390 se ven "Todo" y "Servicios"
+     enteras y "Personales" cortada al medio, que es justamente la señal de que
+     sigue. El modo lector no cambia la altura —los cinco botones de alta son
+     `.admin-action-btn` y desaparecen con los otros 22, la franja se queda en
+     47px y el filtrado sigue ahí.
+
+     Medido con `odd/tasks/movil.mjs`.
+     ========================================================================== */
+
+  /* La banda no necesita un paso de 8px arriba y abajo para separar dos
+     renglones: acá hay UN renglón de 30px, y el filete de abajo ya lo separa
+     del contenido. Los 16px que sobran son 16px de la primera pantalla. */
+  .section-rail { padding: var(--space-1) 0; }
+
   .section-rail-list {
-    /* Dos renglones en vez de scrollear en horizontal. Cinco entradas de 124px
-       más cuatro gaps son 652px contra 625 disponibles a 640: "Extras" quedaba
-       con el borde derecho fuera de la vista, sin ninguna señal de que había
-       algo más. Un renglón scrolleable es un patrón válido, pero acá la quinta
-       entrada es la que carga el alta de Extras, y dejar Extras fuera de la
-       vista es reintroducir el defecto justo en el ancho donde más se nota. */
-    flex-wrap: wrap;
-    overflow-x: visible;
-    row-gap: var(--space-2);
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: var(--space-1);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--space-1) var(--space-3);
+    scrollbar-width: none;
   }
+  .section-rail-list::-webkit-scrollbar { display: none; }
 
-  /* DOS ENTRADAS POR RENGLÓN, FIJAS.
-     Medido a 390 con la entrada al ancho mínimo que puede: la banda ocupaba
-     290px —casi media pantalla antes de la primera cifra— porque `flex: 1 1
-     auto` con `min-width: 124px` deja que cada entrada crezca hasta el ancho
-     completo y las cinco salen una por renglón. Fijando la base al 50% menos
-     el gap entran dos por renglón, la banda baja a ~170px y las tres últimas
-     entradas quedan en el mismo bloque que las dos primeras.
-
-     El nombre se recorta con puntos suspensivos antes que el subtotal: el
-     subtotal es la cifra que responde "¿cuánto gasté acá?" y el nombre se
-     reconoce por el beginning del rótulo, no se lee entero. */
+  /* La entrada deja de ser una caja y pasa a ser el filtro y su alta, uno al
+     lado del otro. `display: flex` gana al `display: grid` del breakpoint de
+     1200 porque está declarado después, en la misma hoja y a igual
+     especificidad: no hace falta `!important` para ganar, hace falta orden. */
   .rail-entry {
-    flex: 0 0 calc(50% - var(--space-1));
-    width: calc(50% - var(--space-1));
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-1);
+    flex: 0 0 auto;
+    min-width: 0;
+    padding-bottom: 0;
   }
 
-  .rail-entry > .segment-pill-btn { width: 100%; }
+  .rail-entry > .segment-pill-btn {
+    width: auto;
+    height: 30px;
+  }
 
-  /* Los DOS botones de Movimientos tienen que caber en media columna.
-     Medido: a 175px, "Ingreso" y "Gasto" con el padding que traen miden 58px y
-     48px, o sea 110px con el gap: entran. La versión anterior le daba el ancho
-     completo y lo pagaba con un renglón entero de la banda —4 renglones en vez
-     de 3— para resolver un problema que no existía. El aire que sobra en los
-     dos botones se les saca por el padding, que es lo único que se puede quitar
-     sin tocar el texto. */
-  .rail-entry-adds > .rail-add-btn {
+  /* El conteo va pegado al nombre: sin el subtotal al lado que lo empujara,
+     el `margin-left: auto` de la base lo dejaría pegado al borde de una caja
+     que ya no existe. */
+  .rail-entry-count {
+    margin-left: 0;
+    padding-right: 0;
+  }
+
+  /* EL SUBTOTAL NO SE ESCRIBE: SE DECIDE QUE NO ESTÁ.
+     Es el mismo dato que el encabezado del grupo, a 20px, doce píxeles más
+     abajo en la misma pantalla. */
+  .rail-entry-total { display: none; }
+
+  .section-rail .rail-add-btn {
+    height: 28px;
+    margin-left: 0;
+    width: auto;
     padding: 0 var(--space-1);
     font-size: var(--text-2xs);
   }
+
+  .rail-entry-adds {
+    margin-left: 0;
+    gap: 2px;
+  }
+
+  .rail-entry-adds > .rail-add-btn { flex: 0 0 auto; }
 }

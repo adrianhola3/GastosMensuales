@@ -1,6 +1,6 @@
 {
   "suite": "adversarial-suite",
-  "generatedAt": "2026-10-11T02:48:41.515Z",
+  "generatedAt": "2026-10-11T04:24:32.705Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -5903,8 +5903,8 @@
           "pass": true,
           "label": "coma-miles: a rejected amount changed nothing on disk",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_kpvkhriwh_1791686808228\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_kpvkhriwh_1791686808228\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_dk8y785u5_1791692574743\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_dk8y785u5_1791692574743\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
             "contexto": {
               "etiqueta": "coma-miles",
               "entrada": "1,000",
@@ -12139,7 +12139,7 @@
                 "servicios": {
                   "fijos": [
                     {
-                      "id": "id_0qfzei91k_1791686880347",
+                      "id": "id_rwtmcf3j0_1791692634234",
                       "concepto": "PRUEBA-MODAL Gasto",
                       "montoEstimado": 8,
                       "montoReal": null,
@@ -12157,7 +12157,7 @@
                 "notas": "PRUEBA-MODAL nota con carrera",
                 "movimientos": [
                   {
-                    "id": "id_hnluvfzi9_1791686879399",
+                    "id": "id_eaatn0z13_1791692633306",
                     "fecha": "2026-08-02",
                     "concepto": "PRUEBA-MODAL Mov",
                     "flujo": "Gasto",
@@ -12238,7 +12238,7 @@
           "label": "the target record exists after the UI create",
           "detail": {
             "objetivo": {
-              "id": "id_ll8ta91to_1791686885890",
+              "id": "id_9ceew6a2w_1791692639582",
               "concepto": "PRUEBA-RERENDER Original",
               "montoEstimado": 44.44,
               "montoReal": null,
@@ -12261,11 +12261,11 @@
           "pass": true,
           "label": "the sheet still points at the original record",
           "detail": {
-            "actual": "id_ll8ta91to_1791686885890",
-            "expected": "id_ll8ta91to_1791686885890",
+            "actual": "id_9ceew6a2w_1791692639582",
+            "expected": "id_9ceew6a2w_1791692639582",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_ll8ta91to_1791686885890",
+              "itemId": "id_9ceew6a2w_1791692639582",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12279,7 +12279,7 @@
             "expected": "prueba-alfa-2026",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_ll8ta91to_1791686885890",
+              "itemId": "id_9ceew6a2w_1791692639582",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12302,7 +12302,7 @@
           "pass": true,
           "label": "DISK: the original record id still exists",
           "detail": {
-            "objetivo": "id_ll8ta91to_1791686885890"
+            "objetivo": "id_9ceew6a2w_1791692639582"
           }
         },
         {
@@ -12312,7 +12312,7 @@
             "actual": "PRUEBA-TRAS-RE-RENDER",
             "expected": "PRUEBA-TRAS-RE-RENDER",
             "contexto": {
-              "id": "id_ll8ta91to_1791686885890",
+              "id": "id_9ceew6a2w_1791692639582",
               "concepto": "PRUEBA-TRAS-RE-RENDER",
               "montoEstimado": 31.31,
               "montoReal": null,
@@ -12382,7 +12382,7 @@
           "label": "the target record exists",
           "detail": {
             "objetivo": {
-              "id": "id_gg3m4gik6_1791686891884",
+              "id": "id_piw4gcdvw_1791692645283",
               "concepto": "PRUEBA-STALE Original",
               "montoEstimado": 21.21,
               "montoReal": null,
@@ -12395,8 +12395,8 @@
           "pass": true,
           "label": "the sheet holds the original record id",
           "detail": {
-            "actual": "id_gg3m4gik6_1791686891884",
-            "expected": "id_gg3m4gik6_1791686891884"
+            "actual": "id_piw4gcdvw_1791692645283",
+            "expected": "id_piw4gcdvw_1791692645283"
           }
         },
         {

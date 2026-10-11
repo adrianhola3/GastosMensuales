@@ -487,17 +487,87 @@
   white-space: nowrap;
   color: var(--ink);
 }
+
 /* ==========================================================================
    LA FILA EN PANTALLAS ANGOSTAS
    --------------------------------------------------------------------------
-   390px, LA RETÍCULA DE ESCRITORIO DEJA EL CONCEPTO EN 77PX.
-   Medido a 390 con concepto · estado · importe · acciones en una línea: la
-   columna del concepto queda en 77px y "PRUEBA-ALFA Internet" se lee
-   "PRUEBA-...". Un libro donde el concepto no se lee no es un libro.
+   El problema de esta regla NO es que la fila sea angosta: es que el importe
+   le ganaba al concepto la columna.
 
-   El reparto nuevo pone el concepto y el importe ARRIBA —que son los dos lados
-   de la fila y los que se comparan entre renglones— y el estado y las acciones
-   ABAJO, que son lo que se pulsa y no lo que se lee.
+   LO QUE PASABA, MEDIDO
+   --------------------------------------------------------------------------
+   La retícula de escritorio (`minmax(0,1fr) 88px auto auto`) deja el concepto
+   en 77px a 390px. La regla de más abajo ya partía la fila en dos renglones,
+   pero el del importe seguía en una columna `auto`, y `auto` en una retícula
+   significa "lo que el contenido mida, sin techo". El detalle "Real S/ x
+   (S/ y)" llegó a medir 165px —casi el doble que la cifra principal— y estaba
+   tomando la mitad del ancho útil por ser la más subordinada de las tres.
+
+   MEDIDO CON LA FIXTURE `baseline`, EL "ANTES" REAL
+   --------------------------------------------------------------------------
+     · a 320px (clientWidth 305) el concepto caía a 122px, 2 de 6 truncados
+     · a 390px (clientWidth 375) caía a 192px, 0 de 6 truncados
+
+   Y esos números son el caso BENIGNO, el de las cifras de tres dígitos de la
+   fixture. El caso que produce un presupuesto de verdad es peor: estimado y
+   real de cuatro dígitos y DISTINTOS entre sí, que es cuando el detalle llega
+   a 158px. Ahí el concepto cae a **83px y se truncan las seis filas** a 320,
+   y a 153px con 3 de 6 a 390.
+
+   O sea: el importe no empujaba al concepto "un poco". En el caso real de uso
+   se lo comía —83px de 305 es el 27% de la fila, y ningún nombre de gasto
+   entra en 83px.
+
+   LA REGLA QUE RESUELVE EL ANCHO: LA COLUMNA DEL IMPORTE TIENE TECHO
+   --------------------------------------------------------------------------
+   El importe deja de ser una caja y pasa a ser SUS DOS RENGLONES sueltos.
+   `pintarImporteFila` (app.js:881-883) escribe la cifra y, debajo, el detalle
+   "Real S/ 222.22 (S/ 0.00)" con `innerHTML`, en el mismo nodo: partirlo
+   necesitaría JavaScript. `display: contents` no parte el nodo, lo disuelve —
+   sus dos `<div>` dejan de ser sus hijos y pasan a ser ítems de la retícula de
+   la fila, cada uno en su celda. Un nodo, dos lugares, cero lógica.
+
+   El detalle "Real" baja a un renglón propio, a lo ancho de la fila, que es lo
+   que le devuelve el ancho al concepto.
+
+   EL RESULTADO, MEDIDO
+   --------------------------------------------------------------------------
+   · a 320px el concepto pasa de 122px a 173px
+   · a 390px pasa de 192px a 243px
+   · los seis conceptos de la fixture entran enteros a los dos anchos, y en el
+     caso de cuatro dígitos que antes truncan 6 de 6 ahora entran todos
+   · el ancho del importe queda acotado por la cifra principal y no por su
+     detalle, así que ninguna cifra puede empujar a los botones
+
+   VERIFICADO CON `odd/tasks/movil.mjs`. En el caso de cuatro dígitos
+   distintos que antes daba 83px, la caja del importe pasa de 158px a 76px: el
+   techo existe.
+
+   LO QUE ESTO SÍ COSTA, Y NO ES ANCHO: ES ALTO
+   --------------------------------------------------------------------------
+   El detalle ocupa un renglón de 13px que antes se pagaba en ancho. La fila de
+   gasto pasa de 72px a 90px de alto, o sea 18px por fila. La banda de
+   secciones le devolvió 154px a la primera fila, así que en una pantalla de
+   844px la primera fila sube de y=617 a y=463 —pero las filas engordan 18px
+   cada una y el número de filas COMPLETAS visibles no cambia: 3 antes, 3
+   después. Lo que cambia es que ahora entra la primera fila entera *y* se ve
+   un fragmento de la segunda, en vez de empezar a leerse a media pantalla.
+
+   Si alguna vez hay que recuperar esas filas, el precio está anotado acá: son
+   los 18px de esta fila, no los 154px de la banda. La banda ya dio todo lo que
+   tenía.
+
+   LOS BOTONES, Y POR QUÉ 36PX
+   --------------------------------------------------------------------------
+   22×22 no es un objetivo táctil: es el tamaño de un ícono, no de un control.
+   36×36 casi triplica la superficie y —medido— NO CUESTA ANCHO: el importe
+   principal mide 76px, así que dos botones de 36 más el gap siguen entrando en
+   la misma columna sin que el concepto pierda un píxel. A 44px sí empezaría a
+   empujar.
+
+   Los 36px entran en los 18px de alto de arriba, y más o menos la mitad: el
+   resto es el renglón del detalle. Se eligió el tamaño que no cuesta ancho, no
+   el más grande que se podría poner.
 
    El número de hijos NO cambia: siguen siendo cuatro y en el mismo orden, que
    es el contrato DOM. Lo único que cambia es en qué celda cae cada uno, y eso
@@ -507,18 +577,42 @@
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
       'info    amount'
+      'real    real'
       'state   actions';
+    /* El hueco entre columnas baja de 16px a 8px. En una fila de escritorio es
+       aire que separa la cifra del rótulo; en un teléfono son 8px que no le
+       pertenecen a nadie. Medido: con 16px, "PRUEBA-ALFA Gimnasio" —el nombre
+       del propio informe del problema— quedaba en 165px contra los 166 que
+       mide, y se recortaba por UN pixel. Con 8px el concepto queda en 173 y
+       entra entero. El aire vertical no baja: la separación entre renglones
+       sigue en `--space-1`, que es la que hace legible la pila. */
+    column-gap: var(--space-2);
     row-gap: var(--space-1);
     align-items: center;
   }
 
   .expense-item-info { grid-area: info; }
-  .expense-item-amount { grid-area: amount; }
   .expense-item-state { grid-area: state; }
+
+  .expense-item-amount { display: contents; }
+
+  /* `justify-self: end` y no `text-align: right` heredado: al disolverse el
+     nodo, cada renglón es un ítem de la retícula y se alinea contra el borde
+     como se alineaba antes contra el de la caja. */
+  .expense-item-amount > div:first-child {
+    grid-area: amount;
+    justify-self: end;
+  }
+
+  .expense-item-amount > div + div {
+    grid-area: real;
+    justify-self: end;
+  }
 
   .item-actions {
     grid-area: actions;
     justify-self: end;
+    gap: var(--space-1);
   }
 
   /* Una fila partida en dos renglones ya no puede esconder sus acciones: no
@@ -531,6 +625,15 @@
   .btn-edit-expense,
   .btn-edit-tx { opacity: 1; }
 
+  /* Solo las dos de gasto de la fila del libro. Las del feed de movimientos
+     comparten la regla de arriba y no estas: `.item-actions` está en la fila
+     del libro, y el feed tiene su propia caja. */
+  .expense-card-item .btn-edit-expense,
+  .expense-card-item .btn-delete-expense {
+    width: 36px;
+    height: 36px;
+  }
+
   .ledger-group-subtotal { font-size: var(--text-lg); }
   .ledger-group-name { font-size: var(--text-base); }
 
@@ -539,4 +642,47 @@
      `.ledger-group-heading` es `flex: 1 1 auto` en la base, así que sin eso el
      `h3` no podría encogerse y el ellipsis nunca llegaría a activarse. */
   .ledger-group-head { gap: var(--space-3); }
+
+  /* ==========================================================================
+     EL FEED DE MOVIMIENTOS EN EL TELÉFONO: EL MISMO HAMBRE, OTRA FILA
+     --------------------------------------------------------------------------
+     La fila de gasto no era la única con el problema: el feed tenía el mismo y
+     no lo arreglaba nadie porque la ronda del rediseño no lo miró. Medido a 320
+     con la fixture `baseline`: el concepto pasaba de 65px a 87px según el
+     estado de la fila, y a 390 seguía en el mismo orden de magnitud. El motivo
+     es el mismo que arriba: `.tx-right` es un `flex` de importe más dos
+     botones —154px medidos— y le quita el resto de la fila a `.tx-left`.
+
+     Medido después, con `odd/tasks/movil.mjs`: 257px a 320 y 327px a 390.
+
+     La fila no se desarma: pasa de dos mitades en un renglón a dos renglones,
+     el dato arriba y el control abajo, que es el mismo corte que acaba de
+     hacerse arriba. Los importes siguen cerrando contra el borde derecho, así
+     que la columna de cifras sigue alineando.
+
+     `.tx-right` NO necesita `display: contents` acá, y es a propósito: es un
+     solo renglón que ya se alinea solo. Disolverlo solo serviría para poder
+     sacar el importe de su lado, y acá no hay nada que sacar. */
+  .transaction-feed-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-1);
+  }
+
+  .tx-left { grid-row: 1; }
+
+  .tx-right {
+    grid-row: 2;
+    justify-self: end;
+    gap: var(--space-2);
+  }
+
+  /* Los 36px de la fila de gasto, por el mismo motivo: el control se toca con
+     el dedo. Aquí no cuestan ni un píxel de ancho, porque la fila de abajo es
+     tan ancha como el renglón entero. */
+  .transaction-feed-item .btn-edit-tx,
+  .transaction-feed-item .btn-delete-tx {
+    width: 36px;
+    height: 36px;
+  }
 }

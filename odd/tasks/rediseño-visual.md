@@ -284,6 +284,9 @@ En `odd\tasks/capturas/`, leídas y corregidas a lo largo de la ronda:
 
 - `diseno-1440.png` · `diseno-panel-1440.png` · `diseno-modal-1440.png`
 - `diseno-390.png` · `diseno-panel-390.png` · `diseno-modal-390.png`
+- `movil-320.png` · `movil-390.png` · `movil-768.png` y sus `-filas`, de la
+  segunda ronda. La variante `-filas` es la útil: arriba el concepto queda bajo
+  el pliegue y no se lee.
 
 ## Lo que NO costó alto, y cómo se comprobó
 
@@ -303,6 +306,131 @@ respetó el hecho de que **la barra tiene que cruzar el ancho entero**. La
 primera versión de esta ronda lo apiló todo y la primera fila cayó a y=360, que
 era peor que antes del rediseño. Está anotado en `css/estado-mes.css` con las dos
 medidas, para que nadie lo "simplifique" de nuevo.
+
+---
+
+---
+
+# Segunda ronda: el teléfono
+
+El rediseño se hizo y se verificó a 1440. Después se abrió una ronda sola para
+**≤640px**, que es donde la app se usa de verdad: el padre mira el celular.
+Dos problemas, medidos, y ninguna línea de JavaScript.
+
+## 1. La banda de secciones era un muro
+
+**Era:** cinco entradas en una rejilla de dos por renglón. Medido, **201px de
+alto** —el 24% de una pantalla de 844— antes de la barra superior, antes de la
+cifra protagonista y antes del primer gasto. La primera fila del libro caía en
+**y=617**: en la primera pantalla entraba una fila y un fragmento de la segunda.
+
+**Ahora:** una franja horizontal de **47px**, una línea, scrolleable. El 7% de
+la pantalla. La primera fila sube a **y=463**.
+
+**Por qué no se esconde — y esto es lo importante.** Escondida, la navegación
+de categoría desaparecería entera del teléfono: no habría forma de apagar una
+sección ni de volver a encender una apagada, y `renderActiveSegments` escribe
+el estado con `style.display` inline sobre `.ledger-group`. Un filtro sin dónde
+re-encenderse es un filtro que no se puede usar.
+
+**Por qué una línea y no una tarjeta de dos renglones.** El subtotal **sale**:
+es el mismo dato que el encabezado del grupo, a 20px, doce píxeles más abajo en
+la misma pantalla. En un teléfono el mismo número dos veces, una encima de la
+otra, es exactamente el muro que se está desarmando.
+
+**Sobre el renglón scrolleable.** La objeción de la ronda anterior —"dejar
+Extras fuera de la vista es reintroducir el defecto"— era contra un renglón que
+salía CORTADO sin señal. Uno scrolleable corta al medio, se ve que sigue, y el
+libro de abajo nombra las cuatro secciones con su propio encabezado. Que a 320
+no entren las cinco es aceptable; que no se vea dónde acaba, no.
+
+## 2. El importe le comía la columna al concepto
+
+**El diagnóstico está en el comentario de `css/libro.css` y va repetido acá
+porque es la idea de la ronda:** el problema no era que la fila fuera angosta,
+era que la columna del importe era `auto`, y `auto` en una retícula significa
+"lo que el contenido mida, sin techo". El detalle `Real S/ x (S/ y)` llegó a
+medir 165px y estaba tomando la mitad del ancho útil **por ser la más
+subordinada de las tres**.
+
+**La regla: el importe deja de ser una caja y pasa a ser sus dos renglones
+sueltos.** `pintarImporteFila` escribe la cifra y el detalle con `innerHTML` en
+el mismo nodo, y partirlo necesitaría JavaScript. `display: contents` no parte
+el nodo, lo **disuelve**: sus dos `<div>` dejan de ser sus hijos y pasan a ser
+ítems de la retícula de la fila, cada uno en su celda. Un nodo, dos lugares,
+cero lógica.
+
+Medido con la fixture `baseline`:
+
+| | Antes | Después |
+|---|---|---|
+| Concepto a 320px | 122px | **173px** |
+| Concepto a 390px | 192px | **243px** |
+| Caso real (4 dígitos, estimado ≠ real) a 320px | **83px, 6 de 6 truncados** | entra entero |
+| Botones editar/borrar | 22×22 | **36×36** |
+| Scroll horizontal a 320/390 | — | ninguno |
+
+El caso de la última fila es el que importa: con cifras de tres dígitos el
+problema se ve, pero con un presupuesto de verdad —cuatro dígitos y estimado
+distinto del real— el concepto quedaba en 83px de 305 y **ningún nombre de
+gasto entra en 83px**.
+
+El feed de movimientos tenía el mismo hambre y nadie lo miraba: `.tx-right` es
+un `flex` de importe más dos botones, 154px medidos. Pasa a dos renglones —el
+dato arriba, el control abajo— y el concepto sube de 87px a **257px** a 320.
+
+## Lo que esta ronda NO compró
+
+**El conteo de filas completas en pantalla no mejoró: 3 antes, 3 después.**
+
+La banda le devolvió 154px a la primera fila, pero la fila pasó de 72px a 90px
+de alto —los 36px de los botones y el renglón del detalle— y son 18px por
+fila. La primera fila sube 154px y las filas engordan 54px en total. Lo que
+cambia es que ahora entra la primera fila **entera y** se ve un fragmento de la
+segunda, en vez de empezar a leerse a media pantalla.
+
+Está anotado en las dos hojas. Si alguna vez hay que recuperar filas, el precio
+está en `libro.css` y no en `layout.css`: **la banda ya dio todo lo que tenía.**
+
+## Verificación
+
+```
+node --check (los 5 js)        → los 5 parsean
+node odd\tasks\crud-suite.mjs   → PASS 27 · FAIL 3 · INCONCLUSIVE 4   idéntico a HEAD
+node odd\tasks\store-fix-suite.mjs → 75/75 OK                          idéntico a HEAD
+node odd\tasks\adversarial-suite.mjs → PASS 27 · FAIL 0 · INCONCLUSIVE 4  idéntico a HEAD
+node odd\tasks\reglas.mjs       → 35 cumplen, 0 no cumplen
+node odd\tasks\contraste-diseno.mjs → 19 pares AA, 0 no cumplen
+```
+
+Los 3 FAIL de `crud-suite` son los mismos preexistentes de siempre, uno por
+uno: `expense.edit.whitespace-concepto`, `month.create.clone`, `month.delete`.
+**Ninguno nuevo.** Cero requests a Supabase en las tres suites.
+
+**Herramienta nueva: `odd/tasks/movil.mjs`.** Mide y captura a 320/390/768,
+valida el balance de llaves de las nueve hojas antes de capturar y espera la
+fuente. Las otras rondas dejaron su arnés versionado; esta iba a medirse con un
+guion de usar y tirar, y las capturas `movil-*.png` no tenían de dónde salir.
+Eso no se repite: una captura sin guion es una captura que nadie puede
+re-verificar.
+
+## Una corrección que hubo que hacer
+
+Los comentarios del CSS afirmaban un "antes" de 76px y 146px para el concepto.
+**Esas cifras no existen.** No es que estuvieran desactualizadas: con esta
+fixture son aritméticamente imposibles. Medido con un `Range` sobre el texto,
+los seis conceptos necesitan entre 138 y 166px, así que en una caja de 76px se
+truncan los seis, forzosamente; y forzando el ancho con `!important` a 146px se
+truncan cinco, no dos. Las cifras reales del antes son 122px y 192px.
+
+También se corregió la afirmación de que la primera fila subía a y=471 (son
+463) y, sobre todo, la de "de 1 fila a 3": era la mezcla de dos verdades y una
+falsa.
+
+**El CSS estaba bien. Lo que mentía era el comentario.** Se corrigieron los
+comentarios, no las reglas. Un número falso en un comentario es peor que un
+número ausente: el que lo lea mañana toma decisiones sobre algo que nunca se
+midió.
 
 ---
 

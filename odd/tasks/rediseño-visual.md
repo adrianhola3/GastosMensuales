@@ -524,68 +524,107 @@ que es justamente para lo que existe ese archivo.
 
 # Qué quedó pendiente
 
-Ordenado por lo que cuesta. Los cuatro primeros **requieren tocar `js/`, que
-esta ronda tenía prohibido**.
+> **Esta lista se escribió durante la ronda y no se volvió a actualizar cuando la
+> ronda cambió la respuesta.** Es el mismo problema que los comentarios del CSS
+> que mintieron: un pendiente anotado cuando el trabajo ya estaba hecho. Los
+> puntos 1 y 4 de la versión anterior estaban resueltos antes de que nadie los
+> volviera a mirar. La lección que queda: **un pendiente se borra cuando se
+> resuelve, no cuando deja de molestar.** Verificado el 2026-10-11 contra el
+> código real, no contra el texto.
 
-### 1. "FALTA" en versalitas arriba de una cifra desnuda
+**Quedan TRES, y todos tocan `js/`.** La ronda del rediseño tenía prohibido tocar
+`js/`; eso es lo único que los frenaba.
 
-El plan pide la etiqueta pequeña arriba y la cifra sola abajo. Se renderiza
-`Falta S/ 1,444.43` en un renglón, con la palabra al tamaño de la cifra.
+### 1. La dona a REALIZADO, no planificado
 
-**Por qué:** `app.js:670-672` pone el rótulo y el número en el mismo nodo de
-texto. Partirlo requiere dos nodos en `app.js`, no una regla de estilo.
-La versión actual usa `word-spacing` para abrir el hueco y se lee como una
-cabecera, pero no es lo que el plan dice.
+El plan lo pide en la sección "Vista consolidado". Hoy `js/charts.js:292` arma la
+dona con `totals.globalServicios / globalPersonales / globalExtras`, que son
+**importes estimados**.
 
-### 2. La dona a REALIZADO, no planificado
+**LA TRAMPA, y es lo primero que hay que leer antes de tocar esto:**
+`js/store.js:1267` usa **los mismos campos** en `exportCSV`, cuya columna dice
+`SERVICIOS,PERSONALES,GASTOS EXTRA`. Si se cambia lo que significan esos campos,
+el CSV pasa a exportar realizado diciendo que es planificado, y nadie se entera
+hasta que alguien compare un Excel con la pantalla. **Los campos viejos no se
+tocan:** hay que **agregar** los del realizado y que la dona lea esos.
 
-El plan lo pide en la sección "Vista consolidado". Vive en `js/charts.js:298-300`,
-que lee `--cat-servicios`, `--cat-personales` y `--cat-extras` para pintar los
-tres arcos.
+El criterio del realizado ya existe y no hay que inventarlo: la cobertura se
+deduce de `estaCubierto(item)`, o sea de que el ítem tenga `montoReal`.
 
-**Lo que se hizo mientras tanto:** los tres tokens son ahora **una rampa de
-tinta** —`#1C1B19`, `#56534C`, `#8A867D`—, no los acentos arbitrarios
-azul/violeta/verde de antes. Es la respuesta estándar a "un valor, N partes" y
-no inventa una identidad cromática: la porción más grande es la más oscura. Pero
-sigue siendo **planificado**, y eso es un defecto del dato, no de la paleta.
+**El caso de cero** tiene que caer en el estado vacío que ya existe
+(`sinDatos` / `is-empty`), el mismo que usa el gráfico de barras. Con nada
+pagado los tres valores son 0.
 
-### 3. El tipo de movimiento en el feed va en color
+**Lo que NO es este punto:** los tres tokens `--cat-*` son ahora una rampa de
+tinta (`#1C1B19`, `#56534C`, `#8A867D`) y esa parte está bien. El defecto es el
+dato, no la paleta. Y hay que **rotular la dona como realizado**: una dona de
+realizado rotulada como planificado es peor que la que había.
 
-`app.js:1063` escribe verde o rojo en "Ingreso"/"Gasto" con un `style` inline.
+### 2. El tipo de movimiento en el feed va en color
+
+`js/app.js:1063` escribe verde o rojo en "Ingreso"/"Gasto" con un `style` inline.
 En el libro, el color es estado de cobertura y esas dos palabras no lo son: son
-el signo de un flujo. El signo del importe ya lo dice.
+el signo de un flujo. El signo del importe ya lo dice —el `+`/`-` de la línea
+1070 y las clases `.tx-amount-ingreso` / `.tx-amount-gasto`—.
 
 Es coherente con la regla del plan ("verde = a favor, oxblood = déficit") en el
 sentido de que codifica signo, pero **en el feed el rojo no significa déficit**,
-significa "salió plata". Queda anotado, no corregido.
+significa "salió plata". Decirlo dos veces con un código de color que significa
+otra cosa es peor que no decirlo.
 
-### 4. Las barras de los gráficos están muy pesadas
+El `font-weight: 600` puede quedarse: es jerarquía, no estado.
 
-Chart.js las dibuja con relleno sólido al 100 % y sin borde. `charts.js` los
-controla. Con la paleta nueva los colores son los correctos
-(`--accent-emerald` → `--settled`, `--accent-rose` → `--over`), pero un bloque
-de 726×110 px de verde sólido en un estado de cuenta es un bloque de color, no
-un dato. Necesita `barThickness`, `borderRadius` o un `--sunk` de fondo.
+**Ojo:** hay que buscar si alguna suite o `reglas.mjs` afirma sobre ese color. Si
+algo lo afirmaba, la aserción se **actualiza para afirmar lo correcto** (que la
+palabra NO lleva color de estado), no se borra.
 
-### 5. El aire vertical del rail
+### 3. Las barras de los gráficos están muy pesadas
 
-Con dos períodos cargados, el rail deja ~500 px de columna sin uso debajo de la
-última píldora. Con 24 la lista scrollea sola y no hay aire.
+Chart.js las dibuja con relleno al 100 % del ancho de la categoría. Con pocas
+categorías eso son barras enormes y macizas: un bloque de 726×110 px de verde
+sólido en un estado de cuenta es un bloque de color, no un dato.
 
-**Lo que se hizo:** el ancho, que sí sobraba, bajó 40 px. **Lo que no se hizo:**
-llenar el hueco. Poner algo ahí sería contenido inventado para tapar una
-condición que se resuelve sola con más datos. Queda dicho, no resuelto.
+**Lo que YA se hizo:** `borderRadius: 6` y `borderSkipped: false` están en los
+dos datasets (`js/charts.js:207-208` y `213-214`). Los colores también son los
+correctos (`--accent-emerald` → `--settled`, `--accent-rose` → `--over`).
 
-### 6. Una corrección al plan que hay que conocer
+**Lo que falta:** `maxBarThickness`, que hoy no está. Eligiendo el número con el
+mismo criterio que los botones táctiles en `css/libro.css` —el tamaño que no se
+come ancho vecino— y **midiendo en el navegador**, no de plantilla.
 
-El plan asigna `--ink-3` (`#8A867D`) a "etiquetas y metadatos". **Medido sobre
-blanco da 3.63:1**, y WCAG AA pide 4.5:1 para texto normal. Tres pares fallaban
-(etiquetas de 11 px y la línea de apoyo de 12 px).
+### Resueltos, y cómo
 
-El **valor del token no se tocó** —es correcto para lo que sí es, un indicador
-no textual, que necesita 3:1 y pasa con margen—. Lo que se corrigió es para qué
-se usa: las etiquetas de texto usan `--ink-2` (7.67:1), y `--ink-3` quedó solo
-para el tick de sección y el relleno de la barra de la matriz.
+- **"FALTA" en versalitas arriba de una cifra desnuda.** ~~Pendiente.~~
+  **Resuelto** por `#pendingSummaryLabel { display: contents; }` en
+  `css/estado-mes.css:110`: sus dos `<div>` dejan de ser hijos del nodo y pasan
+  a ser ítems de la retícula de `.status-block`, uno en la celda de la cifra
+  protagonista y el otro en el extremo de la barra. Mismo truco que el importe.
+  `reglas.mjs:117-119` ya verifica tamaño y color de los dos.
+- **El aire vertical del rail.** Con dos períodos cargados sobran ~500 px de
+  columna. **Decidido no llenarlo:** poner algo ahí es contenido inventado para
+  tapar una condición que se resuelve sola con más datos. El ancho, que sí
+  sobraba, bajó 40 px. Queda dicho, no resuelto —y esa es la decisión.
+- **Una corrección al plan que hay que conocer.** El plan asigna `--ink-3`
+  (`#8A867D`) a "etiquetas y metadatos". **Medido sobre blanco da 3.63:1**, y
+  WCAG AA pide 4.5:1 para texto normal. El **valor del token no se tocó** —es
+  correcto para lo que sí es, un indicador no textual, que necesita 3:1 y pasa
+  con margen—. Lo que se corrigió es para qué se usa: las etiquetas de texto
+  usan `--ink-2` (7.67:1), y `--ink-3` quedó solo para el tick de sección y el
+  relleno de la barra de la matriz. Si alguna vez se quiere un tercer nivel de
+  texto, el mismo tono escalado un 88 % da **`#79766E`**, que mide 4.53:1 y
+  conserva el hue.
 
-Si en algún momento se quiere un tercer nivel de texto, el mismo tono escalado
-un 88 % da **`#79766E`**, que mide 4.53:1 y conserva el hue.
+---
+
+## Y el estado de la revisión nativa de este trabajo
+
+`16189a4` (el arnés móvil asertivo) **no tiene recibo de aprobación**. La revisión
+se lanzó, el usuario dio el consentimiento, y el revisor falló dos veces por
+error de runtime —una vez sin devolver nada, otra por un límite del plan de la
+máquina—, no por el cambio. La autoridad quedó **sin quemar** y la línea
+`review-8ec4601487b99599` sigue abierta en estado `reviewing`.
+
+**No hay que inventar un aprobado.** Ese commit está verificado por otras vías:
+114/114 aserciones en verde con exit 0, cinco de cinco mutaciones del CSS
+detectadas, y `css/` `js/` e `index.html` intactos. La ronda anterior
+(`add9849`, línea `review-54dba1f2e94eb0a2`) sí quedó aprobada y quemada.

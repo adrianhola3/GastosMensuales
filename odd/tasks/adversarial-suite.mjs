@@ -370,7 +370,14 @@ test('empty.month-with-no-data: every KPI renders a real number, no NaN, no blan
   p.ok(Object.values(kpis).every(v => v && v.indexOf('NaN') < 0 && v.indexOf('undefined') < 0),
     'no KPI reads NaN or undefined', kpis);
   p.equal(kpis.ingresos, 'S/ 0.00', 'ingresos on an empty month');
-  p.equal(kpis.egresos, 'S/ 0.00', 'egresos on an empty month');
+  /* El presupuesto ya no es un número suelto: con estimado y real separados,
+   * la celda NOMBRA la magnitud que muestra ("Estimado" = lo que se planeó).
+   * El número no cambió —sigue siendo un cero real de 0.00—, lo que cambió es
+   * que la celda diga cuál de los dos importes es. La comparación sigue siendo
+   * EXACTA a propósito: un NaN o un "undefined" adentro la sigue haciendo
+   * fallar, que es justo lo que este test existe para detectar. */
+  p.equal(kpis.egresos, 'Estimado S/ 0.00',
+    'egresos on an empty month: the cell names the magnitude (Estimado) AND holds a real zero');
   p.equal(kpis.balance, 'S/ 0.00', 'balance on an empty month');
   p.equal(kpis.etiquetaBalance, 'Equilibrado', 'the balance label says Equilibrado, not "0 of 0"');
   p.equal(kpis.estadoPago, '0.0% Pagado', 'the paid percentage is a number, not NaN%');
@@ -486,7 +493,8 @@ test('empty.zero-expenses-with-movements: the feed still works and the KPIs are 
              countGastos: g('monthGastosCount'), countIngresos: g('monthIngresosCount') };
   })()`);
   p.equal(kpis.ingresos, sde(esperadoIngresos), 'ingresos come from the movements alone', { esperadoIngresos });
-  p.equal(kpis.egresos, 'S/ 0.00', 'egresos is 0 when the budget lists are empty');
+  p.equal(kpis.egresos, 'Estimado S/ 0.00',
+    'egresos is 0 when the budget lists are empty, and the cell says it is the estimate');
   p.equal(kpis.balance, sde(esperadoBalance),
     'the balance is ingresos MINUS the gasto movements, even with an empty budget', { esperadoBalance });
   p.equal(kpis.countGastos, '0 de 0 gastos pagados', 'the paid count is 0 of 0');
@@ -633,15 +641,20 @@ async function casoImporte(sb, p, etiqueta, entrada, opciones = {}) {
   const crudo = await sb.eval(`(() => { try { return localStorage.getItem(${JSON.stringify(STORAGE_KEY)}); }
     catch (e) { return 'ERROR:' + e; } })()`);
   const enCrudo = typeof crudo === 'string' && creado
-    ? new RegExp('"monto":' + JSON.stringify(creado.monto)).test(crudo.replace(/\\s+/g, ''))
+    ? new RegExp('"montoEstimado":' + JSON.stringify(creado.montoEstimado)).test(crudo.replace(/\\s+/g, ''))
     : false;
 
   const obs = {
     etiqueta, entrada, conceptoAceptado: c.valor === concepto,
     campoRecibido: campo.valor, campoConservoTexto: campo.conservado, campoVacio: campo.vacio,
     flags: campo.flags, formValido: envio.valido, modalSigueAbierto,
-    creadoEnDisco: !!creado, montoGuardado: creado ? creado.monto : null,
-    tipoGuardado: creado ? typeof (creado.monto) : null,
+    /* Un alta escribe el ESTIMADO. `montoReal` queda en null hasta que alguien
+     * paga el ítem, así que el campo que prueba "el importe que escribí se
+     * guardó" es `montoEstimado`, no el real: buscar el real en un alta simple
+     * compararía contra algo que el modelo nuevo garantiza que todavía no
+     * existe. */
+    creadoEnDisco: !!creado, montoGuardado: creado ? creado.montoEstimado : null,
+    tipoGuardado: creado ? typeof (creado.montoEstimado) : null,
     montoPresenteEnLosBytesPersistidos: enCrudo,
     importeRenderizado: ui ? ui.importe : null,
     subtotalEgresosRenderizado: kpi,
@@ -655,8 +668,8 @@ async function casoImporte(sb, p, etiqueta, entrada, opciones = {}) {
 
   /* Whatever the outcome, the invariant that must always hold. */
   if (creado) {
-    p.ok(typeof creado.monto === 'number' && !Number.isNaN(creado.monto),
-      etiqueta + ': a row was created, and its stored monto is a real NUMBER (never NaN)', obs);
+    p.ok(typeof creado.montoEstimado === 'number' && !Number.isNaN(creado.montoEstimado),
+      etiqueta + ': a row was created, and its stored montoEstimado is a real NUMBER (never NaN)', obs);
   }
   p.ok(!(ui && /NaN|undefined/.test(ui.importe || '')),
     etiqueta + ': the rendered amount never contains NaN or undefined', obs);
@@ -680,7 +693,8 @@ test('amount.zero: 0 is accepted, stored and rendered as a real amount', async (
   p.equal(o.montoPresenteEnLosBytesPersistidos, true,
     'DISK: the 0 is literally present in the persisted string', o);
   p.equal(o.importeRenderizado, 'S/ 0.00', 'UI: renders as S/ 0.00, not S/ -0.00', o);
-  p.equal(o.subtotalEgresosRenderizado, 'S/ 0.00', 'UI: the month total includes it as a real zero', o);
+  p.equal(o.subtotalEgresosRenderizado, 'Estimado S/ 0.00',
+    'UI: the month total includes it as a real zero, and says it is the estimate', o);
 });
 
 test('amount.negative: rejected by min=0 with the browser pointing at the field', async (sb, p) => {
@@ -1124,7 +1138,7 @@ test('destroy.last-expense-in-section: the empty state returns and the KPIs stay
   p.equal(ui.placeholder, 'Sin gastos registrados.', 'UI: the honest empty state is back');
   p.equal(ui.conteo, '0', 'UI: the header count is a real zero, not a stale total');
   p.equal(ui.subtotal, 'S/ 0.00', 'UI: the group subtotal is a real zero');
-  p.equal(ui.total, 'S/ 0.00', 'UI: the month total is a real zero');
+  p.equal(ui.total, 'Estimado S/ 0.00', 'UI: the month total is a real zero, and says it is the estimate');
   p.equal(ui.balance, 'S/ 0.00', 'UI: the balance is a real zero');
   p.equal(listaDe(mesDe(await disk(sb), A), 'servicios', 'fijos').length, 0, 'DISK: the list is empty');
   p.equal((await erroresVisibles(sb)).length, 0, 'no NaN/undefined/Infinity anywhere', { malos: await erroresVisibles(sb) });
@@ -1281,7 +1295,12 @@ test('destroy.delete-while-edit-sheet-open: the edit sheet survives and still sa
   p.ok(!!parcheado, 'DISK: the original record id still exists', { objetivo: objetivo.id });
   if (parcheado) {
     p.equal(parcheado.concepto, 'PRUEBA-TRAS-RE-RENDER', 'DISK: the patch landed on the RIGHT record', parcheado);
-    p.equal(parcheado.monto, 31.31, 'DISK: the amount landed too');
+    /* La hoja de edición edita el ESTIMADO, no lo ya pagado: el parche que
+     * manda es {concepto, montoEstimado} y a propósito NO lleva `montoReal`,
+     * porque pagar el ítem es una acción aparte. Comprobar `montoEstimado` es
+     * comprobar el campo que la hoja realmente escribió; `montoReal` acá
+     * seguiría en null y no probaría nada. */
+    p.equal(parcheado.montoEstimado, 31.31, 'DISK: the amount landed too');
   }
   p.equal(todasListas(mesDe(d, A)).length, todasListas(antes).length,
     'DISK: no record was created or destroyed by the re-render + edit');

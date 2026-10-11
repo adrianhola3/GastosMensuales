@@ -481,9 +481,13 @@ function injectedSource(payload) {
     var listeners = [];
     var stub = {
       estaConfigurado: function () { return true; },
-      /* THE decisive call: app.js:43 refrescarSesion() awaits
-       * esperarSesion() and app.js:46 maps truthy -> {rol:'admin'}.
-       * Nothing else grants admin. */
+      /* THE decisive call. esperarSesion()/haySesion() say THERE IS a
+       * session, but that alone no longer grants anything: app.js reads the
+       * role from obtenerRol(). This stub has to answer that too, otherwise
+       * the app falls back to 'lector', the admin gate fails, and every test
+       * in the suite reports INCONCLUSIVE because it could not find a single
+       * edit control to exercise. */
+      obtenerRol: function () { return 'admin'; },
       esperarSesion: function () { return Promise.resolve(true); },
       haySesion: function () { return true; },
       alCambiarSesion: function (cb) { if (typeof cb === 'function') listeners.push(cb); },
@@ -584,6 +588,8 @@ function injectedPlainSource(payload) {
     var listeners = [];
     var stub = {
       estaConfigurado: function () { return true; },
+      /* El rol se lee por acá, no desde haySesion(). Ver la nota del otro stub. */
+      obtenerRol: function () { return 'admin'; },
       esperarSesion: function () { return Promise.resolve(true); },
       haySesion: function () { return true; },
       alCambiarSesion: function (cb) { if (typeof cb === 'function') listeners.push(cb); },

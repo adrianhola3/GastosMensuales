@@ -419,6 +419,83 @@ guion de usar y tirar, y las capturas `movil-*.png` no tenían de dónde salir.
 Eso no se repite: una captura sin guion es una captura que nadie puede
 re-verificar.
 
+## El arnés dejó de ser un parteperiodista
+
+La primera versión de `movil.mjs` imprimía medidas y escribía el informe. Eso
+es un parte, no una prueba: **si mañana alguien revierte el `display: contents`,
+el comando sale con exit 0 y nadie se entera.** La revisión nativa lo marcó y
+tenía razón.
+
+Ahora tiene **114 aserciones** y tres estados de salida:
+
+| Código | Qué significa |
+|---|---|
+| `0` | todo cumple |
+| `1` | alguna aserción de layout en rojo, **o** el CSS desbalanceado, **o** la página tiró una excepción |
+| `2` | infraestructura rota: ni PASS ni FAIL. El navegador no arrancó, la fuente de CDN no cargó, la fixture no renderizó, o el ancho no tiene invariantes declarados |
+
+El `2` existe por un motivo puntual: **afirmar sobre cero filas es un PASS
+mentiroso.** Si la fixture no renderiza, la respuesta honesta es "no pude
+medir", no "todo bien".
+
+### La fixture que faltaba
+
+El arnés sembraba siempre `baseline`, de tres dígitos. Pero **el defecto que
+motivó el `display: contents` no existe con tres dígitos**: necesita cuatro, y
+estimado distinto del real, que es cuando el detalle llega a 158px.
+
+Se agregó `produccion4digitos` a `sandbox.mjs`. No es una variante de `baseline`
+sino una fixture nueva, porque nueve suites viejas asumen los importes
+`111.11 … 777.77` de `baseline` y cambiarlos rompería medidas ajenas.
+
+**La fixture vieja no podía expresar el caso, y esa es la parte interesante.**
+Los ayudantes `item()/mov()/month()` de `sandbox.mjs` emiten la forma
+`{monto, estado}`, y el store la colapsa: si el estado es Pagado, `montoReal =
+montoEstimado` y el detalle queda corto; si no, `montoReal = null` y queda un
+solo renglón. El caso que importa necesita la forma nueva
+`{montoEstimado, montoReal}` con los dos números puestos a mano.
+
+### Lo que revealed la fixture nueva
+
+En producción el concepto mide **167px a 320 y 237px a 390** —seis píxeles por
+debajo de `baseline` (173 y 243). Ese margen es exactamente el defecto
+funcionando: el importe de cuatro dígitos (82px) le cede seis píxeles a la
+columna del concepto, y el concepto entra entero. El piso de la aserción está
+en 159 y 229, calibrado contra esa corrida real, no contra una conjetura.
+
+### Las aserciones que se prueban solas
+
+Una aserción que nunca se vio fallar no es una aserción. Se mutó el CSS a mano
+cinco veces y se comprobó que cada una prende su aserción y sale con `1`:
+
+| Mutación | Aserción que prendió |
+|---|---|
+| `display: contents` → `block` | A3 + A2 (en producción, 6 de 6 truncadas) |
+| quitar `grid-area: real` | A4 |
+| botones 36px → 22px | A5 |
+| borrar `.rail-entry-total { display: none }` | A6 + A8 |
+| quitar `opacity: 1` | A13 |
+
+**No quedó ningún agujero.** Y el tri-estado se probó por los dos lados: un
+ancho sin invariantes da `2`, y una fixture sin filas da `2` con **cero**
+aserciones de layout, no con un verde.
+
+### Dos arreglos de paso
+
+**El campo `culpables` de la medición estaba roto.** Marcaba como culpables a
+las cinco entradas del riel en todas las corridas: miraba solo el `overflow-x`
+del propio elemento, pero la banda está diseñada para scrollear de lado y su
+contenedor recorta. La aserción de scroll horizontal fallaba siempre y no
+tenía solución. Ahora sube por los ancestros. Es W1 en versión chica: un dato
+que se reportaba mal y nadie miraba porque nadie afirmaba sobre él.
+
+**El comentario de la banda volvió a mentir, por tercera vez.** Afirmaba
+"832px con los botones de alta y 784px sin ellos". Ninguno de los dos números
+era de un modo distinto: los dos son del mismo recorrido en admin. La
+diferencia son los 32px de padding lateral, que Chrome cuenta dentro del
+`scrollWidth` de una caja scrolleable. Corregido con la explicación, porque un
+número solo no basta: sin el porqué, el próximo lo vuelve a interpretar mal.
+
 ## Una corrección que hubo que hacer
 
 Los comentarios del CSS afirmaban un "antes" de 76px y 146px para el concepto.

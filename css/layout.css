@@ -941,14 +941,23 @@
      Si alguna vez hay que recuperar filas, el precio está en `libro.css`, no
      acá: esta banda ya dio todo lo que tenía.
 
-     Las cinco entradas miden 832px con los botones de alta y 784px sin ellos, y
-     la franja scrollea en los dos casos: a 390 se ven "Todo" y "Servicios"
-     enteras y "Personales" cortada al medio, que es justamente la señal de que
-     sigue. El modo lector no cambia la altura —los cinco botones de alta son
-     `.admin-action-btn` y desaparecen con los otros 22, la franja se queda en
-     47px y el filtrado sigue ahí.
+     Las cinco entradas suman 784px, y la lista reporta un `scrollWidth` de
+     832px: la diferencia son los 32px de padding lateral (16px a cada lado),
+     que Chrome cuenta dentro del `scrollWidth` de una caja scrolleable.
 
-     Medido con `odd/tasks/movil.mjs`.
+     Ojo con la lectura de esos dos números, porque es la fácil y es la
+     equivocada: 832px y 784px NO son admin contra lector. Son los dos del
+     mismo recorrido en admin — uno con el padding y otro sin. Una versión
+     anterior de este comentario lostomaba por dos modos distintos, y no.
+
+     La franja scrollea en los dos anchos: a 390 se ven "Todo" y "Servicios"
+     enteras y "Personales" cortada al medio, que es justamente la señal de que
+     sigue. El modo lector no cambia la ALTURA —los cinco botones de alta son
+     `.admin-action-btn` y desaparecen con los otros 22, la franja se queda en
+     47px y el filtrado sigue ahí—, pero sí achica la franja.
+
+     Medido con `odd/tasks/movil.mjs`, que ahora asienta estas cifras como
+     aserciones: si la banda vuelve a ser un muro, A8 falla y sale con 1.
      ========================================================================== */
 
   /* La banda no necesita un paso de 8px arriba y abajo para separar dos

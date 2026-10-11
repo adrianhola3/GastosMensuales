@@ -337,8 +337,51 @@ function periodos24() {
   return envelope('prueba-alfa-2026', orden, meses);
 }
 
+/* ESTIMADO ≠ REAL, CON CIFRAS DE CUATRO DÍGITOS — la forma nueva pura.
+ * ------------------------------------------------------------------
+ * `baseline` NO puede expresar el caso que motivó el arreglo de la retícula
+ * angosta, y no es una limitación del arnés: es del formato viejo. `{monto,
+ * estado}` no tiene dos cifras. `migrarItemPresupuesto` (store.js:92-127)
+ * convierte `monto` en `montoEstimado` y pone `montoReal` SOLO si
+ * `estado === 'Pagado'`, con el valor del estimado: diferencia cero y un
+ * detalle de un renglón que dice "S/ 0.00". Si no está pagado, `montoReal`
+ * queda `null` y `pintarImporteFila` (app.js:874-877) escribe UN solo `<div>`.
+ * El defecto real —el importe estimado y el real peleándose por el mismo
+ * ancho de columna— necesita las dos cifras distintas y las dos en su
+ * renglón. La forma nueva `{montoEstimado, montoReal}` sí lo dice, y
+ * `sanear()` la conserva tal cual porque no hay nada que migrar.
+ *
+ * POR QUÉ UNA FIXTURE NUEVA Y NO CAMBIAR `baseline`
+ * -------------------------------------------------
+ * Nueve suites viejas asumen los importes `111.11 … 777.77` de `baseline`.
+ * Cambiarlos rompería medidas que no son de este trabajo: el ancho del
+ * contenido del riel (832px), los subtotales y los conteos. Los conceptos y
+ * los movimientos quedan IDÉNTICOS a propósito: solo cambian las cifras del
+ * importe, así que el ancho del concepto sigue siendo comparable entre las
+ * dos fixtures y una diferencia de un píxel significa algo.
+ *
+ * El orden importa: las listas se recorren en el mismo orden que dibuja
+ * `renderExpenseCategory`, así que `pares[i]` cae sobre el ítem `i`. */
+function produccion4digitos() {
+  const datos = baseline();
+  const mes = datos.meses['prueba-alfa-2026'];   // el mes activo, el que mide el arnés
+  const pares = [                                    // [estimado, real], distintos entre sí
+    [1234.56, 1456.78], [2345.67, 2103.45], [3456.78, 3890.12],
+    [4567.89, 4321.10], [5678.90, 5901.23], [6789.01, 6543.21],
+  ];
+  const listas = [...mes.servicios.fijos, ...mes.servicios.variables,
+                  ...mes.personales.fijos, ...mes.personales.variables, ...mes.extras];
+  listas.forEach((item, i) => {
+    delete item.monto; delete item.estado;           // forma nueva pura, sin alias
+    item.montoEstimado = pares[i][0];
+    item.montoReal = pares[i][1];                    // ≠ estimado a propósito
+  });
+  return datos;
+}
+
 const BUILDERS = {
   baseline, sinMovimientos, sinGastos, unSoloMes, mesVacio, periodos24,
+  produccion4digitos,
 };
 
 export const FIXTURE_NAMES = Object.keys(BUILDERS);

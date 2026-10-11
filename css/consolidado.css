@@ -1,0 +1,294 @@
+/* ==========================================================================
+   LA VISTA CONSOLIDADO — dos gráficos y una matriz, con los mismos tokens.
+
+   LO QUE CAMBIA Y LO QUE NO
+   --------------------------------------------------------------------------
+   La idea no cambia: las mismas tres cifras, la misma matriz y los mismos dos
+   gráficos. Lo que cambia es el vocabulary visual. Antes esta vista tenía su
+   propia familia de nombres —`hero-metric-card`, `card-theme-emerald`,
+   `content-card-box`— con colores propios que nadie más de la app usaba: tres
+   tarjetas verde/cian/ámbar arriba de una página donde el color significa
+   estado. Ahora comparte paleta, tipografía y radios con el libro, y las tres
+   cifras son apoyo, no protagonistas: no están compitiendo con nada, pero
+   tampoco fingen ser la respuesta.
+
+   LAS TRES CLASES `card-theme-*` SE FUERON DEL HTML
+   --------------------------------------------------------------------------
+   No las leía ningún JavaScript: eran color puro aplicado a una tarjeta. Sin
+   ellas, las tres celdas se ven iguales y la única diferencia entre ellas es
+   la que ya está en el rótulo y en la cifra.
+
+   LA MATRIZ: REGLAS HORIZONTALES, NO CEBRA OSCURO
+   --------------------------------------------------------------------------
+   Una tabla de nueve columnas de cifras se lee por filas, no por columnas. La
+   cebra oscura de la versión anterior hacía que la fila se leyera antes que los
+   números; con una regla horizontal de 1px entre filas el ojo baja solo y las
+   cifras quedan en un eje continuo. Y `--rule` al 11% es el mismo divisor del
+   resto de la hoja: una tabla con un divisor y una barra lateral con otro
+   distinto se leen como dos sistemas.
+   ========================================================================== */
+
+.view-header {
+  padding: var(--space-4) 0 var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.view-heading {
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: var(--leading-title);
+  letter-spacing: var(--tracking-figure);
+  color: var(--ink);
+}
+
+.view-subheading {
+  margin-top: var(--space-1);
+  font-size: var(--text-base);
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+/* --------------------------------------------------------------------------
+   LAS TRES CIFRAS DEL CONSOLIDADO
+   --------------------------------------------------------------------------
+   Apiladas —rótulo, cifra, nota— y no en dos columnas: con la cifra de 36px y
+   `minmax(0,1fr) auto`, la columna de la etiqueta se quedaba en 154px de los
+   336 de la celda y los pies de nota envolvían a dos líneas. Apiladas, la cifra
+   tiene los 336px enteros y las tres celdas leen con el mismo ritmo que el
+   bloque de estado del mes.
+
+   Separadas por filete vertical, no por cajas. Una caja por cifra convierte la
+   banda en tres tarjetas, y de vuelta es un tablero. */
+.metrics-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4) var(--space-3) 0;
+  border-left: 1px solid var(--rule);
+}
+
+.hero-metric-card:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.metric-top-row { display: flex; align-items: center; gap: var(--space-2); }
+
+.metric-label-title {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.metric-footer-info {
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.metric-main-value {
+  align-self: start;
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  line-height: var(--leading-figure);
+  letter-spacing: var(--tracking-figure);
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   LAS SECCIONES ESTRUCTURALES — matriz y gráficos
+   --------------------------------------------------------------------------
+   `.content-card-*` es el vocabulario de las tres secciones ESTRUCTURALES del
+   consolidado —una tabla y dos lienzos— y `.ledger-*` es el del libro mensual.
+   Son dos superficies distintas con dos familias de nombres distintas, que es
+   lo que debimos tener desde el principio: "tarjeta de contenido" nunca
+   diseñó a los gastos de un mes ni a la tabla de la matriz. */
+.content-card-box {
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+#viewPanel > .content-card-box:first-of-type {
+  border-top: 0;
+  padding-top: var(--space-3);
+}
+
+.content-card-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.card-header-left {
+  display: grid;
+  grid-template-columns: 2px auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0 var(--space-2);
+  min-width: 0;
+}
+
+.card-header-titles { min-width: 0; }
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.card-title-row h3 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
+}
+
+.card-header-titles p {
+  margin-top: 2px;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+  max-width: 54ch;
+}
+
+/* --------------------------------------------------------------------------
+   LA MATRIZ
+   --------------------------------------------------------------------------
+   Nueve columnas de cifras. En pantallas angostas no hay forma honesta de
+   comprimirlas sin romper la lectura: scrollea adentro, nunca la página. Es un
+   patrón normal de tabla, no un parche. */
+.matrix-table-wrapper {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.matrix-table { width: 100%; font-size: var(--text-sm); }
+
+.matrix-table th {
+  padding: var(--space-2);
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+  text-align: right;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.matrix-table td {
+  padding: var(--space-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+}
+
+.matrix-table th:first-child,
+.matrix-table td:first-child {
+  text-align: left;
+  padding-left: 0;
+}
+
+.matrix-table th:last-child,
+.matrix-table td:last-child { padding-right: 0; }
+
+/* La celda de progreso: una longitud, no un color. Sin fondo y con la pista en
+   `--progress-track`, que es un gris sólido y no un `rgba()` sobre `--sunk` —
+   medido, un `rgba()` sobre `--sunk` da 1.03:1 y un 0% se lee como "sin dato"
+   en vez de como cero. */
+.matrix-progress-cell { width: 80px; }
+
+.matrix-progress-track {
+  height: 3px;
+  background: var(--progress-track);
+  overflow: hidden;
+}
+
+.matrix-progress-fill {
+  height: 100%;
+  background: var(--ink-3);
+}
+
+.matrix-month-btn {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  padding: 0;
+}
+.matrix-month-btn:hover { color: var(--ink); text-decoration: underline; }
+
+.matrix-active-badge {
+  font-size: var(--text-2xs);
+  color: var(--ink-2);
+  margin-left: var(--space-2);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+.matrix-table tfoot td {
+  border-top: 1px solid var(--rule-2);
+  border-bottom: 0;
+  font-weight: 600;
+  color: var(--ink);
+  padding-top: var(--space-3);
+}
+
+.matrix-table td .font-mono { color: inherit; }
+
+/* --------------------------------------------------------------------------
+   LOS GRÁFICOS
+   --------------------------------------------------------------------------
+   Los colores los pone `charts.js` leyendo tokens, no esta hoja. Lo único que
+   se declara acá es la caja del lienzo.
+
+   EL ANILLO SE ACOTA A 420px
+   --------------------------------------------------------------------------
+   Con el ancho completo del contenido, un anillo de 280px de alto se dibuja
+   como un disco gigante, y un disco gigante no dice nada: dice "aquí hay algo
+   alineado". Acotado, se lee como una figura con una relación con el resto. */
+.charts-grid-layout { display: block; }
+
+.chart-section { padding-bottom: var(--space-4); }
+
+.chart-canvas-container {
+  position: relative;
+  height: 280px;
+  margin-top: var(--space-3);
+}
+
+.chart-section:nth-of-type(2) .chart-canvas-container { max-width: 420px; }
+
+/* Sin datos, 280px de alto para una línea de texto es un agujero. `charts.js`
+   marca la sección y el lienzo baja: el alto lo decide si hay algo que mirar,
+   no al revés. */
+.chart-section.is-empty .chart-canvas-container { height: 120px; }
+
+@media (max-width: 720px) {
+  /* A 640px las tres celdas del consolidado no entran: la etiqueta y la cifra
+     pelarían por el mismo renglón. Pasan a apilarse, y el filete vertical se
+     convierte en horizontal para no perder la separación. */
+  .metrics-hero-grid { grid-template-columns: minmax(0, 1fr); }
+
+  .hero-metric-card,
+  .hero-metric-card:first-child {
+    padding: var(--space-3) 0;
+    border-left: 0;
+  }
+
+  .hero-metric-card + .hero-metric-card { border-top: 1px solid var(--rule); }
+
+  /* El encabezado de las secciones del consolidado sí se parte: su título es una
+     frase larga y a 640px no entra con la descripción al lado. */
+  .content-card-header {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-2);
+  }
+}

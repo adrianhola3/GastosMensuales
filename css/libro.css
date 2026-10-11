@@ -1,0 +1,542 @@
+/* ==========================================================================
+   EL LIBRO — las filas del mes, agrupadas por categoría.
+
+   DOS PROBLEMAS CONCRETOS QUE ESTE BLOQUE RESUELVE, Y CADA UNO CON SU
+   MEDIDA
+
+   1. EL RUIDO EN EL MEDIO DE LA FILA.
+   --------------------------------------------------------------------------
+   Medido sobre la pantalla anterior: `.expense-item-tags` estaba alineado con
+   `justify-content: center` dentro de la primera columna de la fila, que mide
+   todo el ancho sobrante. El resultado era que "Fijo" o "Variable Rango:
+   100-400" aparecían flotando en el aire a mitad de camino entre el concepto y
+   el importe, con el concepto pegado a la izquierda y un hueco de 300px
+   detrás. Diez filas con etiquetas de largos distintos se leían como diez
+   renglones deshilachados.
+
+   El arreglo no es esconder la etiqueta: es volver a pegarla a su concepto.
+   `justify-content: flex-start` y sin fondo, sin borde y sin radio: es
+   metadato de la fila, no una píldora. La etiqueta "Rango: 100-400" tampoco se
+   toca —`crud-admin.mjs` la lee por texto— pero deja de flotar.
+
+   2. EL COLOR POR CATEGORÍA.
+   --------------------------------------------------------------------------
+   Medido: los cuatro grupos del libro teñían la superficie con cuatro wash
+   distintos (`rgb(234,238,240)` / `rgb(239,236,243)` / `rgb(233,238,236)` /
+   `rgb(239,237,233)`) y teñían también el nombre, el ícono y el subtotal con
+   cuatro acentos. Cuatro colores para cuatro categorías que el lector ya
+   distingue por su rótulo: es color que no codifica nada.
+
+   El plan dice que el color significa estado, y que las categorías se
+   distinguen por posición y por regla. Así que acá no hay color de categoría:
+   hay un filete entre grupos, un rótulo que los nombra y una marca de sección
+   en tinta. El orden de las secciones ya las distingue entre sí.
+   ========================================================================== */
+
+.ledger-body { display: block; }
+
+.ledger-group {
+  /* NO se declara `display`: app.js escribe `style.display` inline acá
+     (renderActiveSegments) y necesita leer el valor actual para decidir si
+     anima o no. Declararlo lo convierte en una competencia entre la regla y el
+     inline, y el inline siempre gana en silencio. */
+  padding-block: var(--space-3) 0;
+  border-top: 1px solid var(--rule);
+}
+
+.ledger-body > .ledger-group:first-of-type {
+  border-top: 0;
+  padding-top: var(--space-1);
+}
+
+/* --------------------------------------------------------------------------
+   EL ENCABEZADO DEL GRUPO — una sola línea
+   --------------------------------------------------------------------------
+   32px. De izquierda a derecha: la marca de sección, el ícono, el nombre, el
+   conteo, el chevron; y al otro extremo, la cifra del grupo. En el medio queda
+   aire, y ese aire es lo que hace legible que el encabezado es una FILA y no
+   el rótulo de una tarjeta.
+
+   LA MARCA DE SECCIÓN ES TINTA, NO UN ACENTO
+   --------------------------------------------------------------------------
+   Antes era un tick de 2px con el color de la categoría. Ahora es una regla
+   corta en `--ink-3`: separa el ícono del rótulo y dice "acá empieza una
+   sección" sin inventarse un cuarto color con significado. */
+.ledger-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 30px;
+}
+
+/* El `h3` envuelve al botón para que el nombre del grupo sea un encabezado de
+   documento y no un `span` con peso 600. */
+.ledger-group-heading {
+  display: block;
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/* `width: 100%` para que TODO el renglón sea el control, no solo el texto del
+   nombre: en un libro, tocar el encabezado es una acción, y una acción que solo
+   funciona con el ratón no es un control. `border: 0` y `background: none`
+   porque el control es el renglón, no un botón dibujado. */
+.ledger-group-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  text-align: left;
+}
+
+.cat-tick {
+  width: 2px;
+  height: 14px;
+  flex: 0 0 auto;
+  background: var(--ink-3);
+}
+
+.ledger-group-name {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* El conteo de filas. Dice cuántas hay, y cuando el buscador o el filtro
+   dejan menos a la vista dice "3 de 9": un total que no se puede ver es una
+   cifra que no informa nada. */
+.ledger-group-count {
+  flex: 0 0 auto;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.ledger-group-icon { flex: 0 0 auto; color: var(--ink-2); }
+
+.ledger-group-chevron {
+  flex: 0 0 auto;
+  color: var(--ink-2);
+  transition: transform var(--duration) var(--ease);
+}
+
+.ledger-group.collapsed .ledger-group-chevron { transform: rotate(-90deg); }
+
+.ledger-group-meta {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+/* La cifra del grupo: 20px tabular, un peldaño abajo del héroe y un peldaño
+   arriba de la cifra de fila. La escala queda limpia y descendente. */
+.ledger-group-subtotal {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--tracking-figure);
+  color: var(--ink);
+}
+
+.ledger-group-body { padding-top: 0; }
+
+.ledger-group.collapsed > .ledger-group-body { display: none; }
+
+/* EL BUSCADOR VACÍA UN GRUPO, Y EL GRUPO SE VA CON SUS FILAS.
+   Sin esto, un grupo al que el buscador le dejó cero filas visibles seguiría
+   anunciando un nombre, un total y un subtotal que ya no corresponden a nada en
+   pantalla. No se oculta con `style.display` porque esa propiedad la escribe
+   `renderActiveSegments` para el filtro de categoría, y dos filtros compitiendo
+   por la misma propiedad inline es la forma segura de que uno de los dos
+   mienta: se oculta el encabezado y el cuerpo, y el grupo no deja filete. */
+.ledger-group.busqueda-vacia > .ledger-group-head,
+.ledger-group.busqueda-vacia > .ledger-group-body { display: none; }
+
+.ledger-group.busqueda-vacia { padding-block: 0; border-top: 0; }
+
+/* Los tres filtros del feed viven DEBAJO del encabezado, adentro del grupo: no
+   son de la vista, son de este grupo. */
+.ledger-group-filters {
+  display: flex;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+
+.ledger-group-rows { min-width: 0; }
+
+/* ==========================================================================
+   LA FILA — concepto a la izquierda, estado y cifra a la derecha
+   --------------------------------------------------------------------------
+   Cuatro hijos inyectados por app.js, en este orden: concepto · estado ·
+   importe · acciones. No se cambia el número ni el orden: la plantilla los
+   emite así y hay un contrato DOM que lo declara.
+
+   LO QUE SE RESUELVE CON EL ANCHO DE LA COLUMNA DE ESTADO
+   --------------------------------------------------------------------------
+   La de 92px no era el problema, era lo que hacía que las diez marcas
+   "Pendiente" alinearan en una columna. Eso se conserva porque es lo que hace
+   legible leer diez renglones en paralelo: el estado es una marca breve en la
+   misma posición en todas las filas, y la cifra cierra contra el borde.
+
+   LA FILA ALTERNADA
+   --------------------------------------------------------------------------
+   Un `--sunk` muy suave, en las filas pares. Es lo que guía la lectura vertical
+   de una tabla de texto sin necesidad de una cebra de gris contrastado: a
+   diez filas de alto similar, el ojo pierde el hilo si todas se leen igual, y
+   una cebra fuerte compite con el estado. `--sunk` es el mismo tono del papel
+   que usa los campos y las pistas, así que la página tiene un solo valor de
+   "levemente destacado". */
+.expense-card-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 88px auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  /* 6px de aire vertical, no 8. La fila es el único elemento de la hoja que
+     se repite una vez por cada gasto, así que cada píxel acá se paga en todas
+     las filas y no en una: medido a 1440, 4px por fila son 56px de scroll
+     vertical en catorce gastos, y la primera fila sube 4px. Un padding de 8px
+     es indistinguible de uno de 6px leyendo y es 4px reales por renglón. */
+  padding: 6px var(--space-2);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.ledger-group-rows > .expense-card-item:nth-child(even) { background: var(--sunk); }
+
+.expense-card-item:hover { background: var(--paper); }
+
+.expense-item-info { min-width: 0; }
+
+/* El concepto. Es el ancla de la fila: una columna de importes que se lee de
+   izquierda a derecha necesita sus renglones alineados al mismo borde, y el
+   título es el que dice de qué renglón es cada cifra. */
+.expense-item-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* LA ETIQUETA, DE NUEVO PEGADA A SU CONCEPTO.
+   Este es el arreglo del punto 1 de más arriba: `justify-content: flex-start`
+   y nada de fondo. El elemento conserva su nombre de clase porque
+   `crud-admin.mjs` lo lee. */
+.expense-item-tags {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: var(--space-2);
+  margin-top: 1px;
+}
+
+/* Etiquetas de dato, no chips: sin fondo, sin borde, sin radio. El nombre de
+   la clase se conserva por contrato DOM.
+
+   `line-height: 1.2` y no el del cuerpo: la etiqueta vive en su propia línea
+   dentro de la fila, y como la etiqueta define el alto de la fila, ese exceso
+   se pagaba en todas las filas y no en ninguna en particular. */
+.tag-badge {
+  font-size: var(--text-2xs);
+  line-height: 1.2;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* El rango va un paso más atrás que el tipo: es un dato de apoyo del dato de
+   apoyo, y a 11px en tinta 3 ya está bastante atrás. */
+.tag-badge.font-mono { color: var(--ink-2); }
+
+.expense-item-state { display: flex; justify-content: flex-start; }
+
+.expense-item-amount {
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+/* La segunda línea del importe —"Real S/ 222.22 (S/ 0.00)"— la escribe
+   `pintarImporteFila` (app.js:881-883) cuando el gasto tiene monto real. Es
+   la diferencia entre lo estimado y lo que salió de verdad en ESTE renglón, y
+   no está en ninguna celda de arriba: la "Real" del bloque de estado es la
+   suma. Se conserva y se subordina: misma cifra, un peldaño más chica y en
+   tinta secundaria, para que no compita con el importe de la fila. */
+.expense-item-amount > div + div {
+  font-size: var(--text-2xs);
+  font-weight: 400;
+  color: var(--ink-2);
+  line-height: 1.25;
+}
+
+/* ==========================================================================
+   EL ESTADO DE LA FILA — una marca breve, no una etiqueta de estado
+   --------------------------------------------------------------------------
+   El plan dice "marca breve": la lectura tiene que ser "esta fila está
+   cubierta / esta no" sin leer una palabra, y la palabra sirve para el que
+   necesita el nombre. Por eso es una regla de 2px con la palabra al lado, en
+   vez de una píldora con fondo: el fondo de una píldora es un bloque de color
+   repetido diez veces que no codifica nada nuevo y que le compite al estado.
+
+   `status-pagado` y `status-pendiente` son los literales exactos que app.js
+   escribe en `toggleBtn.className` al alternar. Si se renombran, se rompen los
+   dos. */
+.btn-status-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 2px 0;
+  border-left: 2px solid transparent;
+  padding-left: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.btn-status-toggle.status-pagado {
+  color: var(--settled);
+  border-left-color: var(--settled);
+  font-weight: 600;
+}
+
+.btn-status-toggle.status-pendiente {
+  color: var(--pending);
+  border-left-color: var(--pending);
+}
+
+.btn-status-toggle:hover { background: var(--paper); }
+
+/* EL CONCEPTO DE UNA FILA CUBIERTA BAJA A TINTA SECUNDARIA.
+   Medido: con "Pagado" en verde y "Pendiente" en ocre, la única diferencia
+   entre las dos clases de fila era la marca de la derecha, y leyendo diez
+   renglones en paralelo el ojo iba a la marca y no al concepto. Con el
+   concepto cubierto en `--ink-2`, la fila entera se ve "terminada" y la marca
+   pasa a ser la confirmación y no el aviso.
+
+   `:has()` y no una clase nueva en el DOM: la fila no tiene ningún atributo de
+   estado, y agregarlo sería tocar `js/`. El navegador lo soporta y lo soporta
+   desde 2023. */
+.expense-card-item:has(.status-pagado) .expense-item-title { color: var(--ink-2); }
+
+/* ==========================================================================
+   LAS ACCIONES DE FILA — invisibles en reposo, presentes cuando hacen falta
+   --------------------------------------------------------------------------
+   Declaradas con `opacity: 0` y reveladas por `:hover`, `:focus-within` y en
+   puntero grueso. Las tres reglas existen por tres razones distintas:
+
+   · TECLADO. El botón es enfocable, así que el recorrido con Tab llega a él y
+     lo deja invisible si no está la regla de foco. Es el fallo clásico de
+     "enfocable pero invisible".
+   · TÁCTIL. `@media (hover: none)` es literalmente "este dispositivo no tiene
+     hover". Ahí editar o borrar un gasto se queda sin superficie de UI, que
+     es un control muerto.
+   · LECTURA EN BLOQUE. En un libro, donde las filas se escanean de a diez, no
+     poner el botón de borrar desde el principio es lo que evita que la lista
+     parezca una tabla de peligro.
+
+   Lo que se revela es el GOLPE, no el renglón: la fila no cambia de alto ni
+   pierde su separación al aparecer las acciones. */
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.btn-delete-expense,
+.btn-delete-tx,
+.btn-edit-expense,
+.btn-edit-tx {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius);
+  color: var(--ink-2);
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.expense-card-item:hover .btn-delete-expense,
+.transaction-feed-item:hover .btn-delete-tx,
+.expense-card-item:hover .btn-edit-expense,
+.transaction-feed-item:hover .btn-edit-tx,
+.expense-card-item:focus-within .btn-delete-expense,
+.transaction-feed-item:focus-within .btn-delete-tx,
+.expense-card-item:focus-within .btn-edit-expense,
+.transaction-feed-item:focus-within .btn-edit-tx {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .btn-delete-expense,
+  .btn-delete-tx,
+  .btn-edit-expense,
+  .btn-edit-tx { opacity: 1; }
+}
+
+.btn-delete-expense:hover,
+.btn-delete-tx:hover,
+.btn-edit-expense:hover,
+.btn-edit-tx:hover {
+  color: var(--ink);
+  background: var(--sunk);
+}
+
+/* El nombre `.btn-ghost-rose` se conserva por contrato DOM; el color de rosa se
+   fue: borrar no necesita un tono propio y el hover ya lo dice. */
+.btn-ghost-rose {
+  color: inherit;
+  background: none;
+  border: 0;
+}
+
+/* Los tres filtros del feed. */
+.feed-filter-pill {
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  transition: var(--transition);
+}
+.feed-filter-pill:hover { color: var(--ink); }
+.feed-filter-pill.active { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ==========================================================================
+   EL FEED DE MOVIMIENTOS — misma fila, otro dato
+   --------------------------------------------------------------------------
+   Ingresos y gastos no son un presupuesto: no se cubren ni se estiman, se
+   registran. Por eso la fila es más simple —concepto, fecha, tipo, importe— y
+   por eso el tipo va en tinta, no en color: "Ingreso" y "Gasto" son dos
+   categorías del mismo flujo, no dos estados de cobertura. El signo del importe
+   ya dice cuál es cuál.
+
+   `#tx-amount` lo escribe app.js con el signo adelante, así que el signo no se
+   puede poner con CSS: se lee tal cual. */
+.transaction-feed-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.ledger-group-rows > .transaction-feed-item:nth-child(even) { background: var(--sunk); }
+
+.transaction-feed-item:hover { background: var(--paper); }
+
+.tx-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.tx-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.tx-details { min-width: 0; }
+
+.tx-details h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tx-details p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-2xs);
+  color: var(--ink-2);
+  margin-top: 1px;
+}
+
+.tx-right { display: flex; align-items: center; gap: var(--space-2); }
+
+.tx-amount {
+  font-size: var(--text-base);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink);
+}
+/* ==========================================================================
+   LA FILA EN PANTALLAS ANGOSTAS
+   --------------------------------------------------------------------------
+   390px, LA RETÍCULA DE ESCRITORIO DEJA EL CONCEPTO EN 77PX.
+   Medido a 390 con concepto · estado · importe · acciones en una línea: la
+   columna del concepto queda en 77px y "PRUEBA-ALFA Internet" se lee
+   "PRUEBA-...". Un libro donde el concepto no se lee no es un libro.
+
+   El reparto nuevo pone el concepto y el importe ARRIBA —que son los dos lados
+   de la fila y los que se comparan entre renglones— y el estado y las acciones
+   ABAJO, que son lo que se pulsa y no lo que se lee.
+
+   El número de hijos NO cambia: siguen siendo cuatro y en el mismo orden, que
+   es el contrato DOM. Lo único que cambia es en qué celda cae cada uno, y eso
+   lo hace `grid-template-areas`, no el orden del DOM. */
+@media (max-width: 640px) {
+  .expense-card-item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'info    amount'
+      'state   actions';
+    row-gap: var(--space-1);
+    align-items: center;
+  }
+
+  .expense-item-info { grid-area: info; }
+  .expense-item-amount { grid-area: amount; }
+  .expense-item-state { grid-area: state; }
+
+  .item-actions {
+    grid-area: actions;
+    justify-self: end;
+  }
+
+  /* Una fila partida en dos renglones ya no puede esconder sus acciones: no
+     hay un renglón que "aparezca" al pasar por encima, y con el estado y el
+     importe en su propia línea hay sitio de sobra. La regla base lo resuelve
+     con `@media (hover: none)`; esto cubre la ventana angosta con ratón, que
+     llega al mismo resultado por otro camino. */
+  .btn-delete-expense,
+  .btn-delete-tx,
+  .btn-edit-expense,
+  .btn-edit-tx { opacity: 1; }
+
+  .ledger-group-subtotal { font-size: var(--text-lg); }
+  .ledger-group-name { font-size: var(--text-base); }
+
+  /* El encabezado del libro se queda en UN renglón: lo que cede es el aire, no
+     la estructura. El nombre ya tiene `text-overflow: ellipsis` y
+     `.ledger-group-heading` es `flex: 1 1 auto` en la base, así que sin eso el
+     `h3` no podría encogerse y el ellipsis nunca llegaría a activarse. */
+  .ledger-group-head { gap: var(--space-3); }
+}

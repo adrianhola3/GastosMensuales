@@ -1,0 +1,203 @@
+/* ==========================================================================
+   BASE — reset, fondo, foco, iconos y las tres utilidades que existen.
+
+   LO QUE RESUELVE ESTE BLOQUE, Y POR QUÉ NO ES "UN RESET MÁS"
+   --------------------------------------------------------------------------
+   El reset de siempre no es un ritual: acá hay tres que una hoja de aplicación
+   general no suele tener y que cada uno tapa un defecto concreto.
+
+   1. EL RESET DE LOS CONTROLES NATIVOS. Chrome aplica `border: 2px outset` y
+      `buttonface` a cada `<button>`. Sin el reset, cada botón segmentado de la
+      app aparece con un borde gris de dos píxeles que no viene de ningún lado
+      del sistema de diseño y que en una pantalla de tinta se lee como otro
+      filete, o sea como otra jerarquía.
+
+   2. EL ANILLO DE FOCO EN TINTA. El foco no usa un color de marca: usa
+      `--ink`. Un anillo de teclado no codifica estado —codifica "estás acá"—
+      y darle un color lo convertiría en un cuarto color con significado, que
+      es justo lo que el plan prohíbe. Y en tinta tiene más contraste del que
+      tenía el azul.
+
+   3. `tabular-nums` COMO DEFECTO POR DEFECTO. El plan dice "cifras de dinero
+      con tabular-nums, siempre". Ponerlo en una lista de selectores es una
+      lista que se olvida de algo. Se pone en `body` y se hereda: toda cifra de
+      la página es tabular aunque nadie se acuerde de declararlo, y `.font-mono`
+      queda como el nombre histórico que leen index.html y app.js.
+
+   SIN CAJAS, SIN SOMBRAS, SIN DEGRADADOS
+   --------------------------------------------------------------------------
+   En toda la hoja hay **cero** `box-shadow`, **cero** `linear-gradient` y
+   **cero** esquinas redondeadas grandes. No es una austeridad estética: un
+   estado de cuenta se imprime en blanco y negro, y una sombra es una
+   información falsa —dice "esto flota" cuando en realidad solo está alineado
+   distinto. El único lugar donde algo flota de verdad es el sheet de un modal,
+   y ese se separa con el velo y una regla, no con una sombra difusa.
+   ========================================================================== */
+
+/* ESTOS SELECTORES VAN EN `:where()`, Y NO POR ESTÉTICA.
+   Un reset tiene que poder tocar `<button>` sin poder tocar nada: los estilos
+   por etiqueta compiten contra los de las clases por peso de cascada, y un
+   `button { margin: 0 }` pelado gana a `.rail-add-btn { margin-left: 24px }`
+   porque el selector de clase no está. Con `:where()` el peso es 0 y el reset
+   solo pone la base: cualquier componente gana después, sin `!important` y sin
+   orden. Es la diferencia entre "no hay selectores de etiqueta" y "los hay y
+   no pueden ganar".
+
+   Chrome aplica `border: 2px outset` y `buttonface` a cada `<button>`. Sin
+   esto, cada botón segmentado de la app aparece con un borde gris de dos
+   píxeles que no viene de ningún lado del sistema de diseño y que en una
+   pantalla de tinta se lee como otro filete, o sea como otra jerarquía. */
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+}
+
+:where(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  margin: 0;
+}
+
+:where(button) {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(h1, h2, h3, h4, p, figure) {
+  margin: 0;
+}
+
+:where(table) {
+  border-collapse: collapse;
+}
+
+/* --- El fondo: papel, y la superficie encima ---------------------------------
+   El canvas va un escalón por debajo de la superficie de contenido. La
+   diferencia es de 1 punto de tono y no se ve, pero separa las dos cosas:
+   fuera del contenido hay papel; dentro, hoja. Sin esa diferencia el rail y
+   la columna de secciones se leen como parte de la página y la idea de "una
+   superficie de contenido" no existe. */
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  /* El defecto por defecto: cifras tabulares en toda la página. IBM Plex Sans
+     ya es tabular, así que esto no cambia nada con la webfont cargada. Lo que
+     hace es que cuando la fuente NO llega y gana la pila del sistema —que no
+     es tabular— las columnas de importes no sedescoloquen mientras carga. */
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   FOCO — un anillo en todo control interactivo, en tinta
+   --------------------------------------------------------------------------
+   `:where()` vale 0 en especificidad a propósito: el anillo es el estado base
+   de todo control y no tiene por qué ganarle a la regla de un componente. Si
+   un componente necesita un anillo propio, lo escribe con su selector y ya
+   gana. Lo que no puede pasar es que un `:focus-visible` genérico le gane a
+   un componente, que es lo que pasaba con la versión anterior.
+
+   `outline` y no `box-shadow`: el `box-shadow` no sigue la forma real del
+   control y además aquí no hay ninguno. */
+:where(button, a, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   ICONOS — SVG lineal, monocromo, currentColor
+   --------------------------------------------------------------------------
+   Todos los glifos de la app son SVG de trazo, sin relleno, y heredan el
+   color del texto que los rodea. Eso es lo que permite que un ícono acompañe
+   a su rótulo sin ser una segunda fuente de color: si el rótulo es tinta, el
+   ícono es tinta.
+
+   `.ui-icon-img` y `.ui-icon-svg` son dos ganchos que existen por contrato
+   DOM (los leen app.js e index.html) y que hacen trabajos distintos:
+   `.ui-icon-svg` pinta el trazo; `.ui-icon-img` es el que alinea el glifo
+   DENTRO de su caja con `inline-flex`. Si se sacara cualquiera de los dos,
+   los íconos se desalinean de su línea de base.
+   ========================================================================== */
+.ui-glyph,
+.ui-icon-svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+
+.ui-glyph {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+}
+
+/* `.ui-icon-svg` NO fija width/height a propósito: el tamaño viene de las
+   clases de escala. Si fijara 1em y se declarara después, le ganaría a ellas. */
+.ui-icon-svg {
+  display: inline-block;
+  vertical-align: -0.15em;
+}
+
+.ui-icon-xs { width: 14px; height: 14px; }
+.ui-icon-chip { width: 14px; height: 14px; }
+.ui-icon-nav { width: 16px; height: 16px; }
+.ui-icon-brand { width: 20px; height: 20px; }
+
+/* ==========================================================================
+   UTILIDADES
+   --------------------------------------------------------------------------
+   Solo las tres que existen y que algo lee. Una utilidad que no la usa nadie
+   es una mentira que el próximo va a leer como si describiera algo. */
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+/* Los estados vacíos: UNA línea, centrada, silenciosa. Sin ícono, sin
+   ilustración y sin una segunda frase explicando lo obvio. Un estado vacío es
+   una frase, no un panel: el alto lo decide si hay algo que decir. */
+.empty-feed-placeholder,
+.empty-segments-notice {
+  padding: var(--space-3) 0;
+  font-size: var(--text-md);
+  color: var(--ink-2);
+  text-align: center;
+}
+
+/* DENTRO de un grupo del libro un estado vacío es una frase pegada al
+   encabezado, no un bloque centrado: centrado en 1092px de ancho, un "Sin
+   gastos registrados." se convierte en un vacío con forma, que es lo
+   contrario de honesto —parece una sección a la que le falta contenido. */
+.ledger-group .empty-feed-placeholder {
+  padding: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  text-align: left;
+}
+
+/* El aviso de "ninguna categoría seleccionada" sí es un aviso de pantalla
+   entera, y para eso tiene que tener el ancho de la columna: un
+   `text-align: center` dentro de una caja que mide lo que mide su contenido
+   no centra nada. */
+.empty-segments-notice {
+  width: 100%;
+  max-width: 46ch;
+  margin: 0 auto;
+}

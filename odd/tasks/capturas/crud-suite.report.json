@@ -1,6 +1,6 @@
 {
   "suite": "crud-suite",
-  "generatedAt": "2026-10-10T18:34:25.895Z",
+  "generatedAt": "2026-10-11T02:45:15.123Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -54,7 +54,7 @@
       "tripwire": 0
     },
     {
-      "test": "expense.toggle.pagado-pendiente: the row chip flips and the store follows",
+      "test": "expense.toggle.pagado-pendiente: paying writes the real amount and leaves the estimate alone",
       "supabaseRequests": 0,
       "tripwire": 0
     },
@@ -284,10 +284,10 @@
         },
         {
           "pass": true,
-          "label": "DISK: estado persisted",
+          "label": "DISK: a new expense starts uncovered (montoReal = null, not an \"estado\" text)",
           "detail": {
-            "actual": "Pendiente",
-            "expected": "Pendiente"
+            "actual": null,
+            "expected": null
           }
         },
         {
@@ -335,13 +335,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -417,13 +417,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -475,13 +475,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 41
+            "totalRequests": 73
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -508,7 +508,7 @@
             "pulsado": ".btn-edit-expense",
             "antes": {
               "titulo": "PRUEBA-ALFA Internet",
-              "importe": "\n          S/ 111.11\n        ",
+              "importe": "S/ 111.11",
               "estado": "\n            Pendiente\n          "
             }
           }
@@ -625,10 +625,10 @@
         },
         {
           "pass": true,
-          "label": "DISK: estado survived the merge (the form never sends it)",
+          "label": "DISK: coverage survived the edit (the form never sends montoReal)",
           "detail": {
-            "actual": "Pendiente",
-            "expected": "Pendiente"
+            "actual": null,
+            "expected": null
           }
         },
         {
@@ -646,9 +646,9 @@
             "enMemoria": {
               "id": "i-prueba-alfa-2026-sf1",
               "concepto": "PRUEBA-CRDF Internet EDITADO",
-              "monto": 222.99,
               "tipo": "Fijo",
-              "estado": "Pendiente"
+              "montoEstimado": 222.99,
+              "montoReal": null
             }
           }
         },
@@ -666,13 +666,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 51
+            "totalRequests": 91
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -715,10 +715,10 @@
         },
         {
           "pass": true,
-          "label": "DISK: estado untouched",
+          "label": "DISK: coverage untouched",
           "detail": {
-            "actual": "Pendiente",
-            "expected": "Pendiente"
+            "actual": null,
+            "expected": null
           }
         },
         {
@@ -732,13 +732,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 61
+            "totalRequests": 109
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -892,14 +892,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 71
+            "totalRequests": 127
           }
         }
       ],
       "gaps": [],
       "notes": [
         "app.js:1424 alert(\"Por favor ingresa un monto valido\") is UNREACHABLE through the real UI: input[type=number] refuses non-numeric text (the field goes empty, tripping `required`) and min=0 refuses negatives, so parseFloat on this field can never be NaN or < 0. The guard is dead code from the UI. Not a crash risk - a duplicated concern that will drift.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -988,13 +988,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 81
+            "totalRequests": 145
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1090,8 +1090,8 @@
           "pass": true,
           "label": "DISK: nothing was persisted (so no data was lost)",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -1113,14 +1113,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 91
+            "totalRequests": 163
           }
         }
       ],
       "gaps": [],
       "notes": [
         "EXPECTED vs ACTUAL. Expected: the user gets told the concept cannot be blank. Actual: Save is a dead control for whitespace-only input - the click is swallowed by app.js:1422 with no user-visible feedback. Severity: low (no data loss, no wrong value) but it is exactly the \"dead control\" class the brief asks to eliminate. Fix belongs to T4: add `required` handling on the trimmed value, or reuse the existing modal-shake affordance.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1140,7 +1140,7 @@
             "pulsado": ".btn-delete-expense",
             "antes": {
               "titulo": "PRUEBA-ALFA Internet",
-              "importe": "\n          S/ 111.11\n        ",
+              "importe": "S/ 111.11",
               "estado": "\n            Pendiente\n          "
             }
           }
@@ -1195,8 +1195,8 @@
           "pass": true,
           "label": "DISK: the whole persisted document is byte-identical",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -1213,13 +1213,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 101
+            "totalRequests": 181
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1239,7 +1239,7 @@
             "pulsado": ".btn-delete-expense",
             "antes": {
               "titulo": "PRUEBA-ALFA Internet",
-              "importe": "\n          S/ 111.11\n        ",
+              "importe": "S/ 111.11",
               "estado": "\n            Pendiente\n          "
             }
           }
@@ -1308,24 +1308,32 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 111
+            "totalRequests": 199
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
     },
     {
       "group": "Gasto: crear / editar / borrar / marcar pagado",
-      "name": "expense.toggle.pagado-pendiente: the row chip flips and the store follows",
+      "name": "expense.toggle.pagado-pendiente: paying writes the real amount and leaves the estimate alone",
       "fixture": "baseline",
       "verdict": "PASS",
-      "observation": "9 checks passed across UI + memory + disk + network",
+      "observation": "21 checks passed across UI + memory + disk + network",
       "checks": [
+        {
+          "pass": true,
+          "label": "precondition: the fixture expense starts uncovered",
+          "detail": {
+            "actual": null,
+            "expected": null
+          }
+        },
         {
           "pass": true,
           "label": "the row status toggle was clicked",
@@ -1334,10 +1342,75 @@
             "pulsado": ".btn-status-toggle",
             "antes": {
               "titulo": "PRUEBA-ALFA Internet",
-              "importe": "\n          S/ 111.11\n        ",
+              "importe": "S/ 111.11",
               "estado": "\n            Pendiente\n          "
             }
           }
+        },
+        {
+          "pass": true,
+          "label": "UI: paying asks for the real amount",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "no dialog was raised: it is a sheet, not a confirm",
+          "detail": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the estimate stays on screen while the real amount is decided",
+          "detail": {
+            "mostrado": "Estimado: S/ 111.11"
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the field defaults the real amount to the estimate",
+          "detail": {
+            "actual": "111.11",
+            "expected": "111.11"
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: opening the sheet changed nothing",
+          "detail": {
+            "actual": null,
+            "expected": null
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: the real amount was recorded",
+          "detail": {
+            "actual": 150,
+            "expected": 150
+          }
+        },
+        {
+          "pass": true,
+          "label": "DISK: paying did NOT destroy the estimate",
+          "detail": {
+            "actual": 111.11,
+            "expected": 111.11
+          }
+        },
+        {
+          "pass": true,
+          "label": "MEMORY: the real amount was recorded",
+          "detail": {
+            "actual": 150,
+            "expected": 150
+          }
+        },
+        {
+          "pass": true,
+          "label": "UI: the sheet closes after saving",
+          "detail": null
         },
         {
           "pass": true,
@@ -1356,7 +1429,14 @@
         },
         {
           "pass": true,
-          "label": "a fixed expense toggles without any dialog",
+          "label": "UI: the row shows the real amount next to the estimate",
+          "detail": {
+            "importe": "S/ 111.11Real S/ 150.00 (+S/ 38.89)"
+          }
+        },
+        {
+          "pass": true,
+          "label": "the payment itself raised no dialog",
           "detail": {
             "actual": 0,
             "expected": 0
@@ -1364,33 +1444,38 @@
         },
         {
           "pass": true,
-          "label": "DISK: estado flipped",
+          "label": "UI: unpaying asks nothing",
+          "detail": null
+        },
+        {
+          "pass": true,
+          "label": "DISK: the real amount was erased",
           "detail": {
-            "actual": "Pagado",
-            "expected": "Pagado"
+            "actual": null,
+            "expected": null
           }
         },
         {
           "pass": true,
-          "label": "MEMORY: estado flipped",
+          "label": "DISK: the estimate survived the round trip",
           "detail": {
-            "actual": "Pagado",
-            "expected": "Pagado"
+            "actual": 111.11,
+            "expected": 111.11
           }
         },
         {
           "pass": true,
-          "label": "exactly one persisted write for one toggle",
+          "label": "UI: the chip reads \"Pendiente\"",
           "detail": {
-            "actual": 1,
-            "expected": 1
+            "actual": "Pendiente",
+            "expected": "Pendiente"
           }
         },
         {
           "pass": true,
           "label": "the live KPI re-rendered",
           "detail": {
-            "kpi": "3 de 6 gastos pagados"
+            "kpi": "2 de 6 gastos pagados"
           }
         },
         {
@@ -1399,13 +1484,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 121
+            "totalRequests": 217
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1448,7 +1533,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 111
+              "totalControles": 112
             }
           }
         },
@@ -1472,7 +1557,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 131
+            "totalRequests": 235
           }
         }
       ],
@@ -1484,7 +1569,7 @@
       ],
       "notes": [
         "store.js:611 toggleAllBudgetItems is implemented and has ZERO callers: it is not referenced by js/app.js, js/charts.js, or any inline handler in index.html.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1557,13 +1642,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 141
+            "totalRequests": 253
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1751,13 +1836,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 22
+            "totalRequests": 38
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1835,13 +1920,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 33
+            "totalRequests": 57
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1866,7 +1951,7 @@
           "label": "the movement to edit was created through the real UI",
           "detail": {
             "creado": {
-              "id": "id_qvzuoeba2_1791657188279",
+              "id": "id_iwx1og8fg_1791686638194",
               "fecha": "2026-08-10",
               "concepto": "PRUEBA-CRUD Abono Base",
               "flujo": "Ingreso",
@@ -1914,8 +1999,8 @@
           "pass": true,
           "label": "the hidden id is the clicked movement",
           "detail": {
-            "actual": "id_qvzuoeba2_1791657188279",
-            "expected": "id_qvzuoeba2_1791657188279"
+            "actual": "id_iwx1og8fg_1791686638194",
+            "expected": "id_iwx1og8fg_1791686638194"
           }
         },
         {
@@ -2039,13 +2124,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 44
+            "totalRequests": 76
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2118,13 +2203,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 55
+            "totalRequests": 95
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2203,13 +2288,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 66
+            "totalRequests": 114
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2281,13 +2366,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 77
+            "totalRequests": 133
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2346,7 +2431,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 88
+            "totalRequests": 152
           }
         }
       ],
@@ -2358,7 +2443,7 @@
       ],
       "notes": [
         "store.js:694 toggleMovementStatus is implemented and has ZERO callers. The feed row (app.js:732-783) renders exactly two buttons per movement - edit and delete - and no state control.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2410,11 +2495,11 @@
           "pass": true,
           "label": "DISK: a month with that nombre exists",
           "detail": {
-            "nuevoId": "prueba-crud-gamma-2026-1791657213618",
+            "nuevoId": "prueba-crud-gamma-2026-1791686662197",
             "orden": [
               "prueba-alfa-2026",
               "prueba-beta-2026",
-              "prueba-crud-gamma-2026-1791657213618"
+              "prueba-crud-gamma-2026-1791686662197"
             ]
           }
         },
@@ -2462,8 +2547,8 @@
           "pass": true,
           "label": "DISK: the new month became the active one",
           "detail": {
-            "actual": "prueba-crud-gamma-2026-1791657213618",
-            "expected": "prueba-crud-gamma-2026-1791657213618"
+            "actual": "prueba-crud-gamma-2026-1791686662197",
+            "expected": "prueba-crud-gamma-2026-1791686662197"
           }
         },
         {
@@ -2534,13 +2619,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2578,7 +2663,7 @@
           "pass": true,
           "label": "DISK: the clone exists",
           "detail": {
-            "nuevoId": "prueba-crud-delta-2026-1791657217401"
+            "nuevoId": "prueba-crud-delta-2026-1791686667902"
           }
         },
         {
@@ -2615,15 +2700,15 @@
         },
         {
           "pass": true,
-          "label": "DISK: every cloned item was reset to Pendiente",
+          "label": "DISK: every cloned item starts uncovered (montoReal = null)",
           "detail": {
-            "estados": [
-              "Pendiente",
-              "Pendiente",
-              "Pendiente",
-              "Pendiente",
-              "Pendiente",
-              "Pendiente"
+            "reales": [
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
             ]
           }
         },
@@ -2664,14 +2749,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
         "index.html:823 says the clone copies \"los gastos fijos y variables marcados como pendientes\", but store.js:727-735 copies ALL of them and then resets every estado to Pendiente. A month with an item already marked Pagado is cloned as Pendiente. That is the behaviour, and it is the sensible one - the hint is imprecise, not the code. Not a defect, a wording nit for T4.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 3; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2771,13 +2856,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 41
+            "totalRequests": 73
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2845,13 +2930,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 51
+            "totalRequests": 91
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2870,7 +2955,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 109,
+              "totalControles": 110,
               "sospechosos": [],
               "pills": 2,
               "pillsEditable": 0
@@ -2899,7 +2984,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 61
+            "totalRequests": 109
           }
         }
       ],
@@ -2911,7 +2996,7 @@
       ],
       "notes": [
         "Neither js/store.js nor js/app.js has a renameMonth method. addNewMonth derives the id from the nombre, and nothing rewrites an existing nombre afterwards.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2930,7 +3015,7 @@
             "actual": 1,
             "expected": 0,
             "contexto": {
-              "totalControles": 84,
+              "totalControles": 85,
               "sospechosos": [
                 {
                   "tag": "button",
@@ -2964,7 +3049,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 71
+            "totalRequests": 127
           }
         }
       ],
@@ -2976,7 +3061,7 @@
       ],
       "notes": [
         "store.js:759 deleteMonth exists and has ZERO callers. Its guard alert(\"Debes mantener al menos un mes en el sistema.\") can therefore never be shown.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3013,8 +3098,8 @@
           "pass": true,
           "label": "DISK: the whole persisted document is byte-identical",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3031,13 +3116,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3065,8 +3150,8 @@
           "pass": true,
           "label": "DISK: the persisted document is byte-identical",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3083,13 +3168,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3112,9 +3197,9 @@
             "hitClass": "modal-overlay active",
             "sheet": {
               "left": 453,
-              "top": 142,
+              "top": 147,
               "right": 973,
-              "bottom": 758
+              "bottom": 753
             }
           }
         },
@@ -3132,9 +3217,9 @@
               "hitClass": "modal-overlay active",
               "sheet": {
                 "left": 453,
-                "top": 142,
+                "top": 147,
                 "right": 973,
-                "bottom": 758
+                "bottom": 753
               }
             }
           }
@@ -3148,8 +3233,8 @@
           "pass": true,
           "label": "DISK: the persisted document is byte-identical",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3166,13 +3251,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 41
+            "totalRequests": 73
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3201,8 +3286,8 @@
           "pass": true,
           "label": "DISK: byte-identical, the edit was discarded",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3224,13 +3309,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 51
+            "totalRequests": 91
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3259,8 +3344,8 @@
           "pass": true,
           "label": "DISK: byte-identical",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3277,13 +3362,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 61
+            "totalRequests": 109
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3333,7 +3418,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 71
+            "totalRequests": 127
           }
         }
       ],
@@ -3344,7 +3429,7 @@
         }
       ],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3437,13 +3522,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 81
+            "totalRequests": 145
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3464,8 +3549,8 @@
           "pass": true,
           "label": "DISK: byte-identical, open+close writes nothing",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"monto\":666.66,\"tipo\":\"Extra\",\"estado\":\"Pagado\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"monto\":111.11,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"monto\":222.22,\"tipo\":\"Fijo\",\"estado\":\"Pagado\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"monto\":333.33,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"100-400\"}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"monto\":444.44,\"tipo\":\"Fijo\",\"estado\":\"Pendiente\"}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"monto\":555.55,\"tipo\":\"Variable\",\"estado\":\"Pendiente\",\"rango\":\"10-99\"}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"monto\":777.77,\"tipo\":\"Extra\",\"estado\":\"Pendiente\"}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\",\"prueba-beta-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-alfa-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-alfa-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-alfa-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-alfa-2026-ex1\",\"concepto\":\"PRUEBA-ALFA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":666.66,\"montoReal\":666.66}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[{\"id\":\"m-prueba-alfa-2026-1\",\"fecha\":\"2026-08-01\",\"concepto\":\"PRUEBA-ALFA Sueldo\",\"flujo\":\"Ingreso\",\"categoria\":\"Ingreso\",\"retornable\":\"No\",\"estado\":\"Pagado\",\"monto\":1111.11},{\"id\":\"m-prueba-alfa-2026-2\",\"fecha\":\"2026-08-05\",\"concepto\":\"PRUEBA-ALFA Alquiler\",\"flujo\":\"Gasto\",\"categoria\":\"Vivienda\",\"retornable\":\"No\",\"estado\":\"Pendiente\",\"monto\":222.22},{\"id\":\"m-prueba-alfa-2026-3\",\"fecha\":\"2026-08-09\",\"concepto\":\"PRUEBA-ALFA Venta\",\"flujo\":\"Ingreso\",\"categoria\":\"Extra\",\"retornable\":\"Si\",\"estado\":\"Pendiente\",\"monto\":333.33}]},\"prueba-beta-2026\":{\"id\":\"prueba-beta-2026\",\"nombre\":\"PRUEBA-BETA 2026\",\"corto\":\"PRUEBA-BETA\",\"servicios\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-sf1\",\"concepto\":\"PRUEBA-ALFA Internet\",\"tipo\":\"Fijo\",\"montoEstimado\":111.11,\"montoReal\":null},{\"id\":\"i-prueba-beta-2026-sf2\",\"concepto\":\"PRUEBA-ALFA Celular\",\"tipo\":\"Fijo\",\"montoEstimado\":222.22,\"montoReal\":222.22}],\"variables\":[{\"id\":\"i-prueba-beta-2026-sv1\",\"concepto\":\"PRUEBA-ALFA Limpieza\",\"tipo\":\"Variable\",\"rango\":\"100-400\",\"montoEstimado\":333.33,\"montoReal\":null}]},\"personales\":{\"fijos\":[{\"id\":\"i-prueba-beta-2026-pf1\",\"concepto\":\"PRUEBA-ALFA Gimnasio\",\"tipo\":\"Fijo\",\"montoEstimado\":444.44,\"montoReal\":null}],\"variables\":[{\"id\":\"i-prueba-beta-2026-pv1\",\"concepto\":\"PRUEBA-ALFA Cremas\",\"tipo\":\"Variable\",\"rango\":\"10-99\",\"montoEstimado\":555.55,\"montoReal\":null}]},\"extras\":[{\"id\":\"i-prueba-beta-2026-ex1\",\"concepto\":\"PRUEBA-BETA Extra\",\"tipo\":\"Extra\",\"montoEstimado\":777.77,\"montoReal\":null}],\"notas\":\"PRUEBA-ALFA notas de prueba\",\"movimientos\":[]}}}"
           }
         },
         {
@@ -3482,13 +3567,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 91
+            "totalRequests": 163
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null

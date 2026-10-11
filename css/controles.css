@@ -1,0 +1,282 @@
+/* ==========================================================================
+   CONTROLES — botones, campos y lo que se pulsa.
+
+   EL BOTÓN PRIMARIO ES TINTA, NO COLOR
+   --------------------------------------------------------------------------
+   Es la decisión de paleta del plan y va acá, no en el color: negro sobre
+   papel, como el encabezado de una factura bien compuesta. Un botón de un
+   color de marca en una pantalla donde el verde es "cubierto", el ocre es
+   "falta" y el oxblood es "exceso" compite con las tres cifras que sí están
+   diciendo algo. Además el papel es cálido y el botón es tinta: son dos
+   superficies del mismo documento, no un acento ajeno.
+
+   UN BOTÓN, CUATRO VARIANTES, NADA MÁS
+   --------------------------------------------------------------------------
+   La versión anterior tenía `.btn-primary`, `.btn-success` y `.btn-danger`, con
+   `success` en verde y `danger` en rojo. Eso era color por identidad repetido en
+   seis lugares del modal de movimientos y del feed, y ninguno de esos seis
+   decidía nada: el botón ya dice con su texto qué hace, y el estado real —si
+   está pagado o no— vive en la fila. `success` y `danger` quedan como SINÓNIMOS
+   de `.btn-surface` porque app.js reescribe `className` COMPLETO con esos dos
+   literales exactos (`btn btn-success btn-lg`, `btn btn-danger btn-lg`):
+   renombrarlos rompe la escritura.
+
+   EL FEEDBACK DE PRESIÓN ES UN CAMBIO DE FONDO, NO UN ESCALADO
+   --------------------------------------------------------------------------
+   `transform: scale()` sobre un botón de 26px empuja el renglón de al lado, y
+   en una columna de 152px el renglón de al lado es el nombre de la sección
+   siguiente. Un `background` que se oscurece un tono no empuja nada y se lee
+   igual de bien.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-box);
+  font-size: var(--text-md);
+  color: var(--ink);
+  background: var(--sunk);
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.btn:hover { background: var(--paper); border-color: var(--rule-2); }
+
+.btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--text-sm); }
+.btn-lg { padding: var(--space-3) var(--space-4); font-size: var(--text-base); }
+.btn-block { width: 100%; }
+
+/* El botón secundario: con borde, nunca sólido. El plan lo dice así y la razón
+   es que un estado de cuenta tiene UN solo camino principal, y todo lo demás es
+   alternativa. Un botón sólido por control que se offers alternativa convierte
+   la pantalla en un tablero de botones del mismo peso. */
+.btn-surface {
+  background: transparent;
+  border-color: var(--rule-2);
+  color: var(--ink);
+}
+.btn-surface:hover { background: var(--sunk); border-color: var(--rule-2); }
+
+.btn-primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--on-ink);
+  font-weight: 600;
+}
+.btn-primary:hover { background: #35322E; border-color: #35322E; }
+
+/* Sinónimos de `.btn-surface`. Ver el bloque de arriba: app.js escribe estos
+   dos literales en `className` y no se puede cambiar el contrato. */
+.btn-success,
+.btn-danger {
+  background: transparent;
+  border-color: var(--rule-2);
+  color: var(--ink);
+  font-weight: 600;
+}
+.btn-success:hover,
+.btn-danger:hover { background: var(--sunk); border-color: var(--rule-2); }
+
+.btn-close-sheet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-left: auto;
+  border-radius: var(--radius);
+  color: var(--ink-2);
+  font-size: 14px;
+  flex: 0 0 auto;
+  transition: var(--transition);
+}
+.btn-close-sheet:hover { color: var(--ink); background: var(--sunk); }
+
+/* Las cinco clases de alta de las secciones viven en la columna de secciones y
+   su caja la declara `layout.css` con una sola regla. Acá solo se conserva el
+   selector porque es parte del contrato DOM, y se le da el mismo hover que
+   cualquier botón. */
+.btn-quick-add-service,
+.btn-quick-add-personal,
+.btn-quick-add-extra { transition: var(--transition); }
+
+/* ==========================================================================
+   FORMULARIOS — campos que se leen como campos
+   --------------------------------------------------------------------------
+   Un campo es lo único de la app que se hunde: `--sunk` con una regla del
+   mismo tono que los divisores. Sin radio grande y sin sombra.
+
+   EL FLECHA DEL `<select>` ESTÁ DIBUJADA CON UN ASPA, NO CON UN DEGRADADO
+   --------------------------------------------------------------------------
+   La versión anterior armaba el triángulo con dos `linear-gradient` de 5x5px
+   superpuestos. Es la forma canónica y funciona, pero es un degradado: una
+   herramienta que esta hoja no usa, por un glifo que cabe en cuatro lados de un
+   `border`. Además el degradado no se recolorea con `currentColor` y queda
+   clavado al `--ink-3` del momento en que se pintó. */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.form-field:last-child { margin-bottom: 0; }
+.form-field-spaced { margin-top: var(--space-4); }
+
+.form-field label {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.form-input-lg {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--sunk);
+  border: 1px solid transparent;
+  border-radius: var(--radius-box);
+  font-size: var(--text-md);
+  color: var(--ink);
+  min-height: 34px;
+  transition: border-color var(--duration) var(--ease);
+}
+
+.form-input-lg::placeholder { color: var(--ink-2); }
+
+/* EL `<select>` NO TIENE FLECHA PROPIA, Y ES UNA DECISIÓN
+   --------------------------------------------------------------------------
+   La versión anterior la armaba con dos `linear-gradient` de 5x5px superpuestos
+   —la forma canónica de dibujar un triángulo sin imagen— y la anterior a esa
+   usaba un SVG en background. Las dos son un degradado o un recurso para
+   dibujar un glifo de cuatro lados, y esta hoja no usa ninguno de los dos.
+
+   La salida es no dibujar la flecha: `appearance` se queda en su valor por
+   defecto y el navegador pinta la suya. Se ve como un control nativo, que es
+   lo que es; es coherente con el resto del sistema operativo; responde al
+   teclado y al lector de pantalla sin que esta hoja tenga que saber de eso; y
+   con `color-scheme: light` toma la paleta correcta sola. Un `<select>` con
+   `appearance: none` y una flecha dibujada a mano es un `<div>` disfrazado, y
+   el disfraz ya está pagado. */
+/* El anillo lo pone `:focus-visible` en `base.css`; acá solo se refuerza el
+   borde, que es la señal secundaria. El campo NO lleva `outline: none`: sin
+   anillo en el elemento enfocable, la auditoría de foco no tiene nada que
+   leer. */
+.form-input-lg:focus { border-color: var(--rule-2); }
+.form-input-lg:focus { border-color: var(--rule-2); }
+
+/* El importe que se escribe es la cifra más grande del formulario: es el dato
+   que la persona está rescuing, y si tiene el mismo cuerpo que el concepto se
+   lee como un campo más. */
+.form-input-amount {
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  letter-spacing: var(--tracking-figure);
+  min-height: 46px;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.form-hint { font-size: var(--text-xs); color: var(--ink-2); }
+.form-hint-center { text-align: center; }
+
+/* Un valor que se muestra pero NO se edita.
+   El caso real es el "tipo" del gasto y el "tipo" del movimiento: los dos
+   deciden en qué lista o con qué signo vive el registro, así que cambiarlos
+   desde acá dejaría el dato partido. Mismo alto que un campo para que la línea
+   no se hunda al lado del input de al lado, pero SIN caja ni borde: una caja
+   idéntica a la de un input sería un input que no responde. El texto es
+   normal, nunca atenuado como un control deshabilitado, así que se mide con el
+   criterio de contraste de cualquier otro texto. */
+.form-readonly-value {
+  display: flex;
+  align-items: center;
+  min-height: 34px;
+  padding: var(--space-2) 0;
+  font-size: var(--text-md);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.login-error-msg {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--rule);
+  font-size: var(--text-sm);
+  color: var(--over);
+}
+
+.notes-smart-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.notes-smart-textarea {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  padding: var(--space-3);
+  background: var(--sunk);
+  border: 1px solid transparent;
+  border-radius: var(--radius-box);
+  font-size: var(--text-md);
+  line-height: 1.6;
+  color: var(--ink);
+  font-family: var(--font-body);
+}
+
+.notes-smart-textarea:focus { border-color: var(--rule-2); }
+
+.notes-feedback-label { font-size: var(--text-xs); color: var(--ink-2); }
+
+/* Las opciones de qué copia el clon. app.js muestra y esconde el bloque con
+   `style.display`, así que el `display` de acá es solo el punto de partida y no
+   compite con ese inline. */
+.clone-options {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-box);
+}
+
+.clone-options-lead {
+  font-size: var(--text-2xs);
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+}
+
+.clone-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-md);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.clone-option input[type='checkbox'] {
+  accent-color: var(--ink);
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+/* A 640px dos campos en paralelo no caben: cada uno queda con la mitad del
+   ancho de un formulario que ya es angosto, y "Monto (S/)" y "Fecha" pelean
+   por la misma línea. Apilan, que es lo que hace un formulario cuando le
+   falta ancho: se lee de arriba hacia abajo, no de izquierda a derecha. */
+@media (max-width: 640px) {
+  .form-grid-2 { grid-template-columns: minmax(0, 1fr); }
+}

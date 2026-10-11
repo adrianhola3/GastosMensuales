@@ -1,0 +1,416 @@
+/* ==========================================================================
+   TOKENS — el primer bloque de la cascada, y el único lugar donde hay color,
+   medida y tipografía.
+
+   POR QUÉ ESTE ARCHIVO VA PRIMERO Y NO DENTRO DE styles.css
+   --------------------------------------------------------------------------
+   `@import` es legal únicamente antes de la primera regla de la hoja: si
+   hubiera un `:root {}` arriba, el navegador IGNORA todos los `@import` que
+   vienen después y la hoja se queda a medio camino, sin avisar. Por eso
+   `styles.css` es solo el mapa y el primer import es este. No es una preferencia
+   de orden: es la gramática de la especificación.
+
+   LA PALETA: LOS VALORES SON LOS DEL PLAN, LITERALES
+   --------------------------------------------------------------------------
+   `--paper` `--surface` `--sunk` `--ink` `--ink-2` `--ink-3` `--rule`
+   `--rule-2` `--settled` `--settled-wash` `--pending` `--pending-wash`
+   `--over` `--over-wash`. Ninguno se derivó ni se "ajustó": son los del plan.
+
+   POR QUÉ `--sunk` ES MÁS UN CONCEPTO QUE UN COLOR
+   --------------------------------------------------------------------------
+   Los grises de aplicación se sienten técnicos; un fondo con temperatura se
+   siente como papel. `#F4F2ED` no es "un gris más oscuro": es la superficie
+   hundida, la que hace de campo de formulario, de fila alterna y de pista de
+   barra. Por eso se llama `--sunk` y no `--gray-100`: el nombre dice para qué
+   sirve, que es lo único que hace falta recordar.
+
+   EL COLOR SOLO CODIFICA ESTADO
+   --------------------------------------------------------------------------
+   Tres colores de tinta y tres de estado, y nada más:
+     --settled  verde   · lo que ya está cubierto / el saldo a favor
+     --pending  ocre    · lo que falta / el pendiente
+     --over     oxblood · el exceso y el déficit
+   Todo lo que no sea eso es `--ink`, `--ink-2` o `--ink-3`. No hay azul de
+   acción, ni verde de "exito", ni color de categoría: la categoría se
+   distingue por su posición y por la regla que la separa.
+
+   EL BOTÓN PRIMARIO ES TINTA, NO COLOR
+   --------------------------------------------------------------------------
+   Negro sobre papel, como el encabezado de una factura bien compuesta. Un
+   botón primario de un color de marca compite con las cifras de estado, que es
+   lo único que tiene derecho a ser color en esta pantalla.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Superficies ------------------------------------------------------- */
+  --paper: #FBFAF7;   /* fondo general: el papel */
+  --surface: #FFFFFF; /* la superficie de contenido */
+  --sunk: #F4F2ED;    /* campos, filas alternas, zonas de apoyo, pistas */
+
+  /* --- Tinta ------------------------------------------------------------- */
+  --ink: #1C1B19;    /* texto principal: negro con temperatura, no puro */
+  --ink-2: #56534C;  /* texto secundario Y etiquetas de 11-12px */
+  --ink-3: #8A867D;  /* indicadores NO textuales: reglas, marcas, relleno */
+
+  /* POR QUÉ `--ink-3` NO ES EL COLOR DE LAS ETIQUETAS, Y ES UNA CORRECCIÓN
+     --------------------------------------------------------------------------
+     El valor es el del plan y no se tocó. Lo que se corrigió es para qué se usa:
+     `#8A867D` sobre `#FFFFFF` mide **3.63:1** (medido en el navegador, componiendo
+     el fondo real —herramienta: `odd\tasks\contraste-diseno.mjs`), y WCAG AA
+     pide **4.5:1** para texto normal. El plan le asignaba "etiquetas y
+     metadatos", que en esta app son texto de 11 y 12px: tres pares fallaban.
+
+     Las dos salidas eran mover el token o no usarlo para texto. Se eligió la
+     segunda porque `--ink-3` sigue siendo el tono correcto para lo que SÍ es:
+     un indicador no textual necesita 3:1, y 3.63 lo pasa con margen. El tick de
+     sección y el relleno de la barra de la matriz lo usan; ninguna etiqueta de
+     la página lo usa.
+
+     Las etiquetas usan `--ink-2`, que mide 7.67:1. Sigue siendo tinta, sigue sin
+     codificar estado, y sigue siendo la diferencia que el tamaño ya no
+     necesita hacer.
+
+     SI EN ALGÚN MOMENTO SE QUIERE UN TERCER NIVEL DE TEXTO: el mismo tono
+     escalado un 88% da `#79766E`, que mide 4.53:1 y conserva el hue. */
+
+  /* --- Reglas ------------------------------------------------------------ */
+  --rule: rgba(28, 27, 25, .11);  /* hairline estándar: el único divisor */
+  --rule-2: rgba(28, 27, 25, .20); /* hairline de énfasis */
+
+  /* --- Estado ------------------------------------------------------------ */
+  --settled: #2F6B4F;       /* verde profundo desaturado: cubierto */
+  --settled-wash: #EDF3EE;  /* fondo de estado cubierto */
+  --pending: #8A5A1B;       /* ocre cálido: falta */
+  --pending-wash: #FAF1E2;  /* fondo de estado pendiente */
+  --over: #9B3B2E;          /* oxblood: exceso o déficit */
+  --over-wash: #FBEDEA;     /* fondo de exceso */
+
+  /* --- El botón primario es tinta ----------------------------------------
+     Se declara acá porque es una DECISIÓN DE PALETA y no de componente: la
+     caja del botón la pone `controles.css`, el color sale de acá. */
+  --on-ink: #FBFAF7;   /* etiqueta del botón primario, sobre --ink */
+
+  /* ==========================================================================
+     LOS NOMBRES VIEJOS, Y POR QUÉ SIGUEN ESTANDO
+     --------------------------------------------------------------------------
+     `js/app.js` y `js/charts.js` escriben y leen tokens por nombre desde un
+     `<style>` inline y desde un `<canvas>`, y no se tocan. Los nombres no se
+     pueden renombrar; los valores sí, y estos son los nuevos.
+
+     Y HAY UNA TRAMPA EN ESTE PUNTO, QUE ES LA RAZÓN DE QUE ESTA LISTA SEA
+     TAN EXPLICITA
+     --------------------------------------------------------------------------
+     `charts.js:45` lee con `getComputedStyle(el).getPropertyValue('--x')`.
+     Para una custom property eso devuelve el valor **escrito**, NO el
+     resuelto: si declarás `--bg-surface: var(--surface)`, lo que vuelve es la
+     cadena literal `"var(--surface)"`, y el canvas no sabe pintar eso. Lo que
+     llega al lienzo sería invisible o lanzaría.
+
+     O sea: los tokens que charts.js lee TIENEN que ser valores literales, no
+     alias. Por eso `--bg-surface` dice `#FFFFFF` y no `var(--surface)`, aunque
+     las dos cosas sean el mismo color. La duplicación es el precio de que el
+     gráfico se pinte, y está anotada acá para que nadie la "simplifique".
+
+     Los que charts.js lee: --font-body, --font-mono, --text-main,
+     --text-secondary, --text-muted, --text-primary, --hairline,
+     --hairline-strong, --bg-surface, --bg-card, --bg-inset,
+     --accent-emerald, --accent-rose, --accent-cyan, --cat-servicios,
+     --cat-personales, --cat-extras.
+     Los que app.js escribe inline: --text-emerald, --text-rose, --text-cyan,
+     --accent-emerald, --accent-rose, --text-main.
+     ========================================================================== */
+
+  /* Superficies, con los nombres que leen las dos capas de JS. */
+  --bg-canvas: #FBFAF7;  /* alias de --paper  */
+  --bg-surface: #FFFFFF; /* alias de --surface */
+  --bg-card: #FFFFFF;    /* charts.js lo lee para el anillo */
+  --bg-inset: #F4F2ED;   /* alias de --sunk    */
+  --bg-raised: #F4F2ED;  /* el hover de la superficie: hundido, no elevado */
+
+  /* Reglas, con los nombres que leen las dos capas de JS. */
+  --hairline: rgba(28, 27, 25, .11);
+  --hairline-strong: rgba(28, 27, 25, .20);
+  --progress-track: #E6E2DA; /* la pista de barra: tiene que verse como pista
+                                y no como un 0%. Un rgba() sobre --sunk da
+                                1.03:1 y no se ve; esto es un gris sólido. */
+
+  /* Tinta, con los nombres que leen las dos capas de JS. */
+  --text-main: #1C1B19;
+  --text-primary: #1C1B19;
+  --text-secondary: #56534C;
+  --text-muted: #8A867D;
+
+  /* Estado. Mismos valores que arriba, declarados aparte porque JS los lee y
+     los lee POR NOMBRE: `--accent-emerald` no puede ser `var(--settled)`. */
+  --accent-emerald: #2F6B4F;
+  --accent-rose: #9B3B2E;
+  --text-emerald: #2F6B4F;
+  --text-rose: #9B3B2E;
+
+  /* `--text-cyan` lo escribe app.js en UNA sola situación: `balanceNeto === 0`,
+     el caso "Equilibrado". Equilibrado no es un estado de color: es la
+     ausencia de estado. La regla del plan es explícita —"cualquier color que
+     no codifique estado es tinta"— y aquí la tinta que corresponde es la
+     secundaria. Que un número Neutro salga verde sería mentirle al lector. */
+  --text-cyan: #56534C;
+  /* charts.js lo usa SOLO como respaldo de --accent-emerald/--accent-rose,
+     que siempre existen. Va en tinta por coherencia. */
+  --accent-cyan: #56534C;
+
+  /* El foco es tinta, no un color de marca. Un anillo de teclado no codifica
+     estado: es un indicador de "estás acá". Que sea azul lo convertiría en un
+     cuarto color con significado, y es el único elemento que el teclado
+     necesita ver por encima de todo. */
+  --focus-ring: #1C1B19;
+
+  /* ==========================================================================
+     LAS TRES CATEGORÍAS DEL ANILLO, Y POR QUÉ SON TRES TONOS DE TINTA
+     --------------------------------------------------------------------------
+     El plan es categórico: el color significa estado, y las categorías se
+     distinguen por posición y por regla. Las cuatro secciones del libro ya no
+     llevan color: se distinguen por su rótulo y por el filete que las separa.
+
+     PERO `charts.js:298-300` lee `--cat-servicios`, `--cat-personales` y
+     `--cat-extras` para pintar los tres arcos del anillo, y un arco necesita
+     un color: tres sectores del mismo tono no se ven. Las tres categorías del
+     consolidado SÍ son tres porciones distintas de un mismo total, así que el
+     color ahí codifica magnitud, no identidad.
+
+     La salida es una RAMPA DE TINTA: los tres pasos del propio `--ink`, del
+     más oscuro al más claro. No es azul/violeta/verde arbitrario, no repite
+     ningún color de estado y ordena las porciones por valor: la más grande es
+     la más oscura. Es la respuesta estándar a "un valor, N partes" y no
+     inventa una identidad cromática que la app no tiene.
+
+     PENDIENTE Y FUERA DE ALCANCE: el plan pide que la dona pase a REALIZADO y
+     no planificado. Eso vive en `charts.js` y acá no se puede tocar. Queda
+     anotado en `odd/tasks/rediseño-visual.md`, no escondido.
+     ========================================================================== */
+  --cat-servicios: #1C1B19;
+  --cat-personales: #56534C;
+  --cat-extras: #8A867D;
+
+  /* ==========================================================================
+     EL FACTOR DE ZOOM DEL TEXTO
+     --------------------------------------------------------------------------
+     Este token ya existía y hasta ahora solo multiplicaba el ESPACIADO
+     (`--space-*`), no los tamaños de letra: nadie lo escribía desde JS, así que
+     valía 1 y no hacía nada visible. El requisito es que el usuario pueda
+     agrandar TODO el texto, así que acá cada peldaño de la escala se define
+     como `calc(<rem> * var(--text-zoom-factor))`: subir el factor agranda
+     tipografía Y espaciado juntos, que es lo que hace que subirlo siga siendo
+     usable en vez de empujar todo el texto fuera de su caja.
+
+     Se sube desde DevTools o desde una hoja del usuario:
+         html { --text-zoom-factor: 1.15 }
+     No hay ningún control en la UI que lo escriba, y no se agrega uno: sería
+     lógica, y la lógica no es de la presentación.
+     ========================================================================== */
+  --text-zoom-factor: 1;
+}
+
+/* ==========================================================================
+   TIPOGRAFÍA — IBM Plex Sans variable
+   --------------------------------------------------------------------------
+   POR QUÉ ESTA Y POR QUÉ UN CDN PINNEADO
+   --------------------------------------------------------------------------
+   Sin build ni bundler, un `<link>` a un CDN versionado es la única forma de
+   tener una webfont en HTML/CSS plano. Y con la versión FIJA, jsDelivr es
+   inmutable: si el archivo no desaparece, el 404 es imposible.
+
+   `@fontsource-variable/ibm-plex-sans@5.3.0` es 45.712 bytes para el subconjunto
+   latino: 45,7 KB, el mismo orden de magnitud que la Inter que se reemplaza, y
+   un archivo variable cubre los cuatro pesos que usa la hoja.
+
+   POR QUÉ ESTA TIPOGRAFÍA Y NO OTRA
+   --------------------------------------------------------------------------
+   IBM Plex Sans fue dibujada para claridad en información compleja: x-alta,
+   cifras con peso real, y una "a" y una "g" con carácter. Es tipografía de
+   dato, no de landing. Y sus dígitos SON TABULARES POR DEFECTO: medido en el
+   navegador, "11111111", "00000000" y "99999999" miden 480px los tres a 100px
+   de cuerpo, o sea 0.6em exactos por dígito (herramienta:
+   `odd/tasks/fuente-metricas.mjs`). Eso es exactamente lo que necesita una
+   columna de importes: cambiar "S/ 8.00" por "S/ 1,444.43" no mueve un solo
+   píxel de ancho.
+
+   LAS CIFRAS SIGUEN LLEVANDO `tabular-nums` IGUAL
+   --------------------------------------------------------------------------
+   Puesto que la fuente ya es tabular, la propiedad parece redundante. Se
+   conserva a propósito, y por una razón que no es de esta fuente: si el
+   respaldo del sistema llegara a ganar en alguna máquina, el respaldo no es
+   tabular, y sin la declaración las columnas bailarían en esa máquina y no en
+   las demás. Una red de seguridad que solo se activa cuando hace falta.
+
+   EL RESPALDO CON MÉTRICAS CALIBRADAS, Y CÓMO SE CALIBRÓ
+   --------------------------------------------------------------------------
+   Con `font-display: swap` el texto primero se dibuja en la familia de
+   respaldo y después se cambia. IBM Plex Sans es un 2,5% más ancha que la pila
+   `system-ui / Segoe UI`, así que sin más ese swap reorganiza cada renglón: es
+   CLS de fuente.
+
+   La solución es una `@font-face` de respaldo con los cuatro overrides
+   ajustados para que ocupe la misma caja. Los números NO son estimados: salen
+   de `TextMetrics.fontBoundingBox*` del archivo real, medidos en el navegador
+   a 1000px de referencia contra la pila anterior. Resultado:
+
+      size-adjust       102.49%   (ponderado 45/10/30/15 sobre 400/500/600/700)
+      ascent-override   102.50%   (1025/1000)
+      descent-override   27.50%   (275/1000)
+      line-gap-override   0%
+
+   EL COMPROMISO, DICHO DE UNA
+   --------------------------------------------------------------------------
+   `size-adjust` también escala el tamaño DIBUJADO. Si la webfont no llegara a
+   cargar, el usuario vería la pila del sistema un 2.5% más grande. Es el
+   intercambio estándar de la técnica y es preferible al otro, que es aceptar
+   que el texto se reacomode al cargar. Con la red, que es el caso normal, no
+   se ve ninguno de los dos casos.
+
+   CERO `preload`: el `@font-face` con `font-display: swap` ya dispara la
+   descarga en el primer layout, y un `preload` a una URL que pueda cambiar
+   sería un 404 esperando.
+   ========================================================================== */
+
+/* El respaldo existe para ocupar la caja de IBM Plex Sans, no para ser una
+   fuente. No se le cambia la familia, no se le aplica tnum. */
+@font-face {
+  font-family: 'IBM Plex Sans Fallback';
+  font-style: normal;
+  font-weight: 100 900;
+  src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'), local('Arial'),
+    local('Liberation Sans');
+  size-adjust: 102.49%;
+  ascent-override: 102.5%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
+
+/* Subconjunto latino: cubre español, dígitos y puntuación (U+2000-206F).
+   El `latin-ext` queda declarado por si acaso y no se descarga si no hace
+   falta: la página no usa ninguno de esos rangos. */
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/ibm-plex-sans@5.3.0/files/ibm-plex-sans-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('https://cdn.jsdelivr.net/npm/@fontsource-variable/ibm-plex-sans@5.3.0/files/ibm-plex-sans-latin-ext-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* Una sola familia, en todo el rol. El bloque de cifras del plan no dice
+     "mono": dice "IBM Plex Sans variable". Por eso `--font-mono` es la misma
+     pila. Lo que alinea las columnas es `tabular-nums`, que es una propiedad
+     de cifras y no una familia distinta; mezclar una segunda familia para
+     comprar eso es el problema que el plan quiere evitar. */
+  --font-body: 'IBM Plex Sans', 'IBM Plex Sans Fallback', system-ui,
+    -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'IBM Plex Sans', 'IBM Plex Sans Fallback', system-ui,
+    -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Sans', 'IBM Plex Sans Fallback', system-ui,
+    -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* LA ESCALA. Nueve pasos de 11px a 48px, y el último es la única cifra
+     protagonista de la aplicación. Todo lo demás está entre 11 y 24.
+
+     Los de arriba se relevan con Inter y acá suben un peldaño: la familia nueva
+     es un poco más ancha y la misma caja pedía menos aire entre renglones. */
+  --text-2xs: calc(0.6875rem * var(--text-zoom-factor)); /* 11px  metadatos */
+  --text-xs: calc(0.75rem * var(--text-zoom-factor));    /* 12px  etiquetas */
+  --text-sm: calc(0.8125rem * var(--text-zoom-factor));  /* 13px  apoyo */
+  --text-md: calc(0.875rem * var(--text-zoom-factor));   /* 14px  UI */
+  --text-base: calc(0.9375rem * var(--text-zoom-factor));/* 15px  cifras de fila */
+  --text-lg: calc(1.0625rem * var(--text-zoom-factor));  /* 17px  título de sección */
+  --text-xl: calc(1.25rem * var(--text-zoom-factor));    /* 20px  subtotal de grupo */
+  --text-2xl: calc(1.5rem * var(--text-zoom-factor));   /* 24px  bloque del consolidado */
+  --text-3xl: calc(2.25rem * var(--text-zoom-factor));  /* 36px  bloque del mes */
+  --text-hero: calc(3rem * var(--text-zoom-factor));    /* 48px  LA CIFRA */
+
+  /* El interlineado de las cifras es corto y el del texto no. No es una
+     preferencia tipográfica: una columna de importes con el leading de un
+     párrafo se lee como una lista de párrafos, y ahí las cifras no alinean. */
+  --leading-figure: 1.05;
+  --leading-title: 1.2;
+  --leading-body: 1.45;
+
+  /* El tracking se abre en las versalitas y se cierra en las cifras grandes.
+     Es la misma familia y la misma caja: lo que cambia es cuánto se separa. */
+  --tracking-caps: 0.08em;
+  --tracking-tight: -0.01em;
+  --tracking-figure: -0.02em;
+
+  /* --- Espaciado -----------------------------------------------------------
+     El mismo `--text-zoom-factor` que agranda el texto agranda el aire, y por
+     eso los cuatro pasos son los únicos que se declaran: 4, 8, 16 y 32. La
+     escala vieja de nueve pasos estaba calibrada para una rejilla de
+     dashboards; un estado de cuenta tiene cuatro niveles de jerarquía
+     vertical y con más de eso el aire empieza a competir con el dato. */
+  --space-0: 0;
+  --space-1: calc(4px * var(--text-zoom-factor));
+  --space-2: calc(8px * var(--text-zoom-factor));
+  --space-3: calc(16px * var(--text-zoom-factor));
+  --space-4: calc(32px * var(--text-zoom-factor));
+  --space-5: calc(48px * var(--text-zoom-factor));
+
+  /* --- Radios --------------------------------------------------------------
+     Tres niveles y todos chicos. El plan descarta el "rounded-docker" y un
+     estado de cuenta no tiene esquinas redondeadas: lo redondeado aquí sería
+     una sombra y una causa. La cápsula queda solo donde la forma ES un
+     lengthwise, que es la pista de una barra de avance. */
+  --radius: 2px;   /* el radio por defecto: apenas suaviza */
+  --radius-box: 4px; /* cajas de control: input, botón con borde */
+  --radius-track: 0px; /* la pista de la barra: es una regla con longitud */
+
+  /* --- Medidas del armazón -------------------------------------------------
+     `--rail-width` bajó de 236px a 196px. La razón es una medida, no un gusto:
+     a 236 el rail sostenía dos pestañas y una lista de períodos, y medido
+     dejaba ~490px de superficie sin uso debajo de la última píldora. A 196 la
+     marca, el nombre del período y las dos flechas siguen entrando enteros, y
+     los 40px vuelven al libro, que es donde hay filas y cada fila se repite.
+
+     `--section-rail-width` bajó de 168px a 152px por lo mismo: la columna
+     sostiene un nombre, un conteo y un subtotal, y 152px los tienen con
+     holgura. El nombre del grupo NO se recorta: la etiqueta tiene su propio
+     `text-overflow` y el nombre del período, un nombre escrito a mano por la
+     persona, se recorta con puntos suspensivos en vez de empujar el resto.
+
+     La suma de las dos es lo que importa: el contenido pasa de 1036px a 1092px
+     a 1440 de ventana. Cuatro filas más por pantalla, sin haberlas hecho más
+     finas. */
+  --rail-width: 196px;
+  --section-rail-width: 152px;
+
+  /* El velo de una capa flotante. A 0.32 el contenido detrás se apaga sin
+     quedar tapado: el modal tiene que leerse al frente, no tapar la pantalla. */
+  --scrim: rgba(28, 27, 25, 0.32);
+
+  /* --- Movimiento ----------------------------------------------------------
+     Una sola curva y un solo tiempo. La entrada de un sheet dura lo que tarda
+     en leerse, no lo que tarda en hacer efecto: 160ms entra, 160ms sale. El
+     `card-anim-out` no puede durar más que el `setTimeout(..., 160)` de
+     app.js, que corta el grupo cuando termina el tiempo. */
+  --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration: 160ms;
+  --press-scale: 0.98;
+
+  --transition: background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    opacity var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}

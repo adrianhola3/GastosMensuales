@@ -1,0 +1,452 @@
+/* ==========================================================================
+   EL BLOQUE DE ESTADO — la pregunta del mes, contestada una sola vez.
+
+   EL PROBLEMA QUE RESUELVE, MEDIDO
+   --------------------------------------------------------------------------
+   La fila de cifras anterior tenía cinco celdas de la misma estructura y
+   ninguna era protagonista. Peor: la celda "Pendiente" recibía DOS renglones
+   de app.js —"Cubierto S/ 888.88" y "Falta S/ 1,444.43", con el rótulo pegado
+   a la cifra dentro del mismo texto— y el apilado descuadraba la tira entera:
+   medido, esa celda medía 204px de ancho con dos renglones de 20px mientras las
+   otras medían una línea. El resultado era que ninguna cifra destacaba porque
+   todas competían, y la que contestaba la pregunta —"¿cuánto falta?"— era una
+   de cinco iguales.
+
+   LA ESTRUCTURA, DE ARRIBA ABAJO, Y POR QUÉ EN ESTE ORDEN
+   --------------------------------------------------------------------------
+   1. LA CIFRA. Una sola, y es "Falta".
+   2. LA BARRA. Una sola línea, con los dos extremos rotulados: cubierto a la
+      izquierda, estimado total a la derecha.
+   3. UNA LÍNEA DE APOYO. Cuántos gastos están cubiertos, en porcentaje, y
+      cuánto del estimado está cubierto por ingresos.
+   4. A LA DERECHA, LAS CIFRAS DE APOYO. Real, Ingresos y Balance: contestan
+      otras preguntas, más chicas, y por eso van al costado y no arriba.
+
+   POR QUÉ "FALTA" ES LA PROTAGONISTA Y NO "PRESUPUESTO"
+   --------------------------------------------------------------------------
+   Quien mira la pantalla no abre un presupuesto: quiere saber cuánto le falta
+   por cubrir. El estimado es un dato de entrada —está escrito en cada
+   presupuesto— y el balance es una lectura derivada. "Falta" es la única cifra
+   que no se puede inferir mirando otra cosa de la pantalla.
+
+   Y "Falta" ARRIBA, "Real" ABAJO DENTRO DE LA MISMA CELDA
+   --------------------------------------------------------------------------
+   Hay dos "faltantes" en esta app y no son el mismo: lo que falta por cubrir
+   sobre lo estimado, y lo que falta por llegar de ingresos. `Falta` es el
+   primero, y por eso es el título de la cifra grande; el segundo es
+   "Cobertura", y por eso vive en la línea de apoyo con su nombre al lado.
+
+   CÓMO SE PONE LA CIFRA GRANDE SI app.js ESCRIBE EL RÓTULO DENTRO DEL NÚMERO
+   --------------------------------------------------------------------------
+   `#pendingSummaryLabel` recibe su contenido con `innerHTML` en app.js:670-672,
+   con el rótulo y la cifra PEGADOS en el mismo nodo de texto —
+   `"Cubierto S/ 888.88"` y `"Falta S/ 1,444.43"`. La presentación no puede
+   partir un nodo de texto sin escribir JavaScript, y no se toca `js/`.
+
+   Lo que sí se puede es tratar el nodo como lo que es: un contenedor con dos
+   renglones. Con `display: contents` los dos `<div>` dejan de ser hijos de
+   `#pendingSummaryLabel` y pasan a ser ítems de la retícula de `.status-block`,
+   donde cada uno se puede colocar en una celda distinta: "Falta" en la
+   protagonistay "Cubierto" en el extremo izquierdo de la barra.
+
+   Un nodo, dos lugares, cero lógica nueva. Y como el rótulo viene pegado a la
+   cifra, la palabra "Falta" se dibuja al tamaño de la cifra: el rótulo y el
+   número se leen como una unidad y no como dos cosas pegadas. Un "FALTA" en
+   versalitas arriba de un número desnudo habría sido mejor, y queda anotado en
+   `odd/tasks/rediseño-visual.md` como lo que falta por hacer: requiere dos
+   nodos en app.js, no una regla de estilo.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   EL HÉROE, LA BARRA Y LA LÍNEA DE APOYO — UNA RETÍCULA DE TRES COLUMNAS
+   --------------------------------------------------------------------------
+   Las tres columnas existen para que el extremo izquierdo de la barra y el
+   extremo derecho caigan en la MISMA línea. Con una columna de barra y los
+   rótulos flotando, los dos extremos se desalinean por el ancho de sus textos y
+   la barra deja de leerse como una fracción con dos operandos.
+
+   Y LA BARRA NO SE DEJA CONSTREÑIR POR NADA QUE ESTÉ ABAJO.
+   --------------------------------------------------------------------------
+   Medida la disposición donde las cifras de apoyo comparten columna con el
+   extremo derecho de la barra: el ancho de las tres cifras de apoyo es 471px, la
+   columna `auto` crece hasta 471, y la barra queda con 373px útiles y un hueco
+   de ~360px entre el final del relleno y la palabra "Estimado". Una barra con
+   un hueco antes de su rótulo no se lee como una fracción: se lee como dos
+   cosas.
+
+   Por eso el renglón de la barra cruza las tres columnas y el de abajo no lo
+   cruza: las notas y las cifras de apoyo viven en un contenedor propio, el
+   último, y no tienen por qué compartir columna con nada que esté arriba. */
+.status-block {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    'hero  hero   hero'
+    'start track  end'
+    'tail  tail   tail';
+  align-items: baseline;
+  column-gap: var(--space-3);
+  row-gap: var(--space-2);
+  min-width: 0;
+}
+
+/* El último renglón: a la izquierda lo que la barra dijo en números, a la
+   derecha las tres cifras que contestan otras preguntas. `space-between` las
+   separa sin dar a ninguna el ancho completo, y cuando no entran el bloque se
+   parte solo en dos. */
+.status-tail {
+  grid-area: tail;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+/* El nodo que app.js rellena con los dos renglones. `display: contents` es lo
+   que los deja ocupar dos celdas distintas; sin esto los dos renglones se
+   apilarían dentro de una caja y volvería el descuadre que este bloque
+   reemplaza. */
+#pendingSummaryLabel { display: contents; }
+
+/* "Falta S/ 1,444.43" — el segundo renglón que escribe app.js. Es la cifra más
+   grande de la aplicación y no compite con nada: no hay otra del mismo peso en
+   la pantalla.
+
+   Y ES OCRE, Y POR QUE: "Falta" ES un estado, no una descripción. El plan
+   reserva el ocre para lo pendiente, y esto es literalmente lo pendiente de
+   cubrir. Es el único lugar de la aplicación donde un color de estado se usa
+   como jerarquía en vez de como dato, y funciona porque las dos cosas son la
+   misma: la cifra grande ES el estado pendiente, y por eso lleva su color. Si
+   fuera tinta, la jerarquía la daría solo el tamaño; en ocre la dan el tamaño y
+   el significado, que es un segundo eje que no compite con nada.
+
+   Contraste medido: `--pending` sobre `--surface` da 5.9:1. AA para texto
+   normal y muy por encima del 3:1 que pide el tamaño grande. */
+#pendingSummaryLabel > div:nth-child(2) {
+  grid-area: hero;
+  font-size: var(--text-hero);
+  font-weight: 600;
+  line-height: var(--leading-figure);
+  letter-spacing: var(--tracking-figure);
+  color: var(--pending);
+  white-space: nowrap;
+  /* Abre el hueco entre el rótulo y la cifra sin tocar el texto: es el detalle
+     que hace que la línea se lea como "una palabra + una cifra" y no como un
+     titular pegado. app.js escribe `"Falta S/ 1,444.43"` con un solo espacio,
+     que a 48px es un hueco que no se ve. */
+  word-spacing: 0.12em;
+}
+
+/* "Cubierto S/ 888.88" — el primer renglón, en el extremo izquierdo de la
+   barra. Va en el verde de lo cubierto, que es el otro estado del par, y por eso
+   la barra tiene sus dos extremos en los dos colores que significan algo: lo
+   que ya está y lo que falta. El derecho —el estimado— va en tinta: es el
+   denominador de la fracción, no un estado. */
+#pendingSummaryLabel > div:nth-child(1) {
+  grid-area: start;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--settled);
+  white-space: nowrap;
+}
+
+/* LA BARRA. Una sola línea de 3px: es una fracción, y una fracción se dibuja
+   como una longitud, no como una caja.
+
+   LA PISTA USA `--progress-track` Y NO `--sunk`, Y NO ES COSMÉTICA.
+   Medido: `--sunk` (`#F4F2ED`) sobre `--surface` (`#FFFFFF`) da 1.03:1, que es
+   indistinguible. Con la pista invisible, una barra al 38% se lee como una
+   línea que termina sola, y un 0% se lee como "no hay dato" en vez de como
+   "cero cubierto". `--progress-track` es un gris sólido y tiene un solo
+   trabajo en toda la hoja: ser la pista de una barra.
+
+   `id="paidBarFill"` lo escribe app.js con `style.width` en porcentaje, así que
+   el relleno no se anima con transición de `width`: si el ancho salta de golpe
+   a cada pago, se ve el salto, que es información verdadera. */
+.status-track {
+  grid-area: track;
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: var(--progress-track);
+  overflow: hidden;
+  align-self: center;
+}
+
+.status-fill {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--settled);
+}
+
+/* El extremo derecho: "Estimado S/ 2,333.31". Es el otro operando de la misma
+   fracción, y por eso comparte tamaño, tono y línea con "Cubierto". */
+#monthTotalEgresos {
+  grid-area: end;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+  white-space: nowrap;
+  text-align: right;
+}
+
+/* LA LÍNEA DE APOYO. Dice en una línea lo que la barra ya dibujó, en palabras.
+   Las tres medidas van con su nombre al lado, porque "61.9%" solo no dice de
+   qué: "61.9% de los gastos" y "61.9% del presupuesto cubierto por ingresos" son
+   dos números distintos con los mismos tres caracteres. */
+.status-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.status-note { white-space: nowrap; }
+
+.status-note-key { color: var(--ink-2); }
+
+/* ==========================================================================
+   LAS CIFRAS DE APOYO — al final del renglón, más pequeñas que la protagonista
+   --------------------------------------------------------------------------
+   El plan las llama "apoyo, no protagonistas": menos tamaño que la cifra hero,
+   rótulo chico arriba, cifra tabular abajo. Son tres datos de apoyo que
+   contestan a la misma pregunta con otras palabras, y van al final del renglón
+   porque ahí terminan de leerse antes de pasar al libro.
+
+   Sin filete ni caja: comparten renglón con las notas, y separarlas en dos
+   bandas de números sería volver a la tira de cinco celdas que se está
+   corrigiendo. */
+.status-support {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+
+.status-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.status-label {
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.status-value {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-figure);
+  letter-spacing: var(--tracking-figure);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.status-figure-line {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+/* ==========================================================================
+   LA BARRA DE COMANDO — el bloque de estado pegado y el buscador debajo
+   --------------------------------------------------------------------------
+   Es lo único que sobrevive al scrollear. Va pegada bajo la barra superior, no
+   dentro del flujo: es la segunda banda de cromo de la página, y una banda
+   pegada es navegación del documento, no cromo de una tarjeta.
+
+   El margen negativo come el padding superior de `.main-content`. Ese aire
+   existía para un encabezado de vista que ya no existe. */
+.ledger-toolbar {
+  position: sticky;
+  top: 44px; /* la altura de la barra superior */
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: calc(var(--space-4) * -1);
+  /* 8px arriba y 16px abajo, no igual: el margen negativo deja la barra pegada
+     al borde inferior de la barra superior, y un titular a 8px de un filete se
+     lee como que le falta sitio. Abajo sí hace falta aire, porque lo que sigue
+     es la primera fila del libro y el corte pegado las fusiona. */
+  padding: var(--space-2) 0 var(--space-3);
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledger-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+/* ==========================================================================
+   EL BUSCADOR — un filtro tiene que estar al lado del dato que filtra
+   --------------------------------------------------------------------------
+   Por eso vive acá y no en el rail: filtrar un gasto que no está a la vista es
+   filtrar nada.
+
+   El anillo de foco va en la CAJA, no en el input: el input no lleva
+   `outline: none` a propósito. Sin anillo en el elemento enfocable la
+   auditoría de foco no tiene nada que leer, y `:focus-within` de la caja lo
+   cubre igual sin volver el input invisible. */
+.command-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  flex: 1 1 260px;
+  max-width: 340px;
+}
+
+.command-search-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-2);
+  background: var(--sunk);
+  border: 1px solid transparent;
+  border-radius: var(--radius-box);
+  height: 30px;
+  transition: border-color var(--duration) var(--ease);
+}
+
+.command-search-box:focus-within {
+  border-color: var(--rule-2);
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 1px;
+}
+
+.command-search-icon {
+  display: flex;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.command-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--text-sm);
+  color: var(--ink);
+}
+
+.command-search-input::placeholder { color: var(--ink-2); }
+
+.btn-clear-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius);
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.btn-clear-search:hover { color: var(--ink); background: var(--paper); }
+
+/* El atajo de teclado es una pista, no un chip: texto suelto, sin caja. */
+.search-shortcut-badge {
+  font-size: var(--text-2xs);
+  color: var(--ink-2);
+}
+
+.search-results-feedback {
+  font-size: var(--text-2xs);
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* "Abono" y "Gasto" — los dos botones de alta de cabecera.
+   No son cifras, no tienen etiqueta ni importe, y su ancho lo decide el texto
+   más largo y no un dato. Por eso van en el renglón del buscador, que es el
+   renglón de actuar sobre el mes, y no en la tira de números. En modo Lector
+   los oculta `admin-action-btn` y el renglón queda siendo solo el buscador. */
+.ledger-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.ledger-action {
+  flex: 0 0 auto;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-box);
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.ledger-action:hover { color: var(--ink); background: var(--sunk); }
+/* ==========================================================================
+   EL BLOQUE DE ESTADO EN PANTALLAS ESTRECHAS
+   --------------------------------------------------------------------------
+   Tres peldaños y cada uno resuelve un problema distinto, no "que no se rompa".
+
+· HASTA 1200: las tres cifras de apoyo se aprietan, pero NO cambian de sitio.
+     Bajarlas de lugar para que quepan más es una manera de que la barra pierda
+     ancho sin ganar nada.
+
+   · HASTA 860: "Cubierto" y "Estimado" ya no caben en los extremos de la barra
+     con el texto completo. Se mantienen —son los dos operandos de la fracción
+     y sin ellos la barra no dice nada— y lo que baja es la barra a su propio
+     renglón.
+
+   · HASTA 560: la cifra protagonista de 48px con "Falta S/ 1,444.43" mide más
+     que una columna de 390px. Baja a 36px. Es preferible una protagonista un
+     poco más chica que una protagonista cortada, que es la misma regla que la
+     del breakpoint del armazón.
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+  /* Por debajo de 1200 el renglón de abajo ya no entra: las tres medidas de las
+     notas y las tres cifras de apoyo suman ~770px contra los que quedan, y se
+     partirían a mitad de palabra. El renglón se parte entero en dos, con un
+     filete que marca el corte — la barra, arriba, no se toca. */
+  .status-support {
+    width: 100%;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--rule);
+  }
+}
+
+@media (max-width: 860px) {
+  .status-block {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'hero'
+      'start'
+      'track'
+      'end'
+      'tail';
+    row-gap: var(--space-2);
+    align-items: start;
+  }
+
+  #monthTotalEgresos { text-align: left; }
+  .status-track { margin: var(--space-1) 0; }
+  .status-support { width: 100%; }
+}
+
+@media (max-width: 560px) {
+  #pendingSummaryLabel > div:nth-child(2) { font-size: var(--text-3xl); }
+
+  .status-support {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}

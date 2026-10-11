@@ -1,0 +1,321 @@
+/* ==========================================================================
+   CAPAS FLOTANTES — sheets, selector de modo y el aviso de confirmación.
+
+   EL SHEET NO TIENE SOMBRA
+   --------------------------------------------------------------------------
+   Es lo único de la app que de verdad flota: está por encima del contenido con
+   un velo encima. Y aun así no lleva `box-shadow`, porque el velo ya hace el
+   trabajo. Lo que separa el sheet del velo es el contraste de sus dos
+   superficies: `--surface` sobre un `--scrim` al 32% es una diferencia de tono
+   que se lee sin necesidad de una sombra difusa. Y una sombra sobre un velo se
+   ve como un rectángulo con halo, que es exactamente el efecto de "app" que el
+   plan está quitando.
+
+   EL OVERLAY TIENE QUE SEGUIR SIENDO LO QUE GANA EL HIT-TEST
+   --------------------------------------------------------------------------
+   `adversarial-suite.mjs:1207-1223` comprueba, con un hit test real de ratón,
+   que con un sheet abierto el punto donde está el botón de borrar de una fila
+   cae en el overlay y no en el botón. Eso depende de dos cosas: que
+   `.modal-overlay` sea `position: fixed` con `inset: 0` y que nada con un
+   `z-index` mayor quede pegado encima. Por eso el velo del drawer está en 50,
+   el sidebar en 60 y el overlay en 100, y nada más sube.
+
+   NINGUNO DE ESTOS IDS PUEDE IR DENTRO DE UN `<details>` CERRADO
+   --------------------------------------------------------------------------
+   `adversarial-suite.mjs:168` exige que las cifras del mes y el nombre del
+   período pinten texto con `display` distinto de `none`. Los hijos de un
+   `<details>` sin `open` quedan justo en `display: none`. No es una regla de
+   estilo, es un contrato de medición.
+   ========================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--scrim);
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal-sheet {
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-box);
+  animation: sheet-in var(--duration) var(--ease) both;
+}
+
+.modal-sheet-narrow { max-width: 420px; }
+
+@keyframes sheet-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal-sheet-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.modal-sheet-header h3 {
+  flex: 1 1 auto;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.25;
+  color: var(--ink);
+}
+
+.modal-sheet-subtitle {
+  flex: 1 1 100%;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.modal-sheet-body { padding: var(--space-4); }
+
+.modal-sheet-body-center { text-align: center; }
+
+.modal-sheet-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.modal-sheet-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+/* La vista previa del pago variable: el estimado que ya está escrito y el rango
+   que se sugirió, juntos, antes de que la persona escriba lo que salió de
+   verdad. Es un `--sunk` con una regla del mismo tono, no una caja de acento. */
+.pay-var-preview {
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  background: var(--sunk);
+  border-radius: var(--radius-box);
+}
+
+.pay-var-preview-title {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pay-var-preview-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: 2px;
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.pay-var-preview-meta strong { color: var(--ink-2); }
+
+.pay-var-preview-meta .tag-badge { color: var(--ink-2); }
+
+/* El selector de modo SÍ tiene caja, porque sus dos opciones son controles y
+   no se distinguen entre sí por nada que no sea la caja: "Solo lectura" y
+   "Administrador" se leen distinto por el rótulo, pero hasta que se elige uno
+   los dos tienen el mismo aspecto, y hace falta que se vean como dos cosas
+   sobre las que se puede hacer clic. */
+.role-choice-grid {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.role-choice-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-box);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.role-choice-card:hover {
+  border-color: var(--rule-2);
+  background: var(--sunk);
+}
+
+.role-card-titles h4 {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.role-card-titles p {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+.role-card-action-btn {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.role-step-pending-lead {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.role-step-pending-note {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+/* Rechazo funcional —el selector de modo es obligatorio—. Señal, no adorno: se
+   sostiene en `transform` y no bloquea el input. */
+@keyframes modal-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+}
+
+.modal-shake { animation: modal-shake 320ms var(--ease); }
+
+/* ==========================================================================
+   EL AVISO — una línea, abajo al centro
+   --------------------------------------------------------------------------
+   Sin píldora: es un borde sólido y una línea de texto. La versión anterior
+   usaba `border-radius: 980px` y `--bg-inset`, que la hacían leer como un
+   botón flotante con un texto adentro. Y `pointer-events: none`, para que
+   aparezca y desaparezca sin tapar nada.
+   ========================================================================== */
+.neo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: var(--space-5);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 90vw;
+  padding: var(--space-3) var(--space-4);
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: var(--radius-box);
+  font-size: var(--text-sm);
+  opacity: 0;
+  transform: translate(-50%, 8px);
+  pointer-events: none;
+  transition: var(--transition);
+}
+
+.neo-toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* `#toastIcon` y `#authModeIcon` se quedan y son la excepción que demuestra la
+   regla: app.js les escribe `textContent` en cada `showToast` y en
+   `updateAuthModeUI`. Si el nodo no estuviera, la escritura lanzaría. Se ocultan
+   cuando están vacíos, que es lo que hace el `:empty`. */
+#toastIcon:empty,
+#authModeIcon:empty { display: none; }
+
+/* ==========================================================================
+   APARICIÓN Y DESAPARICIÓN DE UN GRUPO
+   --------------------------------------------------------------------------
+   `card-anim-out` dura exactamente 160ms porque app.js corta el grupo con
+   `setTimeout(..., 160)`. Si la animación durara más, se vería cortada en
+   seco. Solo `opacity` y `transform`, y nunca `display`: el `display` inline lo
+   escribe el JavaScript y esta hoja no compite con él.
+   ========================================================================== */
+@keyframes card-anim-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes card-anim-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(-3px); }
+}
+
+.card-anim-in { animation: card-anim-in var(--duration) var(--ease) both; }
+.card-anim-out { animation: card-anim-out var(--duration) var(--ease) both; }
+
+/* ==========================================================================
+   PERMISOS — el único mecanismo del lado cliente
+   --------------------------------------------------------------------------
+   No es seguridad real (la real está en las políticas de Supabase), pero es
+   funcional: si deja de aplicar, los controles de edición quedan visibles para
+   cualquier lector. `!important` a propósito: esta regla tiene que ganarle a
+   CUALQUIER cosa que declare `.admin-action-btn` después, sin depender del
+   orden de la hoja. El mecanismo no se cambió en el rediseño.
+
+   Los controles de escritura que no son `.admin-action-btn` —el toggle de
+   estado de cada fila y el botón de notas— se ocultan con la misma ayuda
+   visual. El gate real es `exigirAdmin()` en app.js; esto es presentación, y
+   por eso va en la hoja de presentación.
+   ========================================================================== */
+body.read-only-mode .admin-action-btn {
+  display: none !important;
+}
+
+body.read-only-mode .btn-status-toggle,
+body.read-only-mode #btnOpenNotesModal {
+  display: none !important;
+}
+
+/* ==========================================================================
+   MOVIMIENTO REDUCIDO
+   --------------------------------------------------------------------------
+   Cubre transiciones Y keyframes, con sus retardos: sin el retardo, una
+   animación con `animation-delay` seguiría apareciendo tarde. El press se
+   convierte en un cambio de opacidad, porque con `transform` desactivado el
+   feedback tiene que seguir existiendo de otra forma.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .neo-toast.show { transform: translate(-50%, 0); }
+  .app-sidebar { transform: translateX(-100%); }
+  .app-sidebar.sidebar-open { transform: none; }
+}
+
+/* ==========================================================================
+   TRANSPARENCIA REDUCIDA
+   --------------------------------------------------------------------------
+   Ya no hay `backdrop-filter` en ninguna parte de la hoja: el topbar es papel
+   opaco y el overlay es un velo sólido. Este bloque queda porque el velo sigue
+   siendo un color con alpha y una persona que pidió menos transparencia quiere
+   el contenido completamente ilegible detrás, no solo un poco más apagado.
+   ========================================================================== */
+@media (prefers-reduced-transparency: reduce) {
+  .modal-overlay { background: var(--ink); }
+}

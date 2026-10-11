@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="css/styles.css">
   <!-- Chart.js para visualización de métricas -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- IBM Plex Sans variable. La hoja principal es css/styles.css; el detalle de
+       por qué el CSS está partido en ocho archivos y en qué orden van está en
+       el comentario de ese archivo, no acá. -->
 </head>
 
 <body>
@@ -335,15 +338,17 @@
              era el lugar del rótulo que faltaba.
 
              `#activeMonthHeaderBadge` es ese rótulo. Baja del rail y sube
-             acá como TÍTULO DE PÁGINA, a la izquierda, a `--text-lg` (17px):
+             acá como TÍTULO DE PÁGINA, a la izquierda, a `--text-base` (15px):
              es la respuesta a "¿qué período estoy mirando?", y tiene que
-             estar antes que las cifras, no después.
+             estar antes que las cifras, no después. La ronda visual lo bajó de
+             17px: el rail ya no compite con él por 236px y a 15px se lee
+             como el encabezado que es, no como una cifra más.
 
              POR QUÉ ARRIBA Y NO EN EL RAIL, Y POR QUÉ NO EN LA BARRA
-             · En el rail competía por 236px con el rótulo "Período" y las
-               dos flechas, y quedaba en una línea de 15px sobre una lista.
-             · En la barra de comando competiría por ancho con la tira de
-               cifras, que es lo que quedó apretado.
+             · En el rail competía por ancho con el rótulo "Período" y las
+               dos flechas, y quedaba en una línea sobre una lista.
+             · En la barra de comando competiría por ancho con el bloque de
+               estado, que es lo que quedó apretado.
              · En el topbar aparece en las DOS vistas. Ése era el fallo que
               .none lo justificaba: en Consolidado el período no se veía en
                ninguna parte, y Consolidated es la vista donde más hace falta.
@@ -361,10 +366,17 @@
           <h2 id="activeMonthHeaderBadge" class="topbar-page-title">Período Actual</h2>
         </div>
         <div class="topbar-right">
-          <div class="topbar-quick-kpi">
-            <span class="kpi-mini-label">Balance</span>
-            <span id="topbarBalanceValue" class="kpi-mini-val font-mono">S/ 0.00</span>
-          </div>
+          <!-- EL BALANCE DUPLICADO SE SACA DE ACÁ.
+               Estaba en la barra (este `#topbarBalanceValue`) y en el bloque de
+               estado (`#monthBalanceNeto`), con el mismo número en los dos
+               sitios. app.js escribe los dos desde `updateLiveProgressAndTotals`
+               (:601-611 y :676-680).
+
+               Se queda UNO, el del bloque de estado, que es donde están las
+               otras cifras y donde se comparan. La escritura de la barra ya
+               venía detrás de un `if (elTopbarBalance)` desde antes del
+               rediseño, así que quitar el nodo no rompe nada: la línea de app.js
+               deja de encontrar el elemento y sigue. -->
           <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes"><svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas</button>
         </div>
       </header>
@@ -376,142 +388,129 @@
              ========================================================== -->
         <section id="viewMes" class="view-container active">
 
-          <!-- ============================================================
-               BARRA DE COMANDO — una sola banda, y es lo único que
-               queda fijo al scrollear.
+<!-- ============================================================
+               BLOQUE DE ESTADO — "cuánto falta" y, al lado, el resto
+               ------------------------------------------------------------
+               Lo que era `.ledger-strip`: cinco celdas del mismo tamaño,
+               sin jerarquía, y una de ellas —"Pendiente"— recibiendo DOS
+               renglones de app.js ("Cubierto S/ x" y "Falta S/ y", con el
+               rótulo pegado a la cifra dentro del mismo texto). Ese
+               apilado descuadraba la tira entera, y con cinco cifras del
+               mismo peso ninguna destacaba.
 
-               DOS RENGLONES, Y NO TRES — T2 CAMBIÓ EL SEGUNDO
-               ───────────────────────────────────────────────
-               · La tira de CIFRAS: cinco celdas de la misma estructura,
-                 comparables entre sí.
-               · La fila de BÚSQUEDA: el buscador, solo.
+               Ahora hay UNA protagonista y es "Falta": es la pregunta que
+               hace quien mira. Las otras tres son apoyo y van a la derecha.
 
-               T2 Sacó el filtro de categoría de este renglón y lo subió a
-               la columna de secciones. Antes eran tres bandas de cromo antes
-               de la primera fila de gasto; ahora son dos, y la navegación de
-               categoría tiene su propio eje vertical, que es el que la persona
-               recorre. El buscador se queda: un filtro tiene que estar al lado
-               del dato que filtra, y la columna de secciones no lo tiene al
-               lado.
+               NINGUNO DE ESTOS IDS SE RENOMBRA. Los escribe app.js:
+                 #pendingSummaryLabel    Cubierto / Falta  (innerHTML, dos <div>)
+                 #monthTotalEgresos      Estimado S/ …
+                 #monthGastosCount       "N de M gastos pagados"
+                 #paidBarFill            style.width = % cubierto
+                 #paidPercentBadge       "N.N% Pagado"
+                 #monthAbonoPercentLabel "N.N%"
+                 #paidTextInfo           Real S/ …
+                 #monthTotalIngresos     S/ …
+                 #monthIngresosCount     "N abonos registrados"
+                 #monthBalanceNeto       S/ …  (+ color inline por signo)
+                 #monthBalanceStatusLabel Saldo a favor / Déficit / Equilibrado
 
-               `.view-header` no vino, y es la única baja sin reemplazo:
-               "Detalle mensual" + su subtítulo repetían lo que la
-               pestaña del rail ya dice, con 95.6px de alto.
+               `#pendingSummaryLabel` ES EL NODO QUE RESUELVE EL DESCUADRE.
+               app.js le escribe dos `<div>` con el rótulo y la cifra pegados
+               (app.js:670-672), y la presentación no puede partir un nodo de
+               texto sin escribir JavaScript. Lo que sí puede es tratar el
+               nodo como lo que es: un contenedor con dos renglones. Con
+               `display: contents` los dos `<div>` dejan de ser sus hijos y
+               pasan a ser ítems de la retícula del héroe, donde cada uno cae
+               en una celda distinta — "Falta" arriba y "Cubierto" en el
+               extremo izquierdo de la barra. Un nodo, dos lugares, cero
+               lógica nueva.
+
+               El HTML inicial de los dos renglones es exactamente el que
+               escribe app.js en su primera pasada: si acá se pusiera otra
+               cosa, la primera pintada mostraría un texto que enseguida se
+               corrige.
                ============================================================ -->
-        <div class="ledger-toolbar" role="group" aria-label="Totales del mes y filtro de categoría">
+        <div class="ledger-toolbar" role="group" aria-label="Estado de cobertura del mes y filtro de texto">
+          <section class="status-block" aria-label="Estado de cobertura del mes">
 
-          <!-- ── LA TIRA DE CIFRAS ────────────────────────────────────────
-               CINCO celdas, y el orden es el orden en que se las
-               pregunta:
+            <!-- `#pendingSummaryLabel` va DIRECTO como hijo de `.status-block`:
+                 lleva `display: contents`, así que sus dos `<div>` no existen
+                 como caja y pasan a ser dos ítems más de la retícula del
+                 bloque. Un wrapper alrededor no aportaría nada. -->
+            <div id="pendingSummaryLabel" class="font-mono"><div>Cubierto S/ 0.00</div><div>Falta S/ 0.00</div></div>
 
-                 Presupuesto → Pagado → Pendiente → Ingresos → Balance
+            <!-- LA BARRA: una sola línea, con los dos extremos rotulados —
+                 "Cubierto" a la izquierda (que app.js escribe dentro de
+                 `#pendingSummaryLabel`, no como un nodo aparte) y el estimado
+                 total a la derecha. Es una fracción —"de esto, cuánto llevo"— y
+                 una fracción se dibuja como una longitud.
 
-               Las tres primeras contestan "¿cuánto falta y en qué?"; las
-               dos últimas cierran la cuenta. Todas con la MISMA
-               estructura interna — etiqueta de 11px, importe de 20px, y
-               una tercera línea de nota de 12px donde hay algo que decir
-               — para que las cifras se comparen de un vistazo. Cuando
-               esta fila tuvo DOS renglones con estructuras distintas, los
-               importes quedaban a distinta altura y no se comparaban, y
-               seis medidas quedaron en micro-texto de 9-11px: eso es
-               peo que las cuatro celdas de `.metrics-row` que T1 sacó.
+                 La pista usa `--progress-track` y no `--sunk`: medido, `--sunk`
+                 sobre `--surface` da 1.03:1, o sea invisible. Con la pista
+                 invisible, una barra al 38% se lee como una línea que termina
+                 sola y un 0% se lee como "no hay dato" en vez de como cero. -->
+            <span class="status-track" role="img"
+              aria-label="Avance de la cobertura del mes"><span id="paidBarFill" class="status-fill" style="width: 0%;"></span></span>
 
-               · PRESUPUESTO lleva debajo la COBERTURA
-                 (`#monthAbonoPercentLabel`), que es ingresos sobre
-                 presupuesto: los dos operandos quedan en la misma tira, y
-                 la nota deja de ser micro-texto suelto.
-               · PAGADO es la ÚNICA fracción de las cinco (pagado sobre
-                 presupuesto), así que es la única que lleva carril. El
-                 denominador (`#monthGastosCount`) va pegado a la izquierda
-                 del carril y el porcentaje a la derecha, que es como se
-                 lee una fracción: base, barra, resultado.
-               · BALANCE sube de la fila de micro-texto porque es el número
-                 que responde "¿estoy bien o mal?". Conserva el color
-                 inline por signo que le escribe app.js, y la palabra del
-                 estado va AL LADO de la cifra, no debajo: estado y número
-                 se leen en un solo vistazo.
+            <span id="monthTotalEgresos" class="font-mono">Estimado S/ 0.00</span>
 
-               Los textos que las suites comparan contra la cadena literal
-               (`#monthGastosCount`, `#paidPercentBadge`,
-               `#monthIngresosCount`, `#monthBalanceStatusLabel`) se
-               conservan tal cual los escribe app.js. `#paidTextInfo` y
-               `#pendingSummaryLabel` sí bajaron a solo importe: la
-               etiqueta de la celda ya dice "Pagado" y "Pendiente".
+<!-- UNA LÍNEA DE APOYO: en palabras lo que la barra ya dibujó.
+                 Cada número con su nombre al lado, porque "61.9%" solo no dice
+                 de qué, y "61.9% de los gastos" y "61.9% del estimado cubierto
+                 por ingresos" son dos números distintos con los mismos tres
+                 caracteres.
 
-               NINGUNO DE ESTOS IDS PUEDE IR EN UN `<details>` CERRADO:
-               `adversarial-suite.mjs:168` exige que `#monthTotalIngresos`,
-               `#monthTotalEgresos`, `#monthBalanceNeto` y
-               `#activeMonthHeaderBadge` pinten texto con `display`
-               distinto de `none`, y los hijos de un `<details>` sin `open`
-               quedan justo en `display: none`. -->
-          <div class="ledger-strip">
-            <div class="ledger-cell">
-              <span class="ledger-cell-label">Presupuesto</span>
-              <span id="monthTotalEgresos" class="ledger-cell-value font-mono">S/ 0.00</span>
-              <span class="ledger-cell-note"><span class="ledger-note-key">Cobertura</span> <span id="monthAbonoPercentLabel" class="font-mono">0.0%</span></span>
+                 Comparte renglón con las cifras de apoyo de la derecha: las dos
+                 cosas son una sola línea de metadatos, y separarlas en dos
+                 renglones cuesta 20px de la primera fila de gasto para no
+                 ganar nada. -->
+            <div class="status-tail">
+              <p class="status-notes">
+                <span id="monthGastosCount" class="status-note">0 de 0 gastos pagados</span>
+                <span id="paidPercentBadge" class="status-note font-mono">0.0% Pagado</span>
+                <span class="status-note"><span class="status-note-key">Ingresos sobre estimado</span>
+                  <span id="monthAbonoPercentLabel" class="font-mono">0.0%</span></span>
+              </p>
+
+            <!-- LAS TRES CIFRAS DE APOYO. A la derecha y más pequeñas que la
+                 protagonista: contestan otras preguntas y por eso no compiten.
+
+                 El plan pedía "Estimado, Real y Balance", pero el Estimado ya
+                 está en el extremo derecho de la barra, que es donde el propio
+                 plan lo coloca ("los dos extremos rotulados: cubierto a la
+                 izquierda, estimado total a la derecha"). Ponerlo también acá
+                 sería la misma cifra en dos lugares. En su lugar entra
+                 Ingresos, que es un dato real del mes que no aparece en
+                 ninguna otra parte de la barra. -->
+            <div class="status-support">
+              <div class="status-figure">
+                <span class="status-label">Real</span>
+                <span id="paidTextInfo" class="status-value font-mono">S/ 0.00</span>
+              </div>
+
+              <div class="status-figure">
+                <span class="status-label">Ingresos</span>
+                <span id="monthTotalIngresos" class="status-value font-mono">S/ 0.00</span>
+                <span id="monthIngresosCount" class="status-note">0 abonos registrados</span>
+              </div>
+
+              <!-- El estado y su número comparten renglón: se leen juntos, y
+                   partirlos en dos renglones separaba la respuesta de su
+                   explicación. -->
+              <div class="status-figure">
+                <span class="status-label">Balance</span>
+                <span class="status-figure-line">
+                  <span id="monthBalanceNeto" class="status-value font-mono">S/ 0.00</span>
+                  <span id="monthBalanceStatusLabel" class="status-note">Equilibrado</span>
+                </span>
+              </div>
             </div>
-
-            <div class="ledger-cell ledger-cell-paid">
-              <span class="ledger-cell-label">Pagado</span>
-              <span id="paidTextInfo" class="ledger-cell-value font-mono">S/ 0.00</span>
-              <span class="ledger-paid-line">
-                <span id="monthGastosCount" class="ledger-cell-note">0 de 0 gastos pagados</span>
-                <span class="payments-track"><span id="paidBarFill" class="payments-fill" style="width: 0%;"></span></span>
-                <span id="paidPercentBadge" class="ledger-cell-note font-mono">0.0% Pagado</span>
-              </span>
             </div>
+          </section>
 
-            <div class="ledger-cell">
-              <span class="ledger-cell-label">Pendiente</span>
-              <span id="pendingSummaryLabel" class="ledger-cell-value font-mono">S/ 0.00</span>
-            </div>
-
-            <div class="ledger-cell">
-              <span class="ledger-cell-label">Ingresos</span>
-              <span id="monthTotalIngresos" class="ledger-cell-value font-mono">S/ 0.00</span>
-              <span id="monthIngresosCount" class="ledger-cell-note">0 abonos registrados</span>
-            </div>
-
-            <div class="ledger-cell">
-              <span class="ledger-cell-label">Balance</span>
-              <span class="ledger-balance-line">
-                <span id="monthBalanceNeto" class="ledger-cell-value font-mono">S/ 0.00</span>
-                <span id="monthBalanceStatusLabel" class="ledger-cell-note">Equilibrado</span>
-              </span>
-            </div>
-          </div>
-
-<!-- ── LA FILA DE BÚSQUEDA ────────────────────────────────────────────────
-               ANTES COMPARTÍA RENGÓN CON EL FILTRO DE CATEGORÍA. Ya no:
-               los cinco `.segment-pill-btn` viven en `<nav class="section-rail">`,
-               la columna que quedó entre el rail y el contenido (ver el bloque
-               de T2 más abajo, en el nivel de `.app-layout`).
-
-               POR QUÉ LA COLUMNA Y NO EL RENGÓN QUE QUEDABA LIBRE
-               Los chips ocupaban 400px+ de ancho horizontal para cinco
-               elementos, y el renglón que los sostenía era el segundo de la
-               banda: dos capas de control (la tira de cifras y la navegación)
-               encima del dato. Con la columna, la banda queda con la tira y el
-               buscador —que es el filtro que tiene que estar pegado a los datos
-               que filtra— y la navegación de categoría sube a su propio eje.
-
-               LO QUE NO SE ROMPIÓ: `data-segment` y `.segment-pill-btn`
-               siguen intactos y los cinco botones siguen siendo cinco, ahora
-               en la columna. `renderActiveSegments` y `toggleSegment` leen esos
-               dos atributos y no cambian una línea. El nombre de la clase lo
-               congeló el contrato DOM y, además, ya no es una cápsula de
-               ninguna manera.
-
-               EL BUSCADOR, que bajó del rail en T1. El atajo `/` sigue
-               funcionando: el binding vive en app.js y no depende de dónde esté
-               el input.
-
-               EL RENOMBRE de T1: `sidebarSearchInput` ->
-               `commandSearchInput`, `btnClearSidebarSearch` ->
-               `btnCommandClearSearch`, `sidebarSearchResultsFeedback` ->
-               `commandSearchResultsFeedback`. Un id que dice "sidebar" en
-               un input que no está en el sidebar es una afirmación falsa
-               que alguien va a leer dentro de tres meses. -->
+          <!-- El buscador vive acá y no en el rail: un filtro tiene que estar
+               al lado del dato que filtra. El atajo `/` sigue funcionando —
+               el binding vive en app.js y no depende de dónde esté el input. -->
           <div class="ledger-row ledger-row-nav">
             <div class="command-search">
               <div class="command-search-box">
@@ -524,31 +523,13 @@
               <div id="commandSearchResultsFeedback" class="search-results-feedback" style="display: none;">
                 <span id="searchResultsCountText">0 coincidencias</span>
               </div>
-</div>
+            </div>
 
-<!-- "Abono" y "Gasto" viven AQUÍ y no en la tira de arriba.
-               POR QUÉ, Y NO ES SOLO ARITMÉTICA:
-               `.ledger-strip` es una tira de CINCO cifras comparables entre
-               sí: Presupuesto, Pagado, Pendiente, Ingresos, Balance. Todas
-               con etiqueta y con importe, todas con el ancho que fija su
-               renglón más ancho. "Abono" y "Gasto" no son cifras — no tienen
-               etiqueta ni importe — y su ancho (110.1px medidos) lo decide el
-               texto más largo, no un dato. Estaban en la tira porque en la
-               versión anterior la banda mezclaba todo; ahora la banda tiene
-               dos renglones con dos trabajos distintos: el de arriba es LEER
-               el mes y el de abajo es ACTUAR sobre el mes y ENCONTRAR en él.
-               El buscador y los dos botones de alta son las dos cosas que se
-               piden juntas —"buscar tal cosa" + "cargar un gasto"— y por eso
-               comparten renglón.
-
-               En modo Lector los oculta `admin-action-btn`. Antes quedaban en
-               la tira de cifras, y con el filete ausente se veía un guion
-               suelto apuntando al aire entre el importe y nada; ahora el
-               filete de `.ledger-row-nav` ya separa los renglones, así que en
-               Lector la fila es sólo el buscador y no hace falta una costura
-               nueva. Medido: con los botones el renglón mide 37px, los mismos
-               que la fila de búsqueda sola, así que los 110.1px de las acciones
-               entran en el aire que ya estaba. -->
+            <!-- "Abono" y "Gasto" NO son cifras: no tienen etiqueta ni importe
+                 y su ancho lo decide el texto más largo, no un dato. Por eso
+                 comparten renglón con el buscador —que es el renglón de actuar
+                 sobre el mes— y no están en la lista de números.
+                 En modo Lector los oculta `admin-action-btn`. -->
             <div class="ledger-actions">
               <button type="button" id="btnHeaderAddIncome" class="ledger-action admin-action-btn"
                 title="Registrar nuevo abono">Abono</button>
@@ -758,7 +739,7 @@
           </div>
 
           <div class="metrics-hero-grid">
-            <div class="hero-metric-card card-theme-emerald">
+            <div class="hero-metric-card">
               <div class="metric-top-row">
                 <span class="metric-label-title">Ingresos acumulados</span>
               </div>
@@ -766,7 +747,7 @@
               <div class="metric-footer-info">Todos los abonos confirmados</div>
             </div>
 
-            <div class="hero-metric-card card-theme-cyan">
+            <div class="hero-metric-card">
               <div class="metric-top-row">
                 <span class="metric-label-title">Balance acumulado</span>
               </div>
@@ -774,7 +755,7 @@
               <div class="metric-footer-info">Ingresos menos gastos realizados</div>
             </div>
 
-            <div class="hero-metric-card card-theme-amber">
+            <div class="hero-metric-card">
               <div class="metric-top-row">
                 <span class="metric-label-title">Cumplimiento</span>
               </div>

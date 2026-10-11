@@ -1,6 +1,6 @@
 {
   "suite": "adversarial-suite",
-  "generatedAt": "2026-10-10T18:39:29.387Z",
+  "generatedAt": "2026-10-11T02:48:41.515Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -187,7 +187,7 @@
           "pass": true,
           "label": "the month view painted real content, it is not a blank screen",
           "detail": {
-            "chars": 758,
+            "chars": 819,
             "viewMesActiva": true,
             "filas": 0,
             "kpisVisibles": [
@@ -196,7 +196,7 @@
               "monthBalanceNeto",
               "activeMonthHeaderBadge"
             ],
-            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado Período PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador Todo Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos 0 0 mov"
+            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador SECCIONES Todo Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimient"
           }
         },
         {
@@ -220,16 +220,15 @@
           "label": "no KPI reads NaN or undefined",
           "detail": {
             "ingresos": "S/ 0.00",
-            "egresos": "S/ 0.00",
+            "egresos": "Estimado S/ 0.00",
             "balance": "S/ 0.00",
             "etiquetaBalance": "Equilibrado",
             "estadoPago": "0.0% Pagado",
-            "pendiente": "S/ 0.00",
-            "informacion": "S/ 0.00",
+            "pendiente": "Cubierto S/ 0.00Falta S/ 0.00",
+            "informacion": "Real S/ 0.00",
             "abono": "0.0%",
             "countGastos": "0 de 0 gastos pagados",
-            "countIngresos": "0 abonos registrados",
-            "topbar": "S/ 0.00"
+            "countIngresos": "0 abonos registrados"
           }
         },
         {
@@ -242,10 +241,10 @@
         },
         {
           "pass": true,
-          "label": "egresos on an empty month",
+          "label": "egresos on an empty month: the cell names the magnitude (Estimado) AND holds a real zero",
           "detail": {
-            "actual": "S/ 0.00",
-            "expected": "S/ 0.00"
+            "actual": "Estimado S/ 0.00",
+            "expected": "Estimado S/ 0.00"
           }
         },
         {
@@ -293,16 +292,15 @@
           "label": "the pending line shows a currency amount",
           "detail": {
             "ingresos": "S/ 0.00",
-            "egresos": "S/ 0.00",
+            "egresos": "Estimado S/ 0.00",
             "balance": "S/ 0.00",
             "etiquetaBalance": "Equilibrado",
             "estadoPago": "0.0% Pagado",
-            "pendiente": "S/ 0.00",
-            "informacion": "S/ 0.00",
+            "pendiente": "Cubierto S/ 0.00Falta S/ 0.00",
+            "informacion": "Real S/ 0.00",
             "abono": "0.0%",
             "countGastos": "0 de 0 gastos pagados",
-            "countIngresos": "0 abonos registrados",
-            "topbar": "S/ 0.00"
+            "countIngresos": "0 abonos registrados"
           }
         },
         {
@@ -338,13 +336,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -565,13 +563,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -715,13 +713,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 42
+            "totalRequests": 74
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -762,10 +760,10 @@
         },
         {
           "pass": true,
-          "label": "egresos is 0 when the budget lists are empty",
+          "label": "egresos is 0 when the budget lists are empty, and the cell says it is the estimate",
           "detail": {
-            "actual": "S/ 0.00",
-            "expected": "S/ 0.00"
+            "actual": "Estimado S/ 0.00",
+            "expected": "Estimado S/ 0.00"
           }
         },
         {
@@ -865,13 +863,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 22
+            "totalRequests": 38
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1010,13 +1008,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 22
+            "totalRequests": 38
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1132,13 +1130,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 2; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1175,7 +1173,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 0.00",
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1207,14 +1205,14 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
         },
         {
           "pass": true,
-          "label": "cero: a row was created, and its stored monto is a real NUMBER (never NaN)",
+          "label": "cero: a row was created, and its stored montoEstimado is a real NUMBER (never NaN)",
           "detail": {
             "etiqueta": "cero",
             "entrada": "0",
@@ -1237,7 +1235,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 0.00",
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1266,7 +1264,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 0.00",
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1298,7 +1296,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1331,7 +1329,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1364,7 +1362,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1397,7 +1395,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1430,7 +1428,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1463,7 +1461,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1496,17 +1494,17 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
         },
         {
           "pass": true,
-          "label": "UI: the month total includes it as a real zero",
+          "label": "UI: the month total includes it as a real zero, and says it is the estimate",
           "detail": {
-            "actual": "S/ 0.00",
-            "expected": "S/ 0.00",
+            "actual": "Estimado S/ 0.00",
+            "expected": "Estimado S/ 0.00",
             "contexto": {
               "etiqueta": "cero",
               "entrada": "0",
@@ -1529,7 +1527,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 0.00",
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1540,13 +1538,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1583,7 +1581,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1612,7 +1610,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1644,7 +1642,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1677,7 +1675,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1710,7 +1708,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1743,7 +1741,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1776,7 +1774,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1809,7 +1807,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1842,7 +1840,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1875,7 +1873,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -1886,13 +1884,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -1929,7 +1927,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1958,7 +1956,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -1990,7 +1988,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2023,7 +2021,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2056,7 +2054,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2089,7 +2087,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2122,7 +2120,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2155,7 +2153,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2188,7 +2186,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2221,7 +2219,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2232,14 +2230,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 41
+            "totalRequests": 73
           }
         }
       ],
       "gaps": [],
       "notes": [
         "FINDING (the input layer disagrees with the display layer). 0.005 cannot be entered, yet formatCurrency(store.js:826) would render it as \"S/ 0.01\", and sanear() does not round, so a JSON import carrying 0.005 would display as S/ 0.01 while the UI refuses to let the user type it. Blocking sub-cent precision in a soles field is defensible; the inconsistency is the defect. T4: either accept and round on input, or state the 2-decimal rule in the field hint.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2276,7 +2274,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2305,7 +2303,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2337,7 +2335,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2370,7 +2368,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2403,7 +2401,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2436,7 +2434,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2469,7 +2467,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2502,7 +2500,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2535,7 +2533,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2546,14 +2544,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 51
+            "totalRequests": 91
           }
         }
       ],
       "gaps": [],
       "notes": [
         "Worth stating plainly because it looks like a defect and is not: high-precision decimals are NOT silently truncated. The browser refuses the submit and the store is never asked, so the data stays intact. The rejection is quiet (no toast, no inline message), which is the only complaint here and it is the same complaint as the whitespace-concepto case.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2590,7 +2588,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2619,7 +2617,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2651,7 +2649,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2684,7 +2682,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2717,7 +2715,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2750,7 +2748,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2783,7 +2781,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2816,7 +2814,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2849,7 +2847,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2882,7 +2880,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -2893,14 +2891,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 61
+            "totalRequests": 109
           }
         }
       ],
       "gaps": [],
       "notes": [
         "CORRECTION to an earlier hypothesis, stated because the correction is the useful part. `parseFloat(\"1e309\") || 0` at app.js:1253 (same pattern at app.js:1532, store.js:518 and store.js:644) WOULD map Infinity to 0 and report success - but that branch is UNREACHABLE from this UI, because the browser never lets an overflowing literal sit in the field. So the `|| 0` is latent, not observable. It only matters for programmatic callers such as a future import path. T4 should still fix it, as hardening, and must not be reported as a user-visible repair.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -2937,7 +2935,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2966,7 +2964,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -2998,7 +2996,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3031,7 +3029,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3064,7 +3062,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3097,7 +3095,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3130,7 +3128,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3163,7 +3161,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3196,7 +3194,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3226,7 +3224,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3255,7 +3253,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3287,7 +3285,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3320,7 +3318,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3353,7 +3351,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3386,7 +3384,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3419,7 +3417,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3452,7 +3450,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3485,7 +3483,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3515,7 +3513,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3544,7 +3542,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3576,7 +3574,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3609,7 +3607,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3642,7 +3640,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3675,7 +3673,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3708,7 +3706,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3741,7 +3739,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3774,7 +3772,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3804,7 +3802,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3833,7 +3831,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -3865,7 +3863,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3898,7 +3896,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3931,7 +3929,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3964,7 +3962,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -3997,7 +3995,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4030,7 +4028,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4063,7 +4061,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4093,7 +4091,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4122,7 +4120,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4154,7 +4152,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4187,7 +4185,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4220,7 +4218,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4253,7 +4251,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4286,7 +4284,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4319,7 +4317,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4352,7 +4350,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4382,7 +4380,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4411,7 +4409,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4443,7 +4441,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4476,7 +4474,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4509,7 +4507,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4542,7 +4540,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4575,7 +4573,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4608,7 +4606,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4641,7 +4639,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4671,7 +4669,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4700,7 +4698,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -4732,7 +4730,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4765,7 +4763,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4798,7 +4796,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4831,7 +4829,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4864,7 +4862,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4897,7 +4895,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4930,7 +4928,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -4941,13 +4939,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 71
+            "totalRequests": 127
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -4984,7 +4982,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -5013,7 +5011,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 0.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 0.00",
             "dialogos": []
           }
         },
@@ -5045,7 +5043,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -5078,7 +5076,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -5111,7 +5109,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -5144,7 +5142,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -5177,7 +5175,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 0.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 0.00",
               "dialogos": []
             }
           }
@@ -5207,7 +5205,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 1,000.00",
-            "subtotalEgresosRenderizado": "S/ 1,000.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
             "dialogos": []
           }
         },
@@ -5239,14 +5237,14 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
         },
         {
           "pass": true,
-          "label": "notacion-exponencial: a row was created, and its stored monto is a real NUMBER (never NaN)",
+          "label": "notacion-exponencial: a row was created, and its stored montoEstimado is a real NUMBER (never NaN)",
           "detail": {
             "etiqueta": "notacion-exponencial",
             "entrada": "1e3",
@@ -5269,7 +5267,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 1,000.00",
-            "subtotalEgresosRenderizado": "S/ 1,000.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
             "dialogos": []
           }
         },
@@ -5298,7 +5296,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 1,000.00",
-            "subtotalEgresosRenderizado": "S/ 1,000.00",
+            "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
             "dialogos": []
           }
         },
@@ -5330,7 +5328,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
@@ -5363,7 +5361,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
@@ -5396,7 +5394,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
@@ -5429,7 +5427,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
@@ -5462,7 +5460,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 1,000.00",
-              "subtotalEgresosRenderizado": "S/ 1,000.00",
+              "subtotalEgresosRenderizado": "Estimado S/ 1,000.00",
               "dialogos": []
             }
           }
@@ -5473,14 +5471,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 81
+            "totalRequests": 145
           }
         }
       ],
       "gaps": [],
       "notes": [
         "DEFECT (silent rejection of the local number format). For a Peruvian user \"12,34\" is the natural way to type a decimal, and the field discards it with no message beyond the browser bubble. Meanwhile EVERY rendered amount uses es-PE grouping (\"S/ 1,000.00\"), so the format the app displays is not a format the app accepts. Severity: medium - this is the most likely real-world input mistake and it fails without explanation. T4 should normalise a comma to a dot before validating.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -5517,7 +5515,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 987,654,321.99",
-            "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+            "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
             "dialogos": []
           }
         },
@@ -5549,14 +5547,14 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
         },
         {
           "pass": true,
-          "label": "separador-miles: a row was created, and its stored monto is a real NUMBER (never NaN)",
+          "label": "separador-miles: a row was created, and its stored montoEstimado is a real NUMBER (never NaN)",
           "detail": {
             "etiqueta": "separador-miles",
             "entrada": "987654321.99",
@@ -5579,7 +5577,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 987,654,321.99",
-            "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+            "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
             "dialogos": []
           }
         },
@@ -5608,7 +5606,7 @@
             "tipoGuardado": "number",
             "montoPresenteEnLosBytesPersistidos": true,
             "importeRenderizado": "S/ 987,654,321.99",
-            "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+            "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
             "dialogos": []
           }
         },
@@ -5640,7 +5638,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5673,7 +5671,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5706,7 +5704,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5739,7 +5737,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5772,7 +5770,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5805,7 +5803,7 @@
               "tipoGuardado": "number",
               "montoPresenteEnLosBytesPersistidos": true,
               "importeRenderizado": "S/ 987,654,321.99",
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5835,7 +5833,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+            "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
             "dialogos": []
           }
         },
@@ -5864,7 +5862,7 @@
             "tipoGuardado": null,
             "montoPresenteEnLosBytesPersistidos": false,
             "importeRenderizado": null,
-            "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+            "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
             "dialogos": []
           }
         },
@@ -5896,7 +5894,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5905,8 +5903,8 @@
           "pass": true,
           "label": "coma-miles: a rejected amount changed nothing on disk",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_b9xo6dpx4_1791657472580\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"monto\":987654321.99,\"tipo\":\"Fijo\",\"rango\":\"\",\"estado\":\"Pendiente\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_b9xo6dpx4_1791657472580\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"monto\":987654321.99,\"tipo\":\"Fijo\",\"rango\":\"\",\"estado\":\"Pendiente\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_kpvkhriwh_1791686808228\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_kpvkhriwh_1791686808228\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
             "contexto": {
               "etiqueta": "coma-miles",
               "entrada": "1,000",
@@ -5929,7 +5927,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5962,7 +5960,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -5995,7 +5993,7 @@
               "tipoGuardado": null,
               "montoPresenteEnLosBytesPersistidos": false,
               "importeRenderizado": null,
-              "subtotalEgresosRenderizado": "S/ 987,654,321.99",
+              "subtotalEgresosRenderizado": "Estimado S/ 987,654,321.99",
               "dialogos": []
             }
           }
@@ -6006,13 +6004,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 91
+            "totalRequests": 163
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -6054,7 +6052,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 111
+            "totalRequests": 199
           }
         }
       ],
@@ -6065,7 +6063,7 @@
         }
       ],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 20"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 36"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -6101,7 +6099,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6134,7 +6132,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6168,7 +6166,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6202,7 +6200,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6236,7 +6234,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6270,7 +6268,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6304,7 +6302,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6338,7 +6336,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6369,7 +6367,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6402,7 +6400,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6433,7 +6431,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6466,7 +6464,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6500,7 +6498,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6531,7 +6529,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6564,7 +6562,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6598,7 +6596,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6611,13 +6609,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 121
+            "totalRequests": 217
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -6653,7 +6651,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6686,7 +6684,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6720,7 +6718,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6754,7 +6752,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6788,7 +6786,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6822,7 +6820,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6856,7 +6854,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6890,7 +6888,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6921,7 +6919,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6954,7 +6952,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6985,7 +6983,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7018,7 +7016,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7052,7 +7050,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7083,7 +7081,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7116,7 +7114,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7150,7 +7148,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7163,13 +7161,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 131
+            "totalRequests": 235
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -7205,7 +7203,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7238,7 +7236,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7272,7 +7270,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7306,7 +7304,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7340,7 +7338,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7374,7 +7372,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7408,7 +7406,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7442,7 +7440,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7473,7 +7471,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7506,7 +7504,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7537,7 +7535,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7570,7 +7568,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7604,7 +7602,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7638,7 +7636,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7669,7 +7667,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7702,7 +7700,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7715,13 +7713,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 141
+            "totalRequests": 253
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -7757,7 +7755,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7790,7 +7788,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7824,7 +7822,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7858,7 +7856,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7892,7 +7890,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7926,7 +7924,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7960,7 +7958,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7994,7 +7992,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8025,7 +8023,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8058,7 +8056,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8089,7 +8087,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8122,7 +8120,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8156,7 +8154,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8190,7 +8188,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8224,7 +8222,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8258,7 +8256,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8292,7 +8290,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8305,13 +8303,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 151
+            "totalRequests": 271
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -8347,7 +8345,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8380,7 +8378,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8414,7 +8412,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8448,7 +8446,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8482,7 +8480,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8516,7 +8514,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8550,7 +8548,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8584,7 +8582,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8615,7 +8613,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8648,7 +8646,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8679,7 +8677,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8712,7 +8710,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8746,7 +8744,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8780,7 +8778,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8811,7 +8809,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8841,7 +8839,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 582
+              "totalElementosDOM": 584
             },
             "dialogos": [
               {
@@ -8879,7 +8877,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -8918,7 +8916,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -8957,7 +8955,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -8996,7 +8994,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9035,7 +9033,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9074,7 +9072,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9113,7 +9111,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9149,7 +9147,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 582
+              "totalElementosDOM": 584
             },
             "dialogos": [
               {
@@ -9187,7 +9185,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9223,7 +9221,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 582
+              "totalElementosDOM": 584
             },
             "dialogos": [
               {
@@ -9261,7 +9259,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9300,7 +9298,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9339,7 +9337,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 582
+                "totalElementosDOM": 584
               },
               "dialogos": [
                 {
@@ -9375,7 +9373,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 582
+              "totalElementosDOM": 584
             },
             "dialogos": [
               {
@@ -9410,7 +9408,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 597
+              "totalElementosDOM": 600
             },
             "dialogos": [
               {
@@ -9448,7 +9446,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9487,7 +9485,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9526,7 +9524,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9565,7 +9563,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9604,7 +9602,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9643,7 +9641,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9682,7 +9680,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9718,7 +9716,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 597
+              "totalElementosDOM": 600
             },
             "dialogos": [
               {
@@ -9756,7 +9754,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9792,7 +9790,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 597
+              "totalElementosDOM": 600
             },
             "dialogos": [
               {
@@ -9830,7 +9828,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9869,7 +9867,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9908,7 +9906,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 597
+                "totalElementosDOM": 600
               },
               "dialogos": [
                 {
@@ -9944,7 +9942,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 597
+              "totalElementosDOM": 600
             },
             "dialogos": [
               {
@@ -9979,7 +9977,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 612
+              "totalElementosDOM": 616
             },
             "dialogos": [
               {
@@ -10017,7 +10015,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10056,7 +10054,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10095,7 +10093,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10134,7 +10132,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10173,7 +10171,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10212,7 +10210,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10251,7 +10249,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10287,7 +10285,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 612
+              "totalElementosDOM": 616
             },
             "dialogos": [
               {
@@ -10325,7 +10323,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10361,7 +10359,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 612
+              "totalElementosDOM": 616
             },
             "dialogos": [
               {
@@ -10399,7 +10397,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10438,7 +10436,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10477,7 +10475,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 612
+                "totalElementosDOM": 616
               },
               "dialogos": [
                 {
@@ -10513,7 +10511,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 612
+              "totalElementosDOM": 616
             },
             "dialogos": [
               {
@@ -10548,7 +10546,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 627
+              "totalElementosDOM": 632
             },
             "dialogos": [
               {
@@ -10586,7 +10584,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10625,7 +10623,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10664,7 +10662,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10703,7 +10701,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10742,7 +10740,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10781,7 +10779,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10820,7 +10818,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10856,7 +10854,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 627
+              "totalElementosDOM": 632
             },
             "dialogos": [
               {
@@ -10894,7 +10892,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -10930,7 +10928,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 627
+              "totalElementosDOM": 632
             },
             "dialogos": [
               {
@@ -10968,7 +10966,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -11007,7 +11005,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -11046,7 +11044,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 627
+                "totalElementosDOM": 632
               },
               "dialogos": [
                 {
@@ -11082,7 +11080,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 627
+              "totalElementosDOM": 632
             },
             "dialogos": [
               {
@@ -11099,14 +11097,14 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 161
+            "totalRequests": 289
           }
         }
       ],
       "gaps": [],
       "notes": [
         "The RTL override U+202E is stored and rendered as a literal character. It is NOT stripped. That is a deliberate non-goal for this app - the data belongs to the user and no text is filtered - but it does mean a hostile month/expense name can visually reverse what follows it. Recorded as a known limitation, not a defect in escaping.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -11130,7 +11128,7 @@
             "creadoEnDisco": true,
             "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
             "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-            "overflowHorizontalPx": 3375,
+            "overflowHorizontalPx": 3094,
             "cssWhiteSpace": "nowrap",
             "cssTextOverflow": "ellipsis",
             "cssOverflow": "hidden",
@@ -11142,7 +11140,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": []
           }
@@ -11162,7 +11160,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11174,7 +11172,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11195,7 +11193,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11207,7 +11205,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11228,7 +11226,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11240,7 +11238,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11261,7 +11259,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11273,7 +11271,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11294,7 +11292,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11306,7 +11304,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11327,7 +11325,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11339,7 +11337,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11360,7 +11358,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11372,7 +11370,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11390,7 +11388,7 @@
             "creadoEnDisco": true,
             "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
             "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-            "overflowHorizontalPx": 3375,
+            "overflowHorizontalPx": 3094,
             "cssWhiteSpace": "nowrap",
             "cssTextOverflow": "ellipsis",
             "cssOverflow": "hidden",
@@ -11402,7 +11400,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": []
           }
@@ -11422,7 +11420,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11434,7 +11432,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11463,7 +11461,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11475,7 +11473,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11496,7 +11494,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11508,7 +11506,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11529,7 +11527,7 @@
               "creadoEnDisco": true,
               "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
               "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-              "overflowHorizontalPx": 3375,
+              "overflowHorizontalPx": 3094,
               "cssWhiteSpace": "nowrap",
               "cssTextOverflow": "ellipsis",
               "cssOverflow": "hidden",
@@ -11541,7 +11539,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 567
+                "totalElementosDOM": 568
               },
               "dialogos": []
             }
@@ -11559,7 +11557,7 @@
             "creadoEnDisco": true,
             "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
             "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-            "overflowHorizontalPx": 3375,
+            "overflowHorizontalPx": 3094,
             "cssWhiteSpace": "nowrap",
             "cssTextOverflow": "ellipsis",
             "cssOverflow": "hidden",
@@ -11571,7 +11569,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": []
           }
@@ -11581,10 +11579,10 @@
           "label": "the row with the 500-character title was located for the layout probe",
           "detail": {
             "encontrado": true,
-            "anchoFila": 1093,
-            "anchoTituloVisible": 791,
-            "scrollTarjeta": 1093,
-            "clientTarjeta": 1093,
+            "anchoFila": 996,
+            "anchoTituloVisible": 739,
+            "scrollTarjeta": 996,
+            "clientTarjeta": 996,
             "desbordeTarjeta": 0,
             "bodyDesborde": 0
           }
@@ -11597,10 +11595,10 @@
             "expected": true,
             "contexto": {
               "encontrado": true,
-              "anchoFila": 1093,
-              "anchoTituloVisible": 791,
-              "scrollTarjeta": 1093,
-              "clientTarjeta": 1093,
+              "anchoFila": 996,
+              "anchoTituloVisible": 739,
+              "scrollTarjeta": 996,
+              "clientTarjeta": 996,
               "desbordeTarjeta": 0,
               "bodyDesborde": 0
             }
@@ -11614,10 +11612,10 @@
             "expected": true,
             "contexto": {
               "encontrado": true,
-              "anchoFila": 1093,
-              "anchoTituloVisible": 791,
-              "scrollTarjeta": 1093,
-              "clientTarjeta": 1093,
+              "anchoFila": 996,
+              "anchoTituloVisible": 739,
+              "scrollTarjeta": 996,
+              "clientTarjeta": 996,
               "desbordeTarjeta": 0,
               "bodyDesborde": 0
             }
@@ -11628,10 +11626,10 @@
           "label": "UI: the visible title box is narrower than the row, i.e. the clip is active and the row keeps its shape",
           "detail": {
             "encontrado": true,
-            "anchoFila": 1093,
-            "anchoTituloVisible": 791,
-            "scrollTarjeta": 1093,
-            "clientTarjeta": 1093,
+            "anchoFila": 996,
+            "anchoTituloVisible": 739,
+            "scrollTarjeta": 996,
+            "clientTarjeta": 996,
             "desbordeTarjeta": 0,
             "bodyDesborde": 0
           }
@@ -11648,7 +11646,7 @@
             "creadoEnDisco": true,
             "tituloRenderizado": "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
             "outerHTMLDelTitulo": "<div class=\"expense-item-title\">LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL",
-            "overflowHorizontalPx": 3375,
+            "overflowHorizontalPx": 3094,
             "cssWhiteSpace": "nowrap",
             "cssTextOverflow": "ellipsis",
             "cssOverflow": "hidden",
@@ -11660,7 +11658,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 567
+              "totalElementosDOM": 568
             },
             "dialogos": []
           }
@@ -11671,13 +11669,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 171
+            "totalRequests": 307
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -11696,7 +11694,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 113,
+              "totalControles": 114,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11710,7 +11708,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 113,
+              "totalControles": 114,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11724,7 +11722,7 @@
             "actual": true,
             "expected": true,
             "contexto": {
-              "totalControles": 113,
+              "totalControles": 114,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11745,7 +11743,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
@@ -11757,7 +11755,7 @@
       ],
       "notes": [
         "js/store.js:787 importJSON(jsonString) and js/store.js:774 exportJSON() and js/store.js:802 exportCSV() are implemented. js/app.js never calls any of them, and index.html has no button, no <input type=file> and no inline handler for them.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -11776,7 +11774,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 59,
+              "totalControles": 60,
               "candidatos": []
             }
           }
@@ -11788,7 +11786,7 @@
             "actual": true,
             "expected": true,
             "contexto": {
-              "totalControles": 59,
+              "totalControles": 60,
               "candidatos": []
             }
           }
@@ -11799,7 +11797,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
@@ -11811,7 +11809,7 @@
       ],
       "notes": [
         "js/store.js:802 exportCSV builds a Blob and clicks a synthetic <a download>, but nothing in the UI ever calls it. Note also what it would emit: the header is \"MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\" and each row contains r.nombre plus totals.toFixed(2). `concepto` is NOT part of exportCSV at all, so hostile expense text can never reach a CSV cell through this path. The only free-text injection surface would be the month `nombre`, which is wrapped in double quotes but not formula-guarded.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -11872,10 +11870,10 @@
         },
         {
           "pass": true,
-          "label": "UI: the month total is a real zero",
+          "label": "UI: the month total is a real zero, and says it is the estimate",
           "detail": {
-            "actual": "S/ 0.00",
-            "expected": "S/ 0.00"
+            "actual": "Estimado S/ 0.00",
+            "expected": "Estimado S/ 0.00"
           }
         },
         {
@@ -11909,7 +11907,7 @@
           "pass": true,
           "label": "the view is still painted, not blank",
           "detail": {
-            "chars": 761,
+            "chars": 822,
             "viewMesActiva": true,
             "filas": 0,
             "kpisVisibles": [
@@ -11918,7 +11916,7 @@
               "monthBalanceNeto",
               "activeMonthHeaderBadge"
             ],
-            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado Período PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador Todo Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos 0 0 mov"
+            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador SECCIONES Todo Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimient"
           }
         },
         {
@@ -11935,13 +11933,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12049,13 +12047,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 32
+            "totalRequests": 56
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12080,8 +12078,8 @@
             "expected": true,
             "contexto": {
               "hit": {
-                "x": 1357,
-                "y": 333,
+                "x": 1373,
+                "y": 313,
                 "elementoEncima": "div#modalMonthNotes.modal-overlay active",
                 "esElOverlay": true,
                 "overlayDisplay": "flex",
@@ -12098,8 +12096,8 @@
             "actual": "fixed",
             "expected": "fixed",
             "contexto": {
-              "x": 1357,
-              "y": 333,
+              "x": 1373,
+              "y": 313,
               "elementoEncima": "div#modalMonthNotes.modal-overlay active",
               "esElOverlay": true,
               "overlayDisplay": "flex",
@@ -12141,12 +12139,12 @@
                 "servicios": {
                   "fijos": [
                     {
-                      "id": "id_i0znk0uiz_1791657535468",
+                      "id": "id_0qfzei91k_1791686880347",
                       "concepto": "PRUEBA-MODAL Gasto",
-                      "monto": 8,
+                      "montoEstimado": 8,
+                      "montoReal": null,
                       "tipo": "Fijo",
-                      "rango": "",
-                      "estado": "Pendiente"
+                      "rango": ""
                     }
                   ],
                   "variables": []
@@ -12159,7 +12157,7 @@
                 "notas": "PRUEBA-MODAL nota con carrera",
                 "movimientos": [
                   {
-                    "id": "id_xemkzfcrm_1791657534528",
+                    "id": "id_hnluvfzi9_1791686879399",
                     "fecha": "2026-08-02",
                     "concepto": "PRUEBA-MODAL Mov",
                     "flujo": "Gasto",
@@ -12189,7 +12187,7 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 43
+            "totalRequests": 75
           }
         }
       ],
@@ -12201,7 +12199,7 @@
       ],
       "notes": [
         "This is a genuine conflict with the acceptance criterion \"modal cancel leaves data untouched\". The notes sheet is documented as autosaving (index.html:798 \"Guardado automatico en tiempo real\"), so persisting is defensible - but then Escape is NOT a cancel and the sheet must say so. Right now it is indistinguishable from a cancel. T4 decision needed: either cancel the pending timer on close, or stop presenting the close button as a cancel.",
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 11"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 19"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12240,12 +12238,12 @@
           "label": "the target record exists after the UI create",
           "detail": {
             "objetivo": {
-              "id": "id_xpwfg19yc_1791657541113",
+              "id": "id_ll8ta91to_1791686885890",
               "concepto": "PRUEBA-RERENDER Original",
-              "monto": 44.44,
+              "montoEstimado": 44.44,
+              "montoReal": null,
               "tipo": "Fijo",
-              "rango": "",
-              "estado": "Pendiente"
+              "rango": ""
             }
           }
         },
@@ -12263,11 +12261,11 @@
           "pass": true,
           "label": "the sheet still points at the original record",
           "detail": {
-            "actual": "id_xpwfg19yc_1791657541113",
-            "expected": "id_xpwfg19yc_1791657541113",
+            "actual": "id_ll8ta91to_1791686885890",
+            "expected": "id_ll8ta91to_1791686885890",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_xpwfg19yc_1791657541113",
+              "itemId": "id_ll8ta91to_1791686885890",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12281,7 +12279,7 @@
             "expected": "prueba-alfa-2026",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_xpwfg19yc_1791657541113",
+              "itemId": "id_ll8ta91to_1791686885890",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12304,7 +12302,7 @@
           "pass": true,
           "label": "DISK: the original record id still exists",
           "detail": {
-            "objetivo": "id_xpwfg19yc_1791657541113"
+            "objetivo": "id_ll8ta91to_1791686885890"
           }
         },
         {
@@ -12314,12 +12312,12 @@
             "actual": "PRUEBA-TRAS-RE-RENDER",
             "expected": "PRUEBA-TRAS-RE-RENDER",
             "contexto": {
-              "id": "id_xpwfg19yc_1791657541113",
+              "id": "id_ll8ta91to_1791686885890",
               "concepto": "PRUEBA-TRAS-RE-RENDER",
-              "monto": 31.31,
+              "montoEstimado": 31.31,
+              "montoReal": null,
               "tipo": "Fijo",
-              "rango": "",
-              "estado": "Pendiente"
+              "rango": ""
             }
           }
         },
@@ -12361,13 +12359,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 53
+            "totalRequests": 93
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12384,12 +12382,12 @@
           "label": "the target record exists",
           "detail": {
             "objetivo": {
-              "id": "id_5ss64m9ue_1791657547530",
+              "id": "id_gg3m4gik6_1791686891884",
               "concepto": "PRUEBA-STALE Original",
-              "monto": 21.21,
+              "montoEstimado": 21.21,
+              "montoReal": null,
               "tipo": "Fijo",
-              "rango": "",
-              "estado": "Pendiente"
+              "rango": ""
             }
           }
         },
@@ -12397,8 +12395,8 @@
           "pass": true,
           "label": "the sheet holds the original record id",
           "detail": {
-            "actual": "id_5ss64m9ue_1791657547530",
-            "expected": "id_5ss64m9ue_1791657547530"
+            "actual": "id_gg3m4gik6_1791686891884",
+            "expected": "id_gg3m4gik6_1791686891884"
           }
         },
         {
@@ -12451,13 +12449,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 63
+            "totalRequests": 111
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12567,13 +12565,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12862,13 +12860,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 21
+            "totalRequests": 37
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -12971,13 +12969,13 @@
           "detail": {
             "supabaseRequests": 0,
             "tripwireAttempts": 0,
-            "totalRequests": 31
+            "totalRequests": 55
           }
         }
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 10"
+        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null

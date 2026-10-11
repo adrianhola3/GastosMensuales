@@ -32,7 +32,7 @@ window.GASTOS_CONFIG = {
      * PONER EN `false` ANTES DE PUBLICAR. Con esta bandera en `true` el sitio
      * publicado también se quedaría sin nube, en silencio y sin avisar.
      */
-  modoLocal: true,
+  modoLocal: false,
 
   supabaseUrl: 'https://bgcgmofroibrxthvdlil.supabase.co',
   supabaseAnonKey: 'sb_publishable_1PIXKBVWdxOx5RnDLkEskQ_nS5TiqU7'

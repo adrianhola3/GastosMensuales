@@ -546,12 +546,14 @@
    LO QUE ESTO SÍ COSTA, Y NO ES ANCHO: ES ALTO
    --------------------------------------------------------------------------
    El detalle ocupa un renglón de 13px que antes se pagaba en ancho. La fila de
-   gasto pasa de 72px a 90px de alto, o sea 18px por fila. La banda de
-   secciones le devolvió 154px a la primera fila, así que en una pantalla de
-   844px la primera fila sube de y=617 a y=463 —pero las filas engordan 18px
-   cada una y el número de filas COMPLETAS visibles no cambia: 3 antes, 3
-   después. Lo que cambia es que ahora entra la primera fila entera *y* se ve
-   un fragmento de la segunda, en vez de empezar a leerse a media pantalla.
+   gasto pasa de 72px a 90px de alto, o sea 18px por fila. La banda de secciones
+   le devolvió 154px a la primera fila —de y=617 a y=463—, así que la primera
+   pantalla le da 381px de libro en vez de 227.
+
+   Y aun así el conteo de filas COMPLETAS en 844px no cambia: 3 antes, 3
+   después. Los 18px por fila se comen los 154px de la banda. No hay lectura
+   favorable de esto: la ganancia vertical de esta ronda es cero, y lo que
+   queda es el ancho del concepto.
 
    Si alguna vez hay que recuperar esas filas, el precio está anotado acá: son
    los 18px de esta fila, no los 154px de la banda. La banda ya dio todo lo que

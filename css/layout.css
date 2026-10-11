@@ -929,16 +929,17 @@
      MEDIDO DESPUÉS
      --------------------------------------------------------------------------
      47px en vez de 201px: 7% de la pantalla en vez de 24%. La primera fila del
-     libro sube de y=617 a y=463.
+     libro sube de y=617 a y=463, así que la primera pantalla le da 381px de
+     libro en vez de 227.
 
-     Ojo con lo que eso NO significa: el conteo de filas COMPLETAS visibles en
-     una pantalla de 844px no cambia, sigue siendo 3. Los 154px que ganó la
-     banda se los comen los 18px de alto que ganó cada fila de gasto (los
-     botones a 36px y el renglón del detalle "Real", ambos en
-     `css/libro.css`). Lo que cambia es que ahora entra la primera fila entera
-     *y* se ve un fragmento de la segunda, en vez de empezar a leerse a media
-     pantalla. Si alguna vez hay que recuperar filas, el precio está en
-     `libro.css`, no acá: esta banda ya dio todo lo que tenía.
+     Ojo con lo que eso NO significa, porque es la lectura fácil y es falsa: el
+     conteo de filas COMPLETAS visibles en 844px NO cambia. Son 3 antes y 3
+     después, las dos veces. Los 154px que ganó esta banda se los comen los
+     18px de alto que ganó cada fila de gasto (los botones a 36px y el renglón
+     del detalle "Real", ambos en `css/libro.css`).
+
+     Si alguna vez hay que recuperar filas, el precio está en `libro.css`, no
+     acá: esta banda ya dio todo lo que tenía.
 
      Las cinco entradas miden 832px con los botones de alta y 784px sin ellos, y
      la franja scrollea en los dos casos: a 390 se ven "Todo" y "Servicios"

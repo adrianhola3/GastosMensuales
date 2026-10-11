@@ -381,13 +381,18 @@ dato arriba, el control abajo— y el concepto sube de 87px a **257px** a 320.
 
 ## Lo que esta ronda NO compró
 
-**El conteo de filas completas en pantalla no mejoró: 3 antes, 3 después.**
+**El conteo de filas completas en pantalla no mejoró: 3 antes, 3 después.** Y no
+hay lectura favorable: la ganancia vertical de la ronda es **cero**.
 
-La banda le devolvió 154px a la primera fila, pero la fila pasó de 72px a 90px
-de alto —los 36px de los botones y el renglón del detalle— y son 18px por
-fila. La primera fila sube 154px y las filas engordan 54px en total. Lo que
-cambia es que ahora entra la primera fila **entera y** se ve un fragmento de la
-segunda, en vez de empezar a leerse a media pantalla.
+La banda le devolvió 154px a la primera fila —de y=617 a y=463, así que la
+primera pantalla le da 381px de libro en vez de 227— pero la fila pasó de 72px
+a 90px de alto por los 36px de los botones y el renglón del detalle, y son 18px
+por fila. Comprobado contra `movil.report.json` a 320px: filas completas en
+y=463/552/656, la cuarta arranca en 792 y se sale. Antes: 617/688/762, las tres
+completas también.
+
+**Lo que sí compró la ronda es el ancho del concepto**, que es el defecto que la
+motivó. La altura se la comió el objetivo táctil de 36px.
 
 Está anotado en las dos hojas. Si alguna vez hay que recuperar filas, el precio
 está en `libro.css` y no en `layout.css`: **la banda ya dio todo lo que tenía.**
@@ -430,7 +435,13 @@ falsa.
 **El CSS estaba bien. Lo que mentía era el comentario.** Se corrigieron los
 comentarios, no las reglas. Un número falso en un comentario es peor que un
 número ausente: el que lo lea mañana toma decisiones sobre algo que nunca se
-midió.
+midió. Y corregir para pasar la revisión no es corregir: es engañar mejor.
+
+**Y una tercera corrección, que la encontró la revisión nativa.** Al arreglar
+lo anterior escribí que "ahora entra la primera fila entera y se ve un fragmento
+de la segunda". También es falso: entran tres filas completas antes y tres
+después. El revisor lo cazó cruzando el comentario contra `movil.report.json`,
+que es justamente para lo que existe ese archivo.
 
 ---
 

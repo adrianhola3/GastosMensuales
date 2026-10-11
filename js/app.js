@@ -259,14 +259,33 @@ document.addEventListener('DOMContentLoaded', () => {
     adminLoginError.style.display = 'block';
   }
 
-  // AL ENTRAR A LA PÁGINA: muestra la selección si no se eligió en esta pestaña.
-  // Se espera a resolver la sesión de Supabase: si el usuario ya tiene la sesión
-  // abierta, hay que entrar directo como administrador y no preguntarle nada.
+  // AL ENTRAR A LA PÁGINA: la selección de rol solo se muestra si NO hay
+  // sesión. Antes se abría a los 60 ms, sin esperar a resolver la sesión: un
+  // usuario que ya estaba loggedueado veía igual el cartel y tenía que tocar
+  // "Modo lectura" para poder pasar. Para el padre eso era especialmente
+  // molesto: le ofrecía un botón de Administrador que no le servía.
   const hasChosenRole = sessionStorage.getItem(ELECCION_ROL_KEY);
   if (!hasChosenRole) {
-    setTimeout(() => {
-      openRoleSelectModal(false);
-    }, 60);
+    const remoto0 = window.gastosRemoto;
+    Promise.resolve()
+      .then(() => {
+        if (!remoto0 || !remoto0.estaConfigurado()) return false;
+        return typeof remoto0.esperarSesion === 'function'
+          ? remoto0.esperarSesion()
+          : remoto0.haySesion();
+      })
+      .catch(() => false)
+      .then((hay) => {
+        if (!hay) { openRoleSelectModal(false); return; }
+        /* Hay sesión: se entra directo con el rol que diga app_metadata, sin
+           pasar por el modal y sin marcar la pestaña como "lector elegido"
+           (esa marca solo corresponde a una ELECCIÓN explícita de la persona). */
+        const rol = typeof remoto0.obtenerRol === 'function' ? remoto0.obtenerRol() : 'lector';
+        sesionActual = { rol, configurado: remoto0.estaConfigurado() };
+        isAdmin = rol === 'admin';
+        updateAuthModeUI();
+        updateIndicadorConexion();
+      });
   }
 
   // Eventos de selección de rol

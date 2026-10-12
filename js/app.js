@@ -592,16 +592,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Feed de Transacciones (Flujo de Caja Real)
     renderTransactionFeed(month);
 
-    // 7. Notas del Mes (indicador en botón topbar)
+    // 7. Notas del Mes (tarjeta en página y botón en topbar)
     const notesTextarea = document.getElementById('monthNotesTextarea');
     if (notesTextarea) notesTextarea.value = month.notas || '';
     const btnOpenNotes = document.getElementById('btnOpenNotesModal');
+    const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
     if (btnOpenNotes) {
-      const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
       btnOpenNotes.classList.toggle('has-notes', hasNotes);
       btnOpenNotes.innerHTML = hasNotes
         ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
         : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
+    }
+
+    // Tarjeta integrada de notas en el cuerpo del mes
+    const cardInlineNotes = document.getElementById('monthNotesInlineCard');
+    const textInlineNotes = document.getElementById('monthNotesDisplayText');
+    if (cardInlineNotes && textInlineNotes) {
+      if (hasNotes) {
+        cardInlineNotes.style.display = 'block';
+        textInlineNotes.textContent = month.notas.trim();
+        textInlineNotes.classList.remove('is-empty');
+      } else {
+        if (isAdmin) {
+          cardInlineNotes.style.display = 'block';
+          textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
+          textInlineNotes.classList.add('is-empty');
+        } else {
+          cardInlineNotes.style.display = 'none';
+        }
+      }
     }
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
@@ -1737,7 +1756,32 @@ tr.innerHTML = `
             ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
             : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
         }
+        const cardInlineNotes = document.getElementById('monthNotesInlineCard');
+        const textInlineNotes = document.getElementById('monthNotesDisplayText');
+        if (cardInlineNotes && textInlineNotes && month) {
+          const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
+          if (hasNotes) {
+            cardInlineNotes.style.display = 'block';
+            textInlineNotes.textContent = month.notas.trim();
+            textInlineNotes.classList.remove('is-empty');
+          } else {
+            if (isAdmin) {
+              cardInlineNotes.style.display = 'block';
+              textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
+              textInlineNotes.classList.add('is-empty');
+            } else {
+              cardInlineNotes.style.display = 'none';
+            }
+          }
+        }
       }, 400);
+    });
+  }
+
+  const btnInlineEditNotes = document.getElementById('btnInlineEditNotes');
+  if (btnInlineEditNotes && btnOpenNotesModal) {
+    btnInlineEditNotes.addEventListener('click', () => {
+      btnOpenNotesModal.click();
     });
   }
 

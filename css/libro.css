@@ -732,3 +732,74 @@
   display: none !important;
 }
 
+/* ==========================================================================
+   TARJETA DE NOTAS Y ACUERDOS EN PÁGINA
+   -------------------------------------------------------------------------- */
+.month-notes-section {
+  display: block;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.month-notes-card {
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 3px solid #6366F1;
+  border-radius: var(--radius-box);
+}
+
+.month-notes-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.month-notes-title-box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.month-notes-title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.notes-header-icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.notes-inline-display {
+  padding-top: var(--space-2);
+}
+
+.notes-display-paragraph {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--ink-1);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.notes-display-paragraph.is-empty {
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+body.read-only-mode .btn-inline-edit-notes {
+  display: none !important;
+}
+
+
+
+

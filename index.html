@@ -1203,44 +1203,19 @@
 
       <form id="formAdminLogin" style="display: none;">
         <div class="modal-sheet-body">
-          <div class="form-field form-field-spaced" style="padding: 12px; background: var(--sunk); border: 1px solid var(--rule); border-radius: var(--radius); margin-bottom: var(--space-3);">
-            <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: 4px;">Acceso Rápido / Prueba de Diseño</div>
-            <p class="form-hint" style="margin-bottom: 10px;">Ingresá como Administrador para explorar y probar todas las herramientas sin necesidad de cuenta.</p>
-            <button type="button" id="btnAdminLoginQuickBypass" class="btn btn-primary btn-block" style="width: 100%;">Entrar como Administrador (Modo Local)</button>
-          </div>
-
-          <div style="display: flex; align-items: center; gap: 8px; margin: 12px 0; color: var(--ink-2); font-size: var(--text-xs);">
-            <div style="flex: 1; height: 1px; background: var(--rule);"></div>
-            <span>o con cuenta en la nube</span>
-            <div style="flex: 1; height: 1px; background: var(--rule);"></div>
-          </div>
-
-          <p class="form-hint">Iniciá sesión con tu correo y contraseña de Supabase:</p>
+          <p class="form-hint">Ingresá tus credenciales de administrador para desbloquear la gestión completa:</p>
           <div class="form-field">
             <label for="adminLoginEmail">Correo electrónico</label>
-            <input type="email" id="adminLoginEmail" class="form-input-lg" placeholder="tucorreo@ejemplo.com" autocomplete="username" required>
+            <input type="email" id="adminLoginEmail" class="form-input-lg" placeholder="ahuamanc@unac.edu.pe" autocomplete="username" required>
           </div>
           <div class="form-field">
             <label for="adminLoginPassword">Contraseña</label>
             <input type="password" id="adminLoginPassword" class="form-input-lg" autocomplete="current-password" required>
           </div>
           <p id="adminLoginError" class="login-error-msg" style="display: none;"></p>
-
-          <div class="form-field form-field-spaced">
-            <button type="button" id="btnAdminLoginGithub" class="btn btn-surface btn-lg btn-block"
-              onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGithub!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGithub().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con GitHub.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con GitHub</button>
-            <p class="form-hint form-hint-center">Te lleva a GitHub para confirmar tu identidad. Regresás automáticamente a esta página.</p>
-          </div>
-
-          <div class="form-field form-field-spaced">
-            <button type="button" id="btnAdminLoginGoogle" class="btn btn-surface btn-lg btn-block"
-              onclick="(function(){var remoto=window.gastosRemoto;if(!remoto||typeof remoto.iniciarSesionConGoogle!=='function'){return;}var caja=document.getElementById('adminLoginError');var mostrarError=function(mensaje){if(!caja){return;}caja.textContent=mensaje;caja.style.display='block';};if(caja){caja.textContent='';caja.style.display='none';}remoto.iniciarSesionConGoogle().then(function(resultado){if(resultado&&resultado.ok){return;}mostrarError(resultado&&resultado.error?resultado.error:'No se pudo iniciar el acceso con Google.');}).catch(function(){mostrarError('Ocurrió un error inesperado. Intentá de nuevo.');});})()">Continuar con Google</button>
-            <p class="form-hint form-hint-center">Te lleva a Google y regresás automáticamente. Es el camino más cómodo: no hay que escribir nada acá.</p>
-          </div>
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
-          <button type="button" id="btnAdminLoginLocalBypass" class="btn btn-surface">Acceso local</button>
           <button type="submit" id="btnAdminLoginSubmit" class="btn btn-primary btn-lg">Entrar</button>
         </div>
       </form>

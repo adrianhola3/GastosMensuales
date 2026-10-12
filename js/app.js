@@ -243,6 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
    */
   function openAdminAuthModal() {
     if (!modalAdminAuth) return;
+    if (modalSessionRoleSelect) {
+      modalSessionRoleSelect.classList.remove('active');
+    }
     if (adminAuthAviso) adminAuthAviso.style.display = 'none';
     if (formAdminLogin) formAdminLogin.style.display = 'block';
     if (adminLoginError) {

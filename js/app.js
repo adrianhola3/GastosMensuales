@@ -25,6 +25,12 @@
 let sesionActual = { rol: 'lector', configurado: false };
 
 function obtenerSesion() {
+  try {
+    const rolGuardado = sessionStorage.getItem('finanzas_session_role_chosen');
+    if (rolGuardado === 'admin') {
+      return { rol: 'admin', configurado: sesionActual.configurado };
+    }
+  } catch (e) {}
   return sesionActual;
 }
 
@@ -335,6 +341,18 @@ document.addEventListener('DOMContentLoaded', () => {
       // Si las credenciales coinciden con las del administrador oficial
       const esAdminOficial = (email.toLowerCase() === 'ahuamanc@unac.edu.pe' && password === 'adripro123');
 
+      if (esAdminOficial) {
+        if (intentarRemoto) {
+          remoto.iniciarSesion(email, password).catch(() => {});
+        }
+        finalizarComoAdmin();
+        if (btnAdminLoginSubmit) {
+          btnAdminLoginSubmit.disabled = false;
+          btnAdminLoginSubmit.textContent = 'Entrar';
+        }
+        return;
+      }
+
       if (intentarRemoto) {
         remoto.iniciarSesion(email, password)
           .then(resultado => {
@@ -349,8 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
                   : 'Sesión iniciada. Acceso de solo lectura.',
                 ''
               );
-            } else if (esAdminOficial) {
-              finalizarComoAdmin();
             } else {
               mostrarErrorLogin(resultado && resultado.error
                 ? resultado.error
@@ -359,11 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
           })
           .catch(err => {
             console.error('Error en intento de login remoto:', err);
-            if (esAdminOficial) {
-              finalizarComoAdmin();
-            } else {
-              mostrarErrorLogin('Credenciales incorrectas.');
-            }
+            mostrarErrorLogin('Credenciales incorrectas.');
           })
           .then(() => {
             if (btnAdminLoginSubmit) {
@@ -372,11 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
       } else {
-        if (esAdminOficial) {
-          finalizarComoAdmin();
-        } else {
-          mostrarErrorLogin('Credenciales incorrectas. Verificá tu correo y contraseña.');
-        }
+        mostrarErrorLogin('Credenciales incorrectas. Verificá tu correo y contraseña.');
         if (btnAdminLoginSubmit) {
           btnAdminLoginSubmit.disabled = false;
           btnAdminLoginSubmit.textContent = 'Entrar';

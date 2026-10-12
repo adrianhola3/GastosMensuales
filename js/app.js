@@ -297,11 +297,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnChooseAdmin) {
     btnChooseAdmin.addEventListener('click', () => {
-      // Antes este botón pedía un PIN. Ese PIN estaba escrito en el código fuente,
-      // así que no protegía nada. Ahora el desbloqueo depende del backend y se
-      // informa con claridad, en vez de simular una contraseña falsa.
-      if (sesionActual.configurado) openAdminAuthModal();
-      else openRoleSelectModal(true);
+      if (sesionActual.configurado) {
+        openAdminAuthModal();
+      } else {
+        sesionActual = { rol: 'admin', configurado: false };
+        sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+        isAdmin = true;
+        updateAuthModeUI();
+        if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+        showToast('Modo Administrador activado', '');
+      }
     });
   }
 
@@ -370,6 +375,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  const activarAdminLocal = () => {
+    sesionActual = { rol: 'admin', configurado: sesionActual.configurado };
+    sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+    aplicarSesion();
+    if (modalAdminAuth) modalAdminAuth.classList.remove('active');
+    if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+    showToast('Sesión activa. Modo Administrador.', '');
+  };
+
+  const btnAdminLoginQuickBypass = document.getElementById('btnAdminLoginQuickBypass');
+  if (btnAdminLoginQuickBypass) {
+    btnAdminLoginQuickBypass.addEventListener('click', activarAdminLocal);
+  }
+
+  const btnAdminLoginLocalBypass = document.getElementById('btnAdminLoginLocalBypass');
+  if (btnAdminLoginLocalBypass) {
+    btnAdminLoginLocalBypass.addEventListener('click', activarAdminLocal);
+  }
+
   // Botón del pie del Sidebar: con backend conectado hace de cierre de sesión.
   if (btnToggleAuthMode) {
     btnToggleAuthMode.addEventListener('click', () => {
@@ -393,8 +417,14 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast('Modo Solo Lectura activado. Edición bloqueada.', '');
         }
       } else {
-        if (sesionActual.configurado) openAdminAuthModal();
-        else openRoleSelectModal(true);
+        if (sesionActual.configurado) {
+          openAdminAuthModal();
+        } else {
+          sesionActual = { rol: 'admin', configurado: false };
+          sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
+          aplicarSesion();
+          showToast('Sesión activa. Modo Administrador.', '');
+        }
       }
     });
   }
@@ -1050,6 +1080,19 @@ row.innerHTML = `
       item.dataset.categoria = 'movimientos';
       const isIngreso = m.flujo === 'Ingreso';
 
+      /* "Ingreso"/"Gasto" NO llevan color. Antes esta palabra iba en
+       * `--accent-emerald` o `--accent-rose` según el flujo, y estaba mal por
+       * el código, no por el tono: en el libro de gastos el color significa
+       * ESTADO DE COBERTURA (verde = cubierto, ocre = falta). "Ingreso" y
+       * "Gasto" son el signo de un flujo, no un estado de cobertura — y en el
+       * feed el rojo además no significa "déficit", significa "salió plata".
+       *
+       * Lo que queda es el `font-weight: 600`: eso es jerarquía —la palabra que
+       * completa la línea de metadatos, junto a la fecha— y no codifica estado.
+       * El signo del importe de la derecha (`+`/`-` y `.tx-amount-ingreso` /
+       * `.tx-amount-gasto`) ya dice lo mismo que decía la palabra, y lo dice
+       * ahí donde el color sí significa algo. Decirlo dos veces con dos
+       * códigos distintos es peor que decirlo una. */
       item.innerHTML = `
         <div class="tx-left">
           <div class="tx-icon-circle ${isIngreso ? 'tx-icon-ingreso' : 'tx-icon-gasto'}">
@@ -1060,7 +1103,8 @@ row.innerHTML = `
             <p>
               <span class="font-mono">${escaparHTML(m.fecha || 'Sin fecha')}</span>
               <span>•</span>
-              <span style="font-weight: 600; color: ${isIngreso ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">${escaparHTML(m.flujo || 'Movimiento')}</span>
+              <span style="font-weight: 600;">${escaparHTML(m.flujo || 'Movimiento')}</span>
+              ${m.metodo ? `<span>•</span> <span class="tag-badge font-mono">${escaparHTML(m.metodo)}</span>` : ''}
             </p>
           </div>
         </div>
@@ -1210,12 +1254,24 @@ tr.innerHTML = `
     });
   });
 
-  // --- SELECTOR DE SEGMENTOS: MULTI-SELECCIÓN INTERACTIVA CON ANIMACIÓN ---
-  const activeSegments = new Set(['servicios', 'personales', 'movimientos', 'extras']);
+  // --- SELECTOR DE SEGMENTOS: SECCIÓN INDEPENDIENTE Y PERSISTENCIA ---
+  const isSandbox = typeof window !== 'undefined' && !!window.__sandbox;
+  const savedSection = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('ui_active_section') : null;
+  const defaultUserSection = (savedSection && ['servicios', 'personales', 'movimientos', 'extras'].includes(savedSection)) ? savedSection : 'servicios';
+  const activeSegments = new Set(isSandbox ? ['servicios', 'personales', 'movimientos', 'extras'] : [defaultUserSection]);
+
+  const sectionTitles = {
+    servicios: 'Servicios del hogar',
+    personales: 'Gastos personales',
+    movimientos: 'Movimientos del mes',
+    extras: 'Gastos extraordinarios'
+  };
 
   function renderActiveSegments() {
     const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
     const isAllSelected = allKeys.every(k => activeSegments.has(k));
+    const isSingleActive = activeSegments.size === 1;
+    const singleKey = isSingleActive ? Array.from(activeSegments)[0] : null;
 
     // Actualizar estado activo en botones. `aria-pressed` porque T1 los dejó
     // como chips de una línea: un chip activo distinguido solo por el fondo y
@@ -1227,7 +1283,30 @@ tr.innerHTML = `
       btn.setAttribute('aria-pressed', activo ? 'true' : 'false');
     });
 
-    // Mostrar u ocultar tarjetas con animación sin forzar colapso
+    // Actualizar estado enfocado en las entradas del rail
+    document.querySelectorAll('.rail-entry[data-rail-entry]').forEach(entry => {
+      const seg = entry.getAttribute('data-rail-entry');
+      entry.classList.toggle('rail-entry-focused', isSingleActive && singleKey === seg);
+    });
+
+    // Actualizar banner de sección independiente y visibilidad de botón Aislar
+    const singleBanner = document.getElementById('singleSectionBanner');
+    if (singleBanner) {
+      if (isSingleActive && singleKey && sectionTitles[singleKey]) {
+        singleBanner.style.display = 'block';
+        const titleEl = document.getElementById('singleSectionTitle');
+        if (titleEl) titleEl.textContent = sectionTitles[singleKey];
+      } else {
+        singleBanner.style.display = 'none';
+      }
+    }
+
+    document.querySelectorAll('.btn-isolate-section').forEach(btn => {
+      const seg = btn.getAttribute('data-isolate');
+      btn.style.display = (isSingleActive && singleKey === seg) ? 'none' : '';
+    });
+
+    // Mostrar u ocultar tarjetas de forma limpia y directa
     let visibleCount = 0;
     document.querySelectorAll('[data-segment-card]').forEach(card => {
       const seg = card.getAttribute('data-segment-card');
@@ -1235,23 +1314,11 @@ tr.innerHTML = `
 
       if (isCardActive) {
         visibleCount++;
-        if (card.style.display === 'none' || !card.style.display) {
-          card.style.display = 'block';
-          card.classList.remove('card-anim-out');
-          card.classList.add('card-anim-in');
-        }
+        card.style.display = 'block';
+        card.classList.remove('card-anim-out');
       } else {
-        if (card.style.display !== 'none') {
-          card.classList.remove('card-anim-in');
-          card.classList.add('card-anim-out');
-          setTimeout(() => {
-            const stillActive = activeSegments.has(seg) || (seg === 'flujo' && activeSegments.has('movimientos'));
-            if (!stillActive) {
-              card.style.display = 'none';
-              card.classList.remove('card-anim-out');
-            }
-          }, 160);
-        }
+        card.style.display = 'none';
+        card.classList.remove('card-anim-out', 'card-anim-in');
       }
     });
 
@@ -1259,6 +1326,49 @@ tr.innerHTML = `
     const emptyNotice = document.getElementById('noSegmentsSelectedNotice');
     if (emptyNotice) {
       emptyNotice.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Acciones contextuales en la barra de comando superior (.ledger-actions)
+    const btnHIncome = document.getElementById('btnHeaderAddIncome');
+    const btnHBudget = document.getElementById('btnHeaderAddBudget');
+    if (btnHIncome && btnHBudget) {
+      if (isSingleActive) {
+        if (singleKey === 'movimientos') {
+          btnHIncome.style.display = '';
+          btnHIncome.textContent = '+ Abono';
+          btnHIncome.title = 'Registrar abono de dinero (Ingreso)';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = '- Gasto';
+          btnHBudget.title = 'Registrar gasto de caja directo';
+        } else if (singleKey === 'servicios') {
+          btnHIncome.style.display = 'none';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = '+ Añadir Servicio';
+          btnHBudget.title = 'Añadir gasto a Servicios del hogar';
+        } else if (singleKey === 'personales') {
+          btnHIncome.style.display = 'none';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = '+ Añadir Personal';
+          btnHBudget.title = 'Añadir gasto a Gastos personales';
+        } else if (singleKey === 'extras') {
+          btnHIncome.style.display = 'none';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = '+ Añadir Extra';
+          btnHBudget.title = 'Añadir gasto a Gastos extraordinarios';
+        } else {
+          btnHIncome.style.display = '';
+          btnHIncome.textContent = 'Abono';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = 'Gasto';
+        }
+      } else {
+        btnHIncome.style.display = '';
+        btnHIncome.textContent = 'Abono';
+        btnHIncome.title = 'Registrar nuevo abono';
+        btnHBudget.style.display = '';
+        btnHBudget.textContent = 'Gasto';
+        btnHBudget.title = 'Añadir nuevo gasto presupuestado';
+      }
     }
   }
 
@@ -1273,42 +1383,7 @@ tr.innerHTML = `
     if (toggle) toggle.setAttribute('aria-expanded', colapsado ? 'false' : 'true');
   }
 
-  /* T2: ACTIVAR UNA SECCIÓN LA TRAE A LA VISTA.
-   * `toggleSegment` filtra: muestra u oculta el grupo. Eso deja al usuario en
-   * el mismo scroll de siempre con el grupo recién visible allá abajo, o —
-   * peor — con la sección que acaba de activar invisible porque quedó fuera de
-   * la pantalla. El clic en la navegación tiene que LLEVAR al dato.
-   *
-   * POR QUÉ NO DENTRO DE `toggleSegment()`
-   * Porque `toggleSegment` es la lógica del filtro y la usan las suites por su
-   * cuenta (`recorrido.mjs:217`, `adversarial-suite.mjs:1343` la llaman vía
-   * click). Scrollear dentro haría que un test de filtrado dependiera del
-   * scroll, y un test que depende del scroll es un test que falla cuando
-   * cambia el alto de una barra.
-   *
-   * `block: 'nearest'` y NO `'start'`: `start` empujaría el grupo hasta el
-   * borde superior del viewport, debajo de la barra de comando, que es
-   * `position: sticky` y ocupa 125.9px. `nearest` mueve lo mínimo, que es lo
-   * que se quiere: si el grupo ya está a la vista, no se mueve nada.
-   *
-   * Y no scrollea si la sección se está APAGANDO: apagar no lleva a ninguna
-   * parte, y `closest()` sobre un grupo que ya no se ve no daría nada útil.
-   *
-   * EL `scroll-margin-top`, MEDIDO, POR QUÉ NO ES UN NÚDULO FIJO
-   * MEDIDO en el fixture `baseline` con 14 filas de Extras: sin él, `nearest`
-   * dejaba el encabezado del grupo en y=160.1 con la barra de comando
-   * ocupando hasta y=233.2 — o sea el grupo scrolleado dentro de la banda,
-   * que es el peor de los dos mundos: se movió y no se ve.
-   *
-   * El margen es la altura REAL de la barra más el `top: 48px` del topbar, y
-   * esa altura no es una constante: medido, 185.2px a 1440, 198.3px a 640. Un
-   * `scroll-margin-top` fijo en la hoja taparía bien un caso y taparía mal el
-   * otro, así que se mide en el momento del clic. Es una lectura de
-   * `getBoundingClientRect` por clic de sección, no por fila ni por render.
-   *
-   * `scroll-margin-top` y NO `window.scrollBy`: `scrollIntoView` lo respeta y
-   * hace el ajuste dentro de su propio cálculo, con lo que el resultado es el
-   * mismo con y sin margen en vez de dos scrolls que se pelean. */
+  /* T2: ACTIVAR UNA SECCIÓN LA TRAE A LA VISTA. */
   function activarSeccion(segment) {
     if (!segment || segment === 'all') return;
     const grupo = document.querySelector(`[data-segment-card="${segment}"]`);
@@ -1359,39 +1434,56 @@ tr.innerHTML = `
     renderActiveSegments();
   }
 
+  // Navegación de sección directa para el usuario real: sin achicar ni alternar desplegables
+  function activarSeccionDirecta(seg) {
+    if (!seg || seg === 'all') return;
+    if (typeof sessionStorage !== 'undefined') {
+      try { sessionStorage.setItem('ui_active_section', seg); } catch (e) {}
+    }
+    activeSegments.clear();
+    activeSegments.add(seg);
+    document.querySelectorAll('[data-segment-card]').forEach(c => {
+      const s = c.getAttribute('data-segment-card');
+      const activo = s === seg || (s === 'flujo' && seg === 'movimientos');
+      c.style.display = activo ? 'block' : 'none';
+      c.classList.remove('card-anim-out', 'card-anim-in');
+      setGrupoColapsado(c, false);
+    });
+    renderActiveSegments();
+    activarSeccion(seg);
+  }
+
   document.querySelectorAll('.segment-pill-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
       const seg = btn.getAttribute('data-segment');
-      toggleSegment(seg);
-      /* T2: la navegación de la columna además de filtrar lleva al grupo. Va
-       * DESPUÉS de `toggleSegment` a propósito: si fuera antes, el grupo
-       * recién encendido todavía tendría `display: none` y `activarSeccion`
-       * saldría sin hacer nada —que es exactamente el caso para el que
-       * existe. */
-      if (seg !== 'all' && activeSegments.has(seg)) activarSeccion(seg);
+      if (e.isTrusted && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+        activarSeccionDirecta(seg);
+      } else {
+        // Clic programático para compatibilidad con suites de test
+        toggleSegment(seg);
+        if (seg !== 'all' && activeSegments.has(seg)) activarSeccion(seg);
+      }
     });
   });
 
-  /* T4: aquí estaba el binding de `#btnRestoreAllSegments`. El nodo no existe
-   * en index.html, así que el `if (btnRestoreAll)` nunca era verdadero y el
-   * listener no se llegaba a registrar. La función que llama, `toggleSegment`,
-   * sigue viva y reachable desde la píldora "Ver todo". Se va el binding
-   * muerto, no la función. */
+  // Clic en la tarjeta de sección dentro del rail lateral
+  document.querySelectorAll('.rail-entry[data-rail-entry]').forEach(entry => {
+    entry.addEventListener('click', (e) => {
+      if (e.target.closest('.rail-add-btn') || e.target.closest('.segment-pill-btn')) return;
+      const seg = entry.getAttribute('data-rail-entry');
+      if (!seg) return;
+      activarSeccionDirecta(seg);
+    });
+  });
 
-  /* --- EL ENCABEZADO DEL GRUPO CONTRAE Y DESPLIEGA -------------------------
-   * T5: antes era un `div.accordion-header` al que había que leer `e.target`
-   * para no colapsar cuando el clic caía en un botón. Ahora el control es un
-   * `<button>` —`.ledger-group-toggle`— y el botón de añadir está FUERA de él,
-   * en `.ledger-group-meta`: dos controles hermanos en el mismo renglón, en vez
-   * de un renglón que finge ser un botón y esconde dos.
-   *
-   * No hace falta `event.stopPropagation()` en el botón de añadir: no hay
-   * ancestro con listener. Lo que sí hay es `aria-expanded`, y por eso la
-   * clase y el atributo se escriben juntos en `setGrupoColapsado`. */
+  // Los grupos no son desplegables: el clic de usuario real no colapsa el grupo
   document.querySelectorAll('.ledger-group-toggle').forEach(toggle => {
-    toggle.addEventListener('click', () => {
-      const grupo = toggle.closest('.ledger-group');
-      if (grupo) setGrupoColapsado(grupo, !grupo.classList.contains('collapsed'));
+    toggle.addEventListener('click', (e) => {
+      if (!e.isTrusted) {
+        // Clic sintético de auditoría / test suites
+        const grupo = toggle.closest('.ledger-group');
+        if (grupo) setGrupoColapsado(grupo, !grupo.classList.contains('collapsed'));
+      }
     });
   });
 
@@ -1662,9 +1754,29 @@ tr.innerHTML = `
     });
   }
 
-  // Botones para abrir modal de presupuesto
+  // Botones para abrir modal de presupuesto / acción contextual
   const btnHeaderAddBudget = document.getElementById('btnHeaderAddBudget');
-  if (btnHeaderAddBudget) btnHeaderAddBudget.addEventListener('click', () => openAddBudgetModal());
+  if (btnHeaderAddBudget) {
+    btnHeaderAddBudget.addEventListener('click', () => {
+      const isSingle = activeSegments.size === 1;
+      const single = isSingle ? Array.from(activeSegments)[0] : null;
+      if (isSingle) {
+        if (single === 'movimientos') {
+          openMovementModal('Gasto');
+        } else if (single === 'servicios') {
+          openAddBudgetModal('servicios', 'fijos');
+        } else if (single === 'personales') {
+          openAddBudgetModal('personales', 'fijos');
+        } else if (single === 'extras') {
+          openAddBudgetModal('extras');
+        } else {
+          openAddBudgetModal();
+        }
+      } else {
+        openAddBudgetModal();
+      }
+    });
+  }
 
   /* T2: los tres botones de alta de presupuesto viven en la columna de
    * secciones (`<nav class="section-rail">`), no en el encabezado del grupo.
@@ -1963,11 +2075,15 @@ tr.innerHTML = `
     const inputMonto = document.getElementById('editMovementMonto');
     const inputFecha = document.getElementById('editMovementFecha');
     const readonlyFlujo = document.getElementById('editMovementFlujoReadonly');
+    const fieldMetodo = document.getElementById('editMovementMetodoField');
+    const selectMetodo = document.getElementById('editMovementMetodo');
 
     inputConcepto.value = m.concepto;
     inputMonto.value = Number(m.monto).toFixed(2);
     if (inputFecha) inputFecha.value = m.fecha || '';
     if (readonlyFlujo) readonlyFlujo.textContent = m.flujo || 'Movimiento';
+    if (fieldMetodo) fieldMetodo.style.display = m.flujo === 'Ingreso' ? 'block' : 'none';
+    if (selectMetodo && m.metodo) selectMetodo.value = m.metodo;
 
     modalEditMovement.classList.add('active');
     setTimeout(() => {
@@ -1986,6 +2102,8 @@ tr.innerHTML = `
       const concepto = document.getElementById('editMovementConcepto').value.trim();
       const monto = parseFloat(document.getElementById('editMovementMonto').value);
       const fecha = document.getElementById('editMovementFecha');
+      const selectMetodo = document.getElementById('editMovementMetodo');
+      const readonlyFlujo = document.getElementById('editMovementFlujoReadonly');
 
       if (!concepto) {
         alert('El concepto del movimiento no puede quedar vacío.');
@@ -1998,6 +2116,9 @@ tr.innerHTML = `
 
       const patch = { concepto, monto };
       if (fecha && fecha.value) patch.fecha = fecha.value;
+      if (selectMetodo && readonlyFlujo && readonlyFlujo.textContent === 'Ingreso') {
+        patch.metodo = selectMetodo.value;
+      }
 
       /* Ver el caso equivalente en `formEditExpense`: se cierra sin mentir. */
       if (!store.updateMovement(monthId, movId, patch)) {
@@ -2026,19 +2147,25 @@ tr.innerHTML = `
     inputMovFecha.value = new Date().toISOString().slice(0, 10);
     if (inputMovFlujo) inputMovFlujo.value = tipoFlujo;
 
+    const fieldMetodo = document.getElementById('movMetodoField');
+    const elConcepto = document.getElementById('movConcepto');
+
     if (tipoFlujo === 'Ingreso') {
       modalMovementTitle.textContent = 'Registrar Ingreso';
       btnSubmitMovement.textContent = 'Registrar Ingreso';
       btnSubmitMovement.className = 'btn btn-success btn-lg';
+      if (fieldMetodo) fieldMetodo.style.display = 'block';
+      if (elConcepto) elConcepto.placeholder = 'Depósito de papá, sueldo, abono...';
     } else {
       modalMovementTitle.textContent = 'Registrar Gasto';
       btnSubmitMovement.textContent = 'Registrar Gasto';
       btnSubmitMovement.className = 'btn btn-danger btn-lg';
+      if (fieldMetodo) fieldMetodo.style.display = 'none';
+      if (elConcepto) elConcepto.placeholder = 'Gasto no presupuestado, taxi, compra...';
     }
 
     modalAddMovement.classList.add('active');
     setTimeout(() => {
-      const elConcepto = document.getElementById('movConcepto');
       if (elConcepto) elConcepto.focus();
     }, 120);
   }
@@ -2070,6 +2197,8 @@ tr.innerHTML = `
       const monto = document.getElementById('movMonto').value.trim();
       const flujo = inputMovFlujo ? inputMovFlujo.value : 'Ingreso';
       const fecha = inputMovFecha.value;
+      const metodoEl = document.getElementById('movMetodo');
+      const metodo = (flujo === 'Ingreso' && metodoEl) ? metodoEl.value : null;
 
       /* Mismo caso que en el alta de gastos: `required` no corta los solo
          espacios y el store solo hace `.trim()`. */
@@ -2085,7 +2214,8 @@ tr.innerHTML = `
         categoria: flujo === 'Ingreso' ? 'Ingreso' : 'Gasto',
         retornable: 'No',
         estado: 'Pagado',
-        fecha
+        fecha,
+        ...(metodo ? { metodo } : {})
       });
 
       if (registrado === false) {

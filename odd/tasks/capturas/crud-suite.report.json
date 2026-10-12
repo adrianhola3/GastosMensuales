@@ -1,6 +1,6 @@
 {
   "suite": "crud-suite",
-  "generatedAt": "2026-10-11T04:21:36.294Z",
+  "generatedAt": "2026-10-12T05:38:27.676Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -1533,7 +1533,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 112
+              "totalControles": 119
             }
           }
         },
@@ -1951,14 +1951,15 @@
           "label": "the movement to edit was created through the real UI",
           "detail": {
             "creado": {
-              "id": "id_zghbeeo07_1791692423581",
+              "id": "id_eyubmp28u_1791783434154",
               "fecha": "2026-08-10",
               "concepto": "PRUEBA-CRUD Abono Base",
               "flujo": "Ingreso",
               "categoria": "Ingreso",
               "retornable": "No",
               "estado": "Pagado",
-              "monto": 1000
+              "monto": 1000,
+              "metodo": "Yape"
             }
           }
         },
@@ -1999,8 +2000,8 @@
           "pass": true,
           "label": "the hidden id is the clicked movement",
           "detail": {
-            "actual": "id_zghbeeo07_1791692423581",
-            "expected": "id_zghbeeo07_1791692423581"
+            "actual": "id_eyubmp28u_1791783434154",
+            "expected": "id_eyubmp28u_1791783434154"
           }
         },
         {
@@ -2495,11 +2496,11 @@
           "pass": true,
           "label": "DISK: a month with that nombre exists",
           "detail": {
-            "nuevoId": "prueba-crud-gamma-2026-1791692447503",
+            "nuevoId": "prueba-crud-gamma-2026-1791783459501",
             "orden": [
               "prueba-alfa-2026",
               "prueba-beta-2026",
-              "prueba-crud-gamma-2026-1791692447503"
+              "prueba-crud-gamma-2026-1791783459501"
             ]
           }
         },
@@ -2547,8 +2548,8 @@
           "pass": true,
           "label": "DISK: the new month became the active one",
           "detail": {
-            "actual": "prueba-crud-gamma-2026-1791692447503",
-            "expected": "prueba-crud-gamma-2026-1791692447503"
+            "actual": "prueba-crud-gamma-2026-1791783459501",
+            "expected": "prueba-crud-gamma-2026-1791783459501"
           }
         },
         {
@@ -2663,7 +2664,7 @@
           "pass": true,
           "label": "DISK: the clone exists",
           "detail": {
-            "nuevoId": "prueba-crud-delta-2026-1791692451581"
+            "nuevoId": "prueba-crud-delta-2026-1791783463446"
           }
         },
         {
@@ -2955,7 +2956,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 110,
+              "totalControles": 117,
               "sospechosos": [],
               "pills": 2,
               "pillsEditable": 0
@@ -3015,7 +3016,7 @@
             "actual": 1,
             "expected": 0,
             "contexto": {
-              "totalControles": 85,
+              "totalControles": 92,
               "sospechosos": [
                 {
                   "tag": "button",

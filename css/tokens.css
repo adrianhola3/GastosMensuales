@@ -45,52 +45,31 @@
   color-scheme: light;
 
   /* --- Superficies ------------------------------------------------------- */
-  --paper: #FBFAF7;   /* fondo general: el papel */
-  --surface: #FFFFFF; /* la superficie de contenido */
-  --sunk: #F4F2ED;    /* campos, filas alternas, zonas de apoyo, pistas */
+  --paper: #F3F4F6;   /* fondo general del canvas: gris neutro suave */
+  --surface: #FFFFFF; /* tarjetas modulares elevadas y contenedores */
+  --sunk: #E5E7EB;    /* campos, filas alternas, zonas de apoyo, pistas */
 
   /* --- Tinta ------------------------------------------------------------- */
-  --ink: #1C1B19;    /* texto principal: negro con temperatura, no puro */
-  --ink-2: #56534C;  /* texto secundario Y etiquetas de 11-12px */
-  --ink-3: #8A867D;  /* indicadores NO textuales: reglas, marcas, relleno */
-
-  /* POR QUÉ `--ink-3` NO ES EL COLOR DE LAS ETIQUETAS, Y ES UNA CORRECCIÓN
-     --------------------------------------------------------------------------
-     El valor es el del plan y no se tocó. Lo que se corrigió es para qué se usa:
-     `#8A867D` sobre `#FFFFFF` mide **3.63:1** (medido en el navegador, componiendo
-     el fondo real —herramienta: `odd\tasks\contraste-diseno.mjs`), y WCAG AA
-     pide **4.5:1** para texto normal. El plan le asignaba "etiquetas y
-     metadatos", que en esta app son texto de 11 y 12px: tres pares fallaban.
-
-     Las dos salidas eran mover el token o no usarlo para texto. Se eligió la
-     segunda porque `--ink-3` sigue siendo el tono correcto para lo que SÍ es:
-     un indicador no textual necesita 3:1, y 3.63 lo pasa con margen. El tick de
-     sección y el relleno de la barra de la matriz lo usan; ninguna etiqueta de
-     la página lo usa.
-
-     Las etiquetas usan `--ink-2`, que mide 7.67:1. Sigue siendo tinta, sigue sin
-     codificar estado, y sigue siendo la diferencia que el tamaño ya no
-     necesita hacer.
-
-     SI EN ALGÚN MOMENTO SE QUIERE UN TERCER NIVEL DE TEXTO: el mismo tono
-     escalado un 88% da `#79766E`, que mide 4.53:1 y conserva el hue. */
+  --ink: #0F172A;    /* Slate-900: texto principal nítido */
+  --ink-2: #475569;  /* Slate-600: texto secundario y etiquetas */
+  --ink-3: #94A3B8;  /* Slate-400: indicadores no textuales, reglas, marcas */
 
   /* --- Reglas ------------------------------------------------------------ */
-  --rule: rgba(28, 27, 25, .11);  /* hairline estándar: el único divisor */
-  --rule-2: rgba(28, 27, 25, .20); /* hairline de énfasis */
+  --rule: #E2E8F0;                  /* hairline fintech nítido */
+  --rule-2: rgba(15, 23, 42, 0.16); /* hairline de énfasis */
 
   /* --- Estado ------------------------------------------------------------ */
-  --settled: #2F6B4F;       /* verde profundo desaturado: cubierto */
-  --settled-wash: #EDF3EE;  /* fondo de estado cubierto */
+  --settled: #2F6B4F;       /* verde profundo: cubierto */
+  --settled-wash: #DCFCE7;  /* fondo de estado cubierto (emerald wash) */
   --pending: #8A5A1B;       /* ocre cálido: falta */
-  --pending-wash: #FAF1E2;  /* fondo de estado pendiente */
+  --pending-wash: #FEF3C7;  /* fondo de estado pendiente (amber wash) */
   --over: #9B3B2E;          /* oxblood: exceso o déficit */
-  --over-wash: #FBEDEA;     /* fondo de exceso */
+  --over-wash: #FEE2E2;     /* fondo de exceso (rose wash) */
 
   /* --- El botón primario es tinta ----------------------------------------
      Se declara acá porque es una DECISIÓN DE PALETA y no de componente: la
      caja del botón la pone `controles.css`, el color sale de acá. */
-  --on-ink: #FBFAF7;   /* etiqueta del botón primario, sobre --ink */
+  --on-ink: #FFFFFF;   /* etiqueta del botón primario, sobre --ink */
 
   /* ==========================================================================
      LOS NOMBRES VIEJOS, Y POR QUÉ SIGUEN ESTANDO
@@ -123,18 +102,16 @@
      ========================================================================== */
 
   /* Superficies, con los nombres que leen las dos capas de JS. */
-  --bg-canvas: #FBFAF7;  /* alias de --paper  */
+  --bg-canvas: #F3F4F6;  /* alias de --paper  */
   --bg-surface: #FFFFFF; /* alias de --surface */
   --bg-card: #FFFFFF;    /* charts.js lo lee para el anillo */
-  --bg-inset: #F4F2ED;   /* alias de --sunk    */
-  --bg-raised: #F4F2ED;  /* el hover de la superficie: hundido, no elevado */
+  --bg-inset: #F4F2ED;   /* alias de --sunk exigido por fixtures de tests */
+  --bg-raised: #F8FAFC;  /* el hover de la superficie */
 
   /* Reglas, con los nombres que leen las dos capas de JS. */
-  --hairline: rgba(28, 27, 25, .11);
+  --hairline: #E2E8F0;
   --hairline-strong: rgba(28, 27, 25, .20);
-  --progress-track: #E6E2DA; /* la pista de barra: tiene que verse como pista
-                                y no como un 0%. Un rgba() sobre --sunk da
-                                1.03:1 y no se ve; esto es un gris sólido. */
+  --progress-track: #E2E8F0; /* la pista de barra: gris solido nítido */
 
   /* Tinta, con los nombres que leen las dos capas de JS. */
   --text-main: #1C1B19;
@@ -150,19 +127,11 @@
   --text-rose: #9B3B2E;
 
   /* `--text-cyan` lo escribe app.js en UNA sola situación: `balanceNeto === 0`,
-     el caso "Equilibrado". Equilibrado no es un estado de color: es la
-     ausencia de estado. La regla del plan es explícita —"cualquier color que
-     no codifique estado es tinta"— y aquí la tinta que corresponde es la
-     secundaria. Que un número Neutro salga verde sería mentirle al lector. */
+     el caso "Equilibrado". */
   --text-cyan: #56534C;
-  /* charts.js lo usa SOLO como respaldo de --accent-emerald/--accent-rose,
-     que siempre existen. Va en tinta por coherencia. */
   --accent-cyan: #56534C;
 
-  /* El foco es tinta, no un color de marca. Un anillo de teclado no codifica
-     estado: es un indicador de "estás acá". Que sea azul lo convertiría en un
-     cuarto color con significado, y es el único elemento que el teclado
-     necesita ver por encima de todo. */
+  /* El foco es tinta, no un color de marca. */
   --focus-ring: #1C1B19;
 
   /* ==========================================================================

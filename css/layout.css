@@ -61,7 +61,7 @@
 
 .app-main-area {
   min-width: 0; /* sin esto un hijo con contenido ancho revienta la columna */
-  background: var(--surface);
+  background: var(--paper);
   display: flex;
   flex-direction: column;
 }
@@ -101,13 +101,14 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--paper);
-  border-right: 1px solid var(--rule);
+  background: #111827;
+  border-right: 1px solid #1F2937;
+  color: #F8FAFC;
 }
 
 /* --- Marca ----------------------------------------------------------------
-   El nombre en un renglón y eldescriptor debajo, sin caja. Es la firma del
-   documento, no un encabezado de sección: no lleva filete arriba. */
+   El nombre en un renglón y el descriptor debajo, sin caja. Es la firma del
+   documento, no un encabezado de sección. */
 .sidebar-brand {
   display: flex;
   align-items: flex-start;
@@ -128,7 +129,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ink-2);
+  color: #38BDF8;
 }
 
 .brand-texts { min-width: 0; }
@@ -141,12 +142,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #FFFFFF;
 }
 
 .brand-sub {
   display: block;
   font-size: var(--text-2xs);
-  color: var(--ink-2);
+  color: #94A3B8;
   line-height: 1.35;
   white-space: nowrap;
   overflow: hidden;
@@ -161,10 +163,10 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radius);
-  color: var(--ink-2);
+  color: #94A3B8;
   transition: var(--transition);
 }
-.sidebar-close-btn:hover { color: var(--ink); background: var(--sunk); }
+.sidebar-close-btn:hover { color: #FFFFFF; background: #1F2937; }
 
 /* --- Las dos vistas --------------------------------------------------------
    Con ícono y con texto: en 196px entran los dos, y el texto es lo que hace
@@ -186,48 +188,41 @@
   padding: 7px var(--space-2);
   border-radius: var(--radius);
   font-size: var(--text-md);
-  color: var(--ink-2);
+  color: #94A3B8;
   text-align: left;
   transition: var(--transition);
 }
 
 .sidebar-nav-tab:hover {
-  background: var(--sunk);
-  color: var(--ink);
+  background: #1F2937;
+  color: #F8FAFC;
 }
 
 .sidebar-nav-tab.active {
-  color: var(--ink);
+  background: #1F2937;
+  color: #FFFFFF;
   font-weight: 600;
 }
 
-/* LA MARCA DE "ACÁ ESTÁS": UN BORDE, NO UNA SOMBRA.
-   `border-left: 2px solid transparent` en reposo y el mismo borde con color en
-   el activo. Podría haber sido `box-shadow: inset`, que no mueve el layout, y
-   esa es la razón técnica de no hacerlo: en esta hoja no hay ni una sombra,
-   y la primera que entra por "es solo un inset" es la primera que otro usa
-   para una caja difusa. El borde transparente reserva los 2px siempre, así que
-   activar no mueve nada. */
+/* LA MARCA DE "ACÁ ESTÁS" */
 .sidebar-nav-tab,
-.month-pill-btn,
+.month-pill-btn {
+  border-left: 2px solid transparent;
+}
+
+.sidebar-nav-tab.active { border-left-color: #38BDF8; }
+.month-pill-btn.active { border-left-color: #38BDF8; }
+
 .rail-entry > .segment-pill-btn,
 .rail-entry-all > .segment-pill-btn {
   border-left: 2px solid transparent;
 }
-
-.sidebar-nav-tab.active { border-left-color: var(--ink); }
-.month-pill-btn.active { border-left-color: var(--ink); }
 .rail-entry > .segment-pill-btn.active,
 .rail-entry-all > .segment-pill-btn.active { border-left-color: var(--ink); }
 
 .nav-tab-icon { display: flex; color: inherit; }
 
-/* --- La línea de tiempo: el bloque que CRECE ------------------------------
-   `flex: 1 1 auto` + `min-height: 0` es lo que hace que la lista scrollee y
-   SOLO la lista. Arriba, el rótulo estático y las dos flechas que recorren la
-   lista. Abajo, las dos acciones que administran períodos, que en modo Lector
-   desaparecen con su bloque entero: media pieza de dos botones partidos se lee
-   como que sobran controles. */
+/* --- La línea de tiempo: el bloque que CRECE ------------------------------ */
 .sidebar-periods {
   display: flex;
   flex-direction: column;
@@ -247,7 +242,7 @@
 
 .sidebar-section-label {
   font-size: var(--text-2xs);
-  color: var(--ink-2);
+  color: #94A3B8;
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
 }
@@ -259,8 +254,6 @@
   flex: 0 0 auto;
 }
 
-/* El bloque que scrollea. `min-height: 0` es lo que permite que encoje: sin
-   él la lista empujaría el pie del rail fuera de la pantalla. */
 .period-track {
   display: flex;
   flex-direction: column;
@@ -268,16 +261,10 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior-y: contain;
-  /* Una barra de scroll de 8px a la derecha de una columna de 196px se come el
-     aire de los nombres. Las flechas del encabezado y el ítem cortado son
-     pistas más honestas que una barra que aparece y desaparece. */
   scrollbar-width: none;
 }
 .period-track::-webkit-scrollbar { display: none; }
 
-/* Un mes es una fila de una lista, no una cápsula: la misma marca de regla que
-   las vistas, sin fondo. El `aria-pressed` que escribe app.js lleva el estado a
-   quien no ve la regla. */
 .month-pill-btn {
   flex: 0 0 auto;
   display: flex;
@@ -286,7 +273,7 @@
   padding: 0 var(--space-2);
   border-radius: var(--radius);
   font-size: var(--text-md);
-  color: var(--ink-2);
+  color: #94A3B8;
   text-align: left;
   white-space: nowrap;
   overflow: hidden;
@@ -294,11 +281,11 @@
   transition: var(--transition);
 }
 
-.month-pill-btn:hover { color: var(--ink); background: var(--sunk); }
+.month-pill-btn:hover { color: #FFFFFF; background: #1F2937; }
 
 .month-pill-btn.active {
-  background: var(--sunk);
-  color: var(--ink);
+  background: #1F2937;
+  color: #FFFFFF;
   font-weight: 600;
 }
 
@@ -310,13 +297,13 @@
   width: 22px;
   height: 22px;
   border-radius: var(--radius);
-  color: var(--ink-2);
+  color: #94A3B8;
   transition: var(--transition);
 }
-.period-arrow:hover { color: var(--ink); background: var(--sunk); }
-.period-arrow:disabled { color: var(--ink-3); opacity: 0.4; cursor: default; }
+.period-arrow:hover { color: #FFFFFF; background: #1F2937; }
+.period-arrow:disabled { color: #475569; opacity: 0.4; cursor: default; }
 
-/* Administración de períodos: van con la línea de tiempo porque la gestionan. */
+/* Administración de períodos */
 .period-admin {
   display: flex;
   align-items: center;
@@ -324,31 +311,22 @@
   flex: 0 0 auto;
   padding: var(--space-3) var(--space-2) 0;
   margin-top: var(--space-2);
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid #1F2937;
 }
 
 .period-new {
   flex: 0 0 auto;
   font-size: var(--text-sm);
-  color: var(--ink-2);
+  color: #94A3B8;
   white-space: nowrap;
   transition: var(--transition);
 }
-.period-new:hover { color: var(--ink); }
+.period-new:hover { color: #FFFFFF; }
 
-/* "Eliminar mes" se lee en rojo en reposo y solo se subraya al pasar por
-   encima: es la acción destructiva —cada guardado sobrescribe el blob entero,
-   así que no hay historial— y tiene que parecerlo antes de que se pase por
-   encima, no después. `.period-new:hover` es (0,2,0), así que estas dos reglas
-   repiten el selector para poder ganarle sin `!important`. */
-.period-new.period-new-danger { color: var(--over); }
-.period-new.period-new-danger:hover { color: var(--over); text-decoration: underline; text-underline-offset: 3px; }
+.period-new.period-new-danger { color: #EF4444; }
+.period-new.period-new-danger:hover { color: #F87171; text-decoration: underline; text-underline-offset: 3px; }
 
-/* --- Pie: estado y modo. Es META, no navegación ---------------------------
-   Chico, en tinta apagada, anclado al borde inferior con `margin-top: auto` +
-   `flex: 0 0 auto`: la lista de períodos que crece nunca lo empuja fuera de la
-   pantalla. Sin caja y sin filete encima: era el último borde del rail y
-   delimitaba algo que no es un control. */
+/* --- Pie: estado y modo. Es META, no navegación */
 .sidebar-footer {
   margin-top: auto;
   flex: 0 0 auto;
@@ -363,7 +341,7 @@
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-2xs);
-  color: var(--ink-2);
+  color: #94A3B8;
   padding: var(--space-1) var(--space-2);
 }
 
@@ -373,12 +351,9 @@
   border-radius: 50%;
   background: currentColor;
 }
-.conn-online { color: var(--ink-2); }
-.conn-offline { color: var(--ink-2); }
+.conn-online { color: #10B981; }
+.conn-offline { color: #94A3B8; }
 
-/* app.js reescribe el className COMPLETO de este botón: se estilan solo por
-   estos dos literales exactos. El punto dice el estado, así el botón no se lee
-   como un campo vacío. */
 .mode-badge {
   display: flex;
   align-items: center;
@@ -387,7 +362,7 @@
   padding: var(--space-2);
   border-radius: var(--radius);
   font-size: var(--text-xs);
-  color: var(--ink-2);
+  color: #94A3B8;
   text-align: left;
   transition: var(--transition);
 }
@@ -401,9 +376,9 @@
   background: currentColor;
 }
 
-.mode-badge.readonly-active { color: var(--ink-2); }
-.mode-badge.admin-active { color: var(--ink); font-weight: 600; }
-.mode-badge:hover { background: var(--sunk); color: var(--ink); }
+.mode-badge.readonly-active { color: #94A3B8; }
+.mode-badge.admin-active { color: #FFFFFF; font-weight: 600; }
+.mode-badge:hover { background: #1F2937; color: #FFFFFF; }
 
 /* ==========================================================================
    LA COLUMNA DE SECCIONES — dónde se filtra la categoría
@@ -430,7 +405,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: var(--surface);
+  background: #F8FAFC;
   border-right: 1px solid var(--rule);
 }
 
@@ -452,14 +427,46 @@
 .section-rail-list::-webkit-scrollbar { display: none; }
 
 .rail-entry {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
+  padding: 5px 6px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-box);
+  border: 1px solid transparent;
+  background: transparent;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease, border-color 0.18s ease;
+  cursor: pointer;
 }
 
-/* La fila que era un chip de 26px es ahora una fila de navegación de 30px:
-   `width: 100%` para que TODO el renglón sea el control, no solo el texto del
-   nombre. En un libro, tocar la fila es una acción. */
+.rail-entry:hover {
+  background: #FFFFFF;
+  border-color: #E2E8F0;
+  transform: translateX(2px);
+}
+
+.rail-entry.rail-entry-focused {
+  background: #FFFFFF;
+  border-color: #38BDF8;
+  border-left-width: 3px;
+  border-left-color: #0284C7;
+  transform: translateX(2px);
+}
+
+.rail-entry-all {
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* En escritorio se quita la opción 'Todo' de Secciones por solicitud del usuario */
+@media (min-width: 641px) {
+  .section-rail .rail-entry-all {
+    display: none !important;
+  }
+}
+
 .rail-entry > .segment-pill-btn,
 .rail-entry-all > .segment-pill-btn {
   position: relative;
@@ -475,19 +482,29 @@
   color: var(--ink-2);
   text-align: left;
   white-space: nowrap;
-  transition: var(--transition);
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .rail-entry > .segment-pill-btn:hover,
-.rail-entry-all > .segment-pill-btn:hover { color: var(--ink); background: var(--sunk); }
+.rail-entry-all > .segment-pill-btn:hover {
+  color: var(--ink);
+  background: var(--sunk);
+}
 
-/* LA MISMA MARCA QUE `.sidebar-nav-tab.active`, con el motivo puesto: tres
-   navegaciones con tres fondos distintos se leen como tres sistemas. Y el
-   `aria-pressed` que escribe app.js acompaña a la clase, porque un filtro no
-   puede depender de ver el color. */
+.rail-entry > .segment-pill-btn .ui-icon-chip {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
+}
+
+.rail-entry:hover .ui-icon-chip {
+  transform: scale(1.1);
+  color: #0284C7;
+}
+
 .rail-entry > .segment-pill-btn.active,
 .rail-entry-all > .segment-pill-btn.active {
   color: var(--ink);
+  background: #FFFFFF;
+  border-left-color: var(--ink);
   font-weight: 600;
 }
 
@@ -496,8 +513,18 @@
 .rail-entry-count {
   flex: 0 0 auto;
   margin-left: auto;
-  font-size: var(--text-2xs);
+  font-size: 10px;
+  font-weight: 600;
   color: var(--ink-2);
+  background: #F1F5F9;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.rail-entry.rail-entry-focused .rail-entry-count {
+  background: #E0F2FE;
+  color: #0369A1;
 }
 
 /* El subtotal, DEBAJO del nombre: es el dato que responde "¿cuánto gasté
@@ -506,8 +533,19 @@
 .rail-entry-total {
   display: block;
   font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-tight);
   color: var(--ink-2);
   padding-left: 24px;
+  margin-top: 1px;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  transition: color 0.15s ease;
+}
+
+.rail-entry.rail-entry-focused .rail-entry-total {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* EL BOTÓN DE ALTA: UN SOLO `.rail-add-btn` PARA LOS CINCO.
@@ -523,11 +561,13 @@
   margin-left: 24px;
   width: calc(100% - 24px);
   height: 26px;
-  font-size: var(--text-xs);
-  font-weight: 600;
+  font-size: var(--text-2xs);
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
   color: var(--ink-2);
   background: transparent;
-  border: 1px solid var(--rule-2);
+  border: 1px solid var(--rule);
+  transition: var(--transition);
 }
 
 .section-rail .rail-add-btn:hover {
@@ -600,7 +640,7 @@
   gap: var(--space-4);
   height: 44px;
   padding: 0 var(--space-5);
-  background: var(--paper);
+  background: #FFFFFF;
   border-bottom: 1px solid var(--rule);
 }
 
@@ -988,7 +1028,10 @@
     gap: var(--space-1);
     flex: 0 0 auto;
     min-width: 0;
-    padding-bottom: 0;
+    padding: 0;
+    margin-bottom: 0;
+    border: none;
+    background: transparent;
   }
 
   .rail-entry > .segment-pill-btn {
@@ -1001,7 +1044,9 @@
      que ya no existe. */
   .rail-entry-count {
     margin-left: 0;
-    padding-right: 0;
+    padding: 0;
+    background: transparent;
+    font-size: var(--text-2xs);
   }
 
   /* EL SUBTOTAL NO SE ESCRIBE: SE DECIDE QUE NO ESTÁ.

@@ -80,6 +80,7 @@
    superficie de contenido" no existe. */
 html {
   background: var(--paper);
+  scrollbar-gutter: stable;
 }
 
 body {

@@ -37,14 +37,14 @@
        "h": 38,
        "bottom": 42
       },
-      "scrollW": 832,
+      "scrollW": 826,
       "clientW": 305,
       "offsetW": 305,
       "overflowX": "auto",
       "scrollLeft": 0,
       "scrollea": true
      },
-     "anchoContenidoSumaCajas": 784,
+     "anchoContenidoSumaCajas": 778,
      "totales": [
       {
        "texto": "S/ 666.66",
@@ -107,7 +107,7 @@
        "caja": {
         "x": 91,
         "y": 8,
-        "w": 162,
+        "w": 160,
         "h": 30,
         "bottom": 38
        }
@@ -115,9 +115,9 @@
       {
        "texto": "Personales",
        "caja": {
-        "x": 257,
+        "x": 256,
         "y": 8,
-        "w": 174,
+        "w": 173,
         "h": 30,
         "bottom": 38
        }
@@ -125,9 +125,9 @@
       {
        "texto": "Movimientos",
        "caja": {
-        "x": 435,
+        "x": 433,
         "y": 8,
-        "w": 232,
+        "w": 230,
         "h": 30,
         "bottom": 38
        }
@@ -135,9 +135,9 @@
       {
        "texto": "Extras",
        "caja": {
-        "x": 672,
+        "x": 667,
         "y": 8,
-        "w": 144,
+        "w": 143,
         "h": 30,
         "bottom": 38
        }
@@ -147,17 +147,17 @@
     "filas": {
      "total": 6,
      "completasEnPantalla": 3,
-     "primeraFilaY": 463,
+     "primeraFilaY": 455,
      "detalle": [
       {
        "concepto": "PRUEBA-ALFA Internet",
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 469,
+         "y": 461,
          "w": 173,
          "h": 20,
-         "bottom": 488
+         "bottom": 481
         },
         "scrollW": 173,
         "clientW": 173,
@@ -171,10 +171,10 @@
           "texto": "S/ 111.11",
           "caja": {
            "x": 213,
-           "y": 474,
+           "y": 467,
            "w": 68,
            "h": 22,
-           "bottom": 496
+           "bottom": 489
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -187,20 +187,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 469,
+         "y": 461,
          "w": 173,
          "h": 34,
-         "bottom": 502
+         "bottom": 495
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 510,
+         "y": 503,
          "w": 76,
          "h": 36,
-         "bottom": 546
+         "bottom": 539
         }
        },
        "botones": [
@@ -208,10 +208,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 510,
+          "y": 503,
           "w": 36,
           "h": 36,
-          "bottom": 546
+          "bottom": 539
          },
          "w": 36,
          "h": 36,
@@ -221,10 +221,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 510,
+          "y": 503,
           "w": 36,
           "h": 36,
-          "bottom": 546
+          "bottom": 539
          },
          "w": 36,
          "h": 36,
@@ -234,22 +234,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 518,
-          "w": 65,
-          "h": 21,
-          "bottom": 539
+          "y": 510,
+          "w": 70,
+          "h": 22,
+          "bottom": 532
          },
-         "w": 65,
-         "h": 21,
+         "w": 70,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 463,
+        "y": 455,
         "w": 273,
-        "h": 90,
-        "bottom": 552
+        "h": 91,
+        "bottom": 546
        }
       },
       {
@@ -257,10 +257,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 558,
+         "y": 552,
          "w": 173,
          "h": 20,
-         "bottom": 578
+         "bottom": 572
         },
         "scrollW": 173,
         "clientW": 173,
@@ -274,10 +274,10 @@
           "texto": "S/ 222.22",
           "caja": {
            "x": 213,
-           "y": 564,
+           "y": 558,
            "w": 68,
            "h": 22,
-           "bottom": 586
+           "bottom": 580
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -288,10 +288,10 @@
           "texto": "Real S/ 222.22 (S/ 0.00)",
           "caja": {
            "x": 162,
-           "y": 596,
+           "y": 590,
            "w": 119,
            "h": 14,
-           "bottom": 610
+           "bottom": 604
           },
           "gridArea": "real",
           "row": "real/real",
@@ -304,20 +304,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 558,
+         "y": 552,
          "w": 173,
          "h": 34,
-         "bottom": 592
+         "bottom": 586
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 614,
+         "y": 608,
          "w": 76,
          "h": 36,
-         "bottom": 650
+         "bottom": 644
         }
        },
        "botones": [
@@ -325,10 +325,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 614,
+          "y": 608,
           "w": 36,
           "h": 36,
-          "bottom": 650
+          "bottom": 644
          },
          "w": 36,
          "h": 36,
@@ -338,10 +338,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 614,
+          "y": 608,
           "w": 36,
           "h": 36,
-          "bottom": 650
+          "bottom": 644
          },
          "w": 36,
          "h": 36,
@@ -351,22 +351,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 621,
-          "w": 51,
-          "h": 21,
-          "bottom": 642
+          "y": 615,
+          "w": 56,
+          "h": 22,
+          "bottom": 637
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 552,
+        "y": 546,
         "w": 273,
-        "h": 103,
-        "bottom": 656
+        "h": 104,
+        "bottom": 651
        }
       },
       {
@@ -374,10 +374,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 662,
+         "y": 657,
          "w": 173,
          "h": 20,
-         "bottom": 681
+         "bottom": 676
         },
         "scrollW": 173,
         "clientW": 173,
@@ -391,10 +391,10 @@
           "texto": "S/ 333.33",
           "caja": {
            "x": 213,
-           "y": 668,
+           "y": 663,
            "w": 68,
            "h": 22,
-           "bottom": 689
+           "bottom": 684
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -407,20 +407,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 662,
+         "y": 657,
          "w": 173,
          "h": 34,
-         "bottom": 695
+         "bottom": 690
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 703,
+         "y": 698,
          "w": 76,
          "h": 36,
-         "bottom": 739
+         "bottom": 734
         }
        },
        "botones": [
@@ -428,10 +428,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 703,
+          "y": 698,
           "w": 36,
           "h": 36,
-          "bottom": 739
+          "bottom": 734
          },
          "w": 36,
          "h": 36,
@@ -441,10 +441,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 703,
+          "y": 698,
           "w": 36,
           "h": 36,
-          "bottom": 739
+          "bottom": 734
          },
          "w": 36,
          "h": 36,
@@ -454,22 +454,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 711,
-          "w": 65,
-          "h": 21,
-          "bottom": 732
+          "y": 705,
+          "w": 70,
+          "h": 22,
+          "bottom": 727
          },
-         "w": 65,
-         "h": 21,
+         "w": 70,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 656,
+        "y": 651,
         "w": 273,
         "h": 90,
-        "bottom": 745
+        "bottom": 740
        }
       },
       {
@@ -477,10 +477,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 798,
+         "y": 809,
          "w": 173,
          "h": 20,
-         "bottom": 818
+         "bottom": 829
         },
         "scrollW": 173,
         "clientW": 173,
@@ -494,10 +494,10 @@
           "texto": "S/ 444.44",
           "caja": {
            "x": 213,
-           "y": 804,
+           "y": 815,
            "w": 68,
            "h": 22,
-           "bottom": 826
+           "bottom": 837
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -510,20 +510,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 798,
+         "y": 809,
          "w": 173,
          "h": 34,
-         "bottom": 832
+         "bottom": 843
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 840,
+         "y": 851,
          "w": 76,
          "h": 36,
-         "bottom": 876
+         "bottom": 887
         }
        },
        "botones": [
@@ -531,10 +531,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 840,
+          "y": 851,
           "w": 36,
           "h": 36,
-          "bottom": 876
+          "bottom": 887
          },
          "w": 36,
          "h": 36,
@@ -544,10 +544,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 840,
+          "y": 851,
           "w": 36,
           "h": 36,
-          "bottom": 876
+          "bottom": 887
          },
          "w": 36,
          "h": 36,
@@ -557,22 +557,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 847,
-          "w": 65,
-          "h": 21,
-          "bottom": 869
+          "y": 858,
+          "w": 70,
+          "h": 22,
+          "bottom": 880
          },
-         "w": 65,
-         "h": 21,
+         "w": 70,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 792,
+        "y": 803,
         "w": 273,
-        "h": 90,
-        "bottom": 882
+        "h": 91,
+        "bottom": 894
        }
       },
       {
@@ -580,10 +580,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 888,
+         "y": 900,
          "w": 173,
          "h": 20,
-         "bottom": 908
+         "bottom": 919
         },
         "scrollW": 173,
         "clientW": 173,
@@ -597,10 +597,10 @@
           "texto": "S/ 555.55",
           "caja": {
            "x": 213,
-           "y": 894,
+           "y": 906,
            "w": 68,
            "h": 22,
-           "bottom": 916
+           "bottom": 928
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -613,20 +613,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 888,
+         "y": 900,
          "w": 173,
          "h": 34,
-         "bottom": 922
+         "bottom": 934
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 930,
+         "y": 942,
          "w": 76,
          "h": 36,
-         "bottom": 966
+         "bottom": 978
         }
        },
        "botones": [
@@ -634,10 +634,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 930,
+          "y": 942,
           "w": 36,
           "h": 36,
-          "bottom": 966
+          "bottom": 978
          },
          "w": 36,
          "h": 36,
@@ -647,10 +647,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 930,
+          "y": 942,
           "w": 36,
           "h": 36,
-          "bottom": 966
+          "bottom": 978
          },
          "w": 36,
          "h": 36,
@@ -660,22 +660,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 937,
-          "w": 65,
-          "h": 21,
-          "bottom": 958
+          "y": 949,
+          "w": 70,
+          "h": 22,
+          "bottom": 971
          },
-         "w": 65,
-         "h": 21,
+         "w": 70,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 882,
+        "y": 894,
         "w": 273,
         "h": 90,
-        "bottom": 972
+        "bottom": 984
        }
       },
       {
@@ -683,10 +683,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 1381,
+         "y": 1425,
          "w": 173,
          "h": 20,
-         "bottom": 1400
+         "bottom": 1444
         },
         "scrollW": 173,
         "clientW": 173,
@@ -700,10 +700,10 @@
           "texto": "S/ 666.66",
           "caja": {
            "x": 213,
-           "y": 1387,
+           "y": 1431,
            "w": 68,
            "h": 22,
-           "bottom": 1409
+           "bottom": 1453
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -714,10 +714,10 @@
           "texto": "Real S/ 666.66 (S/ 0.00)",
           "caja": {
            "x": 162,
-           "y": 1419,
+           "y": 1463,
            "w": 119,
            "h": 14,
-           "bottom": 1432
+           "bottom": 1476
           },
           "gridArea": "real",
           "row": "real/real",
@@ -730,20 +730,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 1381,
+         "y": 1425,
          "w": 173,
          "h": 34,
-         "bottom": 1415
+         "bottom": 1459
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 1436,
+         "y": 1480,
          "w": 76,
          "h": 36,
-         "bottom": 1472
+         "bottom": 1516
         }
        },
        "botones": [
@@ -751,10 +751,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 1436,
+          "y": 1480,
           "w": 36,
           "h": 36,
-          "bottom": 1472
+          "bottom": 1516
          },
          "w": 36,
          "h": 36,
@@ -764,10 +764,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 1436,
+          "y": 1480,
           "w": 36,
           "h": 36,
-          "bottom": 1472
+          "bottom": 1516
          },
          "w": 36,
          "h": 36,
@@ -777,22 +777,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 1444,
-          "w": 51,
-          "h": 21,
-          "bottom": 1465
+          "y": 1487,
+          "w": 56,
+          "h": 22,
+          "bottom": 1509
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 1375,
+        "y": 1419,
         "w": 273,
         "h": 103,
-        "bottom": 1478
+        "bottom": 1522
        }
       }
      ]
@@ -805,10 +805,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1059,
+         "y": 1087,
          "w": 257,
          "h": 36,
-         "bottom": 1095
+         "bottom": 1123
         },
         "scrollW": 257,
         "clientW": 257
@@ -816,10 +816,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1059,
+         "y": 1087,
          "w": 149,
          "h": 20,
-         "bottom": 1078
+         "bottom": 1106
         },
         "scrollW": 149,
         "clientW": 149,
@@ -828,10 +828,10 @@
        "txRight": {
         "caja": {
          "x": 99,
-         "y": 1099,
+         "y": 1127,
          "w": 182,
          "h": 36,
-         "bottom": 1135
+         "bottom": 1163
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -855,10 +855,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1151,
+         "y": 1179,
          "w": 257,
          "h": 36,
-         "bottom": 1187
+         "bottom": 1215
         },
         "scrollW": 257,
         "clientW": 257
@@ -866,10 +866,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1151,
+         "y": 1179,
          "w": 155,
          "h": 20,
-         "bottom": 1170
+         "bottom": 1198
         },
         "scrollW": 155,
         "clientW": 155,
@@ -878,10 +878,10 @@
        "txRight": {
         "caja": {
          "x": 115,
-         "y": 1191,
+         "y": 1219,
          "w": 166,
          "h": 36,
-         "bottom": 1227
+         "bottom": 1255
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -905,10 +905,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1243,
+         "y": 1271,
          "w": 257,
          "h": 36,
-         "bottom": 1280
+         "bottom": 1308
         },
         "scrollW": 257,
         "clientW": 257
@@ -916,10 +916,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1243,
+         "y": 1271,
          "w": 141,
          "h": 20,
-         "bottom": 1263
+         "bottom": 1291
         },
         "scrollW": 141,
         "clientW": 141,
@@ -928,10 +928,10 @@
        "txRight": {
         "caja": {
          "x": 112,
-         "y": 1284,
+         "y": 1312,
          "w": 169,
          "h": 36,
-         "bottom": 1320
+         "bottom": 1348
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -967,6 +967,1942 @@
    "real": null,
    "fuente": "loaded",
    "alto": 844
+  },
+  "390": {
+   "pedido": {
+    "ancho": {
+     "pedido": 390,
+     "clientWidth": 375,
+     "innerWidth": 390,
+     "altoViewport": 844,
+     "media640": true,
+     "hoverNone": false
+    },
+    "banda": {
+     "caja": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 47,
+      "bottom": 47
+     },
+     "altoAdmin": {
+      "h": 47,
+      "y": 0
+     },
+     "altoLector": {
+      "h": 47,
+      "y": 0
+     },
+     "altoCambiaConLector": false,
+     "adminVisiblesEnLector": 0,
+     "entradas": 5,
+     "lista": {
+      "caja": {
+       "x": 0,
+       "y": 4,
+       "w": 375,
+       "h": 38,
+       "bottom": 42
+      },
+      "scrollW": 826,
+      "clientW": 375,
+      "offsetW": 375,
+      "overflowX": "auto",
+      "scrollLeft": 0,
+      "scrollea": true
+     },
+     "anchoContenidoSumaCajas": 778,
+     "totales": [
+      {
+       "texto": "S/ 666.66",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "S/ 999.99",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "3 movs",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "S/ 666.66",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      }
+     ],
+     "etiquetas": [
+      {
+       "texto": "Todo",
+       "caja": {
+        "x": 16,
+        "y": 8,
+        "w": 71,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Servicios",
+       "caja": {
+        "x": 91,
+        "y": 8,
+        "w": 160,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Personales",
+       "caja": {
+        "x": 256,
+        "y": 8,
+        "w": 173,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Movimientos",
+       "caja": {
+        "x": 433,
+        "y": 8,
+        "w": 230,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Extras",
+       "caja": {
+        "x": 667,
+        "y": 8,
+        "w": 143,
+        "h": 30,
+        "bottom": 38
+       }
+      }
+     ]
+    },
+    "filas": {
+     "total": 6,
+     "completasEnPantalla": 3,
+     "primeraFilaY": 455,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Internet",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 461,
+         "w": 243,
+         "h": 20,
+         "bottom": 481
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 158
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 111.11",
+          "caja": {
+           "x": 283,
+           "y": 467,
+           "w": 68,
+           "h": 22,
+           "bottom": 489
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 461,
+         "w": 243,
+         "h": 34,
+         "bottom": 495
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 503,
+         "w": 76,
+         "h": 36,
+         "bottom": 539
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 503,
+          "w": 36,
+          "h": 36,
+          "bottom": 539
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 503,
+          "w": 36,
+          "h": 36,
+          "bottom": 539
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 510,
+          "w": 70,
+          "h": 22,
+          "bottom": 532
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 455,
+        "w": 343,
+        "h": 91,
+        "bottom": 546
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Celular",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 552,
+         "w": 243,
+         "h": 20,
+         "bottom": 572
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 151
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 222.22",
+          "caja": {
+           "x": 283,
+           "y": 558,
+           "w": 68,
+           "h": 22,
+           "bottom": 580
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 222.22 (S/ 0.00)",
+          "caja": {
+           "x": 232,
+           "y": 590,
+           "w": 119,
+           "h": 14,
+           "bottom": 604
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 552,
+         "w": 243,
+         "h": 34,
+         "bottom": 586
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 608,
+         "w": 76,
+         "h": 36,
+         "bottom": 644
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 608,
+          "w": 36,
+          "h": 36,
+          "bottom": 644
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 608,
+          "w": 36,
+          "h": 36,
+          "bottom": 644
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 615,
+          "w": 56,
+          "h": 22,
+          "bottom": 637
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 546,
+        "w": 343,
+        "h": 104,
+        "bottom": 651
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Limpieza",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 657,
+         "w": 243,
+         "h": 20,
+         "bottom": 676
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 163
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 333.33",
+          "caja": {
+           "x": 283,
+           "y": 663,
+           "w": 68,
+           "h": 22,
+           "bottom": 684
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 657,
+         "w": 243,
+         "h": 34,
+         "bottom": 690
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 698,
+         "w": 76,
+         "h": 36,
+         "bottom": 734
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 698,
+          "w": 36,
+          "h": 36,
+          "bottom": 734
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 698,
+          "w": 36,
+          "h": 36,
+          "bottom": 734
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 705,
+          "w": 70,
+          "h": 22,
+          "bottom": 727
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 651,
+        "w": 343,
+        "h": 90,
+        "bottom": 740
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Gimnasio",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 809,
+         "w": 243,
+         "h": 20,
+         "bottom": 829
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 166
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 444.44",
+          "caja": {
+           "x": 283,
+           "y": 815,
+           "w": 68,
+           "h": 22,
+           "bottom": 837
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 809,
+         "w": 243,
+         "h": 34,
+         "bottom": 843
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 851,
+         "w": 76,
+         "h": 36,
+         "bottom": 887
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 851,
+          "w": 36,
+          "h": 36,
+          "bottom": 887
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 851,
+          "w": 36,
+          "h": 36,
+          "bottom": 887
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 858,
+          "w": 70,
+          "h": 22,
+          "bottom": 880
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 803,
+        "w": 343,
+        "h": 91,
+        "bottom": 894
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Cremas",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 900,
+         "w": 243,
+         "h": 20,
+         "bottom": 919
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 154
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 555.55",
+          "caja": {
+           "x": 283,
+           "y": 906,
+           "w": 68,
+           "h": 22,
+           "bottom": 928
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 900,
+         "w": 243,
+         "h": 34,
+         "bottom": 934
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 942,
+         "w": 76,
+         "h": 36,
+         "bottom": 978
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 942,
+          "w": 36,
+          "h": 36,
+          "bottom": 978
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 942,
+          "w": 36,
+          "h": 36,
+          "bottom": 978
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 949,
+          "w": 70,
+          "h": 22,
+          "bottom": 971
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 894,
+        "w": 343,
+        "h": 90,
+        "bottom": 984
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Extra",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 1425,
+         "w": 243,
+         "h": 20,
+         "bottom": 1444
+        },
+        "scrollW": 243,
+        "clientW": 243,
+        "recortado": false,
+        "necesita": 138
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 666.66",
+          "caja": {
+           "x": 283,
+           "y": 1431,
+           "w": 68,
+           "h": 22,
+           "bottom": 1453
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 666.66 (S/ 0.00)",
+          "caja": {
+           "x": 232,
+           "y": 1463,
+           "w": 119,
+           "h": 14,
+           "bottom": 1476
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 1425,
+         "w": 243,
+         "h": 34,
+         "bottom": 1459
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 1480,
+         "w": 76,
+         "h": 36,
+         "bottom": 1516
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 1480,
+          "w": 36,
+          "h": 36,
+          "bottom": 1516
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 1480,
+          "w": 36,
+          "h": 36,
+          "bottom": 1516
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 1487,
+          "w": 56,
+          "h": 22,
+          "bottom": 1509
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 1419,
+        "w": 343,
+        "h": 103,
+        "bottom": 1522
+       }
+      }
+     ]
+    },
+    "feed": {
+     "total": 3,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Sueldo",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1087,
+         "w": 327,
+         "h": 36,
+         "bottom": 1123
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1087,
+         "w": 149,
+         "h": 20,
+         "bottom": 1106
+        },
+        "scrollW": 149,
+        "clientW": 149,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 169,
+         "y": 1127,
+         "w": 182,
+         "h": 36,
+         "bottom": 1163
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Alquiler",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1179,
+         "w": 327,
+         "h": 36,
+         "bottom": 1215
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1179,
+         "w": 155,
+         "h": 20,
+         "bottom": 1198
+        },
+        "scrollW": 155,
+        "clientW": 155,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 185,
+         "y": 1219,
+         "w": 166,
+         "h": 36,
+         "bottom": 1255
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Venta",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1271,
+         "w": 327,
+         "h": 36,
+         "bottom": 1308
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1271,
+         "w": 141,
+         "h": 20,
+         "bottom": 1291
+        },
+        "scrollW": 141,
+        "clientW": 141,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 182,
+         "y": 1312,
+         "w": 169,
+         "h": 36,
+         "bottom": 1348
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      }
+     ]
+    },
+    "documento": {
+     "scrollWidth": 375,
+     "clientWidth": 375,
+     "scrollHorizontal": false,
+     "culpables": []
+    },
+    "tipografia": {
+     "familia": "\"IBM Plex Sans\", \"IBM Plex Sans Fallback\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+     "lista": "IBM Plex Sans",
+     "status": "loaded"
+    }
+   },
+   "real": null,
+   "fuente": "loaded",
+   "alto": 844
+  },
+  "768": {
+   "pedido": {
+    "ancho": {
+     "pedido": 768,
+     "clientWidth": 753,
+     "innerWidth": 768,
+     "altoViewport": 1024,
+     "media640": false,
+     "hoverNone": false
+    },
+    "banda": {
+     "caja": {
+      "x": 0,
+      "y": 0,
+      "w": 753,
+      "h": 84,
+      "bottom": 84
+     },
+     "altoAdmin": {
+      "h": 84,
+      "y": 0
+     },
+     "altoLector": {
+      "h": 76.6,
+      "y": 0
+     },
+     "altoCambiaConLector": true,
+     "adminVisiblesEnLector": 0,
+     "entradas": 5,
+     "lista": {
+      "caja": {
+       "x": 0,
+       "y": 8,
+       "w": 753,
+       "h": 67,
+       "bottom": 75
+      },
+      "scrollW": 753,
+      "clientW": 753,
+      "offsetW": 753,
+      "overflowX": "auto",
+      "scrollLeft": 0,
+      "scrollea": false
+     },
+     "anchoContenidoSumaCajas": 579,
+     "totales": [
+      {
+       "texto": "S/ 666.66",
+       "display": "block",
+       "caja": {
+        "x": 23,
+        "y": 45,
+        "w": 64,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "S/ 999.99",
+       "display": "block",
+       "caja": {
+        "x": 168,
+        "y": 45,
+        "w": 77,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "3 movs",
+       "display": "block",
+       "caja": {
+        "x": 326,
+        "y": 45,
+        "w": 38,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "S/ 666.66",
+       "display": "block",
+       "caja": {
+        "x": 501,
+        "y": 45,
+        "w": 52,
+        "h": 16,
+        "bottom": 60
+       }
+      }
+     ],
+     "etiquetas": [
+      {
+       "texto": "Todo",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "Servicios",
+       "caja": {
+        "x": 16,
+        "y": 8,
+        "w": 137,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Personales",
+       "caja": {
+        "x": 161,
+        "y": 8,
+        "w": 150,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Movimientos",
+       "caja": {
+        "x": 319,
+        "y": 8,
+        "w": 167,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Extras",
+       "caja": {
+        "x": 494,
+        "y": 8,
+        "w": 125,
+        "h": 63,
+        "bottom": 71
+       }
+      }
+     ]
+    },
+    "filas": {
+     "total": 6,
+     "completasEnPantalla": 5,
+     "primeraFilaY": 440,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Internet",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 446,
+         "w": 321,
+         "h": 20,
+         "bottom": 465
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 158
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 111.11",
+          "caja": {
+           "x": 498,
+           "y": 452,
+           "w": 136,
+           "h": 22,
+           "bottom": 474
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 446,
+         "w": 321,
+         "h": 34,
+         "bottom": 480
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 452,
+         "w": 46,
+         "h": 22,
+         "bottom": 474
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 452,
+          "w": 22,
+          "h": 22,
+          "bottom": 474
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 452,
+          "w": 22,
+          "h": 22,
+          "bottom": 474
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 452,
+          "w": 70,
+          "h": 22,
+          "bottom": 474
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 440,
+        "w": 655,
+        "h": 47,
+        "bottom": 487
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Celular",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 493,
+         "w": 321,
+         "h": 20,
+         "bottom": 513
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 151
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 222.22",
+          "caja": {
+           "x": 498,
+           "y": 493,
+           "w": 136,
+           "h": 22,
+           "bottom": 514
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 222.22 (S/ 0.00)",
+          "caja": {
+           "x": 498,
+           "y": 514,
+           "w": 136,
+           "h": 14,
+           "bottom": 528
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 493,
+         "w": 321,
+         "h": 34,
+         "bottom": 527
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 499,
+         "w": 46,
+         "h": 22,
+         "bottom": 521
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 499,
+          "w": 22,
+          "h": 22,
+          "bottom": 521
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 499,
+          "w": 22,
+          "h": 22,
+          "bottom": 521
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 499,
+          "w": 56,
+          "h": 22,
+          "bottom": 521
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 487,
+        "w": 655,
+        "h": 49,
+        "bottom": 535
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Limpieza",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 541,
+         "w": 321,
+         "h": 20,
+         "bottom": 561
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 163
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 333.33",
+          "caja": {
+           "x": 498,
+           "y": 547,
+           "w": 136,
+           "h": 22,
+           "bottom": 569
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 541,
+         "w": 321,
+         "h": 34,
+         "bottom": 575
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 547,
+         "w": 46,
+         "h": 22,
+         "bottom": 569
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 547,
+          "w": 22,
+          "h": 22,
+          "bottom": 569
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 547,
+          "w": 22,
+          "h": 22,
+          "bottom": 569
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 547,
+          "w": 70,
+          "h": 22,
+          "bottom": 569
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 535,
+        "w": 655,
+        "h": 46,
+        "bottom": 581
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Gimnasio",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 659,
+         "w": 321,
+         "h": 20,
+         "bottom": 678
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 166
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 444.44",
+          "caja": {
+           "x": 498,
+           "y": 665,
+           "w": 136,
+           "h": 22,
+           "bottom": 686
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 659,
+         "w": 321,
+         "h": 34,
+         "bottom": 692
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 665,
+         "w": 46,
+         "h": 22,
+         "bottom": 687
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 665,
+          "w": 22,
+          "h": 22,
+          "bottom": 687
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 665,
+          "w": 22,
+          "h": 22,
+          "bottom": 687
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 665,
+          "w": 70,
+          "h": 22,
+          "bottom": 687
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 653,
+        "w": 655,
+        "h": 47,
+        "bottom": 699
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Cremas",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 705,
+         "w": 321,
+         "h": 20,
+         "bottom": 725
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 154
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 555.55",
+          "caja": {
+           "x": 498,
+           "y": 711,
+           "w": 136,
+           "h": 22,
+           "bottom": 733
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 705,
+         "w": 321,
+         "h": 34,
+         "bottom": 739
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 711,
+         "w": 46,
+         "h": 22,
+         "bottom": 733
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 711,
+          "w": 22,
+          "h": 22,
+          "bottom": 733
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 711,
+          "w": 22,
+          "h": 22,
+          "bottom": 733
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 711,
+          "w": 70,
+          "h": 22,
+          "bottom": 733
+         },
+         "w": 70,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 699,
+        "w": 655,
+        "h": 46,
+        "bottom": 745
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Extra",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 1085,
+         "w": 321,
+         "h": 20,
+         "bottom": 1105
+        },
+        "scrollW": 321,
+        "clientW": 321,
+        "recortado": false,
+        "necesita": 138
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 666.66",
+          "caja": {
+           "x": 498,
+           "y": 1084,
+           "w": 136,
+           "h": 22,
+           "bottom": 1106
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 666.66 (S/ 0.00)",
+          "caja": {
+           "x": 498,
+           "y": 1106,
+           "w": 136,
+           "h": 14,
+           "bottom": 1120
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 1085,
+         "w": 321,
+         "h": 34,
+         "bottom": 1119
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 1091,
+         "w": 46,
+         "h": 22,
+         "bottom": 1113
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 1091,
+          "w": 22,
+          "h": 22,
+          "bottom": 1113
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 1091,
+          "w": 22,
+          "h": 22,
+          "bottom": 1113
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 394,
+          "y": 1091,
+          "w": 56,
+          "h": 22,
+          "bottom": 1113
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 1078,
+        "w": 655,
+        "h": 48,
+        "bottom": 1126
+       }
+      }
+     ]
+    },
+    "feed": {
+     "total": 3,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Sueldo",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 857,
+         "w": 171,
+         "h": 36,
+         "bottom": 893
+        },
+        "scrollW": 171,
+        "clientW": 171
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 857,
+         "w": 149,
+         "h": 20,
+         "bottom": 876
+        },
+        "scrollW": 149,
+        "clientW": 149,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 542,
+         "y": 864,
+         "w": 154,
+         "h": 22,
+         "bottom": 886
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Alquiler",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 909,
+         "w": 177,
+         "h": 36,
+         "bottom": 946
+        },
+        "scrollW": 177,
+        "clientW": 177
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 909,
+         "w": 155,
+         "h": 20,
+         "bottom": 929
+        },
+        "scrollW": 155,
+        "clientW": 155,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 558,
+         "y": 917,
+         "w": 138,
+         "h": 22,
+         "bottom": 939
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Venta",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 962,
+         "w": 163,
+         "h": 36,
+         "bottom": 998
+        },
+        "scrollW": 163,
+        "clientW": 163
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 962,
+         "w": 141,
+         "h": 20,
+         "bottom": 981
+        },
+        "scrollW": 141,
+        "clientW": 141,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 555,
+         "y": 969,
+         "w": 141,
+         "h": 22,
+         "bottom": 991
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      }
+     ]
+    },
+    "documento": {
+     "scrollWidth": 753,
+     "clientWidth": 753,
+     "scrollHorizontal": false,
+     "culpables": []
+    },
+    "tipografia": {
+     "familia": "\"IBM Plex Sans\", \"IBM Plex Sans Fallback\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+     "lista": "IBM Plex Sans",
+     "status": "loaded"
+    }
+   },
+   "real": null,
+   "fuente": "loaded",
+   "alto": 1024
   }
  },
  "produccion4digitos": {
@@ -1007,14 +2943,14 @@
        "h": 38,
        "bottom": 42
       },
-      "scrollW": 832,
+      "scrollW": 826,
       "clientW": 305,
       "offsetW": 305,
       "overflowX": "auto",
       "scrollLeft": 0,
       "scrollea": true
      },
-     "anchoContenidoSumaCajas": 784,
+     "anchoContenidoSumaCajas": 778,
      "totales": [
       {
        "texto": "S/ 7,037.01",
@@ -1077,7 +3013,7 @@
        "caja": {
         "x": 91,
         "y": 8,
-        "w": 162,
+        "w": 160,
         "h": 30,
         "bottom": 38
        }
@@ -1085,9 +3021,9 @@
       {
        "texto": "Personales",
        "caja": {
-        "x": 257,
+        "x": 256,
         "y": 8,
-        "w": 174,
+        "w": 173,
         "h": 30,
         "bottom": 38
        }
@@ -1095,9 +3031,9 @@
       {
        "texto": "Movimientos",
        "caja": {
-        "x": 435,
+        "x": 433,
         "y": 8,
-        "w": 232,
+        "w": 230,
         "h": 30,
         "bottom": 38
        }
@@ -1105,9 +3041,9 @@
       {
        "texto": "Extras",
        "caja": {
-        "x": 672,
+        "x": 667,
         "y": 8,
-        "w": 144,
+        "w": 143,
         "h": 30,
         "bottom": 38
        }
@@ -1117,17 +3053,17 @@
     "filas": {
      "total": 6,
      "completasEnPantalla": 3,
-     "primeraFilaY": 463,
+     "primeraFilaY": 455,
      "detalle": [
       {
        "concepto": "PRUEBA-ALFA Internet",
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 469,
+         "y": 461,
          "w": 167,
          "h": 20,
-         "bottom": 488
+         "bottom": 481
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1141,10 +3077,10 @@
           "texto": "S/ 1,234.56",
           "caja": {
            "x": 199,
-           "y": 474,
+           "y": 467,
            "w": 82,
            "h": 22,
-           "bottom": 496
+           "bottom": 489
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1155,10 +3091,10 @@
           "texto": "Real S/ 1,456.78 (+S/ 222.22)",
           "caja": {
            "x": 132,
-           "y": 506,
+           "y": 499,
            "w": 149,
            "h": 14,
-           "bottom": 520
+           "bottom": 513
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1171,20 +3107,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 469,
+         "y": 461,
          "w": 167,
          "h": 34,
-         "bottom": 502
+         "bottom": 495
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 524,
+         "y": 517,
          "w": 76,
          "h": 36,
-         "bottom": 560
+         "bottom": 553
         }
        },
        "botones": [
@@ -1192,10 +3128,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 524,
+          "y": 517,
           "w": 36,
           "h": 36,
-          "bottom": 560
+          "bottom": 553
          },
          "w": 36,
          "h": 36,
@@ -1205,10 +3141,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 524,
+          "y": 517,
           "w": 36,
           "h": 36,
-          "bottom": 560
+          "bottom": 553
          },
          "w": 36,
          "h": 36,
@@ -1218,22 +3154,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 531,
-          "w": 51,
-          "h": 21,
-          "bottom": 553
+          "y": 524,
+          "w": 56,
+          "h": 22,
+          "bottom": 546
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 463,
+        "y": 455,
         "w": 273,
-        "h": 103,
-        "bottom": 566
+        "h": 104,
+        "bottom": 560
        }
       },
       {
@@ -1241,10 +3177,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 572,
+         "y": 566,
          "w": 167,
          "h": 20,
-         "bottom": 591
+         "bottom": 585
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1258,10 +3194,10 @@
           "texto": "S/ 2,345.67",
           "caja": {
            "x": 199,
-           "y": 578,
+           "y": 572,
            "w": 82,
            "h": 22,
-           "bottom": 600
+           "bottom": 594
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1272,10 +3208,10 @@
           "texto": "Real S/ 2,103.45 (-S/ 242.22)",
           "caja": {
            "x": 135,
-           "y": 610,
+           "y": 604,
            "w": 146,
            "h": 14,
-           "bottom": 623
+           "bottom": 617
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1288,20 +3224,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 572,
+         "y": 566,
          "w": 167,
          "h": 34,
-         "bottom": 606
+         "bottom": 600
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 627,
+         "y": 621,
          "w": 76,
          "h": 36,
-         "bottom": 663
+         "bottom": 657
         }
        },
        "botones": [
@@ -1309,10 +3245,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 627,
+          "y": 621,
           "w": 36,
           "h": 36,
-          "bottom": 663
+          "bottom": 657
          },
          "w": 36,
          "h": 36,
@@ -1322,10 +3258,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 627,
+          "y": 621,
           "w": 36,
           "h": 36,
-          "bottom": 663
+          "bottom": 657
          },
          "w": 36,
          "h": 36,
@@ -1335,22 +3271,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 635,
-          "w": 51,
-          "h": 21,
-          "bottom": 656
+          "y": 628,
+          "w": 56,
+          "h": 22,
+          "bottom": 650
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 566,
+        "y": 560,
         "w": 273,
-        "h": 103,
-        "bottom": 669
+        "h": 104,
+        "bottom": 664
        }
       },
       {
@@ -1358,10 +3294,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 675,
+         "y": 670,
          "w": 167,
          "h": 20,
-         "bottom": 695
+         "bottom": 690
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1375,10 +3311,10 @@
           "texto": "S/ 3,456.78",
           "caja": {
            "x": 199,
-           "y": 681,
+           "y": 676,
            "w": 82,
            "h": 22,
-           "bottom": 703
+           "bottom": 698
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1389,10 +3325,10 @@
           "texto": "Real S/ 3,890.12 (+S/ 433.34)",
           "caja": {
            "x": 132,
-           "y": 713,
+           "y": 708,
            "w": 149,
            "h": 14,
-           "bottom": 727
+           "bottom": 722
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1405,20 +3341,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 675,
+         "y": 670,
          "w": 167,
          "h": 34,
-         "bottom": 709
+         "bottom": 704
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 731,
+         "y": 726,
          "w": 76,
          "h": 36,
-         "bottom": 767
+         "bottom": 762
         }
        },
        "botones": [
@@ -1426,10 +3362,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 731,
+          "y": 726,
           "w": 36,
           "h": 36,
-          "bottom": 767
+          "bottom": 762
          },
          "w": 36,
          "h": 36,
@@ -1439,10 +3375,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 731,
+          "y": 726,
           "w": 36,
           "h": 36,
-          "bottom": 767
+          "bottom": 762
          },
          "w": 36,
          "h": 36,
@@ -1452,22 +3388,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 738,
-          "w": 51,
-          "h": 21,
-          "bottom": 760
+          "y": 733,
+          "w": 56,
+          "h": 22,
+          "bottom": 755
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 669,
+        "y": 664,
         "w": 273,
         "h": 103,
-        "bottom": 773
+        "bottom": 768
        }
       },
       {
@@ -1475,10 +3411,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 826,
+         "y": 837,
          "w": 167,
          "h": 20,
-         "bottom": 845
+         "bottom": 856
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1492,10 +3428,10 @@
           "texto": "S/ 4,567.89",
           "caja": {
            "x": 199,
-           "y": 832,
+           "y": 843,
            "w": 82,
            "h": 22,
-           "bottom": 854
+           "bottom": 865
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1506,10 +3442,10 @@
           "texto": "Real S/ 4,321.10 (-S/ 246.79)",
           "caja": {
            "x": 135,
-           "y": 864,
+           "y": 874,
            "w": 146,
            "h": 14,
-           "bottom": 877
+           "bottom": 888
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1522,20 +3458,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 826,
+         "y": 837,
          "w": 167,
          "h": 34,
-         "bottom": 860
+         "bottom": 870
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 881,
+         "y": 892,
          "w": 76,
          "h": 36,
-         "bottom": 917
+         "bottom": 928
         }
        },
        "botones": [
@@ -1543,10 +3479,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 881,
+          "y": 892,
           "w": 36,
           "h": 36,
-          "bottom": 917
+          "bottom": 928
          },
          "w": 36,
          "h": 36,
@@ -1556,10 +3492,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 881,
+          "y": 892,
           "w": 36,
           "h": 36,
-          "bottom": 917
+          "bottom": 928
          },
          "w": 36,
          "h": 36,
@@ -1569,22 +3505,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 889,
-          "w": 51,
-          "h": 21,
-          "bottom": 910
+          "y": 899,
+          "w": 56,
+          "h": 22,
+          "bottom": 921
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 820,
+        "y": 831,
         "w": 273,
-        "h": 103,
-        "bottom": 923
+        "h": 104,
+        "bottom": 935
        }
       },
       {
@@ -1592,10 +3528,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 929,
+         "y": 941,
          "w": 167,
          "h": 20,
-         "bottom": 949
+         "bottom": 961
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1609,10 +3545,10 @@
           "texto": "S/ 5,678.90",
           "caja": {
            "x": 199,
-           "y": 935,
+           "y": 947,
            "w": 82,
            "h": 22,
-           "bottom": 957
+           "bottom": 969
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1623,10 +3559,10 @@
           "texto": "Real S/ 5,901.23 (+S/ 222.33)",
           "caja": {
            "x": 132,
-           "y": 967,
+           "y": 979,
            "w": 149,
            "h": 14,
-           "bottom": 981
+           "bottom": 993
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1639,20 +3575,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 929,
+         "y": 941,
          "w": 167,
          "h": 34,
-         "bottom": 963
+         "bottom": 975
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 985,
+         "y": 997,
          "w": 76,
          "h": 36,
-         "bottom": 1021
+         "bottom": 1033
         }
        },
        "botones": [
@@ -1660,10 +3596,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 985,
+          "y": 997,
           "w": 36,
           "h": 36,
-          "bottom": 1021
+          "bottom": 1033
          },
          "w": 36,
          "h": 36,
@@ -1673,10 +3609,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 985,
+          "y": 997,
           "w": 36,
           "h": 36,
-          "bottom": 1021
+          "bottom": 1033
          },
          "w": 36,
          "h": 36,
@@ -1686,22 +3622,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 992,
-          "w": 51,
-          "h": 21,
-          "bottom": 1013
+          "y": 1004,
+          "w": 56,
+          "h": 22,
+          "bottom": 1026
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 923,
+        "y": 935,
         "w": 273,
         "h": 103,
-        "bottom": 1027
+        "bottom": 1039
        }
       },
       {
@@ -1709,10 +3645,10 @@
        "titulo": {
         "caja": {
          "x": 24,
-         "y": 1436,
+         "y": 1480,
          "w": 167,
          "h": 20,
-         "bottom": 1455
+         "bottom": 1499
         },
         "scrollW": 167,
         "clientW": 167,
@@ -1726,10 +3662,10 @@
           "texto": "S/ 6,789.01",
           "caja": {
            "x": 199,
-           "y": 1442,
+           "y": 1486,
            "w": 82,
            "h": 22,
-           "bottom": 1464
+           "bottom": 1508
           },
           "gridArea": "amount",
           "row": "amount/amount",
@@ -1740,10 +3676,10 @@
           "texto": "Real S/ 6,543.21 (-S/ 245.80)",
           "caja": {
            "x": 135,
-           "y": 1474,
+           "y": 1518,
            "w": 146,
            "h": 14,
-           "bottom": 1487
+           "bottom": 1531
           },
           "gridArea": "real",
           "row": "real/real",
@@ -1756,20 +3692,20 @@
         "gridArea": "info",
         "caja": {
          "x": 24,
-         "y": 1436,
+         "y": 1480,
          "w": 167,
          "h": 34,
-         "bottom": 1470
+         "bottom": 1514
         }
        },
        "acciones": {
         "gridArea": "actions",
         "caja": {
          "x": 205,
-         "y": 1491,
+         "y": 1535,
          "w": 76,
          "h": 36,
-         "bottom": 1527
+         "bottom": 1571
         }
        },
        "botones": [
@@ -1777,10 +3713,10 @@
          "sel": ".btn-edit-expense",
          "caja": {
           "x": 205,
-          "y": 1491,
+          "y": 1535,
           "w": 36,
           "h": 36,
-          "bottom": 1527
+          "bottom": 1571
          },
          "w": 36,
          "h": 36,
@@ -1790,10 +3726,10 @@
          "sel": ".btn-delete-expense",
          "caja": {
           "x": 245,
-          "y": 1491,
+          "y": 1535,
           "w": 36,
           "h": 36,
-          "bottom": 1527
+          "bottom": 1571
          },
          "w": 36,
          "h": 36,
@@ -1803,22 +3739,22 @@
          "sel": ".btn-status-toggle",
          "caja": {
           "x": 24,
-          "y": 1499,
-          "w": 51,
-          "h": 21,
-          "bottom": 1520
+          "y": 1542,
+          "w": 56,
+          "h": 22,
+          "bottom": 1564
          },
-         "w": 51,
-         "h": 21,
+         "w": 56,
+         "h": 22,
          "opacity": "1"
         }
        ],
        "fila": {
         "x": 16,
-        "y": 1430,
+        "y": 1474,
         "w": 273,
         "h": 103,
-        "bottom": 1533
+        "bottom": 1577
        }
       }
      ]
@@ -1831,10 +3767,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1114,
+         "y": 1142,
          "w": 257,
          "h": 36,
-         "bottom": 1150
+         "bottom": 1178
         },
         "scrollW": 257,
         "clientW": 257
@@ -1842,10 +3778,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1114,
+         "y": 1142,
          "w": 149,
          "h": 20,
-         "bottom": 1133
+         "bottom": 1161
         },
         "scrollW": 149,
         "clientW": 149,
@@ -1854,10 +3790,10 @@
        "txRight": {
         "caja": {
          "x": 99,
-         "y": 1154,
+         "y": 1182,
          "w": 182,
          "h": 36,
-         "bottom": 1190
+         "bottom": 1218
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -1881,10 +3817,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1206,
+         "y": 1234,
          "w": 257,
          "h": 36,
-         "bottom": 1242
+         "bottom": 1270
         },
         "scrollW": 257,
         "clientW": 257
@@ -1892,10 +3828,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1206,
+         "y": 1234,
          "w": 155,
          "h": 20,
-         "bottom": 1225
+         "bottom": 1253
         },
         "scrollW": 155,
         "clientW": 155,
@@ -1904,10 +3840,10 @@
        "txRight": {
         "caja": {
          "x": 115,
-         "y": 1246,
+         "y": 1274,
          "w": 166,
          "h": 36,
-         "bottom": 1282
+         "bottom": 1310
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -1931,10 +3867,10 @@
        "txLeft": {
         "caja": {
          "x": 24,
-         "y": 1298,
+         "y": 1326,
          "w": 257,
          "h": 36,
-         "bottom": 1335
+         "bottom": 1363
         },
         "scrollW": 257,
         "clientW": 257
@@ -1942,10 +3878,10 @@
        "conceptoH4": {
         "caja": {
          "x": 46,
-         "y": 1298,
+         "y": 1326,
          "w": 141,
          "h": 20,
-         "bottom": 1318
+         "bottom": 1346
         },
         "scrollW": 141,
         "clientW": 141,
@@ -1954,10 +3890,10 @@
        "txRight": {
         "caja": {
          "x": 112,
-         "y": 1339,
+         "y": 1367,
          "w": 169,
          "h": 36,
-         "bottom": 1375
+         "bottom": 1403
         },
         "gridRow": "2",
         "justifySelf": "end"
@@ -1993,6 +3929,2054 @@
    "real": null,
    "fuente": "loaded",
    "alto": 844
+  },
+  "390": {
+   "pedido": {
+    "ancho": {
+     "pedido": 390,
+     "clientWidth": 375,
+     "innerWidth": 390,
+     "altoViewport": 844,
+     "media640": true,
+     "hoverNone": false
+    },
+    "banda": {
+     "caja": {
+      "x": 0,
+      "y": 0,
+      "w": 375,
+      "h": 47,
+      "bottom": 47
+     },
+     "altoAdmin": {
+      "h": 47,
+      "y": 0
+     },
+     "altoLector": {
+      "h": 47,
+      "y": 0
+     },
+     "altoCambiaConLector": false,
+     "adminVisiblesEnLector": 0,
+     "entradas": 5,
+     "lista": {
+      "caja": {
+       "x": 0,
+       "y": 4,
+       "w": 375,
+       "h": 38,
+       "bottom": 42
+      },
+      "scrollW": 826,
+      "clientW": 375,
+      "offsetW": 375,
+      "overflowX": "auto",
+      "scrollLeft": 0,
+      "scrollea": true
+     },
+     "anchoContenidoSumaCajas": 778,
+     "totales": [
+      {
+       "texto": "S/ 7,037.01",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "S/ 10,246.79",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "3 movs",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "S/ 6,789.01",
+       "display": "none",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      }
+     ],
+     "etiquetas": [
+      {
+       "texto": "Todo",
+       "caja": {
+        "x": 16,
+        "y": 8,
+        "w": 71,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Servicios",
+       "caja": {
+        "x": 91,
+        "y": 8,
+        "w": 160,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Personales",
+       "caja": {
+        "x": 256,
+        "y": 8,
+        "w": 173,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Movimientos",
+       "caja": {
+        "x": 433,
+        "y": 8,
+        "w": 230,
+        "h": 30,
+        "bottom": 38
+       }
+      },
+      {
+       "texto": "Extras",
+       "caja": {
+        "x": 667,
+        "y": 8,
+        "w": 143,
+        "h": 30,
+        "bottom": 38
+       }
+      }
+     ]
+    },
+    "filas": {
+     "total": 6,
+     "completasEnPantalla": 3,
+     "primeraFilaY": 455,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Internet",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 461,
+         "w": 237,
+         "h": 20,
+         "bottom": 481
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 158
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 1,234.56",
+          "caja": {
+           "x": 269,
+           "y": 467,
+           "w": 82,
+           "h": 22,
+           "bottom": 489
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 1,456.78 (+S/ 222.22)",
+          "caja": {
+           "x": 202,
+           "y": 499,
+           "w": 149,
+           "h": 14,
+           "bottom": 513
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 461,
+         "w": 237,
+         "h": 34,
+         "bottom": 495
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 517,
+         "w": 76,
+         "h": 36,
+         "bottom": 553
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 517,
+          "w": 36,
+          "h": 36,
+          "bottom": 553
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 517,
+          "w": 36,
+          "h": 36,
+          "bottom": 553
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 524,
+          "w": 56,
+          "h": 22,
+          "bottom": 546
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 455,
+        "w": 343,
+        "h": 104,
+        "bottom": 560
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Celular",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 566,
+         "w": 237,
+         "h": 20,
+         "bottom": 585
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 151
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 2,345.67",
+          "caja": {
+           "x": 269,
+           "y": 572,
+           "w": 82,
+           "h": 22,
+           "bottom": 594
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 2,103.45 (-S/ 242.22)",
+          "caja": {
+           "x": 205,
+           "y": 604,
+           "w": 146,
+           "h": 14,
+           "bottom": 617
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 566,
+         "w": 237,
+         "h": 34,
+         "bottom": 600
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 621,
+         "w": 76,
+         "h": 36,
+         "bottom": 657
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 621,
+          "w": 36,
+          "h": 36,
+          "bottom": 657
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 621,
+          "w": 36,
+          "h": 36,
+          "bottom": 657
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 628,
+          "w": 56,
+          "h": 22,
+          "bottom": 650
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 560,
+        "w": 343,
+        "h": 104,
+        "bottom": 664
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Limpieza",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 670,
+         "w": 237,
+         "h": 20,
+         "bottom": 690
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 163
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 3,456.78",
+          "caja": {
+           "x": 269,
+           "y": 676,
+           "w": 82,
+           "h": 22,
+           "bottom": 698
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 3,890.12 (+S/ 433.34)",
+          "caja": {
+           "x": 202,
+           "y": 708,
+           "w": 149,
+           "h": 14,
+           "bottom": 722
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 670,
+         "w": 237,
+         "h": 34,
+         "bottom": 704
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 726,
+         "w": 76,
+         "h": 36,
+         "bottom": 762
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 726,
+          "w": 36,
+          "h": 36,
+          "bottom": 762
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 726,
+          "w": 36,
+          "h": 36,
+          "bottom": 762
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 733,
+          "w": 56,
+          "h": 22,
+          "bottom": 755
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 664,
+        "w": 343,
+        "h": 103,
+        "bottom": 768
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Gimnasio",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 837,
+         "w": 237,
+         "h": 20,
+         "bottom": 856
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 166
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 4,567.89",
+          "caja": {
+           "x": 269,
+           "y": 843,
+           "w": 82,
+           "h": 22,
+           "bottom": 865
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 4,321.10 (-S/ 246.79)",
+          "caja": {
+           "x": 205,
+           "y": 874,
+           "w": 146,
+           "h": 14,
+           "bottom": 888
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 837,
+         "w": 237,
+         "h": 34,
+         "bottom": 870
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 892,
+         "w": 76,
+         "h": 36,
+         "bottom": 928
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 892,
+          "w": 36,
+          "h": 36,
+          "bottom": 928
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 892,
+          "w": 36,
+          "h": 36,
+          "bottom": 928
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 899,
+          "w": 56,
+          "h": 22,
+          "bottom": 921
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 831,
+        "w": 343,
+        "h": 104,
+        "bottom": 935
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Cremas",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 941,
+         "w": 237,
+         "h": 20,
+         "bottom": 961
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 154
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 5,678.90",
+          "caja": {
+           "x": 269,
+           "y": 947,
+           "w": 82,
+           "h": 22,
+           "bottom": 969
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 5,901.23 (+S/ 222.33)",
+          "caja": {
+           "x": 202,
+           "y": 979,
+           "w": 149,
+           "h": 14,
+           "bottom": 993
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 941,
+         "w": 237,
+         "h": 34,
+         "bottom": 975
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 997,
+         "w": 76,
+         "h": 36,
+         "bottom": 1033
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 997,
+          "w": 36,
+          "h": 36,
+          "bottom": 1033
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 997,
+          "w": 36,
+          "h": 36,
+          "bottom": 1033
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 1004,
+          "w": 56,
+          "h": 22,
+          "bottom": 1026
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 935,
+        "w": 343,
+        "h": 103,
+        "bottom": 1039
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Extra",
+       "titulo": {
+        "caja": {
+         "x": 24,
+         "y": 1480,
+         "w": 237,
+         "h": 20,
+         "bottom": 1499
+        },
+        "scrollW": 237,
+        "clientW": 237,
+        "recortado": false,
+        "necesita": 138
+       },
+       "amount": {
+        "display": "contents",
+        "divs": [
+         {
+          "texto": "S/ 6,789.01",
+          "caja": {
+           "x": 269,
+           "y": 1486,
+           "w": 82,
+           "h": 22,
+           "bottom": 1508
+          },
+          "gridArea": "amount",
+          "row": "amount/amount",
+          "col": "amount/amount",
+          "justifySelf": "end"
+         },
+         {
+          "texto": "Real S/ 6,543.21 (-S/ 245.80)",
+          "caja": {
+           "x": 205,
+           "y": 1518,
+           "w": 146,
+           "h": 14,
+           "bottom": 1531
+          },
+          "gridArea": "real",
+          "row": "real/real",
+          "col": "real/real",
+          "justifySelf": "end"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "info",
+        "caja": {
+         "x": 24,
+         "y": 1480,
+         "w": 237,
+         "h": 34,
+         "bottom": 1514
+        }
+       },
+       "acciones": {
+        "gridArea": "actions",
+        "caja": {
+         "x": 275,
+         "y": 1535,
+         "w": 76,
+         "h": 36,
+         "bottom": 1571
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 275,
+          "y": 1535,
+          "w": 36,
+          "h": 36,
+          "bottom": 1571
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 315,
+          "y": 1535,
+          "w": 36,
+          "h": 36,
+          "bottom": 1571
+         },
+         "w": 36,
+         "h": 36,
+         "opacity": "1"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 24,
+          "y": 1542,
+          "w": 56,
+          "h": 22,
+          "bottom": 1564
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 16,
+        "y": 1474,
+        "w": 343,
+        "h": 103,
+        "bottom": 1577
+       }
+      }
+     ]
+    },
+    "feed": {
+     "total": 3,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Sueldo",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1142,
+         "w": 327,
+         "h": 36,
+         "bottom": 1178
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1142,
+         "w": 149,
+         "h": 20,
+         "bottom": 1161
+        },
+        "scrollW": 149,
+        "clientW": 149,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 169,
+         "y": 1182,
+         "w": 182,
+         "h": 36,
+         "bottom": 1218
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Alquiler",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1234,
+         "w": 327,
+         "h": 36,
+         "bottom": 1270
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1234,
+         "w": 155,
+         "h": 20,
+         "bottom": 1253
+        },
+        "scrollW": 155,
+        "clientW": 155,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 185,
+         "y": 1274,
+         "w": 166,
+         "h": 36,
+         "bottom": 1310
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Venta",
+       "txLeft": {
+        "caja": {
+         "x": 24,
+         "y": 1326,
+         "w": 327,
+         "h": 36,
+         "bottom": 1363
+        },
+        "scrollW": 327,
+        "clientW": 327
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 46,
+         "y": 1326,
+         "w": 141,
+         "h": 20,
+         "bottom": 1346
+        },
+        "scrollW": 141,
+        "clientW": 141,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 182,
+         "y": 1367,
+         "w": 169,
+         "h": 36,
+         "bottom": 1403
+        },
+        "gridRow": "2",
+        "justifySelf": "end"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 36,
+         "h": 36
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 36,
+         "h": 36
+        }
+       ]
+      }
+     ]
+    },
+    "documento": {
+     "scrollWidth": 375,
+     "clientWidth": 375,
+     "scrollHorizontal": false,
+     "culpables": []
+    },
+    "tipografia": {
+     "familia": "\"IBM Plex Sans\", \"IBM Plex Sans Fallback\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+     "lista": "IBM Plex Sans",
+     "status": "loaded"
+    }
+   },
+   "real": null,
+   "fuente": "loaded",
+   "alto": 844
+  },
+  "768": {
+   "pedido": {
+    "ancho": {
+     "pedido": 768,
+     "clientWidth": 753,
+     "innerWidth": 768,
+     "altoViewport": 1024,
+     "media640": false,
+     "hoverNone": false
+    },
+    "banda": {
+     "caja": {
+      "x": 0,
+      "y": 0,
+      "w": 753,
+      "h": 84,
+      "bottom": 84
+     },
+     "altoAdmin": {
+      "h": 84,
+      "y": 0
+     },
+     "altoLector": {
+      "h": 76.6,
+      "y": 0
+     },
+     "altoCambiaConLector": true,
+     "adminVisiblesEnLector": 0,
+     "entradas": 5,
+     "lista": {
+      "caja": {
+       "x": 0,
+       "y": 8,
+       "w": 753,
+       "h": 67,
+       "bottom": 75
+      },
+      "scrollW": 753,
+      "clientW": 753,
+      "offsetW": 753,
+      "overflowX": "auto",
+      "scrollLeft": 0,
+      "scrollea": false
+     },
+     "anchoContenidoSumaCajas": 589,
+     "totales": [
+      {
+       "texto": "S/ 7,037.01",
+       "display": "block",
+       "caja": {
+        "x": 23,
+        "y": 45,
+        "w": 64,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "S/ 10,246.79",
+       "display": "block",
+       "caja": {
+        "x": 168,
+        "y": 45,
+        "w": 77,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "3 movs",
+       "display": "block",
+       "caja": {
+        "x": 326,
+        "y": 45,
+        "w": 38,
+        "h": 16,
+        "bottom": 60
+       }
+      },
+      {
+       "texto": "S/ 6,789.01",
+       "display": "block",
+       "caja": {
+        "x": 501,
+        "y": 45,
+        "w": 63,
+        "h": 16,
+        "bottom": 60
+       }
+      }
+     ],
+     "etiquetas": [
+      {
+       "texto": "Todo",
+       "caja": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0,
+        "bottom": 0
+       }
+      },
+      {
+       "texto": "Servicios",
+       "caja": {
+        "x": 16,
+        "y": 8,
+        "w": 137,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Personales",
+       "caja": {
+        "x": 161,
+        "y": 8,
+        "w": 150,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Movimientos",
+       "caja": {
+        "x": 319,
+        "y": 8,
+        "w": 167,
+        "h": 63,
+        "bottom": 71
+       }
+      },
+      {
+       "texto": "Extras",
+       "caja": {
+        "x": 494,
+        "y": 8,
+        "w": 135,
+        "h": 63,
+        "bottom": 71
+       }
+      }
+     ]
+    },
+    "filas": {
+     "total": 6,
+     "completasEnPantalla": 5,
+     "primeraFilaY": 440,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Internet",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 447,
+         "w": 308,
+         "h": 20,
+         "bottom": 466
+        },
+        "scrollW": 308,
+        "clientW": 308,
+        "recortado": false,
+        "necesita": 158
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 1,234.56",
+          "caja": {
+           "x": 485,
+           "y": 446,
+           "w": 149,
+           "h": 22,
+           "bottom": 468
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 1,456.78 (+S/ 222.22)",
+          "caja": {
+           "x": 485,
+           "y": 468,
+           "w": 149,
+           "h": 14,
+           "bottom": 481
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 447,
+         "w": 308,
+         "h": 34,
+         "bottom": 480
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 453,
+         "w": 46,
+         "h": 22,
+         "bottom": 475
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 453,
+          "w": 22,
+          "h": 22,
+          "bottom": 475
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 453,
+          "w": 22,
+          "h": 22,
+          "bottom": 475
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 381,
+          "y": 453,
+          "w": 56,
+          "h": 22,
+          "bottom": 475
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 440,
+        "w": 655,
+        "h": 49,
+        "bottom": 488
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Celular",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 495,
+         "w": 311,
+         "h": 20,
+         "bottom": 515
+        },
+        "scrollW": 311,
+        "clientW": 311,
+        "recortado": false,
+        "necesita": 151
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 2,345.67",
+          "caja": {
+           "x": 488,
+           "y": 494,
+           "w": 146,
+           "h": 22,
+           "bottom": 516
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 2,103.45 (-S/ 242.22)",
+          "caja": {
+           "x": 488,
+           "y": 516,
+           "w": 146,
+           "h": 14,
+           "bottom": 530
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 495,
+         "w": 311,
+         "h": 34,
+         "bottom": 529
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 501,
+         "w": 46,
+         "h": 22,
+         "bottom": 523
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 501,
+          "w": 22,
+          "h": 22,
+          "bottom": 523
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 501,
+          "w": 22,
+          "h": 22,
+          "bottom": 523
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 384,
+          "y": 501,
+          "w": 56,
+          "h": 22,
+          "bottom": 523
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 488,
+        "w": 655,
+        "h": 49,
+        "bottom": 537
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Limpieza",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 544,
+         "w": 308,
+         "h": 20,
+         "bottom": 563
+        },
+        "scrollW": 308,
+        "clientW": 308,
+        "recortado": false,
+        "necesita": 163
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 3,456.78",
+          "caja": {
+           "x": 485,
+           "y": 543,
+           "w": 149,
+           "h": 22,
+           "bottom": 565
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 3,890.12 (+S/ 433.34)",
+          "caja": {
+           "x": 485,
+           "y": 565,
+           "w": 149,
+           "h": 14,
+           "bottom": 578
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 544,
+         "w": 308,
+         "h": 34,
+         "bottom": 577
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 550,
+         "w": 46,
+         "h": 22,
+         "bottom": 572
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 550,
+          "w": 22,
+          "h": 22,
+          "bottom": 572
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 550,
+          "w": 22,
+          "h": 22,
+          "bottom": 572
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 381,
+          "y": 550,
+          "w": 56,
+          "h": 22,
+          "bottom": 572
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 537,
+        "w": 655,
+        "h": 48,
+        "bottom": 584
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Gimnasio",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 663,
+         "w": 311,
+         "h": 20,
+         "bottom": 683
+        },
+        "scrollW": 311,
+        "clientW": 311,
+        "recortado": false,
+        "necesita": 166
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 4,567.89",
+          "caja": {
+           "x": 488,
+           "y": 662,
+           "w": 146,
+           "h": 22,
+           "bottom": 684
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 4,321.10 (-S/ 246.79)",
+          "caja": {
+           "x": 488,
+           "y": 684,
+           "w": 146,
+           "h": 14,
+           "bottom": 698
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 663,
+         "w": 311,
+         "h": 34,
+         "bottom": 697
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 669,
+         "w": 46,
+         "h": 22,
+         "bottom": 691
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 669,
+          "w": 22,
+          "h": 22,
+          "bottom": 691
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 669,
+          "w": 22,
+          "h": 22,
+          "bottom": 691
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 384,
+          "y": 669,
+          "w": 56,
+          "h": 22,
+          "bottom": 691
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 656,
+        "w": 655,
+        "h": 49,
+        "bottom": 705
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Cremas",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 712,
+         "w": 308,
+         "h": 20,
+         "bottom": 731
+        },
+        "scrollW": 308,
+        "clientW": 308,
+        "recortado": false,
+        "necesita": 154
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 5,678.90",
+          "caja": {
+           "x": 485,
+           "y": 711,
+           "w": 149,
+           "h": 22,
+           "bottom": 733
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 5,901.23 (+S/ 222.33)",
+          "caja": {
+           "x": 485,
+           "y": 733,
+           "w": 149,
+           "h": 14,
+           "bottom": 746
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 712,
+         "w": 308,
+         "h": 34,
+         "bottom": 745
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 718,
+         "w": 46,
+         "h": 22,
+         "bottom": 740
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 718,
+          "w": 22,
+          "h": 22,
+          "bottom": 740
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 718,
+          "w": 22,
+          "h": 22,
+          "bottom": 740
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 381,
+          "y": 718,
+          "w": 56,
+          "h": 22,
+          "bottom": 740
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 705,
+        "w": 655,
+        "h": 48,
+        "bottom": 752
+       }
+      },
+      {
+       "concepto": "PRUEBA-ALFA Extra",
+       "titulo": {
+        "caja": {
+         "x": 57,
+         "y": 1092,
+         "w": 311,
+         "h": 20,
+         "bottom": 1112
+        },
+        "scrollW": 311,
+        "clientW": 311,
+        "recortado": false,
+        "necesita": 138
+       },
+       "amount": {
+        "display": "block",
+        "divs": [
+         {
+          "texto": "S/ 6,789.01",
+          "caja": {
+           "x": 488,
+           "y": 1092,
+           "w": 146,
+           "h": 22,
+           "bottom": 1113
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         },
+         {
+          "texto": "Real S/ 6,543.21 (-S/ 245.80)",
+          "caja": {
+           "x": 488,
+           "y": 1113,
+           "w": 146,
+           "h": 14,
+           "bottom": 1127
+          },
+          "gridArea": "auto",
+          "row": "auto/auto",
+          "col": "auto/auto",
+          "justifySelf": "auto"
+         }
+        ]
+       },
+       "info": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 57,
+         "y": 1092,
+         "w": 311,
+         "h": 34,
+         "bottom": 1126
+        }
+       },
+       "acciones": {
+        "gridArea": "auto",
+        "caja": {
+         "x": 650,
+         "y": 1098,
+         "w": 46,
+         "h": 22,
+         "bottom": 1120
+        }
+       },
+       "botones": [
+        {
+         "sel": ".btn-edit-expense",
+         "caja": {
+          "x": 650,
+          "y": 1098,
+          "w": 22,
+          "h": 22,
+          "bottom": 1120
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-delete-expense",
+         "caja": {
+          "x": 674,
+          "y": 1098,
+          "w": 22,
+          "h": 22,
+          "bottom": 1120
+         },
+         "w": 22,
+         "h": 22,
+         "opacity": "0"
+        },
+        {
+         "sel": ".btn-status-toggle",
+         "caja": {
+          "x": 384,
+          "y": 1098,
+          "w": 56,
+          "h": 22,
+          "bottom": 1120
+         },
+         "w": 56,
+         "h": 22,
+         "opacity": "1"
+        }
+       ],
+       "fila": {
+        "x": 49,
+        "y": 1086,
+        "w": 655,
+        "h": 48,
+        "bottom": 1133
+       }
+      }
+     ]
+    },
+    "feed": {
+     "total": 3,
+     "detalle": [
+      {
+       "concepto": "PRUEBA-ALFA Sueldo",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 864,
+         "w": 171,
+         "h": 36,
+         "bottom": 901
+        },
+        "scrollW": 171,
+        "clientW": 171
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 864,
+         "w": 149,
+         "h": 20,
+         "bottom": 884
+        },
+        "scrollW": 149,
+        "clientW": 149,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 542,
+         "y": 871,
+         "w": 154,
+         "h": 22,
+         "bottom": 893
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Alquiler",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 917,
+         "w": 177,
+         "h": 36,
+         "bottom": 953
+        },
+        "scrollW": 177,
+        "clientW": 177
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 917,
+         "w": 155,
+         "h": 20,
+         "bottom": 936
+        },
+        "scrollW": 155,
+        "clientW": 155,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 558,
+         "y": 924,
+         "w": 138,
+         "h": 22,
+         "bottom": 946
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      },
+      {
+       "concepto": "PRUEBA-ALFA Venta",
+       "txLeft": {
+        "caja": {
+         "x": 57,
+         "y": 969,
+         "w": 163,
+         "h": 36,
+         "bottom": 1006
+        },
+        "scrollW": 163,
+        "clientW": 163
+       },
+       "conceptoH4": {
+        "caja": {
+         "x": 79,
+         "y": 969,
+         "w": 141,
+         "h": 20,
+         "bottom": 989
+        },
+        "scrollW": 141,
+        "clientW": 141,
+        "recortado": false
+       },
+       "txRight": {
+        "caja": {
+         "x": 555,
+         "y": 976,
+         "w": 141,
+         "h": 22,
+         "bottom": 998
+        },
+        "gridRow": "auto",
+        "justifySelf": "auto"
+       },
+       "mismoRenglon": false,
+       "botones": [
+        {
+         "sel": ".btn-edit-tx",
+         "w": 22,
+         "h": 22
+        },
+        {
+         "sel": ".btn-delete-tx",
+         "w": 22,
+         "h": 22
+        }
+       ]
+      }
+     ]
+    },
+    "documento": {
+     "scrollWidth": 753,
+     "clientWidth": 753,
+     "scrollHorizontal": false,
+     "culpables": []
+    },
+    "tipografia": {
+     "familia": "\"IBM Plex Sans\", \"IBM Plex Sans Fallback\", system-ui, -apple-system, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif",
+     "lista": "IBM Plex Sans",
+     "status": "loaded"
+    }
+   },
+   "real": null,
+   "fuente": "loaded",
+   "alto": 1024
   }
  }
 }

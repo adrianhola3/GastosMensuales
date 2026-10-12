@@ -16,7 +16,8 @@
  * Postura del color en los graficos:
  *   · Donut: un acento por categoria, y solo ahi. Las 3 categorias del
  *     consolidado son 3Fatias distintas, asi que el color si significa algo
- *     (que porcion del gasto es de cada una).
+ *     (que porcion del GASTO REALIZADO es de cada una). La rampa es de tinta,
+ *     no de identidad: la porcion mas grande es la mas oscura.
  *   · Barras: dos series que NO son categorias (acumulado de ingresos vs
  *     balance acumulado), asi que van en los acentos de ESTADO, no de
  *     identidad: emerald = ingresos, rose = balance.
@@ -194,6 +195,36 @@ function renderGlobalCharts() {
       barChartInstance = null;
     }
 
+    /* EL GROSOR DE LA BARRA, Y POR QUÉ 36
+ * --------------------------------------------------------------------------
+ * MEDIDO en el navegador (no estimado): con el arnés de `odd/tasks`, sobre la
+ * fixture `baseline` a 1440x900, leyendo el ancho real que Chart.js le da a
+ * cada barra — `Chart.getChart('chartTrendBar').getDatasetMeta(0).data[i].width`:
+ *
+ *   lienzo 981px · chartArea 928px · 2 períodos  ->  barra de 167.0px
+ *   misma medida con 1 solo período              ->  barra de 353.2px
+ *   misma medida con 24 períodos (`periodos24`)  ->  barra de  13.8px
+ *   a 390px: 52.1px con 2 períodos, 4.3px con 24
+ *
+ * El ancho sale de `chartArea x barPercentage(0.9) x categoryPercentage(0.8) /
+ * 2 series`, o sea `334 / N`: con pocos períodos cada barra se come el 18% del
+ * área y con uno solo el 38%. A 167x250 eso no es una barra, es un bloque de
+ * color — y un bloque de color no se puede comparar con otro, que es lo único
+ * que sirve un gráfico de barras.
+ *
+ * EL NÚMERO, con el criterio que ya está escrito en `css/libro.css:562-572`
+ * para los botones táctiles: **el tamaño más grande que NO le come ancho al
+ * vecino**. Allí se medió que 36x36 casi triplica la superficie del control sin
+ * que el importe de al lado pierda un píxel, y que a 44 ya se empuja. La
+ * traslación es directa: el vecino de una barra es la otra serie y la categoría
+ * de al lado. Con tope de 36 la pareja ocupa 72px de los 464px que mide el
+ * slot de una categoría a dos períodos, así que la barra y su vecina siguen
+ * respirando y el slot entero no se llena; con 44 la pareja pasa a 88px y
+ * empieza a comerse el aire que las separa.
+ *
+ * Y el tope no muerde donde el gráfico ya estaba bien: `334 / 36 = 9.3`, o
+ * sea que solo acota a partir de 9 períodos. Con los 24 de `periodos24` las
+ * barras se quedan en sus 13.8px naturales — verificado después del cambio. */
     barChartInstance = new Chart(barCanvas, {
       type: 'bar',
       plugins: [sinDatos],
@@ -206,6 +237,7 @@ function renderGlobalCharts() {
             backgroundColor: colorIngresos,
             borderRadius: 6,
             borderSkipped: false,
+            maxBarThickness: 36,
           },
           {
             label: 'Balance acumulado',
@@ -213,6 +245,7 @@ function renderGlobalCharts() {
             backgroundColor: colorBalance,
             borderRadius: 6,
             borderSkipped: false,
+            maxBarThickness: 36,
           }
         ]
       },
@@ -280,7 +313,7 @@ function renderGlobalCharts() {
     });
   }
 
-  // 2. Gráfico Doughnut: Distribución acumulada por categorías
+  // 2. Gráfico Doughnut: Distribución REALIZADA por categorías
   const donutCanvas = document.getElementById('chartCategoryDonut') || document.getElementById('globalDonutChart');
   if (donutCanvas) {
     if (donutChartInstance) {
@@ -288,9 +321,30 @@ function renderGlobalCharts() {
       donutChartInstance = null;
     }
 
+    /* EL DATO DE LA DONA ES REALIZADO, NO PLANIFICADO
+     * ------------------------------------------------------------------
+     * Antes leía `globalServicios` / `globalPersonales` / `globalExtras`, que
+     * suman `montoEstimado`: plata que alguien se proposes gastar. Ahora lee los
+     * `*Real`, que suman el `montoReal` de los ítems cubiertos. Pregunta
+     * distinta, y la que le importa a quien mira el consolidado: no en qué se
+     * repartió la plata, sino en qué se está gastando la plata DE VERDAD.
+     *
+     * Y la trampa era esta: los campos viejos no son de la dona solamente.
+     * `store.js:1267` los escribe en las columnas SERVICIOS / PERSONALES /
+     * GASTOS EXTRA del CSV, que sigue siendo un reporte de lo planificado, y
+     * `rows` los usa por mes en la matriz. Reutilizarlos habría exportado
+     * realizado en un archivo rotulado como planificado, sin un solo error en
+     * pantalla: nadie se enteraría hasta comparar un Excel con la app. Por eso
+     * son campos nuevos y los viejos quedan como estaban.
+     *
+     * Consecuencia del cambio: el caso "nada pagado" es mucho más frecuente
+     * que el caso "nada planeado". El estado vacío ya existía y se usa igual
+     * que en las barras: `marcarVacio` baja el lienzo a 120px, `sinDatos`
+     * escribe la línea de texto, y los arcos neutros son de superficie. */
     const catLabels = ['Servicios del hogar', 'Gastos personales', 'Gastos extra'];
-    const catData = [totals.globalServicios, totals.globalPersonales, totals.globalExtras];
+    const catData = [totals.globalServiciosReal, totals.globalPersonalesReal, totals.globalExtrasReal];
     const totalGastos = catData.reduce((a, b) => a + b, 0);
+    marcarVacio(donutCanvas, totalGastos <= 0);
 
     // Un acento por categoria, leido del token. El estado vacio usa las
     // superficies, no los acentos: sin datos no hay nada que categorizar y un
@@ -323,23 +377,31 @@ function renderGlobalCharts() {
         cutout: '70%',
         plugins: {
           'gastos-sin-datos': {
-            texto: totalGastos > 0 ? '' : 'Sin gastos registrados en el acumulado.'
+            // "Sin pagos registrados", no "sin gastos": con el dato realizado el
+            // vacío significa "todavía no salió plata", que es otra cosa que
+            // "no hay nada gastado". La frase vieja era del planificado.
+            texto: totalGastos > 0 ? '' : 'Sin pagos registrados en el acumulado.'
           },
           // Con total 0 no se pinta nada: `sinDatos` ya pone su mensaje y dos
           // textos en el mismo lugar se pisan.
-          // El anillo reparte por categoría los MONTOS ESTIMADOS del gasto (los
-          // subtotales por sección, que ahora suman `montoEstimado`). Antes de
-          // la Fase 1 el número del centro era el mismo, pero se llamaba
-          // "Total de egresos", que sugiere plata ya gastada. Se renombra la
-          // etiqueta y NO el gráfico: el dato que ya se mostraba, con el
-          // nombre que le corresponde.
+          // El anillo reparte por categoría los MONTOS REALIZADOS: lo que salió
+          // de verdad, `montoReal` de los ítems cubiertos. El rótulo dice
+          // "realizado" y el dato es realizado — una dona de realizado
+          // rotulada como planificado es peor que la dona que había, porque
+          // se puede leer mal sin que nada parezca roto.
           'gastos-total-centro': {
-            etiqueta: 'Total estimado',
+            etiqueta: 'Total realizado',
             valor: totalGastos > 0 && window.formatCurrency
               ? window.formatCurrency(totalGastos)
               : ''
           },
           legend: {
+            // Mismo criterio que el gráfico de barras: sin datos, una leyenda
+            // de tres entradas y un anillo neutro es ruido que ocupa el lugar
+            // del mensaje de estado. Ahora el caso vacío es el COMÚN (un mes
+            // con todo pendiente da 0 en las tres categorías), así que esto ya
+            // no es una esquina rara del código.
+            display: totalGastos > 0,
             position: 'bottom',
             labels: {
               boxWidth: 10,
@@ -359,7 +421,7 @@ function renderGlobalCharts() {
             cornerRadius: 10,
             callbacks: {
               label: function(context) {
-                if (totalGastos === 0) return ' Sin gastos registrados aún';
+                if (totalGastos === 0) return ' Sin pagos registrados aún';
                 const percent = ((catData[context.dataIndex] / totalGastos) * 100).toFixed(1);
                 return ` ${context.label}: ${window.formatCurrency(catData[context.dataIndex])} (${percent}%)`;
               }

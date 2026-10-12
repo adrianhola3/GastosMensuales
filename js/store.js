@@ -704,6 +704,22 @@ class FinancialStore {
     const pagadosMovs = movs.filter(x => x.estado === 'Pagado' || x.flujo === 'Gasto');
     const pctPagadoMovimientos = movs.length > 0 ? Math.min(100, (pagadosMovs.length / movs.length) * 100) : 0;
 
+    // --- D3, POR CATEGORÍA: la misma pregunta de antes, con la plata REAL ---
+    //
+    // Arriba los tres subtotales son de `montoEstimado` ("cuánto iba a
+    // gastar"). Estos tres son de `montoReal` ("cuánto salió"), con el mismo
+    // filtro de cobertura que `totalReal`: solo los ítems que `estaCubierto`.
+    // No hay criterio nuevo: es `realesDe` acotado a cada categoría, la misma
+    // suma que ya produce `totalReal` sobre la lista entera.
+    //
+    // NO son dos versiones del mismo número. Con un item pagado por 1.456,78
+    // sobre un estimado de 1.234,56, el estimado vale 1.234,56 y el real
+    // 1.456,78: uno es el plan y el otro es el desvío. Por eso los campos
+    // viven con nombres distintos y no se derivan uno del otro (D3).
+    const subtotalServiciosReal = realesDe(itemsServicios);
+    const subtotalPersonalesReal = realesDe(itemsPersonales);
+    const subtotalExtrasReal = realesDe(itemsExtras);
+
     return {
       subtotalServiciosFijos,
       subtotalServiciosVariables,
@@ -712,6 +728,11 @@ class FinancialStore {
       subtotalPersonalesVariables,
       subtotalPersonales,
       subtotalExtras,
+      // Las mismas tres categorías, pero REALIZADO (montoReal de lo cubierto).
+      // Aditivos: los de arriba no cambian de valor ni de significado.
+      subtotalServiciosReal,
+      subtotalPersonalesReal,
+      subtotalExtrasReal,
       totalEgresos,
       totalIngresos,
       totalEgresosMovimientos,
@@ -749,7 +770,25 @@ class FinancialStore {
     let globalPersonales = 0;
     let globalExtras = 0;
     let globalDesembolsado = 0;
+    let globalServiciosReal = 0;
+    let globalPersonalesReal = 0;
+    let globalExtrasReal = 0;
 
+    // POR QUÉ HAY DOS SERIES DE TRES NÚMEROS Y NO UNA
+    // ---------------------------------------------------
+    // `globalServicios` / `globalPersonales` / `globalExtras` son el
+    // PLANIFICADO y lo siguen siendo: suman `montoEstimado`. Tienen dos
+    // consumidores reales y ninguno de los dos se toca:
+    //   · `exportCSV` (store.js:1267) los escribe en columnas rotuladas
+    //     SERVICIOS / PERSONALES / GASTOS EXTRA, junto a "TOTAL EGRESOS", que
+    //     es el nombre del planificado en el resto de la app.
+    //   · El detalle de la matriz los lee por mes desde `rows`.
+    // Cambiarles el significado dejaría un Excel que dice una cosa y una
+    // pantalla que dice otra, sin que nada se rompa visiblemente. Por eso son
+    // intocables y el realizado vive en campos NUEVOS.
+    //
+    // Los `*Real` son la plata que salió, criterio `estaCubierto` (`montoReal`),
+    // el mismo que ya usa `totalReal` por mes. Son los que lee la dona.
     const rows = this.data.mesesOrden.map(id => {
       const m = this.data.meses[id];
       if (!m) return null;
@@ -761,6 +800,9 @@ class FinancialStore {
       globalPersonales += c.subtotalPersonales;
       globalExtras += c.subtotalExtras;
       globalDesembolsado += c.totalDesembolsado;
+      globalServiciosReal += c.subtotalServiciosReal;
+      globalPersonalesReal += c.subtotalPersonalesReal;
+      globalExtrasReal += c.subtotalExtrasReal;
 
       return {
         monthId: id,
@@ -788,6 +830,10 @@ class FinancialStore {
       globalServicios,
       globalPersonales,
       globalExtras,
+      // Realizado por categoría: la plata que salió, no la que se planeó.
+      globalServiciosReal,
+      globalPersonalesReal,
+      globalExtrasReal,
       globalDesembolsado,
       rows
     };
@@ -1048,7 +1094,8 @@ class FinancialStore {
       categoria: mov.categoria || 'General',
       retornable: mov.retornable || 'No',
       estado: mov.estado || 'Pagado',
-      monto: monto
+      monto: monto,
+      ...(mov.metodo ? { metodo: mov.metodo } : {})
     };
 
     if (!m.movimientos) m.movimientos = [];

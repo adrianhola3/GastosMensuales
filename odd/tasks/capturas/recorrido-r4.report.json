@@ -195,18 +195,18 @@
   {
     "n": 10,
     "nombre": "Un acento por categoria, cuatro tics distintos",
-    "ok": true,
+    "ok": false,
     "detalle": {
       "total": 7,
-      "distintos": 5,
+      "distintos": 1,
       "colores": [
-        "rgb(80, 110, 130)",
-        "rgb(120, 97, 151)",
-        "rgb(74, 116, 93)",
-        "rgb(124, 104, 73)",
-        "rgb(109, 114, 122)",
-        "rgb(109, 114, 122)",
-        "rgb(109, 114, 122)"
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)",
+        "rgb(148, 163, 184)"
       ]
     },
     "escrituras": {
@@ -248,17 +248,17 @@
     "ok": true,
     "detalle": {
       "antes": {
-        "alto": 314,
+        "alto": 324,
         "collapsed": false,
         "aria": "true"
       },
       "colapsada": {
-        "alto": 40,
+        "alto": 48,
         "collapsed": true,
         "aria": "false"
       },
       "expandida": {
-        "alto": 314,
+        "alto": 324,
         "collapsed": false,
         "aria": "true"
       }
@@ -274,18 +274,18 @@
   {
     "n": 13,
     "nombre": "Cifras del mes: ingresos, presupuesto, balance, cobertura",
-    "ok": true,
+    "ok": false,
     "detalle": {
       "ingresos": "S/ 0.00",
-      "egresos": "S/ 699.34",
-      "balance": "S/ 0.00",
-      "estado": "Equilibrado",
+      "egresos": "Estimado S/ 0.00",
+      "balance": "-S/ 178.00",
+      "estado": "Déficit",
       "cobertura": "0.0%",
-      "pagado": "S/ 0.00",
-      "pendiente": "S/ 699.34",
+      "pagado": "Real S/ 178.00",
+      "pendiente": "Cubierto S/ 0.00Falta S/ 0.00",
       "pct": "0.0% Pagado",
       "notasIngresos": "0 abonos registrados",
-      "notasGastos": "0 de 10 gastos pagados"
+      "notasGastos": "2 de 10 gastos pagados"
     },
     "escrituras": {
       "guardar": 0,
@@ -300,9 +300,9 @@
     "nombre": "El acento de estado solo va en la cifra del balance",
     "ok": true,
     "detalle": {
-      "balance": "rgb(43, 108, 140)",
-      "ingresos": "rgb(29, 29, 31)",
-      "etiqueta": "rgb(101, 105, 114)"
+      "balance": "rgb(155, 59, 46)",
+      "ingresos": "rgb(15, 23, 42)",
+      "etiqueta": "rgb(15, 23, 42)"
     },
     "escrituras": {
       "guardar": 0,
@@ -319,10 +319,10 @@
     "detalle": [
       {
         "id": "chartTrendBar",
-        "w": 893,
-        "h": 120,
-        "pintados": 26790,
-        "colores": 71,
+        "w": 981,
+        "h": 280,
+        "pintados": 68670,
+        "colores": 112,
         "conAcento": 6
       },
       {
@@ -330,7 +330,7 @@
         "w": 420,
         "h": 280,
         "pintados": 29400,
-        "colores": 164,
+        "colores": 92,
         "conAcento": 6
       }
     ],

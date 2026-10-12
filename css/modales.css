@@ -278,9 +278,13 @@ body.read-only-mode .admin-action-btn {
   display: none !important;
 }
 
-body.read-only-mode .btn-status-toggle,
 body.read-only-mode #btnOpenNotesModal {
   display: none !important;
+}
+
+body.read-only-mode .btn-status-toggle {
+  pointer-events: none;
+  cursor: default;
 }
 
 /* ==========================================================================

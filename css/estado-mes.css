@@ -97,10 +97,11 @@
 .status-tail {
   grid-area: tail;
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-wrap: nowrap;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
+  gap: var(--space-2) var(--space-3);
+  min-width: 0;
 }
 
 /* El nodo que app.js rellena con los dos renglones. `display: contents` es lo
@@ -198,10 +199,12 @@
 .status-notes {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
   margin: 0;
   font-size: var(--text-xs);
   color: var(--ink-2);
+  min-width: 0;
 }
 
 .status-note { white-space: nowrap; }
@@ -221,26 +224,28 @@
    corrigiendo. */
 .status-support {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-4);
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 .status-figure {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 }
 
 .status-label {
-  font-size: var(--text-2xs);
+  font-size: 10px;
+  font-weight: 600;
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
   color: var(--ink-2);
 }
 
 .status-value {
-  font-size: var(--text-lg);
+  font-size: var(--text-md);
   font-weight: 600;
   line-height: var(--leading-figure);
   letter-spacing: var(--tracking-figure);
@@ -251,7 +256,7 @@
 .status-figure-line {
   display: flex;
   align-items: baseline;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 
 /* ==========================================================================
@@ -269,15 +274,13 @@
   z-index: 20;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
   margin-top: calc(var(--space-4) * -1);
-  /* 8px arriba y 16px abajo, no igual: el margen negativo deja la barra pegada
-     al borde inferior de la barra superior, y un titular a 8px de un filete se
-     lee como que le falta sitio. Abajo sí hace falta aire, porque lo que sigue
-     es la primera fila del libro y el corte pegado las fusiona. */
-  padding: var(--space-2) 0 var(--space-3);
+  padding: var(--space-2) var(--space-4);
   background: var(--surface);
-  border-bottom: 1px solid var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-box);
+  margin-bottom: var(--space-2);
 }
 
 .ledger-row {
@@ -409,15 +412,14 @@
      del breakpoint del armazón.
    ========================================================================== */
 
-@media (max-width: 1200px) {
-  /* Por debajo de 1200 el renglón de abajo ya no entra: las tres medidas de las
-     notas y las tres cifras de apoyo suman ~770px contra los que quedan, y se
-     partirían a mitad de palabra. El renglón se parte entero en dos, con un
-     filete que marca el corte — la barra, arriba, no se toca. */
+@media (max-width: 960px) {
+  .status-tail {
+    flex-wrap: wrap;
+  }
   .status-support {
     width: 100%;
     justify-content: space-between;
-    gap: var(--space-5);
+    gap: var(--space-4);
     padding-top: var(--space-2);
     border-top: 1px solid var(--rule);
   }
@@ -448,5 +450,17 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
+  }
+}
+
+@media (max-width: 640px) {
+  .ledger-toolbar {
+    margin-left: 0;
+    margin-right: 0;
+    padding: var(--space-2) 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
   }
 }

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -601,6 +601,21 @@
               Ninguna categoría seleccionada. Activá una arriba para verla.
             </div>
 
+            <!-- Banner de sección independiente cuando se aísla una categoría -->
+            <div id="singleSectionBanner" class="single-section-banner" style="display: none;">
+              <div class="single-section-header">
+                <div class="single-section-info">
+                  <span class="single-section-pill-tag">Sección Enfocada</span>
+                  <h3 id="singleSectionTitle" class="single-section-title">Servicios del hogar</h3>
+                  <span id="singleSectionSubtitle" class="single-section-subtitle">Visualizando solo esta categoría</span>
+                </div>
+                <button type="button" id="btnBackToAllSections" class="btn-back-to-all" title="Ver todas las secciones">
+                  <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.5 8H4.5M7.5 4.5L4 8l3.5 3.5"/></svg>
+                  <span>Ver todas las secciones</span>
+                </button>
+              </div>
+            </div>
+
             <!-- 1. SERVICIOS -->
             <section class="ledger-group" id="ledgerGroupServicios" data-segment-card="servicios"
               data-categoria="servicios" data-accent="servicios">
@@ -621,6 +636,7 @@
                      `admin-action-btn`, mismo binding en app.js:1421— porque
                      el encabezado es dato y la columna es control. -->
                 <div class="ledger-group-meta">
+                  <button type="button" class="btn-isolate-section" data-isolate="servicios" title="Ver solo Servicios del hogar">Aislar</button>
                   <span id="summaryTagServicios" class="ledger-group-subtotal font-mono">S/ 0.00</span>
                 </div>
               </div>
@@ -646,6 +662,7 @@
                 <!-- T2: `.btn-quick-add-personal` vive en la columna de
                      secciones (app.js:1424 sigue leyéndolo por clase). -->
                 <div class="ledger-group-meta">
+                  <button type="button" class="btn-isolate-section" data-isolate="personales" title="Ver solo Gastos personales">Aislar</button>
                   <span id="summaryTagPersonales" class="ledger-group-subtotal font-mono">S/ 0.00</span>
                 </div>
               </div>
@@ -683,6 +700,7 @@
                      `admin-action-btn`. El encabezado queda con su conteo de
                      movimientos. -->
                 <div class="ledger-group-meta">
+                  <button type="button" class="btn-isolate-section" data-isolate="movimientos" title="Ver solo Movimientos del mes">Aislar</button>
                   <span id="summaryTagMovimientos" class="ledger-group-subtotal font-mono">0 movs</span>
                 </div>
               </div>
@@ -717,6 +735,7 @@
                      control de navegación con la misma forma que los otros
                      tres. -->
                 <div class="ledger-group-meta">
+                  <button type="button" class="btn-isolate-section" data-isolate="extras" title="Ver solo Gastos extraordinarios">Aislar</button>
                   <span id="summaryTagExtras" class="ledger-group-subtotal font-mono">S/ 0.00</span>
                 </div>
               </div>
@@ -960,6 +979,14 @@
               <input type="date" id="movFecha" class="form-input-lg font-mono">
             </div>
           </div>
+          <div class="form-field" id="movMetodoField">
+            <label for="movMetodo">Método de abono</label>
+            <select id="movMetodo" class="form-input-lg">
+              <option value="Yape">Yape</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+            </select>
+          </div>
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
@@ -1070,6 +1097,15 @@
             </div>
           </div>
 
+          <div class="form-field" id="editMovementMetodoField" style="display: none;">
+            <label for="editMovementMetodo">Método de abono</label>
+            <select id="editMovementMetodo" class="form-input-lg">
+              <option value="Yape">Yape</option>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+            </select>
+          </div>
+
           <div class="form-field">
             <label for="editMovementFlujoReadonly">Tipo de movimiento</label>
             <p id="editMovementFlujoReadonly" class="form-readonly-value">Ingreso</p>
@@ -1167,7 +1203,19 @@
 
       <form id="formAdminLogin" style="display: none;">
         <div class="modal-sheet-body">
-          <p class="form-hint">Iniciá sesión con tu correo y contraseña para poder editar los presupuestos.</p>
+          <div class="form-field form-field-spaced" style="padding: 12px; background: var(--sunk); border: 1px solid var(--rule); border-radius: var(--radius); margin-bottom: var(--space-3);">
+            <div style="font-weight: 600; font-size: var(--text-sm); margin-bottom: 4px;">Acceso Rápido / Prueba de Diseño</div>
+            <p class="form-hint" style="margin-bottom: 10px;">Ingresá como Administrador para explorar y probar todas las herramientas sin necesidad de cuenta.</p>
+            <button type="button" id="btnAdminLoginQuickBypass" class="btn btn-primary btn-block" style="width: 100%;">Entrar como Administrador (Modo Local)</button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; margin: 12px 0; color: var(--ink-2); font-size: var(--text-xs);">
+            <div style="flex: 1; height: 1px; background: var(--rule);"></div>
+            <span>o con cuenta en la nube</span>
+            <div style="flex: 1; height: 1px; background: var(--rule);"></div>
+          </div>
+
+          <p class="form-hint">Iniciá sesión con tu correo y contraseña de Supabase:</p>
           <div class="form-field">
             <label for="adminLoginEmail">Correo electrónico</label>
             <input type="email" id="adminLoginEmail" class="form-input-lg" placeholder="tucorreo@ejemplo.com" autocomplete="username" required>
@@ -1192,6 +1240,7 @@
         </div>
         <div class="modal-sheet-footer">
           <button type="button" class="btn btn-surface btn-close-sheet-btn">Cancelar</button>
+          <button type="button" id="btnAdminLoginLocalBypass" class="btn btn-surface">Acceso local</button>
           <button type="submit" id="btnAdminLoginSubmit" class="btn btn-primary btn-lg">Entrar</button>
         </div>
       </form>

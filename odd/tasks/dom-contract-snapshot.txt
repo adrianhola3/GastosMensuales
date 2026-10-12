@@ -1,9 +1,9 @@
 # Snapshot del contrato DOM
-# Generado con: node dom-contract.js js\app.js odd\tasks\dom-contract-snapshot.txt
+# Generado con: node dom-contract.js js/app.js odd/tasks/dom-contract-snapshot.txt
 # Origen: solo js/app.js. Comandos cubiertos: getElementById, querySelector(All),
 # classList.*, className =, getAttribute, y class="..." de las plantillas innerHTML.
 
-[IDS] count=137
+[IDS] count=138
 activeMonthHeaderBadge
 adminAuthAviso
 adminLoginEmail
@@ -18,11 +18,13 @@ badgeSegMovimientos
 badgeSegPersonales
 badgeSegServicios
 btnAdminLoginSubmit
+btnBackToAllSections
 btnBackToRoleChoices
 btnChooseAdmin
 btnChooseReadOnly
-btnClearSidebarSearch
 btnCloseSidebar
+btnCommandClearSearch
+btnDeleteMonth
 btnHeaderAddBudget
 btnHeaderAddIncome
 btnNavMes
@@ -44,6 +46,12 @@ budgetRango
 budgetSection
 budgetSubsection
 budgetSubsectionField
+cloneIncluirExtras
+cloneIncluirMovimientos
+cloneIncluirNotas
+cloneOpcionesRow
+commandSearchInput
+commandSearchResultsFeedback
 editExpenseConcepto
 editExpenseItemId
 editExpenseMonthId
@@ -73,6 +81,7 @@ kpiGlobalBalance
 kpiGlobalCumplimiento
 kpiGlobalEgresos
 kpiGlobalIngresos
+ledgerRowsMovimientos
 miniBarExtras
 miniBarMovimientos
 miniBarPersonales
@@ -121,15 +130,8 @@ roleSelectStepPending
 searchResultsCountText
 selectBudgetSubsectionField
 sidebarBackdrop
-sidebarSearchInput
-sidebarSearchResultsFeedback
-subtotalGastosExtra
-subtotalPersonalesFijos
-subtotalPersonalesVariables
-subtotalServiciosFijos
-subtotalServiciosVariables
-subtotalTotalPersonales
-subtotalTotalServicios
+singleSectionBanner
+singleSectionTitle
 summaryTagExtras
 summaryTagFlujo
 summaryTagMovimientos
@@ -138,15 +140,14 @@ summaryTagServicios
 toastIcon
 toastText
 topbarBalanceValue
-transactionsFeedList
 viewMes
 viewPanel
 
-[CLASSES] count=63
-accordion-header
+[CLASSES] count=72
 active
 admin-action-btn
 admin-active
+app-topbar
 btn
 btn-close-sheet
 btn-close-sheet-btn
@@ -156,12 +157,14 @@ btn-delete-tx
 btn-edit-expense
 btn-edit-tx
 btn-ghost-rose
+btn-isolate-section
 btn-lg
 btn-quick-add-extra
 btn-quick-add-personal
 btn-quick-add-service
 btn-status-toggle
 btn-success
+busqueda-vacia
 card-anim-in
 card-anim-out
 collapsed
@@ -176,6 +179,10 @@ feed-filter-pill
 font-mono
 has-notes
 item-actions
+ledger-group
+ledger-group-rows
+ledger-group-toggle
+ledger-toolbar
 matrix-active-badge
 matrix-month-btn
 matrix-progress-cell
@@ -187,8 +194,11 @@ modal-sheet
 mode-badge
 month-pill-btn
 notes-dot-badge
+rail-entry
+rail-entry-focused
 read-only-mode
 readonly-active
+section-rail
 segment-pill-btn
 show
 sidebar-open
@@ -207,11 +217,16 @@ ui-icon-img
 ui-icon-svg
 ui-icon-xs
 
-[ATRIBUTOS] count=5
+[ATRIBUTOS] count=10
 data-filter
+data-group-count
+data-isolate
 data-item-id
 data-month-id
+data-rail-count
+data-rail-entry
+data-rail-total
 data-segment
 data-segment-card
 
-[TOTAL] ids=137 classes=63 atributos=5 suma=205
+[TOTAL] ids=138 classes=72 atributos=10 suma=220

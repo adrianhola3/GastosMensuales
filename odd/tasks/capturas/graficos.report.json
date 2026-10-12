@@ -1,0 +1,1114 @@
+{
+ "generado": "2026-10-12T05:37:32.191Z",
+ "topeBarra": 36,
+ "salida": {
+  "realizado": {
+   "fixture": "produccion4digitos",
+   "que": "dona = realizado sobre estimado ≠ real",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     7672.57,
+     10222.33,
+     6543.21
+    ],
+    "coloresArcos": [
+     "#1C1B19",
+     "#56534C",
+     "#8A867D"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": "S/ 24,438.11"
+    },
+    "opVacio": {
+     "texto": ""
+    },
+    "leyenda": true,
+    "seccionVacia": false,
+    "hayHole": true,
+    "hole": {
+     "inner": 85.4,
+     "outer": 122
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     7703.67,
+     11246.78,
+     7566.780000000001
+    ],
+    "realizado": [
+     7672.57,
+     10222.33,
+     6543.21
+    ],
+    "estimadoPorCategoria": [
+     7703.67,
+     11246.78,
+     7566.78
+    ],
+    "realPorCategoria": [
+     7672.57,
+     10222.33,
+     6543.21
+    ],
+    "sumaEstimado": 26517.23,
+    "sumaReal": 24438.11,
+    "items": 12,
+    "cubiertos": 7,
+    "movimientos": 3,
+    "formatReal": "S/ 24,438.11",
+    "formatEstimado": "S/ 26,517.23"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Servicios del hogar",
+     "Gastos personales",
+     "Gastos extra",
+     "Total realizado",
+     "S/ 24,438.11"
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "csv": {
+    "ok": true,
+    "csv": "MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\n\"PRUEBA-ALFA 2026\",7037.01,10246.79,6789.01,24072.81,1444.44,-22993.67,6.0%\n\"PRUEBA-BETA 2026\",666.66,999.99,777.77,2444.42,0.00,-222.22,0.0%\n\"TOTALES\",7703.67,11246.78,7566.78,26517.23,1444.44,-23215.89,5.4%\n"
+   },
+   "feed": {
+    "total": 3,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": [
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 1,111.11",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Gasto",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "- S/ 222.22",
+       "clase": "tx-amount font-mono tx-amount-gasto",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 333.33",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     }
+    ]
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 2,
+    "etiquetas": [
+     "PRUEBA-ALFA",
+     "PRUEBA-BETA"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      36,
+      36
+     ],
+     [
+      36,
+      36
+     ]
+    ],
+    "chartArea": 916.521
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 2,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      164.974,
+      164.974
+     ],
+     [
+      164.974,
+      164.974
+     ]
+    ]
+   }
+  },
+  "sin-pago": {
+   "fixture": "produccion4digitos",
+   "que": "todo estimado y nada pagado (estado derivado en memoria)",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "estadoDerivado": {
+    "ok": true,
+    "items": 12,
+    "meses": 2
+   },
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     1,
+     1,
+     1
+    ],
+    "coloresArcos": [
+     "#FFFFFF",
+     "#F4F2ED",
+     "#FFFFFF"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": ""
+    },
+    "opVacio": {
+     "texto": "Sin pagos registrados en el acumulado."
+    },
+    "leyenda": false,
+    "seccionVacia": true,
+    "hayHole": true,
+    "hole": {
+     "inner": 42,
+     "outer": 60
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     7703.67,
+     11246.78,
+     7566.780000000001
+    ],
+    "realizado": [
+     0,
+     0,
+     0
+    ],
+    "estimadoPorCategoria": [
+     7703.67,
+     11246.78,
+     7566.78
+    ],
+    "realPorCategoria": [
+     0,
+     0,
+     0
+    ],
+    "sumaEstimado": 26517.23,
+    "sumaReal": 0,
+    "items": 12,
+    "cubiertos": 0,
+    "movimientos": 3,
+    "formatReal": "S/ 0.00",
+    "formatEstimado": "S/ 26,517.23"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Sin pagos registrados en el acumulado."
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "feed": {
+    "total": 3,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": [
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 1,111.11",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Gasto",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "- S/ 222.22",
+       "clase": "tx-amount font-mono tx-amount-gasto",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 333.33",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     }
+    ]
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 2,
+    "etiquetas": [
+     "PRUEBA-ALFA",
+     "PRUEBA-BETA"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      36,
+      36
+     ],
+     [
+      36,
+      36
+     ]
+    ],
+    "chartArea": 927.51
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 2,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      166.952,
+      166.952
+     ],
+     [
+      166.952,
+      166.952
+     ]
+    ]
+   }
+  },
+  "vacio": {
+   "fixture": "mesVacio",
+   "que": "la dona sin nada que mostrar",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     1,
+     1,
+     1
+    ],
+    "coloresArcos": [
+     "#FFFFFF",
+     "#F4F2ED",
+     "#FFFFFF"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": ""
+    },
+    "opVacio": {
+     "texto": "Sin pagos registrados en el acumulado."
+    },
+    "leyenda": false,
+    "seccionVacia": true,
+    "hayHole": true,
+    "hole": {
+     "inner": 42,
+     "outer": 60
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     0,
+     0,
+     0
+    ],
+    "realizado": [
+     0,
+     0,
+     0
+    ],
+    "estimadoPorCategoria": [
+     0,
+     0,
+     0
+    ],
+    "realPorCategoria": [
+     0,
+     0,
+     0
+    ],
+    "sumaEstimado": 0,
+    "sumaReal": 0,
+    "items": 0,
+    "cubiertos": 0,
+    "movimientos": 0,
+    "formatReal": "S/ 0.00",
+    "formatEstimado": "S/ 0.00"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Sin pagos registrados en el acumulado."
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "feed": {
+    "total": 0,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": []
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 1,
+    "etiquetas": [
+     "PRUEBA-ALFA"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      36
+     ],
+     [
+      36
+     ]
+    ],
+    "chartArea": 981
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 1,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      353.16
+     ],
+     [
+      353.16
+     ]
+    ]
+   }
+  },
+  "baseline": {
+   "fixture": "baseline",
+   "que": "feed sin color de estado + barras con 2 períodos",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     444.44,
+     0,
+     666.66
+    ],
+    "coloresArcos": [
+     "#1C1B19",
+     "#56534C",
+     "#8A867D"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": "S/ 1,111.10"
+    },
+    "opVacio": {
+     "texto": ""
+    },
+    "leyenda": true,
+    "seccionVacia": false,
+    "hayHole": true,
+    "hole": {
+     "inner": 85.4,
+     "outer": 122
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     1333.32,
+     1999.98,
+     1444.4299999999998
+    ],
+    "realizado": [
+     444.44,
+     0,
+     666.66
+    ],
+    "estimadoPorCategoria": [
+     1333.32,
+     1999.98,
+     1444.43
+    ],
+    "realPorCategoria": [
+     444.44,
+     0,
+     666.66
+    ],
+    "sumaEstimado": 4777.73,
+    "sumaReal": 1111.1,
+    "items": 12,
+    "cubiertos": 3,
+    "movimientos": 3,
+    "formatReal": "S/ 1,111.10",
+    "formatEstimado": "S/ 4,777.73"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Servicios del hogar",
+     "Gastos personales",
+     "Gastos extra",
+     "Total realizado",
+     "S/ 1,111.10"
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "csv": {
+    "ok": true,
+    "csv": "MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\n\"PRUEBA-ALFA 2026\",666.66,999.99,666.66,2333.31,1444.44,333.34,61.9%\n\"PRUEBA-BETA 2026\",666.66,999.99,777.77,2444.42,0.00,-222.22,0.0%\n\"TOTALES\",1333.32,1999.98,1444.43,4777.73,1444.44,111.12,30.2%\n"
+   },
+   "feed": {
+    "total": 3,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": [
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 1,111.11",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Gasto",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "- S/ 222.22",
+       "clase": "tx-amount font-mono tx-amount-gasto",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 333.33",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     }
+    ]
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 2,
+    "etiquetas": [
+     "PRUEBA-ALFA",
+     "PRUEBA-BETA"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      36,
+      36
+     ],
+     [
+      36,
+      36
+     ]
+    ],
+    "chartArea": 927.51
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 2,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      166.952,
+      166.952
+     ],
+     [
+      166.952,
+      166.952
+     ]
+    ]
+   }
+  },
+  "un-mes": {
+   "fixture": "unSoloMes",
+   "que": "barras con 1 solo período",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     222.22,
+     0,
+     666.66
+    ],
+    "coloresArcos": [
+     "#1C1B19",
+     "#56534C",
+     "#8A867D"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": "S/ 888.88"
+    },
+    "opVacio": {
+     "texto": ""
+    },
+    "leyenda": true,
+    "seccionVacia": false,
+    "hayHole": true,
+    "hole": {
+     "inner": 85.4,
+     "outer": 122
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     666.66,
+     999.99,
+     666.66
+    ],
+    "realizado": [
+     222.22,
+     0,
+     666.66
+    ],
+    "estimadoPorCategoria": [
+     666.66,
+     999.99,
+     666.66
+    ],
+    "realPorCategoria": [
+     222.22,
+     0,
+     666.66
+    ],
+    "sumaEstimado": 2333.31,
+    "sumaReal": 888.88,
+    "items": 6,
+    "cubiertos": 2,
+    "movimientos": 3,
+    "formatReal": "S/ 888.88",
+    "formatEstimado": "S/ 2,333.31"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Servicios del hogar",
+     "Gastos personales",
+     "Gastos extra",
+     "Total realizado",
+     "S/ 888.88"
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "csv": {
+    "ok": true,
+    "csv": "MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\n\"PRUEBA-ALFA 2026\",666.66,999.99,666.66,2333.31,1444.44,333.34,61.9%\n\"TOTALES\",666.66,999.99,666.66,2333.31,1444.44,333.34,61.9%\n"
+   },
+   "feed": {
+    "total": 3,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": [
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 1,111.11",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Gasto",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "- S/ 222.22",
+       "clase": "tx-amount font-mono tx-amount-gasto",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 333.33",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     }
+    ]
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 1,
+    "etiquetas": [
+     "PRUEBA-ALFA"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      36
+     ],
+     [
+      36
+     ]
+    ],
+    "chartArea": 927.51
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 1,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      333.904
+     ],
+     [
+      333.904
+     ]
+    ]
+   }
+  },
+  "p24": {
+   "fixture": "periodos24",
+   "que": "barras con 24 períodos: el tope no debe morder",
+   "fuente": "loaded",
+   "consola": [],
+   "excepciones": [],
+   "dona": {
+    "ok": true,
+    "chartjs": "4.5.1",
+    "datasetData": [
+     5333.28,
+     0,
+     666.66
+    ],
+    "coloresArcos": [
+     "#1C1B19",
+     "#56534C",
+     "#8A867D"
+    ],
+    "opCentro": {
+     "etiqueta": "Total realizado",
+     "valor": "S/ 5,999.94"
+    },
+    "opVacio": {
+     "texto": ""
+    },
+    "leyenda": true,
+    "seccionVacia": false,
+    "hayHole": true,
+    "hole": {
+     "inner": 85.4,
+     "outer": 122
+    },
+    "tokens": {
+     "surface": "#FFFFFF",
+     "inset": "#F4F2ED",
+     "card": "#FFFFFF",
+     "catServicios": "#1C1B19",
+     "catPersonales": "#56534C",
+     "catExtras": "#8A867D"
+    },
+    "planificado": [
+     15999.839999999998,
+     23999.76000000001,
+     666.66
+    ],
+    "realizado": [
+     5333.28,
+     0,
+     666.66
+    ],
+    "estimadoPorCategoria": [
+     15999.84,
+     23999.76,
+     666.66
+    ],
+    "realPorCategoria": [
+     5333.28,
+     0,
+     666.66
+    ],
+    "sumaEstimado": 40666.26,
+    "sumaReal": 5999.94,
+    "items": 121,
+    "cubiertos": 25,
+    "movimientos": 3,
+    "formatReal": "S/ 5,999.94",
+    "formatEstimado": "S/ 40,666.26"
+   },
+   "pintado": {
+    "ok": true,
+    "textos": [
+     "Servicios del hogar",
+     "Gastos personales",
+     "Gastos extra",
+     "Total realizado",
+     "S/ 5,999.94"
+    ],
+    "lienzos": [
+     "chartCategoryDonut"
+    ]
+   },
+   "csv": {
+    "ok": true,
+    "csv": "MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\n\"PRUEBA-ALFA 2026\",666.66,999.99,666.66,2333.31,1444.44,333.34,61.9%\n\"Periodo de prueba 1 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 2 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 3 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 4 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 5 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 6 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 7 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 8 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 9 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 10 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 11 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 12 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 13 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 14 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 15 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 16 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 17 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 18 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 19 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 20 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 21 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 22 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"Periodo de prueba 23 2028\",666.66,999.99,0.00,1666.65,0.00,-222.22,0.0%\n\"TOTALES\",15999.84,23999.76,666.66,40666.26,1444.44,-4777.72,3.6%\n"
+   },
+   "feed": {
+    "total": 3,
+    "tokens": {
+     "verde": "rgb(47,107,79)",
+     "verdeTexto": "rgb(47,107,79)",
+     "rojo": "rgb(155,59,46)",
+     "rojoTexto": "rgb(155,59,46)",
+     "tinta2": "rgb(71,85,105)",
+     "tinta": "rgb(15,23,42)",
+     "tintaMain": "rgb(28,27,25)"
+    },
+    "filas": [
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 1,111.11",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Gasto",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "- S/ 222.22",
+       "clase": "tx-amount font-mono tx-amount-gasto",
+       "color": "rgb(15,23,42)"
+      }
+     },
+     {
+      "texto": "Ingreso",
+      "estiloInline": "font-weight: 600;",
+      "color": "rgb(71,85,105)",
+      "peso": "600",
+      "importa": {
+       "texto": "+ S/ 333.33",
+       "clase": "tx-amount font-mono tx-amount-ingreso",
+       "color": "rgb(15,23,42)"
+      }
+     }
+    ]
+   },
+   "barras": {
+    "ok": true,
+    "categorias": 24,
+    "etiquetas": [
+     "PRUEBA-ALFA",
+     "Periodo 1",
+     "Periodo 2"
+    ],
+    "series": [
+     "Ingresos acumulados",
+     "Balance acumulado"
+    ],
+    "topes": [
+     36,
+     36
+    ],
+    "anchos": [
+     [
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847
+     ],
+     [
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847
+     ]
+    ],
+    "chartArea": 923.121
+   },
+   "barrasSinTope": {
+    "ok": true,
+    "categorias": 24,
+    "topes": [
+     null,
+     null
+    ],
+    "anchos": [
+     [
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847
+     ],
+     [
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847,
+      13.847
+     ]
+    ]
+   }
+  }
+ }
+}

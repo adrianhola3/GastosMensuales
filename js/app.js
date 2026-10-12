@@ -1689,21 +1689,32 @@ tr.innerHTML = `
 
   if (btnOpenNotesModal && modalMonthNotes) {
     btnOpenNotesModal.addEventListener('click', () => {
-      if (!exigirAdmin('editar las notas del mes')) return;
       const month = store.getActiveMonth();
-      if (notesTextarea) notesTextarea.value = month ? (month.notas || '') : '';
+      if (notesTextarea) {
+        notesTextarea.value = month ? (month.notas || '') : '';
+        notesTextarea.readOnly = !isAdmin;
+      }
+      if (notesFeedback) {
+        notesFeedback.textContent = isAdmin
+          ? 'Guardado automático en tiempo real'
+          : 'Modo lectura (solo el administrador puede editar o borrar notas)';
+      }
       if (modalNotesSubtitle && month) {
         modalNotesSubtitle.textContent = `Recordatorios y observaciones de ${month.nombre}`;
       }
       modalMonthNotes.classList.add('active');
-      setTimeout(() => {
-        if (notesTextarea) notesTextarea.focus();
-      }, 120);
+      if (isAdmin && notesTextarea) {
+        setTimeout(() => notesTextarea.focus(), 120);
+      }
     });
   }
 
   if (notesTextarea) {
     notesTextarea.addEventListener('input', () => {
+      if (!exigirAdmin('editar las notas del mes')) {
+        notesTextarea.readOnly = true;
+        return;
+      }
       if (notesFeedback) notesFeedback.textContent = 'Guardando notas...';
       clearTimeout(notesTimer);
       notesTimer = setTimeout(() => {

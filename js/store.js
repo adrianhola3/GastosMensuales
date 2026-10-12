@@ -197,7 +197,7 @@ function getDefaultData() {
       extras = [
         { id: generateId(), concepto: 'Matrícula 2026-B de la universidad', montoEstimado: 83.00, montoReal: 83.00, tipo: 'Extra' }
       ];
-      notas = 'Matrícula 2026-B universitaria pagada. Controlar compras dermatológicas del mes.';
+      notas = 'Nota de prueba en agosto: acuerdos y pagos pendientes familiares. (Editable y eliminable desde el modo Administrador).';
       movimientos = [];
     }
 

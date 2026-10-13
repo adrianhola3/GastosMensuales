@@ -751,9 +751,10 @@
 
 .month-notes-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-2) var(--space-3);
   padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--rule);
 }
@@ -796,7 +797,26 @@
   font-style: italic;
 }
 
-body.read-only-mode .btn-inline-edit-notes {
+.month-notes-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-inline-delete-notes:hover,
+.btn-delete-notes-modal:hover {
+  color: var(--over);
+  border-color: var(--over);
+}
+
+.btn-delete-notes-modal {
+  margin-right: auto;
+}
+
+body.read-only-mode .btn-inline-edit-notes,
+body.read-only-mode .btn-inline-delete-notes,
+body.read-only-mode .btn-delete-notes-modal {
   display: none !important;
 }
 

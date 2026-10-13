@@ -607,6 +607,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tarjeta integrada de notas en el cuerpo del mes
     const cardInlineNotes = document.getElementById('monthNotesInlineCard');
     const textInlineNotes = document.getElementById('monthNotesDisplayText');
+    const btnInlineDeleteNotes = document.getElementById('btnInlineDeleteNotes');
+    const btnDeleteNotesModal = document.getElementById('btnDeleteNotesModal');
+    if (btnInlineDeleteNotes) {
+      btnInlineDeleteNotes.style.display = (isAdmin && hasNotes) ? '' : 'none';
+    }
+    if (btnDeleteNotesModal) {
+      btnDeleteNotesModal.style.display = (isAdmin && hasNotes) ? '' : 'none';
+    }
     if (cardInlineNotes && textInlineNotes) {
       if (hasNotes) {
         cardInlineNotes.style.display = 'block';
@@ -1704,7 +1712,60 @@ tr.innerHTML = `
   const modalNotesSubtitle = document.getElementById('modalNotesSubtitle');
   const notesTextarea = document.getElementById('monthNotesTextarea');
   const notesFeedback = document.getElementById('notesFeedback');
+  const btnInlineDeleteNotes = document.getElementById('btnInlineDeleteNotes');
+  const btnDeleteNotesModal = document.getElementById('btnDeleteNotesModal');
   let notesTimer = null;
+
+  function sincronizarEstadoNotasUI() {
+    const month = store.getActiveMonth();
+    const hasNotes = Boolean(month && month.notas && month.notas.trim().length > 0);
+
+    if (btnOpenNotesModal) {
+      btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
+      btnOpenNotesModal.innerHTML = hasNotes
+        ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
+        : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
+    }
+
+    if (btnInlineDeleteNotes) {
+      btnInlineDeleteNotes.style.display = (isAdmin && hasNotes) ? '' : 'none';
+    }
+    if (btnDeleteNotesModal) {
+      btnDeleteNotesModal.style.display = (isAdmin && hasNotes) ? '' : 'none';
+    }
+
+    const cardInlineNotes = document.getElementById('monthNotesInlineCard');
+    const textInlineNotes = document.getElementById('monthNotesDisplayText');
+    if (cardInlineNotes && textInlineNotes && month) {
+      if (hasNotes) {
+        cardInlineNotes.style.display = 'block';
+        textInlineNotes.textContent = month.notas.trim();
+        textInlineNotes.classList.remove('is-empty');
+      } else {
+        if (isAdmin) {
+          cardInlineNotes.style.display = 'block';
+          textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
+          textInlineNotes.classList.add('is-empty');
+        } else {
+          cardInlineNotes.style.display = 'none';
+        }
+      }
+    }
+  }
+
+  function eliminarNotaDelMes() {
+    if (!exigirAdmin('eliminar las notas del mes')) return;
+    const month = store.getActiveMonth();
+    if (!month || !month.notas || !month.notas.trim()) return;
+    if (!confirm(`¿Eliminar la nota de ${month.nombre}?`)) return;
+
+    clearTimeout(notesTimer);
+    store.updateNotes(store.data.activeMonthId, '');
+    if (notesTextarea) notesTextarea.value = '';
+    if (notesFeedback) notesFeedback.textContent = 'Nota eliminada';
+    sincronizarEstadoNotasUI();
+    showToast('Nota del mes eliminada', '');
+  }
 
   if (btnOpenNotesModal && modalMonthNotes) {
     btnOpenNotesModal.addEventListener('click', () => {
@@ -1721,6 +1782,7 @@ tr.innerHTML = `
       if (modalNotesSubtitle && month) {
         modalNotesSubtitle.textContent = `Recordatorios y observaciones de ${month.nombre}`;
       }
+      sincronizarEstadoNotasUI();
       modalMonthNotes.classList.add('active');
       if (isAdmin && notesTextarea) {
         setTimeout(() => notesTextarea.focus(), 120);
@@ -1748,32 +1810,7 @@ tr.innerHTML = `
             notesFeedback.textContent = 'Guardado en tiempo real';
           }, 2000);
         }
-        const month = store.getActiveMonth();
-        if (btnOpenNotesModal && month) {
-          const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
-          btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
-          btnOpenNotesModal.innerHTML = hasNotes
-            ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
-            : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
-        }
-        const cardInlineNotes = document.getElementById('monthNotesInlineCard');
-        const textInlineNotes = document.getElementById('monthNotesDisplayText');
-        if (cardInlineNotes && textInlineNotes && month) {
-          const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
-          if (hasNotes) {
-            cardInlineNotes.style.display = 'block';
-            textInlineNotes.textContent = month.notas.trim();
-            textInlineNotes.classList.remove('is-empty');
-          } else {
-            if (isAdmin) {
-              cardInlineNotes.style.display = 'block';
-              textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
-              textInlineNotes.classList.add('is-empty');
-            } else {
-              cardInlineNotes.style.display = 'none';
-            }
-          }
-        }
+        sincronizarEstadoNotasUI();
       }, 400);
     });
   }
@@ -1782,6 +1819,19 @@ tr.innerHTML = `
   if (btnInlineEditNotes && btnOpenNotesModal) {
     btnInlineEditNotes.addEventListener('click', () => {
       btnOpenNotesModal.click();
+    });
+  }
+
+  if (btnInlineDeleteNotes) {
+    btnInlineDeleteNotes.addEventListener('click', eliminarNotaDelMes);
+  }
+  if (btnDeleteNotesModal) {
+    btnDeleteNotesModal.addEventListener('click', () => {
+      eliminarNotaDelMes();
+      const month = store.getActiveMonth();
+      if (modalMonthNotes && (!month || !month.notas || !month.notas.trim())) {
+        modalMonthNotes.classList.remove('active');
+      }
     });
   }
 

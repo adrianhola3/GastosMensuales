@@ -247,12 +247,17 @@ class FinancialStore {
     // sin bloquear el arranque.
     this.oyentes = [];
     this.remotoListo = false; // evita subir a la nube antes de leer lo que hay arriba
+    this.guardandoEnCurso = 0;
+    this.ultimoGuardadoTs = 0;
+    this.sincronizandoEnCurso = false;
+    this.sincronizandoDesdeNube = false;
     this.data = this.leerLocal() || getDefaultData();
     // Fotografía del estado en el momento del arranque. Sirve para que load()
     // distinga "no pasó nada" de "el usuario ya escribió algo mientras
     // esperábamos a la nube".
     this.snapshotArranque = JSON.stringify(this.data);
     this.pendienteCarga = this.load();
+    this.iniciarSincronizacionEnVivo();
   }
 
   /**
@@ -365,7 +370,31 @@ class FinancialStore {
         }
       }
     } else if (hayFilaRemota) {
-      if (this.sanear(remoto)) {
+      let migroNotasLocales = false;
+      if (
+        typeof window !== 'undefined' &&
+        !window.__sandbox &&
+        this.data &&
+        this.data.meses &&
+        remoto.meses
+      ) {
+        Object.keys(this.data.meses).forEach(id => {
+          const mLocal = this.data.meses[id];
+          const mRemoto = remoto.meses[id];
+          if (
+            mLocal &&
+            mRemoto &&
+            Array.isArray(mLocal.notasLista) &&
+            mLocal.notasLista.length > 0 &&
+            mRemoto.notasLista === undefined
+          ) {
+            mRemoto.notasLista = JSON.parse(JSON.stringify(mLocal.notasLista));
+            mRemoto.notas = typeof mLocal.notas === 'string' ? mLocal.notas : mRemoto.notas;
+            migroNotasLocales = true;
+          }
+        });
+      }
+      if (this.sanear(remoto) || migroNotasLocales) {
         this.save(remoto);
       }
       estado = remoto;
@@ -401,6 +430,124 @@ class FinancialStore {
     this.oyentes.forEach(cb => {
       try { cb(this.data); } catch (e) { console.error('Error al notificar cambio de estado:', e); }
     });
+  }
+
+  /**
+   * Aplica un estado proveniente de la nube o de otra pestaña sin pisar la
+   * vista o el período que el lector está mirando actualmente.
+   */
+  aplicarEstadoRemoto(remoto) {
+    if (!remoto || !esEstadoValido(remoto)) return false;
+    if (this.guardandoEnCurso > 0) return false;
+    if (Date.now() - (this.ultimoGuardadoTs || 0) < 1500) return false;
+
+    const copia = JSON.parse(JSON.stringify(remoto));
+    this.sanear(copia);
+
+    if (this.data) {
+      if (this.data.activeMonthId && copia.meses[this.data.activeMonthId]) {
+        copia.activeMonthId = this.data.activeMonthId;
+      }
+      if (this.data.currentView) {
+        copia.currentView = this.data.currentView;
+      }
+    }
+
+    const huellaActual = JSON.stringify({
+      meses: this.data ? this.data.meses : null,
+      mesesOrden: this.data ? this.data.mesesOrden : null
+    });
+    const huellaNueva = JSON.stringify({
+      meses: copia.meses,
+      mesesOrden: copia.mesesOrden
+    });
+
+    if (huellaActual === huellaNueva) return false;
+
+    this.data = copia;
+    this.snapshotArranque = JSON.stringify(copia);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+    } catch (e) {}
+
+    this.sincronizandoDesdeNube = true;
+    try {
+      this.notificar();
+    } finally {
+      this.sincronizandoDesdeNube = false;
+    }
+    return true;
+  }
+
+  /**
+   * Consulta la nube para traer cambios hechos desde el Administrador en otro
+   * navegador o pestaña y actualizar en vivo la vista de Solo Lectura.
+   */
+  async syncFromRemote() {
+    if (typeof window === 'undefined' || window.__sandbox) return false;
+    if (!this.remotoListo || this.guardandoEnCurso > 0 || this.sincronizandoEnCurso) return false;
+    if (Date.now() - (this.ultimoGuardadoTs || 0) < 1500) return false;
+    if (
+      !window.gastosRemoto ||
+      !window.gastosRemoto.estaConfigurado() ||
+      typeof window.gastosRemoto.suscribirCambios !== 'function'
+    ) {
+      return false;
+    }
+
+    this.sincronizandoEnCurso = true;
+    try {
+      const remoto = await window.gastosRemoto.cargar();
+      if (!remoto) return false;
+      return this.aplicarEstadoRemoto(remoto);
+    } catch (e) {
+      return false;
+    } finally {
+      this.sincronizandoEnCurso = false;
+    }
+  }
+
+  /**
+   * Activa la sincronización en tiempo real (Realtime + polling cada 3s +
+   * eventos storage/focus) únicamente en sesiones reales de navegador.
+   */
+  iniciarSincronizacionEnVivo() {
+    if (typeof window === 'undefined' || window.__sandbox) return;
+    const remoto = window.gastosRemoto;
+    if (!remoto || typeof remoto.suscribirCambios !== 'function' || !remoto.estaConfigurado()) return;
+
+    remoto.suscribirCambios(nuevoEstado => {
+      if (nuevoEstado) {
+        this.aplicarEstadoRemoto(nuevoEstado);
+      } else {
+        this.syncFromRemote();
+      }
+    });
+
+    this._intervaloSync = setInterval(() => {
+      if (typeof document !== 'undefined' && document.hidden) return;
+      this.syncFromRemote();
+    }, 3000);
+
+    window.addEventListener('storage', (e) => {
+      if (e && e.key === STORAGE_KEY && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          this.aplicarEstadoRemoto(parsed);
+        } catch (err) {}
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      this.syncFromRemote();
+    });
+
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) this.syncFromRemote();
+      });
+    }
   }
 
   /**
@@ -516,11 +663,29 @@ class FinancialStore {
       console.error('Error al guardar datos en LocalStorage:', e);
     }
 
-    if (this.remotoListo && window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
+    const enModoLecturaReal =
+      typeof window !== 'undefined' &&
+      !window.__sandbox &&
+      typeof document !== 'undefined' &&
+      document.body &&
+      document.body.classList.contains('read-only-mode') &&
+      typeof window.gastosRemoto?.suscribirCambios === 'function';
+
+    if (
+      this.remotoListo &&
+      !enModoLecturaReal &&
+      window.gastosRemoto &&
+      window.gastosRemoto.estaConfigurado()
+    ) {
+      this.guardandoEnCurso++;
+      this.ultimoGuardadoTs = Date.now();
       try {
         await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(this.data)));
       } catch (e) {
         console.warn('No se pudo sincronizar con Supabase:', e);
+      } finally {
+        this.guardandoEnCurso = Math.max(0, this.guardandoEnCurso - 1);
+        this.ultimoGuardadoTs = Date.now();
       }
     }
   }

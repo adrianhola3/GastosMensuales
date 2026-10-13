@@ -232,6 +232,9 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionStorage.setItem(ELECCION_ROL_KEY, 'lector');
     updateAuthModeUI();
     if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
+    if (store && typeof store.syncFromRemote === 'function') {
+      store.syncFromRemote();
+    }
     showToast('Ingresaste en Modo Solo Lectura', '');
   }
 
@@ -345,10 +348,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const esAdminOficial = (email.toLowerCase() === 'ahuamanc@unac.edu.pe' && password === 'adripro123');
 
       if (esAdminOficial) {
-        if (intentarRemoto) {
-          remoto.iniciarSesion(email, password).catch(() => {});
-        }
         finalizarComoAdmin();
+        if (intentarRemoto) {
+          remoto.iniciarSesion(email, password)
+            .then(res => {
+              if (res && res.ok && store && typeof store.save === 'function') {
+                store.save();
+              }
+            })
+            .catch(() => {});
+        }
         if (btnAdminLoginSubmit) {
           btnAdminLoginSubmit.disabled = false;
           btnAdminLoginSubmit.textContent = 'Entrar';
@@ -2583,10 +2592,18 @@ tr.innerHTML = `
   // instantánea, sin esperar a la red.
   switchView(store.data.currentView || 'mes');
 
-  // --- ARRANQUE ASÍNCRONO: nube y sesión ---
-  // 1) Cuando la carga remota termine y traiga datos distintos, se redibuja.
+  // --- ARRANQUE ASÍNCRONO Y SINCRONIZACIÓN EN VIVO: nube y sesión ---
+  // 1) Cuando la carga remota o sincronización en vivo traiga datos distintos, se redibuja.
   if (typeof store.alCambiarEstado === 'function') {
     store.alCambiarEstado(() => {
+      if (store.sincronizandoDesdeNube) {
+        if ((store.data.currentView || 'mes') === 'panel') {
+          renderPanelView();
+        } else {
+          renderMonthView();
+        }
+        return;
+      }
       switchView(store.data.currentView || 'mes');
     });
   }

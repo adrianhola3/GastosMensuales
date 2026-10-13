@@ -45,12 +45,12 @@ drop policy if exists "gastos: lectura publica" on public.gastos;
 
 -- ---------------------------------------------------------------------
 -- 3. Políticas nuevas.
---    Leer: todo el que esté autenticado. El padre tiene que ver lo mismo
---    que el hijo, para eso existe.
---    Escribir, actualizar y borrar: solo el administrador.
+--    Leer: público (anon y authenticated) para que el Modo Solo Lectura
+--    funcione en cualquier navegador o ventana de incógnito sin pedir login.
+--    Escribir, actualizar y borrar: solo el administrador autenticado.
 -- ---------------------------------------------------------------------
-create policy "gastos: leer autenticados"
-  on public.gastos for select to authenticated
+create policy "gastos: lectura publica"
+  on public.gastos for select to anon, authenticated
   using (true);
 
 create policy "gastos: escribir solo admin"

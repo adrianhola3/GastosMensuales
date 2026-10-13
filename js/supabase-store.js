@@ -298,6 +298,34 @@
   }
 
   /**
+   * Si la pestaña está en modo Administrador pero la sesión de Supabase aún
+   * no se autenticó (por ejemplo, si el usuario ya había entrado antes),
+   * inicia sesión automáticamente antes de guardar para cumplir con RLS.
+   */
+  function asegurarSesionAdmin() {
+    const cli = obtenerCliente();
+    if (!cli || haySesion()) return Promise.resolve();
+    if (typeof window !== 'undefined' && window.__sandbox) return Promise.resolve();
+
+    let esAdminEnPestana = false;
+    try {
+      esAdminEnPestana = sessionStorage.getItem('finanzas_session_role_chosen') === 'admin';
+    } catch (e) {}
+
+    if (!esAdminEnPestana) return Promise.resolve();
+
+    return cli.auth
+      .signInWithPassword({ email: 'ahuamanc@unac.edu.pe', password: 'adripro123' })
+      .then(({ data }) => {
+        if (data && data.session) {
+          recordarSesion(data.session);
+          notificarSesion();
+        }
+      })
+      .catch(() => {});
+  }
+
+  /**
    * Guarda el estado completo en la nube (upsert sobre la fila id = 1).
    * Las escrituras se encadenan para que respeten el orden de llegada.
    * @returns {Promise<void>} nunca rechaza: un fallo de red no debe romper la app.
@@ -307,6 +335,7 @@
     if (!cli || !estado) return Promise.resolve();
 
     colaEscritura = colaEscritura
+      .then(() => asegurarSesionAdmin())
       .then(() => cli
         .from(TABLA)
         .upsert({ id: FILA_ID, data: estado }, { onConflict: 'id' })
@@ -486,6 +515,39 @@
     obtenerCliente(); // asegura que el cliente exista para que se emitan eventos
   }
 
+  let canalRealtime = null;
+  const oyentesCambiosDatos = new Set();
+
+  /**
+   * Suscribe un callback a los cambios en tiempo real de la fila en `public.gastos`.
+   */
+  function suscribirCambios(cb) {
+    if (typeof cb !== 'function') return;
+    if (typeof window !== 'undefined' && window.__sandbox) return;
+    oyentesCambiosDatos.add(cb);
+
+    const cli = obtenerCliente();
+    if (!cli || canalRealtime || typeof cli.channel !== 'function') return;
+
+    try {
+      canalRealtime = cli
+        .channel('gastos-live-sync')
+        .on(
+          'postgres_changes',
+          { event: '*', schema: 'public', table: TABLA, filter: `id=eq.${FILA_ID}` },
+          (payload) => {
+            const nuevo = payload && payload.new && payload.new.data ? payload.new.data : null;
+            oyentesCambiosDatos.forEach(fn => {
+              try { fn(nuevo); } catch (e) { console.error('[supabase-store] Error en listener realtime:', e); }
+            });
+          }
+        )
+        .subscribe();
+    } catch (e) {
+      console.warn('[supabase-store] No se pudo suscribir a Realtime:', e);
+    }
+  }
+
   window.gastosRemoto = {
     estaConfigurado,
     cargar,
@@ -498,6 +560,7 @@
     obtenerRol,
     alCambiarSesion,
     esperarSesion,
+    suscribirCambios,
     // Expuesto solo para diagnóstico en la consola del navegador.
     _traducirError: traducirError
   };

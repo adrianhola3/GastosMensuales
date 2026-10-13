@@ -1789,16 +1789,50 @@ tr.innerHTML = `
       const btnDel = itemEl.querySelector('.btn-delete-note');
       if (btnDel) {
         btnDel.addEventListener('click', () => {
-          if (!exigirAdmin('eliminar una nota')) return;
-          if (confirm('¿Eliminar esta nota del mes?')) {
-            store.deleteNoteItem(month.id, nota.id);
-            renderMonthNotesList();
-            showToast('Nota eliminada', '');
-          }
+          abrirModalEliminarNota(month, nota, index + 1);
         });
       }
 
       listContainer.appendChild(itemEl);
+    });
+  }
+
+  const modalDeleteNoteConfirm = document.getElementById('modalDeleteNoteConfirm');
+  const deleteNoteTargetId = document.getElementById('deleteNoteTargetId');
+  const deleteNoteTargetMonthId = document.getElementById('deleteNoteTargetMonthId');
+  const deleteNotePreviewOrder = document.getElementById('deleteNotePreviewOrder');
+  const deleteNotePreviewDate = document.getElementById('deleteNotePreviewDate');
+  const deleteNotePreviewText = document.getElementById('deleteNotePreviewText');
+  const modalDeleteNoteSubtitle = document.getElementById('modalDeleteNoteSubtitle');
+  const btnConfirmDeleteNote = document.getElementById('btnConfirmDeleteNote');
+
+  function abrirModalEliminarNota(month, nota, orden) {
+    if (!exigirAdmin('eliminar una nota')) return;
+    if (!modalDeleteNoteConfirm || !month || !nota) return;
+
+    if (deleteNoteTargetId) deleteNoteTargetId.value = nota.id;
+    if (deleteNoteTargetMonthId) deleteNoteTargetMonthId.value = month.id;
+    if (deleteNotePreviewOrder) deleteNotePreviewOrder.textContent = `#${orden}`;
+    if (deleteNotePreviewDate) deleteNotePreviewDate.textContent = formatearFechaHoraNota(nota.creadoEn);
+    if (deleteNotePreviewText) deleteNotePreviewText.textContent = nota.texto || '';
+    if (modalDeleteNoteSubtitle) {
+      modalDeleteNoteSubtitle.textContent = `¿Estás seguro de eliminar esta nota de ${month.nombre}? Esta acción no se puede deshacer.`;
+    }
+
+    modalDeleteNoteConfirm.classList.add('active');
+  }
+
+  if (btnConfirmDeleteNote) {
+    btnConfirmDeleteNote.addEventListener('click', () => {
+      if (!exigirAdmin('eliminar una nota')) return;
+      const monthId = deleteNoteTargetMonthId ? deleteNoteTargetMonthId.value : '';
+      const noteId = deleteNoteTargetId ? deleteNoteTargetId.value : '';
+      if (!monthId || !noteId) return;
+
+      store.deleteNoteItem(monthId, noteId);
+      if (modalDeleteNoteConfirm) modalDeleteNoteConfirm.classList.remove('active');
+      renderMonthNotesList();
+      showToast('Nota eliminada', '');
     });
   }
 

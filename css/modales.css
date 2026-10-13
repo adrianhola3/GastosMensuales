@@ -132,6 +132,33 @@
 
 .pay-var-preview-meta .tag-badge { color: var(--ink-2); }
 
+.delete-note-preview-box {
+  padding: var(--space-3);
+  background: var(--sunk);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--over);
+  border-radius: var(--radius-box);
+}
+
+.delete-note-preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.delete-note-preview-text {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
 /* El selector de modo SÍ tiene caja, porque sus dos opciones son controles y
    no se distinguen entre sí por nada que no sea la caja: "Solo lectura" y
    "Administrador" se leen distinto por el rótulo, pero hasta que se elige uno

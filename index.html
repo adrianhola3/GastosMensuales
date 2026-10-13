@@ -1158,6 +1158,32 @@
     </div>
   </div>
 
+  <!-- Confirmar eliminación de nota -->
+  <div id="modalDeleteNoteConfirm" class="modal-overlay">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3 id="modalDeleteNoteTitle">Eliminar nota del mes</h3>
+        <p id="modalDeleteNoteSubtitle" class="modal-sheet-subtitle">¿Querés eliminar esta nota? Esta acción no se puede deshacer.</p>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <div class="modal-sheet-body">
+        <input type="hidden" id="deleteNoteTargetId" value="">
+        <input type="hidden" id="deleteNoteTargetMonthId" value="">
+        <div class="delete-note-preview-box">
+          <div class="delete-note-preview-meta">
+            <span id="deleteNotePreviewOrder" class="note-item-order font-mono">#1</span>
+            <span id="deleteNotePreviewDate" class="note-item-timestamp font-mono"></span>
+          </div>
+          <p id="deleteNotePreviewText" class="delete-note-preview-text"></p>
+        </div>
+      </div>
+      <div class="modal-sheet-footer">
+        <button type="button" class="btn btn-surface btn-sm btn-close-sheet-btn">Cancelar</button>
+        <button type="button" id="btnConfirmDeleteNote" class="btn btn-danger btn-sm">Sí, eliminar nota</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Crear o duplicar período -->
   <div id="modalNewMonth" class="modal-overlay">
     <div class="modal-sheet">

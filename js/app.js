@@ -592,44 +592,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Feed de Transacciones (Flujo de Caja Real)
     renderTransactionFeed(month);
 
-    // 7. Notas del Mes (tarjeta en página y botón en topbar)
-    const notesTextarea = document.getElementById('monthNotesTextarea');
-    if (notesTextarea) notesTextarea.value = month.notas || '';
-    const btnOpenNotes = document.getElementById('btnOpenNotesModal');
-    const hasNotes = Boolean(month.notas && month.notas.trim().length > 0);
-    if (btnOpenNotes) {
-      btnOpenNotes.classList.toggle('has-notes', hasNotes);
-      btnOpenNotes.innerHTML = hasNotes
-        ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
-        : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
-    }
-
-    // Tarjeta integrada de notas en el cuerpo del mes
-    const cardInlineNotes = document.getElementById('monthNotesInlineCard');
-    const textInlineNotes = document.getElementById('monthNotesDisplayText');
-    const btnInlineDeleteNotes = document.getElementById('btnInlineDeleteNotes');
-    const btnDeleteNotesModal = document.getElementById('btnDeleteNotesModal');
-    if (btnInlineDeleteNotes) {
-      btnInlineDeleteNotes.style.display = (isAdmin && hasNotes) ? '' : 'none';
-    }
-    if (btnDeleteNotesModal) {
-      btnDeleteNotesModal.style.display = (isAdmin && hasNotes) ? '' : 'none';
-    }
-    if (cardInlineNotes && textInlineNotes) {
-      if (hasNotes) {
-        cardInlineNotes.style.display = 'block';
-        textInlineNotes.textContent = month.notas.trim();
-        textInlineNotes.classList.remove('is-empty');
-      } else {
-        if (isAdmin) {
-          cardInlineNotes.style.display = 'block';
-          textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
-          textInlineNotes.classList.add('is-empty');
-        } else {
-          cardInlineNotes.style.display = 'none';
-        }
-      }
-    }
+    // 7. Notas del Mes (lista cronológica en página)
+    renderMonthNotesList();
 
     // 8. Aplicar segmentos activos (multi-selección interactiva y fluida)
     renderActiveSegments();
@@ -1706,87 +1670,195 @@ tr.innerHTML = `
     if (window.innerWidth <= 1024) toggleSidebar(false);
   });
 
-  // --- NOTAS MODAL & AUTO-SAVE ---
+  // --- NOTAS DEL MES: LISTA CRONOLÓGICA, MARCA DE EDICIÓN Y ACCIONES ---
   const modalMonthNotes = document.getElementById('modalMonthNotes');
   const btnOpenNotesModal = document.getElementById('btnOpenNotesModal');
+  const modalNotesTitle = document.getElementById('modalNotesTitle');
   const modalNotesSubtitle = document.getElementById('modalNotesSubtitle');
   const notesTextarea = document.getElementById('monthNotesTextarea');
   const notesFeedback = document.getElementById('notesFeedback');
-  const btnInlineDeleteNotes = document.getElementById('btnInlineDeleteNotes');
-  const btnDeleteNotesModal = document.getElementById('btnDeleteNotesModal');
+  const editingNoteIdInput = document.getElementById('editingNoteId');
+  const btnSaveNoteModal = document.getElementById('btnSaveNoteModal');
   let notesTimer = null;
 
-  function sincronizarEstadoNotasUI() {
+  function formatearFechaHoraNota(isoStr) {
+    if (!isoStr) return '';
+    const d = new Date(isoStr);
+    if (isNaN(d.getTime())) return '';
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const anio = d.getFullYear();
+    const horas = String(d.getHours()).padStart(2, '0');
+    const minutos = String(d.getMinutes()).padStart(2, '0');
+    return `${dia}/${mes}/${anio} · ${horas}:${minutos}`;
+  }
+
+  function renderMonthNotesList() {
     const month = store.getActiveMonth();
-    const hasNotes = Boolean(month && month.notas && month.notas.trim().length > 0);
+    const listContainer = document.getElementById('monthNotesListContainer');
+    const cardInlineNotes = document.getElementById('monthNotesInlineCard');
+    const textInlineNotes = document.getElementById('monthNotesDisplayText');
+    const countBadge = document.getElementById('monthNotesCountBadge');
+
+    if (!month) return;
+    const notesList = store.getNotesList ? store.getNotesList(month.id) : [];
+    const hasNotes = notesList.length > 0;
+
+    if (countBadge) {
+      countBadge.textContent = String(notesList.length);
+    }
 
     if (btnOpenNotesModal) {
       btnOpenNotesModal.classList.toggle('has-notes', hasNotes);
-      btnOpenNotesModal.innerHTML = hasNotes
-        ? `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas <span class="notes-dot-badge"></span>`
-        : `<svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas`;
     }
 
-    if (btnInlineDeleteNotes) {
-      btnInlineDeleteNotes.style.display = (isAdmin && hasNotes) ? '' : 'none';
-    }
-    if (btnDeleteNotesModal) {
-      btnDeleteNotesModal.style.display = (isAdmin && hasNotes) ? '' : 'none';
-    }
+    if (!cardInlineNotes) return;
 
-    const cardInlineNotes = document.getElementById('monthNotesInlineCard');
-    const textInlineNotes = document.getElementById('monthNotesDisplayText');
-    if (cardInlineNotes && textInlineNotes && month) {
-      if (hasNotes) {
+    if (!hasNotes) {
+      if (listContainer) listContainer.innerHTML = '';
+      if (isAdmin) {
         cardInlineNotes.style.display = 'block';
-        textInlineNotes.textContent = month.notas.trim();
-        textInlineNotes.classList.remove('is-empty');
-      } else {
-        if (isAdmin) {
-          cardInlineNotes.style.display = 'block';
-          textInlineNotes.textContent = 'Sin notas registradas para este mes. Hacé clic en "Editar notas" para agregar acuerdos o recordatorios.';
+        if (textInlineNotes) {
+          textInlineNotes.style.display = 'block';
+          textInlineNotes.textContent = 'Sin notas registradas en este período. Hacé clic en "Añadir nota" para dejar un registro.';
           textInlineNotes.classList.add('is-empty');
-        } else {
-          cardInlineNotes.style.display = 'none';
         }
+      } else {
+        cardInlineNotes.style.display = 'none';
       }
+      return;
     }
+
+    cardInlineNotes.style.display = 'block';
+    if (textInlineNotes) {
+      textInlineNotes.style.display = 'none';
+      textInlineNotes.textContent = month.notas || '';
+    }
+
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    notesList.forEach((nota, index) => {
+      const itemEl = document.createElement('article');
+      itemEl.className = 'note-card-item';
+      itemEl.dataset.noteId = nota.id;
+
+      const fechaCreacionTxt = formatearFechaHoraNota(nota.creadoEn);
+      const fechaEdicionTxt = nota.editado && nota.editadoEn ? formatearFechaHoraNota(nota.editadoEn) : '';
+      const badgeEditadoHTML = nota.editado
+        ? `<span class="note-edited-badge" title="${fechaEdicionTxt ? 'Editado el ' + escaparHTML(fechaEdicionTxt) : 'Nota editada'}">Editado${fechaEdicionTxt ? ' · ' + escaparHTML(fechaEdicionTxt) : ''}</span>`
+        : '';
+
+      itemEl.innerHTML = `
+        <div class="note-item-main">
+          <div class="note-item-meta">
+            <span class="note-item-order font-mono">#${index + 1}</span>
+            <time class="note-item-timestamp font-mono" datetime="${escaparHTML(nota.creadoEn || '')}">${escaparHTML(fechaCreacionTxt)}</time>
+            ${badgeEditadoHTML}
+          </div>
+          <p class="note-item-text">${escaparHTML(nota.texto)}</p>
+        </div>
+        <div class="note-item-actions">
+          <button type="button" class="btn-ghost-rose btn-edit-note" title="Editar esta nota">
+            <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.2 2.6l2.2 2.2M9.9 3.9L4.4 9.4l-.5 2.1 2.1-.5 5.5-5.5z"/></svg>
+            <span class="note-action-label">Editar</span>
+          </button>
+          <button type="button" class="btn-ghost-rose btn-delete-note" title="Eliminar esta nota">
+            <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg>
+            <span class="note-action-label">Eliminar</span>
+          </button>
+        </div>
+      `;
+
+      const btnEdit = itemEl.querySelector('.btn-edit-note');
+      if (btnEdit) {
+        btnEdit.addEventListener('click', () => {
+          abrirModalNota(nota);
+        });
+      }
+
+      const btnDel = itemEl.querySelector('.btn-delete-note');
+      if (btnDel) {
+        btnDel.addEventListener('click', () => {
+          if (!exigirAdmin('eliminar una nota')) return;
+          if (confirm('¿Eliminar esta nota del mes?')) {
+            store.deleteNoteItem(month.id, nota.id);
+            renderMonthNotesList();
+            showToast('Nota eliminada', '');
+          }
+        });
+      }
+
+      listContainer.appendChild(itemEl);
+    });
   }
 
-  function eliminarNotaDelMes() {
-    if (!exigirAdmin('eliminar las notas del mes')) return;
+  function abrirModalNota(notaExistente = null) {
     const month = store.getActiveMonth();
-    if (!month || !month.notas || !month.notas.trim()) return;
-    if (!confirm(`¿Eliminar la nota de ${month.nombre}?`)) return;
+    const editando = Boolean(notaExistente && notaExistente.id);
 
-    clearTimeout(notesTimer);
-    store.updateNotes(store.data.activeMonthId, '');
-    if (notesTextarea) notesTextarea.value = '';
-    if (notesFeedback) notesFeedback.textContent = 'Nota eliminada';
-    sincronizarEstadoNotasUI();
-    showToast('Nota del mes eliminada', '');
+    if (editingNoteIdInput) {
+      editingNoteIdInput.value = editando ? notaExistente.id : '';
+    }
+    if (modalNotesTitle) {
+      modalNotesTitle.textContent = editando ? 'Editar nota' : 'Añadir nota';
+    }
+    if (modalNotesSubtitle && month) {
+      modalNotesSubtitle.textContent = `Recordatorios y observaciones de ${month.nombre}`;
+    }
+    if (notesTextarea) {
+      if (editando) {
+        notesTextarea.value = notaExistente.texto || '';
+      } else if (isSandbox && month && month.notas && (!Array.isArray(month.notasLista) || month.notasLista.length <= 1)) {
+        notesTextarea.value = month.notas || '';
+      } else {
+        notesTextarea.value = '';
+      }
+      notesTextarea.readOnly = !isAdmin;
+    }
+    if (notesFeedback) {
+      notesFeedback.textContent = isAdmin
+        ? (editando ? 'Al guardar se marcará como "Editado" con la hora actual' : 'Se registrará con fecha y hora actual')
+        : 'Modo lectura (solo el administrador puede añadir o editar notas)';
+    }
+    if (modalMonthNotes) {
+      modalMonthNotes.classList.add('active');
+    }
+    if (isAdmin && notesTextarea) {
+      setTimeout(() => notesTextarea.focus(), 120);
+    }
   }
 
   if (btnOpenNotesModal && modalMonthNotes) {
     btnOpenNotesModal.addEventListener('click', () => {
+      abrirModalNota(null);
+    });
+  }
+
+  if (btnSaveNoteModal) {
+    btnSaveNoteModal.addEventListener('click', () => {
+      if (!exigirAdmin('guardar una nota')) return;
       const month = store.getActiveMonth();
-      if (notesTextarea) {
-        notesTextarea.value = month ? (month.notas || '') : '';
-        notesTextarea.readOnly = !isAdmin;
+      if (!month || !notesTextarea) return;
+
+      const texto = notesTextarea.value.trim();
+      if (!texto) {
+        showToast('Escribí un texto para la nota antes de guardar.', '');
+        return;
       }
-      if (notesFeedback) {
-        notesFeedback.textContent = isAdmin
-          ? 'Guardado automático en tiempo real'
-          : 'Modo lectura (solo el administrador puede editar o borrar notas)';
+
+      clearTimeout(notesTimer);
+      const editId = editingNoteIdInput ? editingNoteIdInput.value : '';
+      if (editId) {
+        store.updateNoteItem(month.id, editId, texto);
+        showToast('Nota actualizada', '');
+      } else {
+        store.addNoteItem(month.id, texto);
+        showToast('Nota añadida al mes', '');
       }
-      if (modalNotesSubtitle && month) {
-        modalNotesSubtitle.textContent = `Recordatorios y observaciones de ${month.nombre}`;
-      }
-      sincronizarEstadoNotasUI();
-      modalMonthNotes.classList.add('active');
-      if (isAdmin && notesTextarea) {
-        setTimeout(() => notesTextarea.focus(), 120);
-      }
+
+      if (modalMonthNotes) modalMonthNotes.classList.remove('active');
+      renderMonthNotesList();
     });
   }
 
@@ -1796,12 +1868,10 @@ tr.innerHTML = `
         notesTextarea.readOnly = true;
         return;
       }
+      if (!isSandbox) return;
       if (notesFeedback) notesFeedback.textContent = 'Guardando notas...';
       clearTimeout(notesTimer);
       notesTimer = setTimeout(() => {
-        /* El gate va DENTRO del temporizador y no antes de programarlo: cada
-           pulsación reprograma los 400 ms, así que el aviso sale una vez por
-           ráfaga de escritura en vez de en cada tecla. */
         if (!exigirAdmin('editar las notas del mes')) return;
         store.updateNotes(store.data.activeMonthId, notesTextarea.value);
         if (notesFeedback) {
@@ -1810,28 +1880,8 @@ tr.innerHTML = `
             notesFeedback.textContent = 'Guardado en tiempo real';
           }, 2000);
         }
-        sincronizarEstadoNotasUI();
+        renderMonthNotesList();
       }, 400);
-    });
-  }
-
-  const btnInlineEditNotes = document.getElementById('btnInlineEditNotes');
-  if (btnInlineEditNotes && btnOpenNotesModal) {
-    btnInlineEditNotes.addEventListener('click', () => {
-      btnOpenNotesModal.click();
-    });
-  }
-
-  if (btnInlineDeleteNotes) {
-    btnInlineDeleteNotes.addEventListener('click', eliminarNotaDelMes);
-  }
-  if (btnDeleteNotesModal) {
-    btnDeleteNotesModal.addEventListener('click', () => {
-      eliminarNotaDelMes();
-      const month = store.getActiveMonth();
-      if (modalMonthNotes && (!month || !month.notas || !month.notas.trim())) {
-        modalMonthNotes.classList.remove('active');
-      }
     });
   }
 

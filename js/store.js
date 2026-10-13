@@ -191,13 +191,23 @@ function getDefaultData() {
     
     let extras = [];
     let notas = '';
+    let notasLista = [];
     let movimientos = [];
 
     if (m.id === 'agosto-2026') {
       extras = [
         { id: generateId(), concepto: 'Matrícula 2026-B de la universidad', montoEstimado: 83.00, montoReal: 83.00, tipo: 'Extra' }
       ];
-      notas = 'Nota de prueba en agosto: acuerdos y pagos pendientes familiares. (Editable y eliminable desde el modo Administrador).';
+      notas = 'Nota de prueba en agosto: acuerdos y pagos pendientes familiares.';
+      notasLista = [
+        {
+          id: generateId(),
+          texto: 'Nota de prueba en agosto: acuerdos y pagos pendientes familiares.',
+          creadoEn: new Date().toISOString(),
+          editadoEn: null,
+          editado: false
+        }
+      ];
       movimientos = [];
     }
 
@@ -215,6 +225,7 @@ function getDefaultData() {
       },
       extras: extras,
       notas: notas,
+      notasLista: notasLista,
       movimientos: movimientos
     };
   });
@@ -1162,7 +1173,118 @@ class FinancialStore {
     const m = this.getMonth(monthId);
     if (!m) return;
     m.notas = notesText;
+    if (Array.isArray(m.notasLista)) {
+      if (!notesText || !notesText.trim()) {
+        m.notasLista = [];
+      } else if (m.notasLista.length === 1) {
+        m.notasLista[0].texto = notesText;
+      }
+    }
     this.save();
+  }
+
+  getNotesList(monthId) {
+    const m = this.getMonth(monthId);
+    if (!m) return [];
+    if (Array.isArray(m.notasLista) && m.notasLista.length > 0) {
+      return [...m.notasLista].sort((a, b) => new Date(a.creadoEn || 0) - new Date(b.creadoEn || 0));
+    }
+    if (typeof m.notas === 'string' && m.notas.trim().length > 0) {
+      return [{
+        id: 'legacy_' + monthId,
+        texto: m.notas.trim(),
+        creadoEn: m.creadoEn || '2026-08-01T12:00:00.000Z',
+        editadoEn: null,
+        editado: false
+      }];
+    }
+    return [];
+  }
+
+  sincronizarNotasTextoPlano(m) {
+    if (!m) return;
+    if (!Array.isArray(m.notasLista) || m.notasLista.length === 0) {
+      m.notas = '';
+    } else {
+      const ordenadas = [...m.notasLista].sort((a, b) => new Date(a.creadoEn || 0) - new Date(b.creadoEn || 0));
+      m.notas = ordenadas.map(n => n.texto).join('\n\n');
+    }
+  }
+
+  asegurarNotasListaMigrada(m) {
+    if (!m) return;
+    if (!Array.isArray(m.notasLista)) {
+      m.notasLista = [];
+      if (typeof m.notas === 'string' && m.notas.trim().length > 0) {
+        m.notasLista.push({
+          id: generateId(),
+          texto: m.notas.trim(),
+          creadoEn: new Date().toISOString(),
+          editadoEn: null,
+          editado: false
+        });
+      }
+    }
+  }
+
+  addNoteItem(monthId, texto) {
+    const m = this.getMonth(monthId);
+    if (!m) return false;
+    const limpio = typeof texto === 'string' ? texto.trim() : '';
+    if (!limpio) return false;
+
+    this.asegurarNotasListaMigrada(m);
+    const nuevaNota = {
+      id: generateId(),
+      texto: limpio,
+      creadoEn: new Date().toISOString(),
+      editadoEn: null,
+      editado: false
+    };
+    m.notasLista.push(nuevaNota);
+    this.sincronizarNotasTextoPlano(m);
+    this.save();
+    return nuevaNota;
+  }
+
+  updateNoteItem(monthId, noteId, nuevoTexto) {
+    const m = this.getMonth(monthId);
+    if (!m) return false;
+    const limpio = typeof nuevoTexto === 'string' ? nuevoTexto.trim() : '';
+    if (!limpio) return false;
+
+    this.asegurarNotasListaMigrada(m);
+    let item = m.notasLista.find(n => n.id === noteId);
+    if (!item && String(noteId).startsWith('legacy_') && m.notasLista.length === 1) {
+      item = m.notasLista[0];
+    }
+    if (!item) return false;
+
+    if (item.texto !== limpio) {
+      item.texto = limpio;
+      item.editado = true;
+      item.editadoEn = new Date().toISOString();
+    }
+    this.sincronizarNotasTextoPlano(m);
+    this.save();
+    return true;
+  }
+
+  deleteNoteItem(monthId, noteId) {
+    const m = this.getMonth(monthId);
+    if (!m) return false;
+
+    this.asegurarNotasListaMigrada(m);
+    let idx = m.notasLista.findIndex(n => n.id === noteId);
+    if (idx === -1 && String(noteId).startsWith('legacy_') && m.notasLista.length === 1) {
+      idx = 0;
+    }
+    if (idx === -1) return false;
+
+    m.notasLista.splice(idx, 1);
+    this.sincronizarNotasTextoPlano(m);
+    this.save();
+    return true;
   }
 
   // --- GESTIÓN DE MESES ---
@@ -1214,6 +1336,9 @@ class FinancialStore {
           ? base.extras.map(i => clonarItemPresupuesto(i))
           : [],
         notas: opciones.notas ? base.notas : '',
+        ...(opciones.notas && Array.isArray(base.notasLista)
+          ? { notasLista: base.notasLista.map(n => ({ ...n, id: generateId() })) }
+          : {}),
         // Un movimiento NO se resetea a Pendiente, a diferencia de los gastos.
         // Un movimiento es una transacción YA registrada, con su estado y su
         // fecha: ponerlo en Pendiente cambiaría su significado (un ingreso ya

@@ -366,18 +366,6 @@
           <h2 id="activeMonthHeaderBadge" class="topbar-page-title">Período Actual</h2>
         </div>
         <div class="topbar-right">
-          <!-- EL BALANCE DUPLICADO SE SACA DE ACÁ.
-               Estaba en la barra (este `#topbarBalanceValue`) y en el bloque de
-               estado (`#monthBalanceNeto`), con el mismo número en los dos
-               sitios. app.js escribe los dos desde `updateLiveProgressAndTotals`
-               (:601-611 y :676-680).
-
-               Se queda UNO, el del bloque de estado, que es donde están las
-               otras cifras y donde se comparan. La escritura de la barra ya
-               venía detrás de un `if (elTopbarBalance)` desde antes del
-               rediseño, así que quitar el nodo no rompe nada: la línea de app.js
-               deja de encontrar el elemento y sigue. -->
-          <button type="button" id="btnOpenNotesModal" class="btn-topbar-notes" title="Abrir notas y acuerdos del mes"><svg class="ui-icon-img ui-icon-xs ui-icon-svg" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg> Notas</button>
         </div>
       </header>
 
@@ -753,22 +741,20 @@
                 <div class="month-notes-title-box">
                   <span class="cat-tick" aria-hidden="true"></span>
                   <svg class="ui-icon-img ui-icon-xs ui-icon-svg notes-header-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9.75 2.5H4.75a1.5 1.5 0 0 0-1.5 1.5v8a1.5 1.5 0 0 0 1.5 1.5h6.5a1.5 1.5 0 0 0 1.5-1.5V5.75L9.75 2.5z"/><path d="M6 8.25h4M6 10.75h3"/></svg>
-                  <h3 class="month-notes-title">Notas y acuerdos del mes</h3>
+                  <h3 class="month-notes-title">Notas del mes</h3>
+                  <span id="monthNotesCountBadge" class="rail-entry-count">0</span>
                 </div>
                 <div class="month-notes-actions">
-                  <button type="button" id="btnInlineEditNotes" class="btn btn-sm btn-surface btn-inline-edit-notes" title="Editar notas del mes">
-                    <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z"/></svg>
-                    <span>Editar notas</span>
-                  </button>
-                  <button type="button" id="btnInlineDeleteNotes" class="btn btn-sm btn-surface btn-inline-delete-notes" title="Eliminar notas del mes" style="display: none;">
-                    <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg>
-                    <span>Eliminar nota</span>
+                  <button type="button" id="btnOpenNotesModal" class="btn btn-sm btn-surface btn-inline-edit-notes" title="Añadir una nueva nota al mes">
+                    <svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 3.5v9M3.5 8h9"/></svg>
+                    <span>Añadir nota</span>
                   </button>
                 </div>
               </div>
               <div class="month-notes-body">
                 <div id="monthNotesInlineContent" class="notes-inline-display">
-                  <p id="monthNotesDisplayText" class="notes-display-paragraph"></p>
+                  <div id="monthNotesListContainer" class="notes-list-container"></div>
+                  <p id="monthNotesDisplayText" class="notes-display-paragraph is-empty" style="display: none;"></p>
                 </div>
               </div>
             </div>
@@ -1153,20 +1139,21 @@
   <div id="modalMonthNotes" class="modal-overlay">
     <div class="modal-sheet modal-sheet-narrow">
       <div class="modal-sheet-header">
-        <h3>Notas y acuerdos</h3>
+        <h3 id="modalNotesTitle">Añadir nota</h3>
         <p id="modalNotesSubtitle" class="modal-sheet-subtitle">Recordatorios y observaciones del mes.</p>
         <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
       </div>
       <div class="modal-sheet-body">
+        <input type="hidden" id="editingNoteId" value="">
         <div class="notes-smart-box">
           <textarea id="monthNotesTextarea" class="notes-smart-textarea"
-            placeholder="Notas sobre los pagos del mes, acuerdos familiares, abonos pendientes…"></textarea>
-          <div id="notesFeedback" class="notes-feedback-label">Guardado automático en tiempo real</div>
+            placeholder="Escribí una nota o acuerdo del mes…"></textarea>
+          <div id="notesFeedback" class="notes-feedback-label">Se registrará con fecha y hora actual</div>
         </div>
       </div>
       <div class="modal-sheet-footer">
-        <button type="button" id="btnDeleteNotesModal" class="btn btn-sm btn-surface btn-delete-notes-modal" title="Eliminar la nota de este mes" style="display: none;">Eliminar nota</button>
-        <button type="button" class="btn btn-primary btn-sm btn-close-sheet-btn">Listo</button>
+        <button type="button" class="btn btn-surface btn-sm btn-close-sheet-btn">Cancelar</button>
+        <button type="button" id="btnSaveNoteModal" class="btn btn-primary btn-sm">Guardar nota</button>
       </div>
     </div>
   </div>

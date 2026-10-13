@@ -797,6 +797,103 @@
   font-style: italic;
 }
 
+.notes-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-card-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.note-card-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.note-item-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.note-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 4px;
+}
+
+.note-item-order {
+  font-size: var(--text-2xs);
+  font-weight: 600;
+  color: var(--ink-2);
+  background: var(--sunk);
+  padding: 1px 6px;
+  border-radius: var(--radius);
+}
+
+.note-item-timestamp {
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+}
+
+.note-edited-badge {
+  font-size: var(--text-2xs);
+  font-style: italic;
+  color: var(--ink-2);
+  background: var(--sunk);
+  padding: 1px 6px;
+  border-radius: var(--radius);
+}
+
+.note-item-text {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.note-item-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.btn-edit-note,
+.btn-delete-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  font-size: var(--text-xs);
+  color: var(--ink-2);
+  background: transparent;
+  transition: var(--transition);
+}
+
+.btn-edit-note:hover {
+  color: var(--ink);
+  background: var(--sunk);
+  border-color: var(--rule-2);
+}
+
+.btn-delete-note:hover {
+  color: var(--over);
+  background: var(--sunk);
+  border-color: var(--over);
+}
+
 .month-notes-actions {
   display: flex;
   flex-wrap: wrap;
@@ -804,20 +901,20 @@
   gap: var(--space-2);
 }
 
-.btn-inline-delete-notes:hover,
-.btn-delete-notes-modal:hover {
-  color: var(--over);
-  border-color: var(--over);
-}
-
-.btn-delete-notes-modal {
-  margin-right: auto;
-}
-
 body.read-only-mode .btn-inline-edit-notes,
-body.read-only-mode .btn-inline-delete-notes,
-body.read-only-mode .btn-delete-notes-modal {
+body.read-only-mode .note-item-actions,
+body.read-only-mode #btnOpenNotesModal {
   display: none !important;
+}
+
+@media (max-width: 640px) {
+  .note-card-item {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .note-item-actions {
+    align-self: flex-end;
+  }
 }
 
 

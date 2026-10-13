@@ -92,7 +92,10 @@ function esEstadoValido(data) {
 function migrarItemPresupuesto(item, marca) {
   if (item.monto !== undefined) {
     const viejo = normalizarMonto(item.monto);
-    item.montoEstimado = viejo === null ? 0 : viejo;
+    const estimadoActual = normalizarMonto(item.montoEstimado);
+    if (estimadoActual === null || (estimadoActual === 0 && viejo !== null && viejo > 0)) {
+      item.montoEstimado = viejo === null ? 0 : viejo;
+    }
     delete item.monto;
     marca();
   }
@@ -611,11 +614,36 @@ class FinancialStore {
         m.extras
       ].filter(Array.isArray);
 
+      const preciosBaseRecuperacion = {
+        'Internet de casa': 89.90,
+        'Celular': 39.90,
+        'CIUNAC (Inglés)': 83.00,
+        'Pasajes': 150.00,
+        'Corte de cabello': 25.00,
+        'Productos de casa: Jabón, shampoo, papel...': 30.00,
+        'Gimnasio': 103.54,
+        'Consulta dermatólogo': 50.00,
+        'Productos dermatológicos: Jabón cerave...': 45.00,
+        'Matrícula 2026-B de la universidad': 83.00
+      };
+      const enNavegadorReal =
+        typeof window !== 'undefined' &&
+        !window.__sandbox &&
+        typeof window.gastosRemoto?.suscribirCambios === 'function';
+
       listasPresupuesto.forEach(lista => {
         lista.forEach(item => {
           if (!item || typeof item !== 'object') return;
           if (typeof item.concepto !== 'string') { item.concepto = ''; cambios = true; }
           migrarItemPresupuesto(item, () => { cambios = true; });
+          if (
+            enNavegadorReal &&
+            item.montoEstimado === 0 &&
+            preciosBaseRecuperacion[item.concepto] !== undefined
+          ) {
+            item.montoEstimado = preciosBaseRecuperacion[item.concepto];
+            cambios = true;
+          }
         });
       });
 

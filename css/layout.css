@@ -59,6 +59,13 @@
   pointer-events: auto;
 }
 
+@media (min-width: 1025px) {
+  .sidebar-backdrop {
+    display: none !important;
+    pointer-events: none !important;
+  }
+}
+
 .app-main-area {
   min-width: 0; /* sin esto un hijo con contenido ancho revienta la columna */
   background: var(--paper);

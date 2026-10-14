@@ -1648,6 +1648,12 @@ tr.innerHTML = `
     sidebarBackdrop.addEventListener('click', () => toggleSidebar(false));
   }
 
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) {
+      toggleSidebar(false);
+    }
+  });
+
   // --- NAVEGACIÓN SECUENCIAL DE MESES ---
   document.getElementById('btnPrevMonth').addEventListener('click', () => {
     const order = store.data.mesesOrden;

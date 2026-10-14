@@ -455,6 +455,7 @@
 
 @media (max-width: 640px) {
   .ledger-toolbar {
+    position: static;
     margin-left: 0;
     margin-right: 0;
     padding: var(--space-2) 0;

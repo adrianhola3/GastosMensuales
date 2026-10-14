@@ -1562,7 +1562,11 @@ class FinancialStore {
 
   deleteMonth(monthId) {
     if (this.data.mesesOrden.length <= 1) {
-      alert('Debes mantener al menos un mes en el sistema.');
+      if (typeof window !== 'undefined' && typeof window.showToast === 'function') {
+        window.showToast('Debes mantener al menos un mes en el sistema.', '⚠️');
+      } else if (typeof alert === 'function') {
+        alert('Debes mantener al menos un mes en el sistema.');
+      }
       return false;
     }
     delete this.data.meses[monthId];

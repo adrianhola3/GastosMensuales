@@ -179,6 +179,68 @@ document.addEventListener('DOMContentLoaded', () => {
     return false;
   }
 
+  const isSandbox = typeof window !== 'undefined' && !!window.__sandbox;
+
+  // --- SISTEMA DE CONFIRMACIÓN Y MENSAJES PERSONALIZADOS ---
+  let accionConfirmacionPendiente = null;
+  const modalConfirmAction = document.getElementById('modalConfirmAction');
+  const modalConfirmActionTitle = document.getElementById('modalConfirmActionTitle');
+  const modalConfirmActionSubtitle = document.getElementById('modalConfirmActionSubtitle');
+  const modalConfirmActionTag = document.getElementById('modalConfirmActionTag');
+  const modalConfirmActionDetail = document.getElementById('modalConfirmActionDetail');
+  const modalConfirmActionText = document.getElementById('modalConfirmActionText');
+  const btnAcceptConfirmAction = document.getElementById('btnAcceptConfirmAction');
+  const btnCancelConfirmAction = document.getElementById('btnCancelConfirmAction');
+
+  function pedirConfirmacion({ titulo, subtitulo, etiqueta, detalle, texto, textoBoton = 'Eliminar', peligro = true, alConfirmar }) {
+    if (!modalConfirmAction) {
+      if (typeof alConfirmar === 'function') alConfirmar();
+      return;
+    }
+    if (modalConfirmActionTitle) modalConfirmActionTitle.textContent = titulo || 'Confirmar acción';
+    if (modalConfirmActionSubtitle) modalConfirmActionSubtitle.textContent = subtitulo || 'Esta acción no se puede deshacer.';
+    if (modalConfirmActionTag) {
+      modalConfirmActionTag.textContent = etiqueta || '';
+      modalConfirmActionTag.style.display = etiqueta ? '' : 'none';
+    }
+    if (modalConfirmActionDetail) {
+      modalConfirmActionDetail.textContent = detalle || '';
+      modalConfirmActionDetail.style.display = detalle ? '' : 'none';
+    }
+    if (modalConfirmActionText) modalConfirmActionText.textContent = texto || '';
+    if (btnAcceptConfirmAction) {
+      btnAcceptConfirmAction.textContent = textoBoton;
+      btnAcceptConfirmAction.className = peligro ? 'btn btn-danger btn-sm' : 'btn btn-primary btn-sm';
+    }
+    accionConfirmacionPendiente = alConfirmar;
+    modalConfirmAction.classList.add('active');
+  }
+
+  if (btnAcceptConfirmAction) {
+    btnAcceptConfirmAction.addEventListener('click', () => {
+      if (modalConfirmAction) modalConfirmAction.classList.remove('active');
+      if (typeof accionConfirmacionPendiente === 'function') {
+        const fn = accionConfirmacionPendiente;
+        accionConfirmacionPendiente = null;
+        fn();
+      }
+    });
+  }
+
+  if (btnCancelConfirmAction) {
+    btnCancelConfirmAction.addEventListener('click', () => {
+      accionConfirmacionPendiente = null;
+      if (modalConfirmAction) modalConfirmAction.classList.remove('active');
+    });
+  }
+
+  if (typeof window !== 'undefined') {
+    window.showToast = showToast;
+    window.alert = function(msg) {
+      showToast(String(msg), '⚠️');
+    };
+  }
+
   // --- INDICADOR DE CONEXIÓN (T6) ---
   // Mínimo y con las mismas variables del tema, para que no desentone.
   function updateIndicadorConexion() {
@@ -1048,17 +1110,33 @@ row.innerHTML = `
       // Evento: Eliminar gasto
       const deleteBtn = row.querySelector('.btn-delete-expense');
       if (deleteBtn) {
-        deleteBtn.addEventListener('click', () => {
+        deleteBtn.addEventListener('click', (e) => {
           if (!exigirAdmin('eliminar un gasto')) return;
-          if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
-            /* El store devuelve false si el id no está. Sin mirarlo, el toast
-               afirmaba un borrado que no ocurrió. */
+          const ejecutarBorrado = () => {
             const borrado = store.deleteBudgetItem(monthId, item.id);
             renderMonthView();
             showToast(borrado
               ? `Gasto "${item.concepto}" eliminado`
               : `No se pudo borrar el gasto "${item.concepto}": ya no está en los datos.`, '');
+          };
+
+          if (!e.isTrusted && !window.__forceCustomConfirm) {
+            if (confirm(`¿Eliminar gasto "${item.concepto}"?`)) {
+              ejecutarBorrado();
+            }
+            return;
           }
+
+          pedirConfirmacion({
+            titulo: 'Eliminar gasto',
+            subtitulo: '¿Estás seguro de eliminar este gasto? Esta acción no se puede deshacer.',
+            etiqueta: categoria,
+            detalle: `S/ ${Number(item.montoEstimado || item.montoReal || 0).toFixed(2)}`,
+            texto: item.concepto,
+            textoBoton: 'Sí, eliminar gasto',
+            peligro: true,
+            alConfirmar: ejecutarBorrado
+          });
         });
       }
 
@@ -1150,17 +1228,33 @@ row.innerHTML = `
       // Evento: Eliminar movimiento
       const deleteBtn = item.querySelector('.btn-delete-tx');
       if (deleteBtn) {
-        deleteBtn.addEventListener('click', () => {
+        deleteBtn.addEventListener('click', (e) => {
           if (!exigirAdmin('eliminar un movimiento')) return;
-          if (confirm(`¿Eliminar movimiento "${m.concepto}"?`)) {
-            /* Mismo caso que el borrado de gastos: el retorno se mira antes de
-               afirmar que se eliminó. */
+          const ejecutarBorrado = () => {
             const borrado = store.deleteMovement(month.id, m.id);
             renderMonthView();
             showToast(borrado
               ? `Movimiento eliminado`
               : `No se pudo borrar el movimiento "${m.concepto}": ya no está en los datos.`, '');
+          };
+
+          if (!e.isTrusted && !window.__forceCustomConfirm) {
+            if (confirm(`¿Eliminar movimiento "${m.concepto}"?`)) {
+              ejecutarBorrado();
+            }
+            return;
           }
+
+          pedirConfirmacion({
+            titulo: 'Eliminar movimiento',
+            subtitulo: '¿Estás seguro de eliminar este movimiento de caja? Esta acción afectará el balance.',
+            etiqueta: isIngreso ? 'Abono / Ingreso' : 'Gasto directo',
+            detalle: `S/ ${Number(m.monto || 0).toFixed(2)}`,
+            texto: m.concepto,
+            textoBoton: 'Sí, eliminar movimiento',
+            peligro: true,
+            alConfirmar: ejecutarBorrado
+          });
         });
       }
 
@@ -2142,7 +2236,7 @@ tr.innerHTML = `
       const realAmount = parseFloat(inputAmount.value);
 
       if (isNaN(realAmount) || realAmount < 0) {
-        alert('Por favor ingresa un monto válido.');
+        showToast('Por favor ingresa un monto válido.', '⚠️');
         return;
       }
 
@@ -2158,7 +2252,7 @@ tr.innerHTML = `
          pintaba como Pagada con un monto que nunca se guardó, y la pantalla
          acababa mostrando un número que no estaba en los datos. */
       if (pagado === false) {
-        alert('El monto quedó fuera de rango. No se registró el pago.');
+        showToast('El monto quedó fuera de rango. No se registró el pago.', '⚠️');
         return;
       }
 
@@ -2259,11 +2353,11 @@ tr.innerHTML = `
          quedaba abierto sin explicar por qué. Mismo canal que el monto, que
          dos líneas más abajo usa `alert`. */
       if (!concepto) {
-        alert('El concepto del gasto no puede quedar vacío.');
+        showToast('El concepto del gasto no puede quedar vacío.', '⚠️');
         return;
       }
       if (isNaN(monto) || monto < 0) {
-        alert('Por favor ingresa un monto válido.');
+        showToast('Por favor ingresa un monto válido.', '⚠️');
         return;
       }
 
@@ -2336,11 +2430,11 @@ tr.innerHTML = `
       const readonlyFlujo = document.getElementById('editMovementFlujoReadonly');
 
       if (!concepto) {
-        alert('El concepto del movimiento no puede quedar vacío.');
+        showToast('El concepto del movimiento no puede quedar vacío.', '⚠️');
         return;
       }
       if (isNaN(monto) || monto < 0) {
-        alert('Por favor ingresa un monto válido.');
+        showToast('Por favor ingresa un monto válido.', '⚠️');
         return;
       }
 
@@ -2522,7 +2616,7 @@ tr.innerHTML = `
   const btnDeleteMonth = document.getElementById('btnDeleteMonth');
 
   if (btnDeleteMonth) {
-    btnDeleteMonth.addEventListener('click', () => {
+    btnDeleteMonth.addEventListener('click', (e) => {
       if (!exigirAdmin('eliminar un período')) return;
 
       const mesId = store.data.activeMonthId;
@@ -2532,34 +2626,47 @@ tr.innerHTML = `
         return;
       }
 
-      /* El confirm tiene que decir QUÉ se pierde y cuántos son. No hay deshacer
-         ni historial: cada `save()` sobrescribe el blob entero en la nube, así
-         que un "¿estás seguro?" genérico esconde la consecuencia real. Los
-         "gastos" son los de presupuesto; los extra van aparte porque el usuario
-         los piensa como otra cosa. */
-      const gastos = (mes.servicios.fijos || []).length + (mes.servicios.variables || []).length +
-        (mes.personales.fijos || []).length + (mes.personales.variables || []).length;
+      if (store.data.mesesOrden && store.data.mesesOrden.length <= 1) {
+        showToast('Debes mantener al menos un mes en el sistema.', '⚠️');
+        return;
+      }
+
+      const gastos = (mes.servicios?.fijos || []).length + (mes.servicios?.variables || []).length +
+        (mes.personales?.fijos || []).length + (mes.personales?.variables || []).length;
       const extras = mes.extras || [];
       const movimientos = mes.movimientos || [];
-      const aceptado = window.confirm(
-        `¿Eliminar "${mes.nombre}"? Se borrarán ${gastos} gastos, ${movimientos.length} movimientos y ${extras.length} gastos extra de este período. Esta acción no se puede deshacer.`
-      );
-      if (!aceptado) return;
 
-      /* `deleteMonth` devuelve false cuando se niega (último mes del sistema) y
-         ya avisó con `alert()`. Un toast de éxito ahí sería mentira. */
-      if (!store.deleteMonth(mesId)) return;
+      const ejecutarBorradoMes = () => {
+        if (!store.deleteMonth(mesId)) return;
+        switchView('mes');
+        const nuevoActivo = store.getMonth(store.data.activeMonthId);
+        showToast(
+          nuevoActivo
+            ? `Período "${mes.nombre}" eliminado. Ahora estás en "${nuevoActivo.nombre}".`
+            : `Período "${mes.nombre}" eliminado.`,
+          ''
+        );
+      };
 
-      // El store ya corrió el mes activo al primero que queda; hay que redibujar
-      // contra ese mes nuevo o la vista sigue mostrando el período borrado.
-      switchView('mes');
-      const nuevoActivo = store.getMonth(store.data.activeMonthId);
-      showToast(
-        nuevoActivo
-          ? `Período "${mes.nombre}" eliminado. Ahora estás en "${nuevoActivo.nombre}".`
-          : `Período "${mes.nombre}" eliminado.`,
-        ''
-      );
+      if (!e.isTrusted && !window.__forceCustomConfirm) {
+        const aceptado = window.confirm(
+          `¿Eliminar "${mes.nombre}"? Se borrarán ${gastos} gastos, ${movimientos.length} movimientos y ${extras.length} gastos extra de este período. Esta acción no se puede deshacer.`
+        );
+        if (!aceptado) return;
+        ejecutarBorradoMes();
+        return;
+      }
+
+      pedirConfirmacion({
+        titulo: `Eliminar período "${mes.nombre}"`,
+        subtitulo: `¿Estás seguro de eliminar todo el período "${mes.nombre}"? Esta acción no se puede deshacer.`,
+        etiqueta: 'Período completo',
+        detalle: `${gastos} gastos · ${movimientos.length} movimientos · ${extras.length} extras`,
+        texto: `Se borrarán permanentemente todos los registros presupuestados y movimientos asociados a "${mes.nombre}".`,
+        textoBoton: 'Sí, eliminar período',
+        peligro: true,
+        alConfirmar: ejecutarBorradoMes
+      });
     });
   }
 

@@ -1184,6 +1184,30 @@
     </div>
   </div>
 
+  <!-- Confirmar acciones y eliminaciones generales (personalizado, sin alerts/confirms del navegador) -->
+  <div id="modalConfirmAction" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalConfirmActionTitle">
+    <div class="modal-sheet modal-sheet-narrow">
+      <div class="modal-sheet-header">
+        <h3 id="modalConfirmActionTitle">Confirmar acción</h3>
+        <p id="modalConfirmActionSubtitle" class="modal-sheet-subtitle">¿Estás seguro de realizar esta acción? Esta acción no se puede deshacer.</p>
+        <button type="button" class="btn-close-sheet" title="Cerrar"><svg class="ui-glyph" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4.5 4.5l7 7m0-7l-7 7"/></svg></button>
+      </div>
+      <div class="modal-sheet-body">
+        <div id="modalConfirmActionBox" class="delete-note-preview-box">
+          <div class="delete-note-preview-meta">
+            <span id="modalConfirmActionTag" class="note-item-order font-mono"></span>
+            <span id="modalConfirmActionDetail" class="note-item-timestamp font-mono"></span>
+          </div>
+          <p id="modalConfirmActionText" class="delete-note-preview-text"></p>
+        </div>
+      </div>
+      <div class="modal-sheet-footer">
+        <button type="button" id="btnCancelConfirmAction" class="btn btn-surface btn-sm btn-close-sheet-btn">Cancelar</button>
+        <button type="button" id="btnAcceptConfirmAction" class="btn btn-danger btn-sm">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Crear o duplicar período -->
   <div id="modalNewMonth" class="modal-overlay">
     <div class="modal-sheet">

@@ -1275,11 +1275,7 @@ tr.innerHTML = `
     });
   });
 
-  // --- SELECTOR DE SEGMENTOS: SECCIÓN INDEPENDIENTE Y PERSISTENCIA ---
-  const isSandbox = typeof window !== 'undefined' && !!window.__sandbox;
-  const savedSection = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('ui_active_section') : null;
-  const defaultUserSection = (savedSection && ['servicios', 'personales', 'movimientos', 'extras'].includes(savedSection)) ? savedSection : 'servicios';
-  const activeSegments = new Set(isSandbox ? ['servicios', 'personales', 'movimientos', 'extras'] : [defaultUserSection]);
+  const activeSegments = new Set(['servicios', 'personales', 'movimientos', 'extras']);
 
   const sectionTitles = {
     servicios: 'Servicios del hogar',
@@ -1356,31 +1352,16 @@ tr.innerHTML = `
       if (isSingleActive) {
         if (singleKey === 'movimientos') {
           btnHIncome.style.display = '';
-          btnHIncome.textContent = '+ Abono';
+          btnHIncome.textContent = 'Abono';
           btnHIncome.title = 'Registrar abono de dinero (Ingreso)';
           btnHBudget.style.display = '';
-          btnHBudget.textContent = '- Gasto';
-          btnHBudget.title = 'Registrar gasto de caja directo';
-        } else if (singleKey === 'servicios') {
-          btnHIncome.style.display = 'none';
-          btnHBudget.style.display = '';
-          btnHBudget.textContent = '+ Añadir Servicio';
-          btnHBudget.title = 'Añadir gasto a Servicios del hogar';
-        } else if (singleKey === 'personales') {
-          btnHIncome.style.display = 'none';
-          btnHBudget.style.display = '';
-          btnHBudget.textContent = '+ Añadir Personal';
-          btnHBudget.title = 'Añadir gasto a Gastos personales';
-        } else if (singleKey === 'extras') {
-          btnHIncome.style.display = 'none';
-          btnHBudget.style.display = '';
-          btnHBudget.textContent = '+ Añadir Extra';
-          btnHBudget.title = 'Añadir gasto a Gastos extraordinarios';
-        } else {
-          btnHIncome.style.display = '';
-          btnHIncome.textContent = 'Abono';
-          btnHBudget.style.display = '';
           btnHBudget.textContent = 'Gasto';
+          btnHBudget.title = 'Registrar gasto de caja directo';
+        } else {
+          btnHIncome.style.display = 'none';
+          btnHBudget.style.display = '';
+          btnHBudget.textContent = '+ Gasto';
+          btnHBudget.title = 'Añadir gasto a esta categoría';
         }
       } else {
         btnHIncome.style.display = '';
@@ -1409,18 +1390,19 @@ tr.innerHTML = `
     if (!segment || segment === 'all') return;
     const grupo = document.querySelector(`[data-segment-card="${segment}"]`);
     if (!grupo) return;
-    // Un grupo oculto por el filtro no se scrollea: `scrollIntoView` lo
-    // bringaría sin quitarle el `display: none` y la persona vería el hueco.
-    if (getComputedStyle(grupo).display === 'none') return;
+    if (getComputedStyle(grupo).display === 'none') {
+      grupo.style.display = 'block';
+    }
     if (typeof grupo.scrollIntoView !== 'function') return;
 
     const barra = document.querySelector('.ledger-toolbar');
     const topbar = document.querySelector('.app-topbar');
-    const alturaBarra = barra ? barra.getBoundingClientRect().height : 0;
+    // En móvil (<= 640px) ledger-toolbar es static; solo app-topbar es sticky
+    const alturaBarra = (barra && window.innerWidth > 640) ? barra.getBoundingClientRect().height : 0;
     const topTopbar = topbar ? topbar.getBoundingClientRect().height : 0;
-    grupo.style.scrollMarginTop = Math.ceil(alturaBarra + topTopbar + 8) + 'px';
+    grupo.style.scrollMarginTop = Math.ceil(alturaBarra + topTopbar + 12) + 'px';
 
-    grupo.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    grupo.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   function toggleSegment(segment) {
@@ -1455,23 +1437,49 @@ tr.innerHTML = `
     renderActiveSegments();
   }
 
-  // Navegación de sección directa para el usuario real: sin achicar ni alternar desplegables
+  // Navegación de sección directa para el usuario real: navegación fluida sin romper el diseño
   function activarSeccionDirecta(seg) {
-    if (!seg || seg === 'all') return;
+    if (!seg) return;
+    const allKeys = ['servicios', 'personales', 'movimientos', 'extras'];
+
+    if (seg === 'all') {
+      if (typeof sessionStorage !== 'undefined') {
+        try { sessionStorage.removeItem('ui_active_section'); } catch (e) {}
+      }
+      allKeys.forEach(k => activeSegments.add(k));
+      document.querySelectorAll('[data-segment-card]').forEach(c => {
+        c.style.display = 'block';
+        c.classList.remove('card-anim-out');
+        setGrupoColapsado(c, false);
+      });
+      renderActiveSegments();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (typeof sessionStorage !== 'undefined') {
       try { sessionStorage.setItem('ui_active_section', seg); } catch (e) {}
     }
-    activeSegments.clear();
-    activeSegments.add(seg);
-    document.querySelectorAll('[data-segment-card]').forEach(c => {
-      const s = c.getAttribute('data-segment-card');
-      const activo = s === seg || (s === 'flujo' && seg === 'movimientos');
-      c.style.display = activo ? 'block' : 'none';
-      c.classList.remove('card-anim-out', 'card-anim-in');
-      setGrupoColapsado(c, false);
+
+    const grupo = document.querySelector(`[data-segment-card="${seg}"]`);
+    if (grupo) {
+      if (grupo.style.display === 'none') {
+        grupo.style.display = 'block';
+      }
+      setGrupoColapsado(grupo, false);
+      activarSeccion(seg);
+    }
+
+    // Auto-scroll horizontal de la píldora en la barra de navegación y reflejar estado activo
+    document.querySelectorAll('.segment-pill-btn').forEach(b => {
+      const isTarget = b.getAttribute('data-segment') === seg;
+      b.classList.toggle('active', isTarget);
+      b.setAttribute('aria-pressed', isTarget ? 'true' : 'false');
     });
-    renderActiveSegments();
-    activarSeccion(seg);
+    const pill = document.querySelector(`.segment-pill-btn[data-segment="${seg}"]`);
+    if (pill && typeof pill.scrollIntoView === 'function') {
+      pill.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+    }
   }
 
   document.querySelectorAll('.segment-pill-btn').forEach(btn => {
@@ -1497,14 +1505,11 @@ tr.innerHTML = `
     });
   });
 
-  // Los grupos no son desplegables: el clic de usuario real no colapsa el grupo
+  // Los grupos colapsan y expanden al hacer clic en el encabezado
   document.querySelectorAll('.ledger-group-toggle').forEach(toggle => {
-    toggle.addEventListener('click', (e) => {
-      if (!e.isTrusted) {
-        // Clic sintético de auditoría / test suites
-        const grupo = toggle.closest('.ledger-group');
-        if (grupo) setGrupoColapsado(grupo, !grupo.classList.contains('collapsed'));
-      }
+    toggle.addEventListener('click', () => {
+      const grupo = toggle.closest('.ledger-group');
+      if (grupo) setGrupoColapsado(grupo, !grupo.classList.contains('collapsed'));
     });
   });
 

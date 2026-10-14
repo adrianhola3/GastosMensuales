@@ -197,12 +197,13 @@
     "nombre": "Un acento por categoria, cuatro tics distintos",
     "ok": false,
     "detalle": {
-      "total": 7,
-      "distintos": 1,
+      "total": 8,
+      "distintos": 5,
       "colores": [
-        "rgb(148, 163, 184)",
-        "rgb(148, 163, 184)",
-        "rgb(148, 163, 184)",
+        "rgb(2, 132, 199)",
+        "rgb(124, 58, 237)",
+        "rgb(22, 163, 74)",
+        "rgb(217, 119, 6)",
         "rgb(148, 163, 184)",
         "rgb(148, 163, 184)",
         "rgb(148, 163, 184)",
@@ -248,17 +249,17 @@
     "ok": true,
     "detalle": {
       "antes": {
-        "alto": 324,
+        "alto": 335,
         "collapsed": false,
         "aria": "true"
       },
       "colapsada": {
-        "alto": 48,
+        "alto": 56,
         "collapsed": true,
         "aria": "false"
       },
       "expandida": {
-        "alto": 324,
+        "alto": 335,
         "collapsed": false,
         "aria": "true"
       }
@@ -277,15 +278,15 @@
     "ok": false,
     "detalle": {
       "ingresos": "S/ 0.00",
-      "egresos": "Estimado S/ 0.00",
-      "balance": "-S/ 178.00",
+      "egresos": "Estimado S/ 699.34",
+      "balance": "-S/ 83.00",
       "estado": "Déficit",
       "cobertura": "0.0%",
-      "pagado": "Real S/ 178.00",
-      "pendiente": "Cubierto S/ 0.00Falta S/ 0.00",
-      "pct": "0.0% Pagado",
+      "pagado": "Real S/ 83.00",
+      "pendiente": "Cubierto S/ 83.00Falta S/ 616.34",
+      "pct": "11.9% Pagado",
       "notasIngresos": "0 abonos registrados",
-      "notasGastos": "2 de 10 gastos pagados"
+      "notasGastos": "1 de 10 gastos pagados"
     },
     "escrituras": {
       "guardar": 0,
@@ -322,7 +323,7 @@
         "w": 981,
         "h": 280,
         "pintados": 68670,
-        "colores": 112,
+        "colores": 107,
         "conAcento": 6
       },
       {
@@ -330,7 +331,7 @@
         "w": 420,
         "h": 280,
         "pintados": 29400,
-        "colores": 92,
+        "colores": 82,
         "conAcento": 6
       }
     ],
@@ -348,7 +349,7 @@
     "ok": false,
     "detalle": {
       "abierto": false,
-      "sub": "Recordatorios y observaciones del mes.",
+      "sub": "Recordatorios y observaciones de Agosto 2026",
       "cerrado": false
     },
     "escrituras": {

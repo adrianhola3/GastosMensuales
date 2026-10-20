@@ -1,6 +1,6 @@
 # 📊 Monitor de Cuota y Consumo de Tokens (En Vivo)
 
-> ⏱️ **Última actualización:** 20/10/2026, 01:46:23 (En vivo)
+> ⏱️ **Última actualización:** 20/10/2026, 09:55:13 (En vivo)
 
 ---
 
@@ -10,8 +10,8 @@
 | :--- | :--- | :--- |
 | **Ventana Móvil 5 Horas** | `[░░░░░░░░░░░░░░░░] 0.0% usado` | **$12.00 libre** de $12.00 (Reset en ~0.0h) |
 | **Ritmo Diario Seguro** | `[░░░░░░░░░░░░░░░░] 0.0% ritmo` | Ritmo sugerido: $0.01 / día |
-| **Saldo Semanal Libre** | `[░░░░░░░░░░░░░░░░] 0.0% libre` | **$0.00 libre** de $30.00 (Reset en ~137.2h) |
-| **Saldo Mensual Libre** | `[█░░░░░░░░░░░░░░░] 5.9% libre` | **$3.56 libre** de $60.00 (Reset en ~28.9 días) |
+| **Saldo Semanal Libre** | `[░░░░░░░░░░░░░░░░] 0.0% libre` | **$0.00 libre** de $30.00 (Reset en ~129.1h) |
+| **Saldo Mensual Libre** | `[█░░░░░░░░░░░░░░░] 5.9% libre` | **$3.56 libre** de $60.00 (Reset en ~28.6 días) |
 
 ---
 

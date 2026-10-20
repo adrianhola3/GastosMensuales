@@ -1,6 +1,6 @@
 {
   "suite": "crud-suite",
-  "generatedAt": "2026-10-14T17:43:08.994Z",
+  "generatedAt": "2026-10-14T22:11:34.092Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -1951,7 +1951,7 @@
           "label": "the movement to edit was created through the real UI",
           "detail": {
             "creado": {
-              "id": "id_y5jnp7s5r_1791999721901",
+              "id": "id_yf2ug6mn5_1792015819544",
               "fecha": "2026-08-10",
               "concepto": "PRUEBA-CRUD Abono Base",
               "flujo": "Ingreso",
@@ -2000,8 +2000,8 @@
           "pass": true,
           "label": "the hidden id is the clicked movement",
           "detail": {
-            "actual": "id_y5jnp7s5r_1791999721901",
-            "expected": "id_y5jnp7s5r_1791999721901"
+            "actual": "id_yf2ug6mn5_1792015819544",
+            "expected": "id_yf2ug6mn5_1792015819544"
           }
         },
         {
@@ -2496,11 +2496,11 @@
           "pass": true,
           "label": "DISK: a month with that nombre exists",
           "detail": {
-            "nuevoId": "prueba-crud-gamma-2026-1791999744413",
+            "nuevoId": "prueba-crud-gamma-2026-1792015842471",
             "orden": [
               "prueba-alfa-2026",
               "prueba-beta-2026",
-              "prueba-crud-gamma-2026-1791999744413"
+              "prueba-crud-gamma-2026-1792015842471"
             ]
           }
         },
@@ -2548,8 +2548,8 @@
           "pass": true,
           "label": "DISK: the new month became the active one",
           "detail": {
-            "actual": "prueba-crud-gamma-2026-1791999744413",
-            "expected": "prueba-crud-gamma-2026-1791999744413"
+            "actual": "prueba-crud-gamma-2026-1792015842471",
+            "expected": "prueba-crud-gamma-2026-1792015842471"
           }
         },
         {
@@ -2664,7 +2664,7 @@
           "pass": true,
           "label": "DISK: the clone exists",
           "detail": {
-            "nuevoId": "prueba-crud-delta-2026-1791999747947"
+            "nuevoId": "prueba-crud-delta-2026-1792015846036"
           }
         },
         {
@@ -3439,19 +3439,19 @@
       "group": "Modales: cancelar, Escape, overlay. Notas: autoguardado.",
       "name": "notes.autosave: typing in the notes sheet persists after the debounce",
       "fixture": "baseline",
-      "verdict": "PASS",
-      "observation": "11 checks passed across UI + memory + disk + network",
+      "verdict": "FAIL",
+      "observation": "failed -> the real notes button opens the sheet; the textarea is prefilled with the stored notas; UI: the feedback label shows the debounced save in flight; DISK: the notes were persisted after ~400 ms, accents intact; MEMORY: the notes are in the store; UI: the feedback label confirms the save; exactly one persisted write for one debounced save",
       "checks": [
         {
-          "pass": true,
+          "pass": false,
           "label": "the real notes button opens the sheet",
           "detail": null
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "the textarea is prefilled with the stored notas",
           "detail": {
-            "actual": "PRUEBA-ALFA notas de prueba",
+            "actual": "",
             "expected": "PRUEBA-ALFA notas de prueba"
           }
         },
@@ -3464,10 +3464,10 @@
           }
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "UI: the feedback label shows the debounced save in flight",
           "detail": {
-            "feedback": "Guardando notas..."
+            "feedback": "Se registrará con fecha y hora actual"
           }
         },
         {
@@ -3479,33 +3479,33 @@
           }
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "DISK: the notes were persisted after ~400 ms, accents intact",
           "detail": {
-            "actual": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026",
+            "actual": "PRUEBA-ALFA notas de prueba",
             "expected": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026"
           }
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "MEMORY: the notes are in the store",
           "detail": {
-            "actual": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026",
+            "actual": "PRUEBA-ALFA notas de prueba",
             "expected": "PRUEBA-CRUD notas con acentos: ñ á é í óú — 2026"
           }
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "UI: the feedback label confirms the save",
           "detail": {
-            "feedback": "Guardado automáticamente"
+            "feedback": "Se registrará con fecha y hora actual"
           }
         },
         {
-          "pass": true,
+          "pass": false,
           "label": "exactly one persisted write for one debounced save",
           "detail": {
-            "actual": 1,
+            "actual": 0,
             "expected": 1
           }
         },
@@ -3529,7 +3529,7 @@
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 1; page requests during this test: 18"
+        "observation method -> console errors this test: none; page exceptions: Uncaught ReferenceError: isSandbox is not defined; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
@@ -3574,7 +3574,7 @@
       ],
       "gaps": [],
       "notes": [
-        "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
+        "observation method -> console errors this test: none; page exceptions: Uncaught ReferenceError: isSandbox is not defined | Uncaught ReferenceError: isSandbox is not defined; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null

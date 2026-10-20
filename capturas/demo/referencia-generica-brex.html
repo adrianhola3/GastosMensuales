@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumen Standard — instrumento de medición de luz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&family=Inter+Tight:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   REFERENCE LOCK — Primary: Brex
+   "White concrete, single ember — a clinical financial
+    instrument where one orange spark does all the talking."
+
+   PRESERVE  near-white canvas · single chromatic voice ·
+             compressed grotesque · 12px radius · hairline
+             borders · near-zero elevation · 48px section gaps
+   BORROW    Mercury → graphite lift, reserved for the figure
+             that matters. One lift on the whole page.
+   REJECT    dual palette · emoji · decorative side stripes ·
+             card-per-item · gradients used as decoration ·
+             centred-everything
+
+   MEDIA ROLE · Brex is photography-led. This fictional product
+   measures luminance, so luminance IS the media and is rendered
+   code-native. That is an honest substitution, not a fake photo.
+   ═══════════════════════════════════════════════════════════ */
+
+:root{
+  --canvas:#ffffff;
+  --sunken:#f7f7f6;
+  --lift:#f1f1f1;
+
+  --ink:#101010;
+  --ink-2:#5f5f5f;
+  --ink-3:#8e8e8e;
+
+  --hairline:rgba(0,0,0,.09);
+  --hairline-firm:rgba(0,0,0,.16);
+
+  --ember:#ff5900;        /* CTA ONLY. the single chromatic voice. */
+  --ember-wash:#fff2ec;
+
+  --shadow-lift:0 1px 2px rgba(0,0,0,.04), 0 12px 28px rgba(0,0,0,.06);
+
+  --r-card:12px;
+  --r-ctl:9999px;
+
+  --gap-section:96px;
+  --shell:1200px;
+
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Inter Tight','Inter',system-ui,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--canvas);color:var(--ink);font-size:15px;line-height:1.55;letter-spacing:-.011em}
+::selection{background:var(--ember);color:#fff}
+
+.shell{max-width:var(--shell);margin:0 auto;padding:0 32px}
+
+/* type scale — Major Second-ish, compressed, −0.03em at display */
+h1,h2,h3{font-family:var(--font-display);font-weight:500;letter-spacing:-.032em;line-height:1.06}
+h1{font-size:76px;letter-spacing:-.04em}
+h2{font-size:46px;letter-spacing:-.034em}
+h3{font-size:22px;letter-spacing:-.022em;font-weight:500}
+.eyebrow{
+  font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);
+}
+.lede{font-size:19px;color:var(--ink-2);letter-spacing:-.015em;max-width:56ch}
+.muted{color:var(--ink-3)}
+
+/* ── nav · no border, whitespace separates ─────────────────── */
+.nav{position:sticky;top:0;background:var(--canvas);z-index:50}
+.nav-in{display:flex;align-items:center;gap:32px;height:64px}
+.mark{display:flex;align-items:center;gap:10px;margin-right:auto}
+.mark-dot{width:26px;height:26px;border-radius:7px;background:var(--ink);display:grid;place-items:center;flex:none}
+.mark-dot svg{width:13px;height:13px;stroke:#fff;stroke-width:2;fill:none}
+.mark-name{font-weight:500;letter-spacing:-.018em}
+.nav-links{display:flex;gap:26px}
+.nav-links a{color:var(--ink-2);text-decoration:none;font-size:14px;letter-spacing:-.012em}
+.nav-links a:hover{color:var(--ink)}
+
+/* ── buttons · pill, one filled, the rest ghost ───────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:var(--r-ctl);
+  padding:10px 22px;font:inherit;font-weight:500;letter-spacing:-.014em;
+  cursor:pointer;text-decoration:none;white-space:nowrap;
+}
+.btn-fill{background:var(--ember);color:#fff;border:1px solid var(--ember)}
+.btn-fill:hover{background:#e85000;border-color:#e85000}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--hairline-firm)}
+.btn-ghost:hover{background:var(--sunken)}
+.btn-text{color:var(--ink-3);padding:10px 8px}
+.btn-text:hover{color:var(--ink)}
+
+/* ── hero ─────────────────────────────────────────────────── */
+.hero{padding:104px 0 88px}
+.hero h1{margin:22px 0 0;max-width:17ch}
+.hero .lede{margin-top:26px}
+.hero-actions{display:flex;align-items:center;gap:10px;margin-top:38px}
+
+/* ── luminance field · the media, rendered code-native ────── */
+.field{
+  margin-top:72px;height:420px;border-radius:var(--r-card);overflow:hidden;position:relative;
+  background:#0b0b0c;
+  display:grid;grid-template-columns:repeat(5,1fr);
+}
+.cell{position:relative;display:grid;place-items:end start;padding:22px}
+.cell::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 30% 20%,var(--c),transparent 68%);
+  opacity:var(--o);
+}
+.cell span{
+  position:relative;z-index:1;font-size:11px;font-weight:500;letter-spacing:.06em;
+  text-transform:uppercase;color:rgba(255,255,255,.82);
+  font-variant-numeric:tabular-nums;
+  mix-blend-mode:plus-lighter;
+}
+.field-cap{
+  display:flex;justify-content:space-between;gap:24px;
+  margin-top:14px;font-size:12px;color:var(--ink-3);letter-spacing:-.01em;
+}
+
+/* ── sections · asymmetry is the tension ───────────────────── */
+section{padding-top:var(--gap-section)}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:56px}
+.sec-head .lede{margin:0}
+
+/* feature row — text left, media right, alternating */
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:44px 0;border-top:1px solid var(--hairline)}
+.feat:nth-child(even) .feat-copy{order:2}
+.feat-copy h3{margin:14px 0 12px}
+.feat-copy p{color:var(--ink-2);max-width:46ch}
+.spec{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:500;letter-spacing:.03em;color:var(--ink-2);background:var(--lift);border-radius:var(--r-ctl);padding:4px 11px;font-variant-numeric:tabular-nums}
+
+.feat-media{border-radius:var(--r-card);overflow:hidden;background:var(--sunken);border:1px solid var(--hairline);aspect-ratio:4/3;position:relative}
+/* honest placeholders for the two media that stay code-native */
+.m-wave{position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,transparent 0 23px,rgba(0,0,0,.05) 23px 24px),
+  radial-gradient(90% 70% at 50% 0%,#fff 0%,var(--lift) 55%,var(--sunken) 100%);}
+.m-grid{position:absolute;inset:0;background:
+  linear-gradient(90deg,rgba(0,0,0,.06) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(rgba(0,0,0,.06) 1px,transparent 1px) 0 0/28px 28px,
+  var(--canvas);}
+.m-note{
+  position:absolute;left:16px;bottom:14px;right:16px;
+  font-size:11px;color:var(--ink-3);letter-spacing:.02em;
+}
+
+/* ── data table · no cards, hairlines only ─────────────────── */
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table th{
+  text-align:left;font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3);padding:0 16px 12px 0;border-bottom:1px solid var(--hairline-firm);
+}
+.table th:last-child,.table td:last-child{text-align:right;padding-right:0}
+.table td{padding:16px 16px 16px 0;border-bottom:1px solid var(--hairline);font-variant-numeric:tabular-nums;letter-spacing:-.012em}
+.table tr:last-child td{border-bottom:0}
+.table .k{font-weight:450}
+.table .v{color:var(--ink-2)}
+
+/* ── the one lift on the page · reserved for the figure ───── */
+.figure{
+  background:linear-gradient(180deg,#0e0e0f,#101012);color:#fff;border-radius:var(--r-card);
+  padding:64px;box-shadow:var(--shadow-lift);
+}
+.figure-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:38px;padding-top:30px;border-top:1px solid rgba(255,255,255,.12)}
+.figure .eyebrow{color:rgba(255,255,255,.42)}
+.figure-num{font-size:42px;font-weight:500;letter-spacing:-.035em;margin-top:8px;font-variant-numeric:tabular-nums}
+.figure-sub{font-size:12px;color:rgba(255,255,255,.55);margin-top:4px;letter-spacing:-.01em}
+
+/* ── quote ────────────────────────────────────────────────── */
+.quote{padding:112px 0;border-top:1px solid var(--hairline);text-align:center}
+.quote p{font-family:var(--font-display);font-size:34px;font-weight:500;letter-spacing:-.03em;line-height:1.24;max-width:22ch;margin:0 auto}
+.quote cite{display:block;font-style:normal;font-size:12px;color:var(--ink-3);margin-top:24px;letter-spacing:.04em}
+
+/* ── cta ──────────────────────────────────────────────────── */
+.cta{padding:0 0 112px}
+.cta-in{
+  border:1px solid var(--hairline);border-radius:var(--r-card);background:var(--sunken);
+  padding:72px;text-align:center;
+}
+.cta-in h2{max-width:16ch;margin:0 auto}
+.cta-in .lede{margin:20px auto 0}
+.cta-actions{display:flex;justify-content:center;gap:10px;margin-top:34px}
+
+/* ── footer · utilitarian, no newsletter, no socials ──────── */
+footer{border-top:1px solid var(--hairline);padding:64px 0 80px}
+.foot-grid{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:40px}
+.foot-grid h4{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px}
+.foot-grid ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.foot-grid a{color:var(--ink-2);text-decoration:none;font-size:13px;letter-spacing:-.012em}
+.foot-grid a:hover{color:var(--ink)}
+.foot-note{margin-top:56px;padding-top:24px;border-top:1px solid var(--hairline);font-size:12px;color:var(--ink-3);display:flex;justify-content:space-between;gap:24px}
+
+/* ── responsive ───────────────────────────────────────────── */
+@media(max-width:1000px){
+  h1{font-size:56px} h2{font-size:34px}
+  :root{--gap-section:72px}
+  .sec-head,.feat,.figure-grid,.foot-grid{grid-template-columns:1fr;gap:32px}
+  .feat:nth-child(even) .feat-copy{order:0}
+  .field{grid-template-columns:repeat(3,1fr);height:340px}
+  .shell{padding:0 22px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <div class="mark">
+      <div class="mark-dot"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
+      <span class="mark-name">Lumen Standard</span>
+    </div>
+    <div class="nav-links">
+      <a href="#instrumento">Instrumento</a>
+      <a href="#datos">Datos</a>
+      <a href="#spec">Especificaciones</a>
+    </div>
+    <a class="btn btn-fill" href="#contacto">Solicitar unidad</a>
+  </div>
+</nav>
+
+<!-- ── HERO ────────────────────────────────────────────── -->
+<header class="hero shell">
+  <div class="eyebrow">Instrumento de medición · Serie L-2</div>
+  <h1>Luz medida como un instrumento, no como una estimación.</h1>
+  <p class="lede">Lumen Standard convierte la luminancia del entorno en un número auditable. Sin calibración anual, sin hojas de cálculo, sin discutir si la oficina está "demasiado oscura".</p>
+  <div class="hero-actions">
+    <a class="btn btn-fill" href="#contacto">Solicitar unidad</a>
+    <a class="btn btn-ghost" href="#spec">Ver especificaciones</a>
+  </div>
+
+  <!-- media role: luminance, rendered code-native -->
+  <div class="field" role="img" aria-label="Barrido de luminancia de cinco puntos de medición, de 18 a 940 lux">
+    <div class="cell" style="--c:#2a1508;--o:1"><span>18 lx</span></div>
+    <div class="cell" style="--c:#7a3a10;--o:1"><span>140 lx</span></div>
+    <div class="cell" style="--c:#c86a1e;--o:1"><span>320 lx</span></div>
+    <div class="cell" style="--c:#f2a04a;--o:1"><span>640 lx</span></div>
+    <div class="cell" style="--c:#ffdca8;--o:1"><span>940 lx</span></div>
+  </div>
+  <div class="field-cap">
+    <span>Barrido de luminancia · 5 puntos · lectura cada 4 s</span>
+    <span class="muted">Fuente: registro propio del dispositivo</span>
+  </div>
+</header>
+
+<!-- ── INSTRUMENTO ─────────────────────────────────────── -->
+<section id="instrumento" class="shell">
+  <div class="sec-head">
+    <h2>Un instrumento,<br>no una estimación.</h2>
+    <p class="lede">Cada lectura se sella, se archiva y se puede citar en un informe. El dispositivo no aprende: mide, y lo que mide no cambia según quién mire.</p>
+  </div>
+
+  <div class="feat">
+    <div class="feat-copy">
+      <div class="eyebrow">01 · Calibración</div>
+      <h3>La referencia no se vence</h3>
+      <p>El sensor se autocompara contra una referencia interna cada 90 días. La desviación se corrige sola y queda registrada. No existe la tarea anual de "recalibrar el equipo".</p>
+      <div class="spec"><span class="tag">±2% deriva máx.</span><span class="tag">Auto-ciclo 90 d</span><span class="tag">Log firmado</span></div>
+    </div>
+    <div class="feat-media">
+      <div class="m-wave"></div>
+      <div class="m-note">Medio generado en código · señal de deriva temporal</div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-copy">
+      <div class="eyebrow">02 · Registro</div>
+      <h3>Cada lectura tiene sello de tiempo</h3>
+      <p>El registro es inmutable. Puedes compartir el enlace de una lectura concreta, no un export genérico con fecha de modification. Nadie edita la historia.</p>
+      <div class="spec"><span class="tag">Append-only</span><span class="tag">Enlaces por lectura</span><span class="tag">Export CSV / JSON</span></div>
+    </div>
+    <div class="feat-media">
+      <div class="m-grid"></div>
+      <div class="m-note">Medio generado en código · rejilla de referencia</div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <div class="feat-copy">
+      <div class="eyebrow">03 · Salida</div>
+      <h3>Un número que entra en el acta</h3>
+      <p>El informe sale con la lectura, la incertidumbre y el método. Formato que un inspector acepta y que un controlador entiende. Sin capturas de pantalla como evidencia.</p>
+      <div class="spec"><span class="tag">PDF firmado</span><span class="tag">Incertidumbre ±2%</span><span class="tag">Metodología incluida</span></div>
+    </div>
+    <div class="feat-media">
+      <div class="m-wave"></div>
+      <div class="m-note">Medio generado en código · dominio del sensor</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATOS ────────────────────────────────────────────── -->
+<section id="datos" class="shell">
+  <div class="sec-head">
+    <h2>Lo que el instrumento<br>declara sin reservas.</h2>
+    <p class="lede">Especificaciones completas, sin letra chica. Si un número no figura aquí, no lo sostenemos.</p>
+  </div>
+  <table class="table">
+    <thead>
+      <tr><th>Parámetro</th><th>Rango</th><th>Incertidumbre</th><th>Nota</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="k">Luminancia</td><td class="v">10 – 2000 lx</td><td class="v">± 2%</td><td class="v">Espectral 380–780 nm</td></tr>
+      <tr><td class="k">Iluminancia</td><td class="v">10 – 5000 lx</td><td class="v">± 2%</td><td class="v">Hemisférica 0–180°</td></tr>
+      <tr><td class="k">CCT</td><td class="v">2200 – 6500 K</td><td class="v">± 90 K</td><td class="v">Punto correlacionado</td></tr>
+      <tr><td class="k">CRI</td><td class="v">Ra 80 – 98</td><td class="v">± 1.5</td><td class="v">R9 por separado</td></tr>
+      <tr><td class="k">Parpadeo</td><td class="v">0 – 2000 Hz</td><td class="v">± 1 Hz</td><td class="v">Detección por muestreo doble</td></tr>
+      <tr><td class="k">Registro</td><td class="v">24 meses</td><td class="v">—</td><td class="v">Append-only, sellado</td></tr>
+      <tr><td class="k">Autonomía</td><td class="v">9 años</td><td class="v">—</td><td class="v">Batería de sellado</td></tr>
+      <tr><td class="k">Temperatura</td><td class="v">−20 – 55 °C</td><td class="v">± 0.3 °C</td><td class="v">Compensada por software</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ── LA ÚNICA ELEVACIÓN DE LA PÁGINA ─────────────────── -->
+<section class="shell" style="padding-top:0">
+  <div class="figure">
+    <div class="eyebrow">Instalado · red de referencia</div>
+    <div class="figure-num">1.284</div>
+    <div class="figure-sub">unidades en producción, lecturas compartidas públicamente</div>
+    <div class="figure-grid">
+      <div><div class="eyebrow">Lecturas / mes</div><div class="figure-num" style="font-size:26px">8,4 M</div></div>
+      <div><div class="eyebrow">Deriva media</div><div class="figure-num" style="font-size:26px">0,8%</div></div>
+      <div><div class="eyebrow">Autonomías activas</div><div class="figure-num" style="font-size:26px">97,2%</div></div>
+      <div><div class="eyebrow">Países</div><div class="figure-num" style="font-size:26px">34</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CITA ─────────────────────────────────────────────── -->
+<section class="quote shell">
+  <p>Dejamos de discutir si la luz era suficiente. Ahora hay un número y una fecha.</p>
+  <cite>Dirección de operaciones · planta de Ávila</cite>
+</section>
+
+<!-- ── CTA ──────────────────────────────────────────────── -->
+<section id="spec" class="cta shell">
+  <div class="cta-in">
+    <h2>Pedí el instrumento, no el folleto.</h2>
+    <p class="lede">Unidad de evaluación durante 30 días. Si no coincide con tu referencia, la devolvés.</p>
+    <div class="cta-actions">
+      <a class="btn btn-fill" href="#contacto">Solicitar unidad</a>
+      <a class="btn btn-text" href="#datos">Ver especificaciones →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────── -->
+<footer class="shell" id="contacto">
+  <div class="foot-grid">
+    <div>
+      <div class="mark">
+        <div class="mark-dot"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
+        <span class="mark-name">Lumen Standard</span>
+      </div>
+      <p class="muted" style="margin-top:18px;font-size:13px;max-width:34ch">Instrumentos de medición de luz y color. Fabricados en la UE, calibrados de fábrica.</p>
+    </div>
+    <div><h4>Producto</h4><ul><li><a href="#spec">Especificaciones</a></li><li><a href="#datos">Datos técnicos</a></li><li><a href="#instrumento">Cómo funciona</a></li></ul></div>
+    <div><h4>Empresa</h4><ul><li><a href="#">Manifiesto</a></li><li><a href="#">Metodología</a></li><li><a href="#">Prensa</a></li></ul></div>
+    <div><h4>Contacto</h4><ul><li><a href="#">ventas@lumen.example</a></li><li><a href="#">Soporte técnico</a></li><li><a href="#">Distribuidores</a></li></ul></div>
+  </div>
+  <div class="foot-note">
+    <span>© 2026 Lumen Standard S.L.</span>
+    <span class="muted">Producto ficticio · muestra de dirección de diseño</span>
+  </div>
+</footer>
+
+</body>
+</html>

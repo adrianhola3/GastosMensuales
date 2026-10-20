@@ -1,0 +1,228 @@
+## 5. Resultados
+
+En total se resolvieron **79 items**. De ellos, 29 tienen una respuesta numerica declarada en el PDF y se pueden comparar.
+
+| Indicador | Valor |
+|---|---|
+| Items resueltos | 79 |
+| Items con respuesta numerica en el PDF | 29 |
+| Veredictos `COINCIDE` | 22 |
+| Veredictos `DIFIERE` | 7 |
+| Items `SIN RESPUESTA NUMERICA EN EL PDF` | 50 |
+| Celdas con error de Excel | 0 |
+
+**22 de las 29 respuestas declaradas por el docente coinciden con el calculo propio. Las 7 que difieren se analizan una por una en el apartado 7.**
+
+---
+
+## 6. Detalle por seccion
+
+Todas las cifras de la columna "Resultado" son las que Excel calculo y que se leyeron del libro reabierto. Se pueden contrastar una por una en el apartado 8.
+
+### 6.1 Seccion A - Notas del curso (F2, pag. 12)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| A01 | a) Probabilidad de nota entre 11 y 13.6 | `=NORM.DIST(13.6,10,2,TRUE)-NORM.DIST(11,10,2,TRUE)` | 0,27260721961306 | `0.2726` | COINCIDE |
+| A02 | b) Probabilidad de nota mayor que 18 | `=1-NORM.DIST(18,10,2,TRUE)` | 3,167124183312E-05 | `0.0` | COINCIDE |
+| A03 | c) Nota minima para estar en el quinto superior | `=NORM.INV(0.95,10,2)` | 13,289707253903 | sin respuesta | SIN RESPUESTA |
+| A04 | d) Limite superior del 70 % central | `=NORM.INV(0.85,10,2)` | 12,072866778988 | sin respuesta | SIN RESPUESTA |
+| A05 | d) Limite inferior del 70 % central | `=NORM.INV(0.15,10,2)` | 7,9271332210124 | sin respuesta | SIN RESPUESTA |
+| A06 | e) 10 estudiantes, mas de 3 con nota mayor que 10 | `=1-(0.5^10+10*0.5^10+45*0.5^10+120*0.5^10)` | 0,828125 | sin respuesta | SIN RESPUESTA |
+
+**Nota sobre A02.** El PDF responde `0.0` porque usa la tabla normal a dos decimales: a `z = 4.00` le corresponde `1.0000`, y `1 − 1.0000 = 0`. El valor exacto es 3,17 x 10⁻⁵, que es practicamente cero. No es discrepancia.
+
+### 6.2 Seccion B - Sueldos del Sector Salud (F2, pag. 13)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| B01 | a) Probabilidad de sueldo menor a 2500 | `=NORM.DIST(2500,3000,500,TRUE)` | 0,15865525393146 | `0.1587` | COINCIDE |
+| B02 | a) Cantidad de empleados con sueldo menor a 2500 | `=NORM.DIST(2500,3000,500,TRUE)*10000` | 1586,5525393146 | `1587 empleados` | COINCIDE |
+| B03 | b) Sueldo de corte del 35 % inferior | `=NORM.INV(0.35,3000,500)` | 2807,3397667962 | `2807.34` | COINCIDE |
+| B04 | b) Comprobacion P(sueldo menor al corte) | `=NORM.DIST(2807.34,3000,500,TRUE)` | 0,35000017275691 | `35 %` | COINCIDE |
+| B05 | b) Cantidad de empleados con bonificacion | `=10000*0.35` | 3500 | `3500 empleados` | COINCIDE |
+| B06 | c) Limite inferior del 50 % central | `=NORM.INV(0.25,3000,500)` | 2662,755124902 | `2663` | COINCIDE |
+| B07 | c) Limite superior del 50 % central | `=NORM.INV(0.75,3000,500)` | 3337,244875098 | `337` | **DIFIERE** |
+| B08 | d) Probabilidad de ganar menos de 1850 o mas de 2500 | `=NORM.DIST(1850,3000,500,TRUE)+1-NORM.DIST(2500,3000,500,TRUE)` | 0,85206885609022 | sin respuesta | SIN RESPUESTA |
+| B09 | d) Cantidad de empleados del inciso d | la misma formula por 10000 | 8520,6885609022 | sin respuesta | SIN RESPUESTA |
+| B10 | e) Sueldo minimo para elegir a los 1000 mejores | `=NORM.INV(0.9,3000,500)` | 3640,7757827723 | sin respuesta | SIN RESPUESTA |
+| B11 | f) Categoria Bajo: menores de 2000 | `=NORM.DIST(2000,3000,500,TRUE)` | 0,022750131948179 | sin respuesta | SIN RESPUESTA |
+| B12 | f) Categoria Medio: 2000 a menos de 2600 | `=NORM.DIST(2600,3000,500,TRUE)-NORM.DIST(2000,3000,500,TRUE)` | 0,18910526663522 | sin respuesta | SIN RESPUESTA |
+| B13 | f) Categoria Alto: 2600 a mas | `=1-NORM.DIST(2600,3000,500,TRUE)` | 0,7881446014166 | sin respuesta | SIN RESPUESTA |
+| B14 | f) Suma de las tres categorias (control) | suma de B11, B12 y B13 | 1 | sin respuesta | SIN RESPUESTA |
+| B15 | g) 10 empleados independientes, mas de 2 ganan menos de 2500 | `=1-(0.84134475^10+10*0.15865525*0.84134475^9+45*0.15865525^2*0.84134475^8)` | 0,20275375215048 | `0.2029` | **DIFIERE** |
+
+**B14 es una comprobacion de control**: las tres categorias del inciso f) tienen que sumar exactamente 1. Suman 1. Eso valida que los tres cortes se calcularon sobre la misma distribucion.
+
+### 6.3 Seccion C - Longitud de clavos (F2, pag. 14)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| C01 | z estandar tal que F(z) = 0,80 | `=NORMSINV(0.8)` | 0,84162123357292 | `0.8416` | COINCIDE |
+| C02 | z estandar tal que F(z) = 0,90 | `=NORMSINV(0.9)` | 1,2815515655446 | `1.2816` | COINCIDE |
+| C03 | Sigma del clavo | `=(12-11)/(1.28155157-0.84162123)` | 2,273087143751 | `2,27` | COINCIDE |
+| C04 | Media del clavo | `=11-NORMSINV(0.8)*((12-11)/(1.28155157-0.84162123))` | 9,0869215940576 | `9.09` | COINCIDE |
+| C05 | Comprobacion P(X<11) | `=NORM.DIST(11,9.0873,2.2727,TRUE)` | 0,79999352318709 | `0.8` | COINCIDE |
+| C06 | Comprobacion P(X<12) | `=NORM.DIST(12,9.0873,2.2727,TRUE)` | 0,90000909291531 | `0.9` | COINCIDE |
+
+**Este es el ejercicio más importante de la semana.** Es el unico donde los parametros no se dan: hay que deducirlos de dos probabilidades. El procedimiento correcto es el inverso al de las secciones anteriores: se lee cada probabilidad en la tabla normal para obtener su z, se escriben las dos ecuaciones de estandarizacion y se resuelve el sistema.
+
+### 6.4 Seccion D - Horas productivas (F2, pag. 15 y pag. 28)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| D01 | a) Media de horas productivas | `=1305+NORMSINV(0.9756)*(1600-1305)/(NORMSINV(0.8413)+NORMSINV(0.9756))` | 1500,6967822297 | sin respuesta | SIN RESPUESTA |
+| D02 | a) Desviacion estandar | `=(1600-1305)/(NORMSINV(0.8413)+NORMSINV(0.9756))` | 99,321582965149 | sin respuesta | SIN RESPUESTA |
+| D03 | Comprobacion P(X<1305) con mu = 1500 y sigma = 100 | `=NORM.DIST(1305,1500,100,TRUE)` | 0,025588059521639 | `2.56 %` | COINCIDE |
+| D04 | Comprobacion P(X>1600) con mu = 1500 y sigma = 100 | `=1-NORM.DIST(1600,1500,100,TRUE)` | 0,15865525393146 | `15.87 %` | COINCIDE |
+| D05 | b) Probabilidad de trabajar entre 1450 y 1550 horas | `=NORM.DIST(1550,1500,100,TRUE)-NORM.DIST(1450,1500,100,TRUE)` | 0,38292492254803 | sin respuesta | SIN RESPUESTA |
+| D06 | c) 5 meses, exactamente 3 con 1450 a 1550 horas | `=COMBIN(5,3)*(p)^3*(1-p)^2` | 0,21380453479549 | sin respuesta | SIN RESPUESTA |
+
+**Nota de lectura.** D01 y D02 calculan los parametros leyendo el 2,56 % y el 15,87 % **a cuatro decimales**, y por eso dan 1500,70 y 99,32. Los items D03 y D04 muestran que la media y la desviacion **redondas** que el propio enunciario sugiere, 1500 y 100, reproducen las dos probabilidades declaradas: 2,5588 % y 15,8655 %, que redondeados son 2,56 % y 15,87 %. Esa es la lectura que se usa en el inciso b) y c).
+
+### 6.5 Seccion E - Gastos de viajes (F2, pag. 15)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| E01 | a) Probabilidad de gasto superior a 1000 soles | `=1-NORM.DIST(1000,950.25,30.35,TRUE)` | 0,050584846558629 | sin respuesta | SIN RESPUESTA |
+| E02 | a) Cantidad de los 50 vendedores con gasto mayor a 1000 | `=50*(1-NORM.DIST(1000,950.25,30.35,TRUE))` | 2,5292423279315 | sin respuesta | SIN RESPUESTA |
+| E03 | b) Gasto de corte del 15 % inferior | `=NORM.INV(0.15,950.25,30.35)` | 918,79424662886 | sin respuesta | SIN RESPUESTA |
+| E04 | b) Probabilidad acumulada del gasto de 712 soles | `=NORM.DIST(712,950.25,30.35,TRUE)` | 2,0788205269491E-15 | sin respuesta | SIN RESPUESTA |
+| E05 | b) Decision: 712 soles esta en el 15 % inferior | `=IF(NORM.DIST(712,950.25,30.35,TRUE)<0.15,"SI CONSEGUE LAS VACACIONES","NO CONSEGUE LAS VACACIONES")` | SI CONSEGUE LAS VACACIONES | sin respuesta | SIN RESPUESTA |
+
+**La decision del inciso b) sale del propio calculo.** El 15 % inferior de los gastos llega hasta 918,79 soles. Un gasto de 712 soles esta muy por debajo de ese corte, asi que si esta en el 15 % inferior y si consigue las vacaciones. El enunciado pedia justificar la respuesta, y la justificacion es esa comparacion.
+
+### 6.6 Seccion F - Carl Lewis y Ben Johnson (F2, pag. 17)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| F01 | Media de la diferencia de tiempos | `=7-9` | -2 | sin respuesta | SIN RESPUESTA |
+| F02 | Desviacion de la diferencia de tiempos | `=SQRT(9+4)` | 3,605551275464 | sin respuesta | SIN RESPUESTA |
+| F03 | a) Probabilidad de que Carl Lewis gane, valor exacto | `=NORMSDIST((9-7)/SQRT(9+4))` | 0,71045012902304 | `0.7088` | **DIFIERE** |
+| F04 | a) La misma usando la tabla a dos decimales, z = 0,55 | `=NORMSDIST(0.55)` | 0,70884031321165 | `0.7088` | COINCIDE |
+| F05 | b) Probabilidad de que gane con 1 s de ventaja, valor exacto | `=NORMSDIST((9-1-7)/SQRT(9+4))` | 0,60924435250064 | `0.6103` | **DIFIERE** |
+| F06 | b) La misma con la tabla a dos decimales, z = -0,28 | `=1-NORMSDIST(-0.28)` | 0,6102612475558 | `0.6103` | COINCIDE |
+
+**F03 frente a F04 es la prueba de que la diferencia es de metodo y no de error.** El PDF usa la tabla normal a dos decimales: `2 / 3,6056 = 0,5547`, que redondeado a dos decimales es `0,55`, y `Φ(0,55) = 0,7088`. Con el valor exacto se obtiene 0,710450. Los items F05 y F06 muestran el mismo mecanismo en el inciso b).
+
+**Ademas, F03 y F06 confirman que los parametros `9` y `4` del enunciado son varianzas y no desviaciones.** Si fueran desviaciones, la desviacion de la diferencia seria `raiz(9² + 4²) = 9,849` y las probabilidades serian 0,4195 y 0,4212, que no coinciden con lo que el PDF declara.
+
+### 6.7 Seccion G - Ingresos de la consultora (F2, pag. 18)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| G01 | Media total de los tres ingresos | `=14+12+3` | 29 | sin respuesta | SIN RESPUESTA |
+| G02 | Varianza total de los tres ingresos | `=2+4+5` | 11 | sin respuesta | SIN RESPUESTA |
+| G03 | a) Probabilidad de ingresos mayores de 30 millones | `=1-NORM.DIST(30,29,SQRT(11),TRUE)` | 0,3815123002765 | `0.3815` | COINCIDE |
+| G04 | b) Probabilidad de no cubrir gastos de 20 millones | `=NORM.DIST(20,29,SQRT(11),TRUE)` | 0,0033278027414747 | `0.003328` | COINCIDE |
+| G05 | c) 12 meses, al menos un mes sin cubrir gastos | `=1-(1-NORM.DIST(20,29,SQRT(11),TRUE))^12` | 0,039210778279176 | `0.0388` | **DIFIERE** |
+| G06 | c) El mismo inciso recalculado desde el 0,003328 que da el PDF | `=1-(1-0.003328)^12` | 0,039213060156718 | `0.0388` | **DIFIERE** |
+
+**G03 y G04 confirman que `N(14,2)`, `N(12,4)` y `N(3,5)` son varianzas.** El inciso a) del PDF da 0,3815, y solo con `raiz(2+4+5) = raiz(11)` se obtiene ese valor. Si los tres numeros fueran desviaciones, la suma de varianzas seria `14² + 12² + 3² = 349` y la probabilidad seria distinta.
+
+**G05 y G06 demuestran que el inciso c) del PDF es una errata interna.** Ver apartado 7.3.
+
+### 6.8 Seccion H - Placa integrada (F2, pag. 18)
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| H01 | Media de W = 3X1 + X2 + 2X3 | `=3*80+120+2*96` | 552 | sin respuesta | SIN RESPUESTA |
+| H02 | Varianza de W | `=3^2*12+15+2^2*9` | 159 | sin respuesta | SIN RESPUESTA |
+| H03 | Desviacion de W | `=SQRT(3^2*12+15+2^2*9)` | 12,609520212919 | sin respuesta | SIN RESPUESTA |
+| H04 | P(W menor o igual a 70) | `=NORM.DIST(70,552,SQRT(159),TRUE)` | 0 | sin respuesta | SIN RESPUESTA |
+| H05 | P(70 menor o igual a W menor o igual a 90) | `=NORM.DIST(90,552,SQRT(159),TRUE)-NORM.DIST(70,552,SQRT(159),TRUE)` | 3,4269659375557E-294 | `0.1705` | **DIFIERE** |
+| H06 | z superior del intervalo pedido | `=(90-552)/SQRT(159)` | -36,638983260178 | sin respuesta | SIN RESPUESTA |
+
+**Este es el caso donde la errata del PDF es mas grave.** Ver apartado 7.1.
+
+### 6.9 Secciones I, J, K, L y M - Ejercicios propuestos
+
+| ID | Enunciado | Procedimiento | Resultado | PDF | Veredicto |
+|---|---|---|---|---|---|
+| I03 | z del limite inferior de tolerancia de las lavadoras | `=(1.26-1.275)/0.0125` | -1,2 | sin respuesta | SIN RESPUESTA |
+| I04 | z del limite superior de tolerancia | `=(1.29-1.275)/0.0125` | 1,2 | sin respuesta | SIN RESPUESTA |
+| I05 | Probabilidad de estar dentro de tolerancia | `=NORM.DIST(1.29,1.275,0.0125,TRUE)-NORM.DIST(1.26,1.275,0.0125,TRUE)` | 0,76986065955658 | sin respuesta | SIN RESPUESTA |
+| I06 | Porcentaje de lavadoras defectuosas | `(1-I05)*100` | 23,013934044342 | sin respuesta | SIN RESPUESTA |
+| I07 | Cantidad estimada de lavadoras defectuosas en 200 | `(1-I05)*200` | 46,027868088683 | sin respuesta | SIN RESPUESTA |
+| J01 | a) Probabilidad de requerir mas de 500 h | `=1-NORM.DIST(500,500,100,TRUE)` | 0,5 | sin respuesta | SIN RESPUESTA |
+| J02 | b) Probabilidad de tardar entre 500 y 650 h | `=NORM.DIST(650,500,100,TRUE)-NORM.DIST(500,500,100,TRUE)` | 0,43319279873114 | sin respuesta | SIN RESPUESTA |
+| J03 | b) Cantidad esperada entre 500 participantes | `(J02)*500` | 216,59639936557 | sin respuesta | SIN RESPUESTA |
+| K01 | a) Ingreso a partir del cual se paga el 10 % mas alto | `=NORM.INV(0.9,400,50)` | 464,07757827723 | `464` | COINCIDE |
+| K02 | b) Media del ahorro Y = X/4 − 50 | `=0.25*400-50` | 50 | sin respuesta | SIN RESPUESTA |
+| K03 | b) Desviacion del ahorro Y | `=0.25*50` | 12,5 | sin respuesta | SIN RESPUESTA |
+| K04 | b) Probabilidad de que el ahorro sea mayor que 75 | `=1-NORM.DIST(75,0.25*400-50,0.25*50,TRUE)` | 0,022750131948179 | `0.0228` | COINCIDE |
+| L01 | Cuartil 1 del tiempo de vida de los chips | `=NORM.INV(0.25,5106,250)` | 4937,377562451 | sin respuesta | SIN RESPUESTA |
+| L02 | z del cuartil 1 | `=(NORM.INV(0.25,5106,250)-5106)/250` | -0,67448975019608 | sin respuesta | SIN RESPUESTA |
+| L03 | Probabilidad de que el lote dure mas de 4800 h | `=1-NORM.DIST(4800,5106,250,TRUE)` | 0,88952388623448 | sin respuesta | SIN RESPUESTA |
+| L04 | Decision del ensamblador que exige 90 % | `=IF((1-NORM.DIST(4800,5106,250,TRUE))>=0.9,"SI COMPRA EL LOTE","NO COMPRA EL LOTE")` | NO COMPRA EL LOTE | sin respuesta | SIN RESPUESTA |
+| M01 | z del 5 % para el proveedor A | `=(5-4.4)/0.4` | 1,5 | sin respuesta | SIN RESPUESTA |
+| M02 | z del 5 % para el proveedor B | `=(5-4.2)/0.6` | 1,3333333333333 | sin respuesta | SIN RESPUESTA |
+| M03 | P(impurezas menores de 5) para el proveedor A | `=NORM.DIST(5,4.4,0.4,TRUE)` | 0,93319279873114 | sin respuesta | SIN RESPUESTA |
+| M04 | P(impurezas menores de 5) para el proveedor B | `=NORM.DIST(5,4.2,0.6,TRUE)` | 0,90878878027413 | sin respuesta | SIN RESPUESTA |
+| M05 | Proveedor con mayor probabilidad de cumplir | `=IF(NORM.DIST(5,4.4,0.4,TRUE)>NORM.DIST(5,4.2,0.6,TRUE),"PROVEEDOR A","PROVEEDOR B")` | PROVEEDOR A | sin respuesta | SIN RESPUESTA |
+
+**Dos decisiones que el PDF pide y no responde.** L04: el lote dura mas de 4800 horas con probabilidad 0,8895, que es menor que el 0,90 que el ensamblador exige. **No debe comprar el lote.** M05: el proveedor A cumple la condicion de impurezas con probabilidad 0,9332 y el B con 0,9088. **Debe elegir al proveedor A**, aunque tenga media mas alta, porque su desviacion mas pequeña concentra la distribucion por debajo del limite.
+
+**Los items I01, I02, K01 y M04 aparecen tambien en el libro** y pueden consultarse alli. En K01 la respuesta del PDF es `464`, que redondea 464,0776.
+
+### 6.10 Hoja Simulacion - Los 10 sueldos de la pagina 22 del PDF
+
+**Declaracion de procedencia.** Los diez valores de la columna SUELDO provienen literalmente de la tabla de la pagina 22 del PDF. **No se genero ninguna simulacion propia con datos inventados**, aunque la hoja se llame `Simulacion`: el nombre hace referencia a la seccion del PDF que se titula `SIMULACION DE DATOS DE UNA DISTRIBUCION NORMAL`.
+
+| Fila | SUELDO | z estandar | F normal acumulada teorica | Frecuencia observada acumulada | Diferencia |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 15 000 | 2,144927703 | 0,984020686 | 1 | -0,015979314 |
+| 2 | 2 900 | -0,417128092 | 0,338292359 | 0,5 | -0,161707641 |
+| 3 | 1 600 | -0,692390285 | 0,244346133 | 0,2 | 0,044346133 |
+| 4 | 12 000 | 1,509707258 | 0,934440931 | 0,9 | 0,034440931 |
+| 5 | 4 500 | -0,078343855 | 0,468777267 | 0,8 | -0,331222733 |
+| 6 | 1 200 | -0,777086345 | 0,218553915 | 0,1 | 0,118553915 |
+| 7 | 2 000 | -0,607694226 | 0,271695147 | 0,4 | -0,128304853 |
+| 8 | 2 000 | -0,607694226 | 0,271695147 | 0,4 | -0,128304853 |
+| 9 | 4 000 | -0,184213929 | 0,426922816 | 0,7 | -0,273077184 |
+| 10 | 3 500 | -0,290084003 | 0,385875987 | 0,6 | -0,214124013 |
+
+Estadisticos descriptivos, calculados en Excel con `COUNT`, `AVERAGE`, `STDEV.S`, `VAR.S`, `MEDIAN`, `MIN` y `MAX`:
+
+| Estadistico | Valor |
+|---|---|
+| Cantidad de datos | 10 |
+| Media | 4 870,0000 |
+| Desviacion estandar muestral | 4 722,7699 |
+| Varianza muestral | 22 304 555,5556 |
+| Mediana | 3 200,0000 |
+| Minimo | 1 200,0000 |
+| Maximo | 15 000,0000 |
+
+**La mayor diferencia entre la frecuencia observada y la teorica es de 0,331**, en el valor 4 500. Los datos estan muy lejos de ser normales: dos de ellos (15 000 y 12 000) estan mas de 1,5 desviaciones tipicas por encima de la media, y la media y la mediana estan separadas. La comparacion descriptiva confirma lo que el PDF afirma.
+
+**Sobre la prueba de normalidad.** La hoja declara dos celdas como texto, no como numero:
+
+| Concepto | Valor en la hoja |
+|---|---|
+| Prueba de normalidad Kolmogorov-Smirnov | `NO ENCONTRADO EN LA FUENTE`: Excel 16.0 no incluye la prueba de Kolmogorov-Smirnov |
+| Prueba de normalidad Shapiro-Wilk | `NO ENCONTRADO EN LA FUENTE`: Excel 16.0 no incluye la prueba de Shapiro-Wilk |
+| Valor p declarado por el docente en el PDF | `0.010` (declarado por el docente en la pagina 22 del PDF) |
+| Decision segun la regla del PDF | `p = 0.010 <= 0.05, se rechaza H0: los sueldos NO tienen distribucion normal` |
+
+**El valor p no se calcula: se transcribe.** El PDF declara 0,010 como resultado del ejercicio, sin mostrar el calculado. Excel 16.0 no tiene ninguna de las dos pruebas, y por lo tanto no hay forma de reproducir ese 0,010 en este entorno. Inventarlo seria falsear la salida. Lo que si se calcula, y es real, es todo lo descriptivo de la tabla anterior.
+
+### 6.11 Hoja Verificacion - Las reglas empiricas de la pagina 7
+
+| ID | Concepto | Formula | Resultado real de Excel | PDF |
+|---|---|---|---|---|
+| V01 | Regla de 1 sigma | `=NORM.DIST(22,20,2,TRUE)-NORM.DIST(18,20,2,TRUE)` | 0,68268949213709 | `0.6826` |
+| V02 | Regla de 1 sigma en porcentaje | la misma por 100 | 68,268949213709 | `68.26` |
+| V03 | Regla de 2 sigma | `=NORM.DIST(24,20,2,TRUE)-NORM.DIST(16,20,2,TRUE)` | 0,95449973610364 | `0.954` |
+| V04 | Regla de 2 sigma en porcentaje | la misma por 100 | 95,449973610364 | `95.4` |
+| V05 | Regla de 3 sigma | `=NORM.DIST(26,20,2,TRUE)-NORM.DIST(14,20,2,TRUE)` | 0,99730020393674 | `0.997` |
+| V06 | Regla de 3 sigma en porcentaje | la misma por 100 | 99,730020393674 | `99.7` |
+| V07 | Ejemplo de la pagina 7 | `=100*(NORM.DIST(22,20,2,TRUE)-NORM.DIST(18,20,2,TRUE))` | 68,268949213709 | `68 %` |
+| V08 | Uso de tablas | `=NORMSDIST(1.95)` | 0,97441194047836 | `0.9744` |
+| V09 | Comprobacion de la tabla | `=NORMSDIST(1.96)` | 0,97500210485178 | sin respuesta |
+| V10 | Normal tipificada | `=NORMSDIST(0)` | 0,5 | sin respuesta |
+
+**Lectura de las diferencias.** Los tres valores del PDF no son los valores exactos: son los que salen de restar dos entradas de la tabla normal a dos decimales. Por ejemplo `0,8413 - 0,1587 = 0,6826` exactamente, y `0,9772 - 0,0228 = 0,9544`, que redondeado da 0,954. El PDF **no esta equivocado**: usa la tabla. Quien use la funcion de distribucion acumulada de Excel obtendra 0,682689 y vera una diferencia de 9 milesimas respecto de 0,6826. Conviene conocer las dos cifras.
+
+---
+

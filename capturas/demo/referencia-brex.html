@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Referencia bloqueada · Brex → app de gastos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────────────────────
+   REFERENCE LOCK
+   Primary : Brex — "White concrete, single ember"
+             near-white canvas · one chromatic voice · tight
+             compressed grotesque · 12px radius · hairline
+             borders · minimal elevation · generous section gaps
+   Borrow  : Mercury — graphite lift reserved for the hero stat only
+   Reject  : navy+gold dual palette · emoji icons · decorative
+             left stripes · card-per-row · heavy shadows
+   ───────────────────────────────────────────────────────────── */
+
+:root{
+  /* Roles preserved from the source. The ember never becomes a
+     background, a border, or decoration. It is the action, or it
+     is nothing. */
+  --canvas:        #ffffff;
+  --surface-sunken:#f7f7f6;
+  --surface-lift:  #f1f1f1;
+
+  --ink:   #101010;
+  --ink-2: #5f5f5f;
+  --ink-3: #8e8e8e;
+
+  --hairline:      rgba(0,0,0,.09);
+  --hairline-firm: rgba(0,0,0,.16);
+
+  --ember: #ff5900;              /* CTA-only. single accent. */
+  --ember-wash:#fff2ec;
+
+  --pos:   #067647;              /* semantic: paid */
+  --warn:  #b54708;              /* semantic: overdue */
+
+  --lift:  0 1px 2px rgba(0,0,0,.04), 0 12px 28px rgba(0,0,0,.06);
+
+  --r-card: 12px;
+  --r-control: 9999px;
+
+  --gap-section: 48px;
+  --sidebar-w: 232px;
+  --rail-w: 296px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased}
+body{
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--canvas);color:var(--ink);
+  font-size:14px;line-height:1.5;
+  display:grid;grid-template-columns:var(--sidebar-w) var(--rail-w) 1fr;
+  min-height:100vh;
+}
+
+/* ── 1 · Sidebar ─────────────────────────────────────────── */
+.side{border-right:1px solid var(--hairline);padding:28px 20px;display:flex;flex-direction:column;gap:28px}
+
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:26px;height:26px;border-radius:7px;background:var(--ink);display:grid;place-items:center;flex:none}
+.brand-mark svg{width:13px;height:13px;stroke:#fff;stroke-width:2;fill:none}
+.brand-name{font-size:14px;font-weight:600;letter-spacing:-.02em}
+.brand-sub{font-size:11px;color:var(--ink-3);letter-spacing:-.01em;margin-top:-2px}
+
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;
+  font-weight:450;letter-spacing:-.012em;color:var(--ink-2);cursor:pointer;
+}
+.nav-item svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.6;fill:none;flex:none}
+/* active state reads as weight + surface, not as a colour */
+.nav-item[aria-current]{background:var(--surface-sunken);color:var(--ink);font-weight:500}
+
+.period-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);padding:0 10px 6px}
+.period{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:8px;cursor:pointer;font-weight:450;letter-spacing:-.012em;color:var(--ink-2)}
+.period[aria-current]{color:var(--ink);font-weight:500;background:var(--surface-sunken)}
+
+.side-foot{margin-top:auto;display:flex;gap:8px;padding-top:16px;border-top:1px solid var(--hairline)}
+.status{font-size:12px;color:var(--ink-3);display:flex;align-items:center;gap:7px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--pos);flex:none}
+
+/* ── 2 · Rail ────────────────────────────────────────────── */
+.rail{border-right:1px solid var(--hairline);padding:28px 24px;display:flex;flex-direction:column;gap:6px}
+.rail-title{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+
+.cat{padding:14px 0;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:10px}
+.cat:first-of-type{border-top:0;padding-top:0}
+.cat-head{display:flex;align-items:center;gap:8px}
+/* icon, not emoji — stroke geometry from the same 1.6px grid */
+.cat-icon{width:16px;height:16px;stroke:var(--ink-2);stroke-width:1.6;fill:none;flex:none}
+.cat-name{font-weight:500;letter-spacing:-.014em}
+.count{
+  font-size:11px;font-weight:500;color:var(--ink-3);
+  background:var(--surface-sunken);border-radius:var(--r-control);
+  padding:1px 7px;margin-left:auto;font-variant-numeric:tabular-nums;
+}
+.cat-amt{font-size:12px;color:var(--ink-3);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+
+/* ── 3 · Main ────────────────────────────────────────────── */
+.main{padding:32px 40px 64px;display:flex;flex-direction:column;gap:var(--gap-section)}
+
+.crumb{font-size:12px;color:var(--ink-3);letter-spacing:-.01em}
+
+.hero{
+  /* the single borrowed elevation, reserved for the one number that matters */
+  background:linear-gradient(180deg,#0e0e0f,#101012);
+  color:#fff;border-radius:var(--r-card);padding:26px 28px;box-shadow:var(--lift);
+}
+.hero-label{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.hero-figure{
+  font-size:46px;font-weight:500;letter-spacing:-.035em;line-height:1.05;margin-top:10px;
+  font-variant-numeric:tabular-nums;
+}
+.hero-meta{font-size:12px;color:rgba(255,255,255,.55);margin-top:8px;letter-spacing:-.01em}
+.hero-split{
+  display:grid;grid-template-columns:1fr auto auto;gap:26px;align-items:start;
+  margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.12);
+}
+.stat-label{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.stat-value{font-size:15px;font-weight:500;letter-spacing:-.02em;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat-value b{font-weight:600}
+.hero-cta{
+  margin-top:22px;background:var(--ember);color:#fff;border:0;border-radius:var(--r-control);
+  padding:9px 20px;font:inherit;font-weight:500;letter-spacing:-.012em;cursor:pointer;
+}
+.hero-cta:hover{background:#e85000}
+
+.tools{display:flex;align-items:center;gap:14px}
+.search{
+  flex:1;max-width:460px;display:flex;align-items:center;gap:9px;
+  border:1px solid var(--hairline-firm);border-radius:var(--r-control);padding:9px 16px;background:#fff;
+}
+.search svg{width:15px;height:15px;stroke:var(--ink-3);stroke-width:1.7;fill:none;flex:none}
+.search input{border:0;outline:0;font:inherit;letter-spacing:-.012em;width:100%;background:transparent}
+.search input::placeholder{color:var(--ink-3)}
+
+.legend{display:flex;gap:16px;margin-left:auto}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2);cursor:pointer;letter-spacing:-.01em}
+.pill{font-size:11px;font-weight:500;border-radius:var(--r-control);padding:2px 9px;border:1px solid transparent;font-variant-numeric:tabular-nums}
+.pill-pend{background:var(--ember-wash);color:var(--warn);border-color:rgba(181,71,8,.16)}
+
+/* rows are separated by hairlines — not by boxes */
+.rows{border-top:1px solid var(--hairline)}
+.row{
+  display:grid;grid-template-columns:1fr auto auto;gap:20px;align-items:center;
+  padding:14px 4px;border-bottom:1px solid var(--hairline);cursor:pointer;
+}
+.row:hover{background:var(--surface-sunken)}
+.row-name{font-weight:450;letter-spacing:-.014em}
+.row-meta{font-size:12px;color:var(--ink-3);margin-top:1px;letter-spacing:-.01em}
+.row-amt{font-size:14px;font-weight:500;letter-spacing:-.018em;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="side">
+  <div class="brand">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 7-8"/><path d="M14 7h5v5"/></svg>
+    </div>
+    <div>
+      <div class="brand-name">Gestor Financiero</div>
+      <div class="brand-sub">Presupuesto &amp; Gastos</div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-item" aria-current="page">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Vista Mensual
+    </div>
+    <div class="nav-item">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 7-8"/><path d="M3 21h18"/></svg>
+      Consolidado
+    </div>
+  </nav>
+
+  <div>
+    <div class="period-label">Periodo</div>
+    <div class="period">Agosto 2026</div>
+    <div class="period">Septiembre 2026</div>
+    <div class="period" aria-current="page">Octubre 2026</div>
+    <div class="period">Noviembre 2026</div>
+    <div class="period">Diciembre 2026</div>
+  </div>
+
+  <div class="side-foot">
+    <div class="status"><span class="dot"></span> En línea</div>
+  </div>
+</aside>
+
+<!-- Rail -->
+<aside class="rail">
+  <div class="rail-title">Secciones</div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <svg class="cat-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7"/><path d="M5 9v11h14V9"/><path d="M10 20v-6h4v6"/></svg>
+      <span class="cat-name">Servicios</span>
+      <span class="count">6</span>
+    </div>
+    <div class="cat-amt">S/ 417.80</div>
+  </div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <svg class="cat-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+      <span class="cat-name">Personales</span>
+      <span class="count">3</span>
+    </div>
+    <div class="cat-amt">S/ 198.54</div>
+  </div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <svg class="cat-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13l-3 8H10"/><circle cx="6" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M9 7V5a1 1 0 011-1h1"/></svg>
+      <span class="cat-name">Movimientos</span>
+      <span class="count">0</span>
+    </div>
+    <div class="cat-amt">Sin movimientos</div>
+  </div>
+
+  <div class="cat">
+    <div class="cat-head">
+      <svg class="cat-icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6.1.8-4.5 4.2 1.1 6-5.3-2.9-5.3 2.9 1.1-6L3.3 9.4l6.1-.8z"/></svg>
+      <span class="cat-name">Extras</span>
+      <span class="count">0</span>
+    </div>
+    <div class="cat-amt">S/ 0.00</div>
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="crumb">Octubre 2026</div>
+
+  <section class="hero">
+    <div class="hero-label">Falta</div>
+    <div class="hero-figure">S/ 616.34</div>
+    <div class="hero-meta">0 de 9 gastos pagados · 0.0% pagado</div>
+    <div class="hero-split">
+      <div>
+        <div class="stat-label">Cubierto</div>
+        <div class="stat-value"><b>S/ 0.00</b></div>
+      </div>
+      <div>
+        <div class="stat-label">Ingresos</div>
+        <div class="stat-value"><b>S/ 0.00</b></div>
+      </div>
+      <div>
+        <div class="stat-label">Estimado</div>
+        <div class="stat-value"><b>S/ 616.34</b></div>
+      </div>
+    </div>
+    <button class="hero-cta">Registrar gasto</button>
+  </section>
+
+  <div class="tools">
+    <label class="search">
+      <svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input placeholder="Buscar gasto o abono">
+    </label>
+    <div class="legend">
+      <span class="legend-item"><span class="pill pill-pend">Pendiente</span> 5</span>
+      <span class="legend-item">Pagado 0</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="rows">
+      <div class="row">
+        <div><div class="row-name">Internet de casa</div><div class="row-meta">Fibra · mensual</div></div>
+        <span class="pill pill-pend">Pendiente</span>
+        <div class="row-amt">S/ 89.90</div>
+      </div>
+      <div class="row">
+        <div><div class="row-name">Celular</div><div class="row-meta">Fijo · mensual</div></div>
+        <span class="pill pill-pend">Pendiente</span>
+        <div class="row-amt">S/ 39.90</div>
+      </div>
+      <div class="row">
+        <div><div class="row-name">CIUNAC (Inglés)</div><div class="row-meta">Mensualidad</div></div>
+        <span class="pill pill-pend">Pendiente</span>
+        <div class="row-amt">S/ 83.00</div>
+      </div>
+      <div class="row">
+        <div><div class="row-name">Pasajes</div><div class="row-meta">Transporte</div></div>
+        <span class="pill pill-pend">Pendiente</span>
+        <div class="row-amt">S/ 150.00</div>
+      </div>
+      <div class="row">
+        <div><div class="row-name">Corte de cabello</div><div class="row-meta">Personal</div></div>
+        <span class="pill pill-pend">Pendiente</span>
+        <div class="row-amt">S/ 25.00</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

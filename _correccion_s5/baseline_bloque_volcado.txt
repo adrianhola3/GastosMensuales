@@ -1,0 +1,893 @@
+## 8. Volcado completo de la salida real
+
+Lo que sigue es el volcado integro del libro, leido celda por celda despues de cerrarlo y reabrirlo. No hay ningun numero de este apartado escrito a mano.
+
+================================================================
+VOLCADO DE SALIDA REAL - EXCEL 16.0
+Practica Semana 5 - Distribucion Normal
+Generado el 2026-10-18 10:41:41
+================================================================
+
+Total de items calculados: 79
+
+Excel Version: 16.0   Build: 20430
+LanguageID(2) de la interfaz: 2058
+Nota: por COM, .Formula exige nombres de funcion en INGLES aunque la
+      interfaz sea es-ES. Se usa NORM.DIST, NORM.INV, NORMSDIST, NORMSINV.
+
+Libro guardado en: C:\Users\User\AppData\Local\Temp\opencode\estadistica\practica\Semana5_Practica_Distribucion_Normal.xlsx
+El libro fue CERRADO, REABIERTO y volcado celda por celda.
+
+================================================================
+HOJA 1: Practica  (80 filas usadas, 11 columnas)
+================================================================
+ID ............ ID
+Seccion ........ Seccion
+Inciso ......... Inciso
+Parametros ..... Parametros
+Formula ........ Formula (texto plano)
+Resultado num .. Resultado numerico
+Resultado vis .. Resultado visible
+PDF ............ Respuesta del PDF
+Veredicto ...... Veredicto
+------------------------------------------------------------------------------
+ID ............ A01
+Seccion ........ A. Notas del curso
+Inciso ......... a) Probabilidad de nota entre 11 y 13.6
+Parametros ..... X~N(10,4); el PDF resuelve con sigma=2
+Formula ........ =NORM.DIST(13.6,10,2,TRUE)-NORM.DIST(11,10,2,TRUE)
+Resultado num .. 0.27260721961306
+Resultado vis .. 0.27260722
+PDF ............ 0.2726
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ A02
+Seccion ........ A. Notas del curso
+Inciso ......... b) Probabilidad de nota mayor que 18
+Parametros ..... X~N(10,4); el PDF resuelve con sigma=2
+Formula ........ =1-NORM.DIST(18,10,2,TRUE)
+Resultado num .. 3.167124183312E-05
+Resultado vis .. 3.1671E-05
+PDF ............ 0
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ A03
+Seccion ........ A. Notas del curso
+Inciso ......... c) Nota minima para estar en el quinto superior
+Parametros ..... X~N(10,4); sigma=2
+Formula ........ =NORM.INV(0.95,10,2)
+Resultado num .. 13.289707253903
+Resultado vis .. 13.2897073
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ A04
+Seccion ........ A. Notas del curso
+Inciso ......... d) Limite superior del 70% de las notas centrales
+Parametros ..... X~N(10,4); sigma=2
+Formula ........ =NORM.INV(0.85,10,2)
+Resultado num .. 12.072866778988
+Resultado vis .. 12.0728668
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ A05
+Seccion ........ A. Notas del curso
+Inciso ......... d) Limite inferior del 70% de las notas centrales
+Parametros ..... X~N(10,4); sigma=2
+Formula ........ =NORM.INV(0.15,10,2)
+Resultado num .. 7.9271332210124
+Resultado vis .. 7.92713322
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ A06
+Seccion ........ A. Notas del curso
+Inciso ......... e) 10 estudiantes, mas de 3 con nota mayor que 10
+Parametros ..... p = P(X>10) = 0.5
+Formula ........ =1-(0.5^10+10*0.5^10+45*0.5^10+120*0.5^10)
+Resultado num .. 0.828125
+Resultado vis .. 0.828125
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B01
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... a) Probabilidad de sueldo menor a 2500
+Parametros ..... mu=3000 sigma=500 N=10000
+Formula ........ =NORM.DIST(2500,3000,500,TRUE)
+Resultado num .. 0.15865525393146
+Resultado vis .. 0.15865525
+PDF ............ 0.1587
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B02
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... a) Cantidad de empleados con sueldo menor a 2500
+Parametros ..... N=10000
+Formula ........ =NORM.DIST(2500,3000,500,TRUE)*10000
+Resultado num .. 1586.5525393146
+Resultado vis .. 1586.55254
+PDF ............ 1587 empleados
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B03
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... b) Sueldo de corte del 35% inferior
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.INV(0.35,3000,500)
+Resultado num .. 2807.3397667962
+Resultado vis .. 2807.33977
+PDF ............ 2807.34
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B04
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... b) Comprobacion P(sueldo menor al corte)
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.DIST(2807.34,3000,500,TRUE)
+Resultado num .. 0.35000017275691
+Resultado vis .. 0.35000017
+PDF ............ 0.35
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B05
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... b) Cantidad de empleados con bonificacion
+Parametros ..... N=10000
+Formula ........ =10000*0.35
+Resultado num .. 3500
+Resultado vis .. 3500
+PDF ............ 3500 empleados
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B06
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... c) Limite inferior del 50% de sueldos centrales
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.INV(0.25,3000,500)
+Resultado num .. 2662.755124902
+Resultado vis .. 2662.75512
+PDF ............ 2663
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ B07
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... c) Limite superior del 50% de sueldos centrales
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.INV(0.75,3000,500)
+Resultado num .. 3337.244875098
+Resultado vis .. 3337.24488
+PDF ............ 337
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ B08
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... d) Probabilidad de ganar menos de 1850 o mas de 2500
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.DIST(1850,3000,500,TRUE)+1-NORM.DIST(2500,3000,500,TRUE)
+Resultado num .. 0.85206885609022
+Resultado vis .. 0.85206886
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B09
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... d) Cantidad de empleados del inciso d
+Parametros ..... N=10000
+Formula ........ =(NORM.DIST(1850,3000,500,TRUE)+1-NORM.DIST(2500,3000,500,TRUE))*10000
+Resultado num .. 8520.6885609022
+Resultado vis .. 8520.68856
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B10
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... e) Sueldo minimo para elegir a los 1000 mejores
+Parametros ..... percentil 90 de 10000
+Formula ........ =NORM.INV(0.9,3000,500)
+Resultado num .. 3640.7757827723
+Resultado vis .. 3640.77578
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B11
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... f) Categoria Bajo: montos menores de 2000
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.DIST(2000,3000,500,TRUE)
+Resultado num .. 0.022750131948179
+Resultado vis .. 0.02275013
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B12
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... f) Categoria Medio: 2000 a menos de 2600
+Parametros ..... mu=3000 sigma=500
+Formula ........ =NORM.DIST(2600,3000,500,TRUE)-NORM.DIST(2000,3000,500,TRUE)
+Resultado num .. 0.18910526663522
+Resultado vis .. 0.18910527
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B13
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... f) Categoria Alto: 2600 a mas
+Parametros ..... mu=3000 sigma=500
+Formula ........ =1-NORM.DIST(2600,3000,500,TRUE)
+Resultado num .. 0.7881446014166
+Resultado vis .. 0.7881446
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B14
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... f) Suma de las tres categorias (control)
+Parametros ..... debe dar 1
+Formula ........ =NORM.DIST(2000,3000,500,TRUE)+(NORM.DIST(2600,3000,500,TRUE)-NORM.DIST(2000,3000,500,TRUE))+(1-NORM.DIST(2600,3000,500,TRUE))
+Resultado num .. 1
+Resultado vis .. 1
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ B15
+Seccion ........ B. Sueldos Sector Salud
+Inciso ......... g) 10 empleados independientes, mas de 2 ganan menos de 2500
+Parametros ..... p=0.15865525
+Formula ........ =1-(0.84134475^10+10*0.15865525*0.84134475^9+45*0.15865525^2*0.84134475^8)
+Resultado num .. 0.20275375215048
+Resultado vis .. 0.20275375
+PDF ............ 0.2029
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ C01
+Seccion ........ C. Longitud de clavos
+Inciso ......... z estandar tal que F(z)=0.80
+Parametros ..... tabla normal
+Formula ........ =NORMSINV(0.8)
+Resultado num .. 0.84162123357292
+Resultado vis .. 0.84162123
+PDF ............ 0.8416
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ C02
+Seccion ........ C. Longitud de clavos
+Inciso ......... z estandar tal que F(z)=0.90
+Parametros ..... tabla normal
+Formula ........ =NORMSINV(0.9)
+Resultado num .. 1.2815515655446
+Resultado vis .. 1.28155157
+PDF ............ 1.2816
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ C03
+Seccion ........ C. Longitud de clavos
+Inciso ......... Sigma del clavo
+Parametros ..... 11-0.8416s = 12-1.2816s
+Formula ........ =(12-11)/(1.28155157-0.84162123)
+Resultado num .. 2.273087143751
+Resultado vis .. 2.27308714
+PDF ............ 2.27
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ C04
+Seccion ........ C. Longitud de clavos
+Inciso ......... Media del clavo
+Parametros ..... 11 - 0.84162123*sigma
+Formula ........ =11-NORMSINV(0.8)*((12-11)/(1.28155157-0.84162123))
+Resultado num .. 9.0869215940576
+Resultado vis .. 9.08692159
+PDF ............ 9.09
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ C05
+Seccion ........ C. Longitud de clavos
+Inciso ......... Comprobacion P(X<11) con mu y sigma calculados
+Parametros ..... control
+Formula ........ =NORM.DIST(11,9.0873,2.2727,TRUE)
+Resultado num .. 0.79999352318709
+Resultado vis .. 0.79999352
+PDF ............ 0.8
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ C06
+Seccion ........ C. Longitud de clavos
+Inciso ......... Comprobacion P(X<12) con mu y sigma calculados
+Parametros ..... control
+Formula ........ =NORM.DIST(12,9.0873,2.2727,TRUE)
+Resultado num .. 0.90000909291531
+Resultado vis .. 0.90000909
+PDF ............ 0.9
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ D01
+Seccion ........ D. Horas productivas
+Inciso ......... a) Media de horas productivas por mes
+Parametros ..... a determinar con 2.56% y 15.87%
+Formula ........ =1305+NORMSINV(0.9756)*(1600-1305)/(NORMSINV(0.8413)+NORMSINV(0.9756))
+Resultado num .. 1500.6967822297
+Resultado vis .. 1500.69678
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ D02
+Seccion ........ D. Horas productivas
+Inciso ......... a) Desviacion estandar de horas productivas
+Parametros ..... a determinar con 2.56% y 15.87%
+Formula ........ =(1600-1305)/(NORMSINV(0.8413)+NORMSINV(0.9756))
+Resultado num .. 99.321582965149
+Resultado vis .. 99.321583
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ D03
+Seccion ........ D. Horas productivas
+Inciso ......... Comprobacion P(X<1305) con mu=1500 sigma=100
+Parametros ..... el PDF dice 2.56%
+Formula ........ =NORM.DIST(1305,1500,100,TRUE)
+Resultado num .. 0.025588059521639
+Resultado vis .. 0.02558806
+PDF ............ 0.0256
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ D04
+Seccion ........ D. Horas productivas
+Inciso ......... Comprobacion P(X>1600) con mu=1500 sigma=100
+Parametros ..... el PDF dice 15.87%
+Formula ........ =1-NORM.DIST(1600,1500,100,TRUE)
+Resultado num .. 0.15865525393146
+Resultado vis .. 0.15865525
+PDF ............ 0.1587
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ D05
+Seccion ........ D. Horas productivas
+Inciso ......... b) Probabilidad de trabajar entre 1450 y 1550 horas
+Parametros ..... mu=1500 sigma=100
+Formula ........ =NORM.DIST(1550,1500,100,TRUE)-NORM.DIST(1450,1500,100,TRUE)
+Resultado num .. 0.38292492254803
+Resultado vis .. 0.38292492
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ D06
+Seccion ........ D. Horas productivas
+Inciso ......... c) 5 meses, exactamente 3 con 1450 a 1550 horas
+Parametros ..... p del inciso b)
+Formula ........ =COMBIN(5,3)*(NORM.DIST(1550,1500,100,TRUE)-NORM.DIST(1450,1500,100,TRUE))^3*(1-(NORM.DIST(1550,1500,100,TRUE)-NORM.DIST(1450,1500,100,TRUE)))^2
+Resultado num .. 0.21380453479549
+Resultado vis .. 0.21380453
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ E01
+Seccion ........ E. Gastos de viajes
+Inciso ......... a) Probabilidad de gasto superior a 1000 soles
+Parametros ..... mu=950.25 sigma=30.35
+Formula ........ =1-NORM.DIST(1000,950.25,30.35,TRUE)
+Resultado num .. 0.050584846558629
+Resultado vis .. 0.05058485
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ E02
+Seccion ........ E. Gastos de viajes
+Inciso ......... a) Cantidad de los 50 vendedores con gasto mayor a 1000
+Parametros ..... N=50
+Formula ........ =50*(1-NORM.DIST(1000,950.25,30.35,TRUE))
+Resultado num .. 2.5292423279315
+Resultado vis .. 2.52924233
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ E03
+Seccion ........ E. Gastos de viajes
+Inciso ......... b) Gasto de corte del 15% inferior
+Parametros ..... mu=950.25 sigma=30.35
+Formula ........ =NORM.INV(0.15,950.25,30.35)
+Resultado num .. 918.79424662886
+Resultado vis .. 918.794247
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ E04
+Seccion ........ E. Gastos de viajes
+Inciso ......... b) Probabilidad acumulada del gasto de 712 soles
+Parametros ..... mu=950.25 sigma=30.35
+Formula ........ =NORM.DIST(712,950.25,30.35,TRUE)
+Resultado num .. 2.0788205269491E-15
+Resultado vis .. 2.0788E-15
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ E05
+Seccion ........ E. Gastos de viajes
+Inciso ......... b) Decision: 712 soles esta en el 15% inferior
+Parametros ..... regla del PDF
+Formula ........ =IF(NORM.DIST(712,950.25,30.35,TRUE)<0.15,"SI CONSEGUE LAS VACACIONES","NO CONSEGUE LAS VACACIONES")
+Resultado num .. (texto) SI CONSEGUE LAS VACACIONES
+Resultado vis .. SI CONSEGUE LAS VACACIONES
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ F01
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... Media de la diferencia de tiempos
+Parametros ..... mu1=7 mu2=9
+Formula ........ =7-9
+Resultado num .. -2
+Resultado vis .. -2
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ F02
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... Desviacion de la diferencia de tiempos
+Parametros ..... 9 y 4 son varianzas
+Formula ........ =SQRT(9+4)
+Resultado num .. 3.605551275464
+Resultado vis .. 3.60555128
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ F03
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... a) Probabilidad de que Carl Lewis gane
+Parametros ..... valor exacto
+Formula ........ =NORMSDIST((9-7)/SQRT(9+4))
+Resultado num .. 0.71045012902304
+Resultado vis .. 0.71045013
+PDF ............ 0.7088
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ F04
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... a) Probabilidad de Carl Lewis usando la tabla a 2 decimales
+Parametros ..... z=0.55
+Formula ........ =NORMSDIST(0.55)
+Resultado num .. 0.70884031321165
+Resultado vis .. 0.70884031
+PDF ............ 0.7088
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ F05
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... b) Probabilidad de que gane con 1 s de ventaja
+Parametros ..... valor exacto
+Formula ........ =NORMSDIST((9-1-7)/SQRT(9+4))
+Resultado num .. 0.60924435250064
+Resultado vis .. 0.60924435
+PDF ............ 0.6103
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ F06
+Seccion ........ F. Carl Lewis y Ben Johnson
+Inciso ......... b) Probabilidad con 1 s usando la tabla a 2 decimales
+Parametros ..... z=-0.28
+Formula ........ =1-NORMSDIST(-0.28)
+Resultado num .. 0.6102612475558
+Resultado vis .. 0.61026125
+PDF ............ 0.6103
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ G01
+Seccion ........ G. Consultora
+Inciso ......... Media total de los tres ingresos
+Parametros ..... 14+12+3
+Formula ........ =14+12+3
+Resultado num .. 29
+Resultado vis .. 29
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ G02
+Seccion ........ G. Consultora
+Inciso ......... Varianza total de los tres ingresos
+Parametros ..... 2+4+5
+Formula ........ =2+4+5
+Resultado num .. 11
+Resultado vis .. 11
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ G03
+Seccion ........ G. Consultora
+Inciso ......... a) Probabilidad de ingresos mayores de 30 millones
+Parametros ..... mu=29 sigma=raiz(11)
+Formula ........ =1-NORM.DIST(30,29,SQRT(11),TRUE)
+Resultado num .. 0.3815123002765
+Resultado vis .. 0.3815123
+PDF ............ 0.3815
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ G04
+Seccion ........ G. Consultora
+Inciso ......... b) Probabilidad de no cubrir gastos de 20 millones
+Parametros ..... mu=29 sigma=raiz(11)
+Formula ........ =NORM.DIST(20,29,SQRT(11),TRUE)
+Resultado num .. 0.0033278027414747
+Resultado vis .. 0.0033278
+PDF ............ 0.003328
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ G05
+Seccion ........ G. Consultora
+Inciso ......... c) 12 meses, al menos un mes sin cubrir gastos
+Parametros ..... valor exacto
+Formula ........ =1-(1-NORM.DIST(20,29,SQRT(11),TRUE))^12
+Resultado num .. 0.039210778279176
+Resultado vis .. 0.03921078
+PDF ............ 0.0388
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ G06
+Seccion ........ G. Consultora
+Inciso ......... c) El mismo inciso recalculado desde el 0.003328 que da el PDF
+Parametros ..... usando el b) del PDF
+Formula ........ =1-(1-0.003328)^12
+Resultado num .. 0.039213060156718
+Resultado vis .. 0.03921306
+PDF ............ 0.0388
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ H01
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... Media de W = 3X1 + X2 + 2X3
+Parametros ..... mu 80 120 96
+Formula ........ =3*80+120+2*96
+Resultado num .. 552
+Resultado vis .. 552
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ H02
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... Varianza de W = 3X1 + X2 + 2X3
+Parametros ..... 12 15 9 como varianzas
+Formula ........ =3^2*12+15+2^2*9
+Resultado num .. 159
+Resultado vis .. 159
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ H03
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... Desviacion de W
+Parametros ..... raiz de la varianza
+Formula ........ =SQRT(3^2*12+15+2^2*9)
+Resultado num .. 12.609520212919
+Resultado vis .. 12.6095202
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ H04
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... P(W menor o igual a 70)
+Parametros ..... mu=552
+Formula ........ =NORM.DIST(70,552,SQRT(159),TRUE)
+Resultado num .. 0
+Resultado vis .. 0
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ H05
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... P(70 menor o igual a W menor o igual a 90)
+Parametros ..... mu=552 sigma=raiz(159)
+Formula ........ =NORM.DIST(90,552,SQRT(159),TRUE)-NORM.DIST(70,552,SQRT(159),TRUE)
+Resultado num .. 3.4269659375557E-294
+Resultado vis .. 3.427E-294
+PDF ............ 0.1705
+Veredicto ...... DIFIERE
+------------------------------------------------------------------------------
+ID ............ H06
+Seccion ........ H. Propiedad reproductiva
+Inciso ......... z superior del intervalo pedido
+Parametros ..... (90-552)/raiz(159)
+Formula ........ =(90-552)/SQRT(159)
+Resultado num .. -36.638983260178
+Resultado vis .. -36.6389833
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I01
+Seccion ........ I. Lavadoras
+Inciso ......... Limite inferior de tolerancia
+Parametros ..... 1.26 cm
+Formula ........ =1.26
+Resultado num .. 1.26
+Resultado vis .. 1.26
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I02
+Seccion ........ I. Lavadoras
+Inciso ......... Limite superior de tolerancia
+Parametros ..... 1.29 cm
+Formula ........ =1.29
+Resultado num .. 1.29
+Resultado vis .. 1.29
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I03
+Seccion ........ I. Lavadoras
+Inciso ......... z del limite inferior
+Parametros ..... mu=1.275 sigma=0.0125
+Formula ........ =(1.26-1.275)/0.0125
+Resultado num .. -1.2
+Resultado vis .. -1.2
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I04
+Seccion ........ I. Lavadoras
+Inciso ......... z del limite superior
+Parametros ..... mu=1.275 sigma=0.0125
+Formula ........ =(1.29-1.275)/0.0125
+Resultado num .. 1.2
+Resultado vis .. 1.2
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I05
+Seccion ........ I. Lavadoras
+Inciso ......... Probabilidad de estar dentro de tolerancia
+Parametros ..... mu=1.275 sigma=0.0125
+Formula ........ =NORM.DIST(1.29,1.275,0.0125,TRUE)-NORM.DIST(1.26,1.275,0.0125,TRUE)
+Resultado num .. 0.76986065955658
+Resultado vis .. 0.76986066
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I06
+Seccion ........ I. Lavadoras
+Inciso ......... Porcentaje de lavadoras defectuosas
+Parametros ..... muestra de 200
+Formula ........ =(1-(NORM.DIST(1.29,1.275,0.0125,TRUE)-NORM.DIST(1.26,1.275,0.0125,TRUE)))*100
+Resultado num .. 23.013934044342
+Resultado vis .. 23.013934
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ I07
+Seccion ........ I. Lavadoras
+Inciso ......... Cantidad estimada de lavadoras defectuosas
+Parametros ..... muestra de 200
+Formula ........ =(1-(NORM.DIST(1.29,1.275,0.0125,TRUE)-NORM.DIST(1.26,1.275,0.0125,TRUE)))*200
+Resultado num .. 46.027868088683
+Resultado vis .. 46.0278681
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ J01
+Seccion ........ J. Programa de capacitacion
+Inciso ......... a) Probabilidad de requerir mas de 500 h
+Parametros ..... mu=500 sigma=100
+Formula ........ =1-NORM.DIST(500,500,100,TRUE)
+Resultado num .. 0.5
+Resultado vis .. 0.5
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ J02
+Seccion ........ J. Programa de capacitacion
+Inciso ......... b) Probabilidad de tardar entre 500 y 650 h
+Parametros ..... mu=500 sigma=100
+Formula ........ =NORM.DIST(650,500,100,TRUE)-NORM.DIST(500,500,100,TRUE)
+Resultado num .. 0.43319279873114
+Resultado vis .. 0.4331928
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ J03
+Seccion ........ J. Programa de capacitacion
+Inciso ......... b) Cantidad esperada entre 500 participantes
+Parametros ..... N=500
+Formula ........ =(NORM.DIST(650,500,100,TRUE)-NORM.DIST(500,500,100,TRUE))*500
+Resultado num .. 216.59639936557
+Resultado vis .. 216.596399
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ K01
+Seccion ........ K. Ingreso familiar
+Inciso ......... a) Ingreso a partir del cual se paga el 10% mas alto
+Parametros ..... mu=400 sigma=50
+Formula ........ =NORM.INV(0.9,400,50)
+Resultado num .. 464.07757827723
+Resultado vis .. 464.077578
+PDF ............ 464
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ K02
+Seccion ........ K. Ingreso familiar
+Inciso ......... b) Media del ahorro Y = X/4 - 50
+Parametros ..... mu_Y = 0.25*400 - 50
+Formula ........ =0.25*400-50
+Resultado num .. 50
+Resultado vis .. 50
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ K03
+Seccion ........ K. Ingreso familiar
+Inciso ......... b) Desviacion del ahorro Y
+Parametros ..... sig_Y = 0.25*50
+Formula ........ =0.25*50
+Resultado num .. 12.5
+Resultado vis .. 12.5
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ K04
+Seccion ........ K. Ingreso familiar
+Inciso ......... b) Probabilidad de que el ahorro sea mayor que 75
+Parametros ..... mu_Y=50 sigma_Y=12.5
+Formula ........ =1-NORM.DIST(75,0.25*400-50,0.25*50,TRUE)
+Resultado num .. 0.022750131948179
+Resultado vis .. 0.02275013
+PDF ............ 0.0228
+Veredicto ...... COINCIDE
+------------------------------------------------------------------------------
+ID ............ L01
+Seccion ........ L. Chips de semiconductores
+Inciso ......... Cuartil 1 del tiempo de vida
+Parametros ..... mu=5106 sigma=250
+Formula ........ =NORM.INV(0.25,5106,250)
+Resultado num .. 4937.377562451
+Resultado vis .. 4937.37756
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ L02
+Seccion ........ L. Chips de semiconductores
+Inciso ......... z del cuartil 1
+Parametros ..... mu=5106 sigma=250
+Formula ........ =(NORM.INV(0.25,5106,250)-5106)/250
+Resultado num .. -0.67448975019608
+Resultado vis .. -0.67448975
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ L03
+Seccion ........ L. Chips de semiconductores
+Inciso ......... Probabilidad de que el lote dure mas de 4800 h
+Parametros ..... mu=5106 sigma=250
+Formula ........ =1-NORM.DIST(4800,5106,250,TRUE)
+Resultado num .. 0.88952388623448
+Resultado vis .. 0.88952389
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ L04
+Seccion ........ L. Chips de semiconductores
+Inciso ......... Decision del ensamblador que exige 90 por ciento
+Parametros ..... regla del 90 por ciento
+Formula ........ =IF((1-NORM.DIST(4800,5106,250,TRUE))>=0.9,"SI COMPRA EL LOTE","NO COMPRA EL LOTE")
+Resultado num .. (texto) NO COMPRA EL LOTE
+Resultado vis .. NO COMPRA EL LOTE
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ M01
+Seccion ........ M. Proveedores de materia prima
+Inciso ......... z del 5 por ciento para el proveedor A
+Parametros ..... mu=4.4 sigma=0.4
+Formula ........ =(5-4.4)/0.4
+Resultado num .. 1.5
+Resultado vis .. 1.5
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ M02
+Seccion ........ M. Proveedores de materia prima
+Inciso ......... z del 5 por ciento para el proveedor B
+Parametros ..... mu=4.2 sigma=0.6
+Formula ........ =(5-4.2)/0.6
+Resultado num .. 1.3333333333333
+Resultado vis .. 1.33333333
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ M03
+Seccion ........ M. Proveedores de materia prima
+Inciso ......... P(impurezas menores de 5) para el proveedor A
+Parametros ..... mu=4.4 sigma=0.4
+Formula ........ =NORM.DIST(5,4.4,0.4,TRUE)
+Resultado num .. 0.93319279873114
+Resultado vis .. 0.9331928
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ M04
+Seccion ........ M. Proveedores de materia prima
+Inciso ......... P(impurezas menores de 5) para el proveedor B
+Parametros ..... mu=4.2 sigma=0.6
+Formula ........ =NORM.DIST(5,4.2,0.6,TRUE)
+Resultado num .. 0.90878878027413
+Resultado vis .. 0.90878878
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+ID ............ M05
+Seccion ........ M. Proveedores de materia prima
+Inciso ......... Proveedor con mayor probabilidad de cumplir
+Parametros ..... comparar M03 y M04
+Formula ........ =IF(NORM.DIST(5,4.4,0.4,TRUE)>NORM.DIST(5,4.2,0.6,TRUE),"PROVEEDOR A","PROVEEDOR B")
+Resultado num .. (texto) PROVEEDOR A
+Resultado vis .. PROVEEDOR A
+PDF ............ NO ENCONTRADO EN LA FUENTE
+Veredicto ...... SIN RESPUESTA NUMERICA EN EL PDF
+------------------------------------------------------------------------------
+
+================================================================
+HOJA 2: Simulacion
+DECLARACION DE PROCEDENCIA: los 10 valores de la columna SUELDO
+provienen LITERALMENTE de la pagina 22 del PDF del SGA (tabla Fila
+SUELDO). NO se genero ninguna simulacion propia con datos inventados.
+================================================================
+Fila | SUELDO | z estandar | F normal teorica | F observada | Diferencia
+1 | 15,000.0000 | 2.144927703 | 0.984020686 | 1 | -0.015979314
+2 | 2,900.0000 | -0.417128092 | 0.338292359 | 0.5 | -0.161707641
+3 | 1,600.0000 | -0.692390285 | 0.244346133 | 0.2 | 0.044346133
+4 | 12,000.0000 | 1.509707258 | 0.934440931 | 0.9 | 0.034440931
+5 | 4,500.0000 | -0.078343855 | 0.468777267 | 0.8 | -0.331222733
+6 | 1,200.0000 | -0.777086345 | 0.218553915 | 0.1 | 0.118553915
+7 | 2,000.0000 | -0.607694226 | 0.271695147 | 0.4 | -0.128304853
+8 | 2,000.0000 | -0.607694226 | 0.271695147 | 0.4 | -0.128304853
+9 | 4,000.0000 | -0.184213929 | 0.426922816 | 0.7 | -0.273077184
+10 | 3,500.0000 | -0.290084003 | 0.385875987 | 0.6 | -0.214124013
+
+Estadisticos descriptivos de la columna SUELDO:
+  Cantidad de datos                  10.0000
+  Media                              4,870.0000
+  Desviacion estandar muestral       4,722.7699
+  Varianza muestral                  22,304,555.5556
+  Mediana                            3,200.0000
+  Minimo                             1,200.0000
+  Maximo                             15,000.0000
+
+Sobre la prueba de normalidad:
+  Prueba de normalidad Kolmogorov-Smirnov NO ENCONTRADO EN LA FUENTE: Excel 16.0 no incluye la prueba de Kolmogorov-Smirnov
+  Prueba de normalidad Shapiro-Wilk  NO ENCONTRADO EN LA FUENTE: Excel 16.0 no incluye la prueba de Shapiro-Wilk
+  Valor p declarado por el docente en el PDF 0.010 (declarado por el docente en la pagina 22 del PDF)
+  Decision segun la regla del PDF    p = 0.010 <= 0.05, se rechaza H0: los sueldos NO tienen distribucion normal
+  Criterio de reproducibilidad       Los 10 valores provienen literalmente de la pagina 22 del PDF. No se genero ninguna simulacion propia.
+
+================================================================
+HOJA 3: Verificacion de las reglas de la pagina 7 y del uso de tablas
+================================================================
+ID | Concepto | Formula | Resultado Excel | PDF | Nota sobre el metodo del PDF
+V01 | Regla de 1 sigma | =NORM.DIST(22,20,2,TRUE)-NORM.DIST(18,20,2,TRUE) | 0.68268949213709 | 0.6826 | El PDF redondea con la tabla normal a dos decimales
+V02 | Regla de 1 sigma en porcentaje | =100*(NORM.DIST(22,20,2,TRUE)-NORM.DIST(18,20,2,TRUE)) | 68.268949213709 | 68.26 | El PDF redondea con la tabla normal a dos decimales
+V03 | Regla de 2 sigma | =NORM.DIST(24,20,2,TRUE)-NORM.DIST(16,20,2,TRUE) | 0.95449973610364 | 0.954 | El PDF redondea con la tabla normal a dos decimales
+V04 | Regla de 2 sigma en porcentaje | =100*(NORM.DIST(24,20,2,TRUE)-NORM.DIST(16,20,2,TRUE)) | 95.449973610364 | 95.4 | El PDF redondea con la tabla normal a dos decimales
+V05 | Regla de 3 sigma | =NORM.DIST(26,20,2,TRUE)-NORM.DIST(14,20,2,TRUE) | 0.99730020393674 | 0.997 | El PDF redondea con la tabla normal a dos decimales
+V06 | Regla de 3 sigma en porcentaje | =100*(NORM.DIST(26,20,2,TRUE)-NORM.DIST(14,20,2,TRUE)) | 99.730020393674 | 99.7 | El PDF redondea con la tabla normal a dos decimales
+V07 | Ejemplo de la pagina 7 | =100*(NORM.DIST(22,20,2,TRUE)-NORM.DIST(18,20,2,TRUE)) | 68.268949213709 | 68 | El PDF redondea con la tabla normal a dos decimales
+V08 | Uso de tablas | =NORMSDIST(1.95) | 0.97441194047836 | 0.9744 | El PDF redondea con la tabla normal a dos decimales
+V09 | Comprobacion de la tabla | =NORMSDIST(1.96) | 0.97500210485178 | NO ENCONTRADO EN LA FUENTE | El PDF no declara un valor para este item
+V10 | Normal tipificada | =NORMSDIST(0) | 0.5 | NO ENCONTRADO EN LA FUENTE | El PDF no declara un valor para este item
+
+================================================================
+CONTEO DE CELDAS CON ERROR
+================================================================
+  Hoja Practica : 0 celdas con error
+  Hoja Simulacion : 0 celdas con error
+  Hoja Verificacion : 0 celdas con error
+  TOTAL de celdas con error en el libro: 0
+
+================================================================
+RESUMEN
+================================================================
+  Items calculados en la hoja Practica ....... 79
+  Veredictos COINCIDE ......................... 22
+  Veredictos DIFIERE ......................... 7
+  Sin respuesta numerica en el PDF ........... 50
+  Celdas con error en el libro ................ 0
+
+
+---
+

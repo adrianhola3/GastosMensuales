@@ -1,0 +1,32 @@
+﻿===== VERIFICACION FINAL - Correccion apartado 16 / 2.2 / conclusion =====
+Fecha: 2026-10-18 10:55:42
+
+--- 1) Codificacion UTF-8 y tamanos ---
+  01 Apuntes - Semana 5.md
+    Tamano: 36765 bytes
+    UTF-8 valido: True | U+FFFD: False | CJK/Hiragana: 0
+  02 Practica - Semana 5.md
+    Tamano: 74231 bytes
+    UTF-8 valido: True | U+FFFD: False | CJK/Hiragana: 0
+  xlsx Tamano: 24644 bytes
+
+--- 2) Afirmaciones falsas (deben estar ausentes) ---
+  OK: ninguna afirmacion falsa presente.
+
+--- 3) Bloques numericos sin cambios (hash vs linea base) ---
+  Bloque resultados 5-6  base chars: 19975  ahora: 19975
+  SHA256 base: 2C8128DDCED5313C91A89875D60DEB114E9E533C3C6B13B142F42C6E4D16A6B3
+  SHA256 ahora: 2C8128DDCED5313C91A89875D60DEB114E9E533C3C6B13B142F42C6E4D16A6B3
+  IDENTICO: True
+  Bloque volcado 8       base chars: 39250  ahora: 39250
+  SHA256 base: 220BCB41A5749670978268DB2BF68B9B117B2002E54A6E2B79AD0C45530194E6
+  SHA256 ahora: 220BCB41A5749670978268DB2BF68B9B117B2002E54A6E2B79AD0C45530194E6
+  IDENTICO: True
+
+--- 4) Reapertura del xlsx por COM (cero errores) ---
+  Libro reabierto: Semana5_Practica_Distribucion_Normal.xlsx
+  Hojas: Verificacion, Simulacion, Practica
+  Celdas con error (#...): 0
+  OK: cero errores en el libro reabierto.
+
+===== FIN VERIFICACION =====

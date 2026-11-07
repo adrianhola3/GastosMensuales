@@ -17,4 +17,5 @@ Aplicación web moderna e interactiva diseñada para el control financiero, pres
 - **Control con 1 Clic**: Alternar entre `✓ Pagado` y `⏳ Pendiente` con recálculo instantáneo de subtotales y porcentaje de cobertura.
 - **Feed Moderno de Transacciones**: Registro ágil de ingresos y gastos reales con filtros (*Todos, Ingresos, Gastos, Pagados, Pendientes*).
 - **Consolidado Multimes**: Matriz anual y gráficos interactivos con Chart.js.
-- **Persistencia y Respaldo**: Guardado automático en `localStorage`, exportación en CSV (Excel) y copia de seguridad en JSON.
+- **Persistencia y Respaldo**: Guardado automático en `localStorage`, cinco copias rotativas automáticas de cada guardado confirmado, botón **Descargar Copia JSON** en la barra superior y exportación del consolidado en CSV.
+- **Modo Protección**: si la nube no responde o el navegador está sin conexión, la edición se bloquea con un aviso visible y los cambios locales nunca se pisan con el estado remoto viejo.

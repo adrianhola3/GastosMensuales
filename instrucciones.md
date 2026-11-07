@@ -17,6 +17,41 @@ Este workspace aloja la aplicación web de gestión financiera personal (**Finan
 3. **Persistencia limpia:** Mantener la integridad de los datos en `localStorage` y respetar el contrato DOM definido en las pruebas.
 4. **Tareas académicas (`odd/tasks/`):** Los archivos `.md` y `.mjs` dentro de `odd/tasks/` corresponden a suites de diagnóstico, ejercicios y módulos de análisis.
 
+## 🔑 Inicio de sesión en Supabase (PERMANENTE)
+
+Establecida por el usuario el 2026-11-07. **No se vuelve a preguntar, en ninguna
+sesión ni en ningún proyecto.**
+
+Cuando haya que iniciar sesión en la interfaz de Supabase —el dashboard, el panel
+de proyectos, la pantalla de tokens, cualquier vista que lo pida— el método es
+**siempre `Continue with GitHub`**.
+
+- Nunca correo y contraseña.
+- Nunca SSO.
+- Nunca `Continue with ChatGPT`.
+
+La cuenta de Supabase se autentica con la identidad de GitHub del usuario, así que
+la sesión de GitHub es la que manda. Si GitHub a su vez pide login, eso se resuelve
+en la ventana del navegador, no pidiéndole la contraseña al usuario por el chat.
+
+## 🔑 Inicio de sesión en GitHub (PERMANENTE)
+
+Establecida por el usuario el 2026-11-07. **No se vuelve a preguntar, en ninguna
+sesión ni en ningún proyecto.**
+
+Cuando haya que iniciar sesión en la interfaz de GitHub —el login, la autorización
+OAuth de otra aplicación, la pantalla de settings, cualquier vista que lo pida— el
+método es **siempre `Continue with Google`**, y la cuenta de Google es **siempre
+`Adrián HC` (`adrianhuamancastillo@gmail.com`)**.
+
+- Nunca usuario y contraseña de GitHub.
+- Nunca la cuenta `ahuamanc@unac.edu.pe`, ni siquiera si es la primera de la lista.
+- Nunca `Continue with passkey`.
+
+Si el selector de cuentas de Google ofrece más de una, se elige `adrianhuamancastillo@gmail.com`
+sin preguntar. Elegir la otra cuenta no vincula `adrianhola3`: GitHub ofrecería crear
+una cuenta nueva y se perdería el acceso al repositorio.
+
 ## Reglas de realización de un trabajo (PERMANENTES)
 
 Establecidas por el usuario el 2026-10-18. Aplican a todo trabajo académico o de
@@ -106,3 +141,17 @@ No se deja nada solo en la cabeza. El siguiente trabajo, o la siguiente sesión,
 Se anota tras cada avance real, no solo al final de todo.
 
 Esto aplica a cada semana de Estadística, a cada fase de un parcial, y a cualquier trabajo de este usuario.
+
+**O4. Indicador de subagentes activos (OpenCode).**
+
+Cuando OpenCode lance uno o más subagentes/subprocesos delegados, la respuesta debe
+incluir un indicador visual claro de los subprocesos activos, con el formato:
+
+`🔄 Subprocesos activos: <subagente> — <tarea> (inicio: <hora>)`
+
+- El registro canónico vive en `Vault\06 Estado de Trabajos\Subagentes activos.md`
+  (solo OpenCode escribe ahí; usar lockfile `$env:TEMP\opencode-task.lock`).
+- Al lanzar: agregar fila con estado `en ejecucion` y mostrar el indicador en la respuesta.
+- Al terminar: cambiar estado a `completado` o `fallido` y actualizar el indicador.
+- Si no hay subagentes activos, no mostrar el indicador (no inventar).
+- Esto aplica a cada delegación, sin excepción.

@@ -17,6 +17,15 @@ create table if not exists public.gastos (
   updated_at timestamptz not null default now()
 );
 
+-- `create table if not exists` NO toca una tabla que ya existe: si la tabla
+-- venia de antes sin `updated_at`, la columna nunca se agregaba y el trigger de
+-- abajo fallaba en cada UPDATE con
+--   record "new" has no field "updated_at"
+-- Eso dejaba la app sin poder guardar NADA, y el error quedaba tapado como un
+-- console.warn. Por eso la columna se asegura aparte, de forma explicita.
+alter table public.gastos
+  add column if not exists updated_at timestamptz not null default now();
+
 -- RLS encendido. Las politicas concretas viven en 01-seguridad.sql: aca solo se
 -- activa el interruptor. Una tabla con RLS y sin politicas es inaccesible, y eso
 -- es preferible a una tabla abierta por olvido.

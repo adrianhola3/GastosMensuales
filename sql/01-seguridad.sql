@@ -49,7 +49,18 @@ drop policy if exists "gastos: lectura publica" on public.gastos;
 --    Leer: público (anon y authenticated) para que el Modo Solo Lectura
 --    funcione en cualquier navegador o ventana de incógnito sin pedir login.
 --    Escribir, actualizar y borrar: solo el administrador autenticado.
+--
+--    Se borran antes de crearlas para que el archivo se pueda correr sobre una
+--    base que YA tiene estas políticas. Sin esto, `create policy` falla con
+--    "policy already exists" y deja la transacción a medias: es exactamente lo
+--    que pasó al restaurar el proyecto pausado, que conservaba las políticas
+--    viejas.
 -- ---------------------------------------------------------------------
+drop policy if exists "gastos: lectura publica"        on public.gastos;
+drop policy if exists "gastos: escribir solo admin"    on public.gastos;
+drop policy if exists "gastos: actualizar solo admin"  on public.gastos;
+drop policy if exists "gastos: borrar solo admin"      on public.gastos;
+
 create policy "gastos: lectura publica"
   on public.gastos for select to anon, authenticated
   using (true);

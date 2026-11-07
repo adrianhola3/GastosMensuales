@@ -28,10 +28,17 @@
  * USO
  *   node tools/provision-supabase.mjs status
  *   node tools/provision-supabase.mjs init   [--org <slug>] [--region sa-east-1]
+ *   node tools/provision-supabase.mjs adopt  --ref <ref> [--email <correo>]
  *   node tools/provision-supabase.mjs wait
- *   node tools/provision-supabase.mjs apply
+ *   node tools/provision-supabase.mjs apply  [--email <correo>]
  *   node tools/provision-supabase.mjs verify
  *   node tools/provision-supabase.mjs all      (init + wait + apply + verify)
+ *
+ * INIT O ADOPT
+ *   `init` crea un proyecto nuevo. `adopt` toma uno que ya existe: el plan Free
+ *   tiene un tope de proyectos, y un proyecto pausado por inactividad se puede
+ *   restaurar en vez de crear otro. Las dos fases dejan el mismo estado en
+ *   disco, asi que wait/apply/verify no cambian.
  */
 
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -205,6 +212,55 @@ async function init() {
 }
 
 // ---------------------------------------------------------------------------
+// Fase: adopt
+// ---------------------------------------------------------------------------
+//
+// Para cuando el proyecto YA existe (por ejemplo, quedo pausado por inactividad
+// y se restauro desde el panel o con POST /restore). Crear uno nuevo no siempre
+// es una opcion: el plan Free tiene un tope de proyectos. Adoptar toma el
+// proyecto tal como esta y escribe el mismo estado que produciria init, asi que
+// wait, apply y verify siguen funcionando sin cambios.
+
+async function adopt() {
+  const ref = bandera('ref');
+  if (!ref || ref === true) morir('falta --ref <ref> del proyecto a adoptar');
+
+  const proyecto = await api(`/v1/projects/${ref}`);
+  if (!proyecto || !proyecto.ref) morir(`no pude leer el proyecto ${ref}`);
+
+  const nuevo = {
+    ref: proyecto.ref,
+    name: proyecto.name || NOMBRE_PROYECTO,
+    region: proyecto.region || null,
+    organization: proyecto.organization_slug || proyecto.organization_id || null,
+    // La contrasena de la base no se puede recuperar: se genero al crear el
+    // proyecto y no la tenemos. No hace falta para este flujo, que opera con la
+    // Management API y la service key.
+    dbPass: null,
+    adminEmail: bandera('email', null),
+    adminPassword: null,
+    anonKey: null,
+    serviceKey: null,
+    url: `https://${ref}.supabase.co`,
+    creado: proyecto.created_at || new Date().toISOString(),
+    aplicado: null,
+    adoptado: true
+  };
+  guardarEstado(nuevo);
+
+  log(`Proyecto adoptado: ${ref} (${nuevo.name})`);
+  log(`  estado actual: ${proyecto.status}`);
+  log(`  URL: ${nuevo.url}`);
+  if (proyecto.status !== 'ACTIVE_HEALTHY') {
+    log('  Todavia no esta sano: si esta INACTIVE, restaura con POST /restore.');
+    log('  Despues:  node tools/provision-supabase.mjs wait');
+  } else {
+    log('Siguiente paso:  node tools/provision-supabase.mjs apply --email <correo>');
+  }
+  return nuevo;
+}
+
+// ---------------------------------------------------------------------------
 // Fase: wait
 // ---------------------------------------------------------------------------
 
@@ -345,15 +401,33 @@ function escribirConfig(estado) {
   if (!existsSync(CONFIG_FILE)) morir(`no encuentro ${CONFIG_FILE}`);
   let texto = readFileSync(CONFIG_FILE, 'utf8');
 
-  texto = texto.replace(/modoLocal:\s*(true|false)/, 'modoLocal: false');
-  texto = texto.replace(/supabaseUrl:\s*'[^']*'/, `supabaseUrl: '${estado.url}'`);
-  texto = texto.replace(/supabaseAnonKey:\s*'[^']*'/, `supabaseAnonKey: '${estado.anonKey}'`);
+  // Las tres sustituciones van ancladas a lineas de configuracion (indentadas,
+  // terminadas en coma) y no a "la primera aparicion del texto". El comentario
+  // de cabecera de config.js menciona `modoLocal: false` en prosa, y un
+  // replace suelto golpeaba ESA aparicion: el archivo decia "actualizado" y la
+  // linea real seguia en true.
+  const antes = texto;
+  texto = texto.replace(/^(\s*)modoLocal:\s*(true|false)\s*,\s*$/m, '$1modoLocal: false,');
+  texto = texto.replace(/^(\s*)supabaseUrl:\s*'[^']*'\s*,\s*$/m, `$1supabaseUrl: '${estado.url}',`);
+  texto = texto.replace(/^(\s*)supabaseAnonKey:\s*'[^']*'\s*,?\s*$/m, `$1supabaseAnonKey: '${estado.anonKey}'`);
 
-  if (!texto.includes(estado.url)) morir('no pude escribir supabaseUrl en config.js');
-  if (!texto.includes(estado.anonKey)) morir('no pude escribir supabaseAnonKey en config.js');
+  if (texto === antes) {
+    morir('no cambie nada en config.js: el formato no es el esperado. Revisalo a mano.');
+  }
 
   writeFileSync(CONFIG_FILE, texto, 'utf8');
-  log(`config.js actualizado: modoLocal false, URL ${estado.url}`);
+
+  // Se relee del disco y se comprueba el EFECTO, no la intencion.
+  const escrito = readFileSync(CONFIG_FILE, 'utf8');
+  const fallos = [];
+  if (!/^\s*modoLocal:\s*false\s*,\s*$/m.test(escrito)) fallos.push('modoLocal no quedo en false');
+  if (!new RegExp(`^\\s*supabaseUrl:\\s*'${estado.url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}'\\s*,?\\s*$`, 'm').test(escrito)) {
+    fallos.push('supabaseUrl no quedo escrito');
+  }
+  if (!escrito.includes(estado.anonKey)) fallos.push('supabaseAnonKey no quedo escrito');
+  if (fallos.length) morir(`config.js quedo mal: ${fallos.join('; ')}`);
+
+  log(`config.js actualizado y verificado: modoLocal false, URL ${estado.url}`);
 }
 
 async function apply() {
@@ -443,6 +517,22 @@ async function verify() {
     });
     resultados.push(['escritura del administrador (debe funcionar)', res.status, res.ok]);
 
+    // 6. ACTUALIZACION autenticada. Esta comprobacion falta en la version
+    //    anterior y es la que importa: el trigger de `updated_at` es BEFORE
+    //    UPDATE, asi que un INSERT puede pasar mientras todo UPDATE falla. El
+    //    sintoma real era la app sin poder guardar, tapado por un console.warn.
+    res = await fetch(`${url}/rest/v1/gastos?id=eq.999999999`, {
+      method: 'PATCH',
+      headers: {
+        apikey: estado.anonKey,
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      },
+      body: JSON.stringify({ data: { prueba: false } })
+    });
+    resultados.push(['actualizacion del administrador (debe funcionar)', res.status, res.ok]);
+
     // Limpieza: no dejar la fila de prueba.
     await fetch(`${url}/rest/v1/gastos?id=eq.999999999`, {
       method: 'DELETE',
@@ -501,7 +591,7 @@ async function all() {
   await verify();
 }
 
-const fases = { init, wait, apply, verify, status, all };
+const fases = { init, adopt, wait, apply, verify, status, all };
 
 if (!fases[fase]) {
   morir(`fase desconocida: ${fase}. Usa: ${Object.keys(fases).join(' | ')}`);

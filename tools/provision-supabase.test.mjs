@@ -41,7 +41,21 @@ const TOKEN = join(DIR, '.supabase_token');
 const STATE = join(DIR, 'state.json');
 const CONFIG = join(DIR, 'config.js');
 writeFileSync(TOKEN, 'sbp_fake_token_para_pruebas', 'utf8');
-copyFileSync(join(RAIZ, 'js', 'config.js'), CONFIG);
+
+// Config trampa: la cabecera menciona `modoLocal: false` en prosa, igual que el
+// archivo real. Un replace suelto golpea la prosa y deja la linea real en true.
+// Esta es la regresion concreta que costo un apply "exitoso" sin efecto.
+writeFileSync(CONFIG, `/**
+ * Comentario de cabecera: "Mientras estuvo asi, \`modoLocal: false\` hacia que
+ * la app intentara hablar con un host inexistente".
+ */
+window.GASTOS_CONFIG = {
+  modoLocal: true,
+
+  supabaseUrl: '',
+  supabaseAnonKey: ''
+};
+`, 'utf8');
 
 const llamadas = [];
 const ADMIN_TOKEN = 'TOKEN_ADMIN_VALIDO';
@@ -73,7 +87,14 @@ const servidor = createServer(async (req, res) => {
     if (!b.db_pass || !b.name || !b.organization_slug) return json(400, { message: 'faltan campos' });
     return json(201, { ref: 'mockref', status: 'COMING_UP' });
   }
-  if (p === '/v1/projects/mockref') return json(200, { ref: 'mockref', status: 'ACTIVE_HEALTHY' });
+  if (p === '/v1/projects/mockref') return json(200, {
+    ref: 'mockref',
+    name: 'gastos-mensuales',
+    status: 'ACTIVE_HEALTHY',
+    region: 'us-east-1',
+    organization_slug: 'mockorg',
+    created_at: '2026-10-01T04:49:22.000000Z'
+  });
   if (p === '/v1/projects/mockref/api-keys') {
     if (u.searchParams.get('reveal') !== 'true') return json(400, { message: 'falta reveal' });
     return json(200, [
@@ -115,6 +136,10 @@ const servidor = createServer(async (req, res) => {
   if (p === '/rest/v1/gastos' && req.method === 'POST') {
     if (auth.includes(ADMIN_TOKEN)) { res.writeHead(201); return res.end(); }
     return json(401, { message: 'RLS: escritura anonima rechazada' });
+  }
+  if (p === '/rest/v1/gastos' && req.method === 'PATCH') {
+    if (auth.includes(ADMIN_TOKEN)) { res.writeHead(204); return res.end(); }
+    return json(401, { message: 'RLS: actualizacion anonima rechazada' });
   }
   if (p === '/rest/v1/gastos' && req.method === 'DELETE') { res.writeHead(204); return res.end(); }
 
@@ -183,10 +208,13 @@ const cierre = llamadas.filter(l => l.path === '/v1/projects/mockref/config/auth
 check('desactiva el registro publico', cierre.length === 1);
 
 const configTexto = readFileSync(CONFIG, 'utf8');
-check('config.js queda con modoLocal false', /modoLocal:\s*false/.test(configTexto));
-check('config.js queda con la URL del proyecto', configTexto.includes(`supabaseUrl: '${base}'`));
+// Anclado a linea de configuracion: si se afloja, la prosa de la cabecera
+// vuelve a dar falso positivo.
+check('config.js queda con modoLocal false', /^\s*modoLocal:\s*false\s*,\s*$/m.test(configTexto));
+check('config.js queda con la URL del proyecto', /^\s*supabaseUrl:\s*'http:\/\/127\.0\.0\.1:\d+'/m.test(configTexto));
 check('config.js queda con la publishable key', configTexto.includes('sb_publishable_MOCK'));
 check('config.js NO queda con la secret key', !configTexto.includes('sb_secret_MOCK'));
+check('la prosa de la cabecera quedo intacta', configTexto.includes('Comentario de cabecera'));
 
 estado = JSON.parse(readFileSync(STATE, 'utf8'));
 check('guarda la contrasena del admin', typeof estado.adminPassword === 'string' && estado.adminPassword.length >= 12);
@@ -198,9 +226,25 @@ check('verify sale con codigo 0 (todo verde)', r.code === 0, r.out.trim().split(
 
 const verificacion = llamadas.filter(l => l.path === '/rest/v1/gastos' && l.method === 'POST');
 check('verify prueba escritura anonima Y autenticada', verificacion.length === 2, `post=${verificacion.length}`);
+// El trigger de updated_at es BEFORE UPDATE: un INSERT puede pasar mientras
+// todo UPDATE falla. Si verify no prueba PATCH, ese fallo es invisible.
+const actualizacion = llamadas.filter(l => l.path === '/rest/v1/gastos' && l.method === 'PATCH');
+check('verify prueba la ACTUALIZACION autenticada', actualizacion.length === 1, `patch=${actualizacion.length}`);
 const limpieza = llamadas.filter(l => l.path === '/rest/v1/gastos' && l.method === 'DELETE');
 check('verify limpia la fila de prueba', limpieza.length === 1);
 check('el token no se imprime en la salida', !r.out.includes('sbp_fake_token_para_pruebas'));
+
+// 5. adopt: tomar un proyecto que ya existe en vez de crear otro.
+rmSync(STATE, { force: true });
+r = await correr('adopt', ['--ref', 'mockref', '--email', 'admin@ejemplo.com']);
+check('adopt sale con codigo 0', r.code === 0, r.out.trim().split('\n').slice(-1)[0]);
+
+const adoptado = existsSync(STATE) ? JSON.parse(readFileSync(STATE, 'utf8')) : null;
+check('adopt guarda el ref', adoptado?.ref === 'mockref', adoptado?.ref);
+check('adopt toma el nombre real del proyecto', adoptado?.name === 'gastos-mensuales', adoptado?.name);
+check('adopt toma la organizacion del proyecto', adoptado?.organization === 'mockorg', adoptado?.organization);
+check('adopt marca el estado como adoptado', adoptado?.adoptado === true);
+check('adopt no inventa una contrasena de base', adoptado?.dbPass === null);
 
 servidor.close();
 

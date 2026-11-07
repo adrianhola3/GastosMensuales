@@ -20,27 +20,28 @@
  * políticas RLS de la tabla, NO esta clave. Nunca pongas acá la service_role.
  *
  * ---------------------------------------------------------------------------
- * ESTADO ACTUAL (verificado): SIN BACKEND
+ * ESTADO ACTUAL (verificado): NUBE OPERATIVA
  * ---------------------------------------------------------------------------
- * El proyecto configurado antes de esta limpieza,
- * `bgcgmofroibrxthvdlil.supabase.co`, responde NXDOMAIN: no existe. No es un
- * fallo de red ni un proyecto pausado, es un proyecto borrado.
+ * Proyecto `bgcgmofroibrxthvdlil` (region us-east-1, org "Gastos Mensuales").
+ * Habia quedado INACTIVE por inactividad, no borrado: se restauro con
+ * POST /v1/projects/{ref}/restore y hoy responde ACTIVE_HEALTHY.
  *
- * Mientras estuvo así, `modoLocal: false` hacía que la app intentara hablar con
- * un host inexistente en cada guardado y cada 3 segundos, fallara, y lo tapara
- * con un `console.warn`. La interfaz decía "En línea" igual.
+ * Lo que corre sobre esa base, aplicado por `tools/provision-supabase.mjs`:
+ *   - `sql/00-esquema.sql`   -> tabla public.gastos (id, data jsonb, updated_at)
+ *   - `sql/01-seguridad.sql` -> RLS: lectura publica, escritura solo admin
+ *   - usuario administrador con `app_metadata.role = "admin"`
+ *   - registro publico por correo DESACTIVADO
  *
- * Por eso hoy: `modoLocal: true` y las dos cadenas vacías. La app funciona
- * 100% en localStorage y el indicador dice "Solo local", que es la verdad.
+ * Verificado de punta a punta: lectura anonima 200, escritura anonima 401,
+ * login del admin 200, rol presente en el JWT, escritura del admin 201.
  *
- * PARA VOLVER A LA NUBE:
- *   1. Crear el proyecto en Supabase y copiar Project URL + Publishable key.
- *   2. Correr `sql/01-seguridad.sql` contra la base nueva.
- *   3. Completar `supabaseUrl` y `supabaseAnonKey` acá abajo.
- *   4. Poner `modoLocal: false`.
- *   5. Crear el usuario administrador en el panel y asignarle
- *      `app_metadata = { "role": "admin" }`.
- * Sin el paso 2 y el 5, el modo administrador no puede escribir: RLS lo rechaza.
+ * Si en algun momento hay que rehacerlo, NO se hace a mano: se corre
+ *   node tools/provision-supabase.mjs status|adopt|wait|apply|verify
+ * que es idempotente y comprueba el efecto en vez de suponerlo.
+ *
+ * Si el proyecto vuelve a pausarse (el plan Free lo hace por inactividad), el
+ * sintoma es el mismo NXDOMAIN de antes: el host no resuelve aunque el proyecto
+ * exista. Restaurar, no recrear.
  * ---------------------------------------------------------------------------
  */
 
@@ -54,8 +55,7 @@ window.GASTOS_CONFIG = {
      * `false` sin completar las dos cadenas de abajo deja la app en el mismo
      * lugar, pero gastando una consulta DNS fallida por guardado.
      */
-  modoLocal: true,
-
-  supabaseUrl: '',
-  supabaseAnonKey: ''
+  modoLocal: false,
+  supabaseUrl: 'https://bgcgmofroibrxthvdlil.supabase.co',
+  supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnY2dtb2Zyb2licnh0aHZkbGlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4MzAxNjIsImV4cCI6MjEwNjQwNjE2Mn0.utBPVyah8BSXV9Nntioh6W8tpUmSii7JiOMNY5z7aG8'
 };

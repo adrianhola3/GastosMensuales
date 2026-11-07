@@ -133,6 +133,29 @@
   // servidor en cualquier orden y quedar guardado el más viejo al final.
   let colaEscritura = Promise.resolve();
 
+  // --- Estado real de la conexión -------------------------------------------
+  // `estaConfigurado()` responde si HAY credenciales. Esto responde si el
+  // servidor CONTESTÓ. Son dos preguntas distintas, y confundirlas fue lo que
+  // dejó el indicador diciendo "En línea" contra un proyecto que ya no existía.
+  let estadoRedActual = 'conectando'; // 'conectando' | 'en-linea' | 'sin-conexion'
+
+  function fijarEstadoRed(nuevo) {
+    if (estadoRedActual === nuevo) return;
+    estadoRedActual = nuevo;
+    try {
+      window.dispatchEvent(new CustomEvent('gastos:conexion', { detail: { estado: nuevo } }));
+    } catch (e) {}
+  }
+
+  /**
+   * Estado de red observable por la interfaz.
+   * @returns {'local'|'conectando'|'en-linea'|'sin-conexion'}
+   */
+  function estadoRed() {
+    if (!estaConfigurado() || !sdkDisponible()) return 'local';
+    return estadoRedActual;
+  }
+
   // Resuelve apenas Supabase nos informa si hay sesión o si pasó el tiempo máximo.
   let resolverSesionInicial = null;
   const SESION_INICIAL_TIMEOUT_MS = 4000;
@@ -288,41 +311,15 @@
       .maybeSingle()
       .then(({ data, error }) => {
         if (error) throw error;
+        fijarEstadoRed('en-linea');
         return data && data.data ? data.data : null;
       })
       .catch(e => {
         // Sin conexión o sin permisos: se avisa y se sigue con la copia local.
+        fijarEstadoRed('sin-conexion');
         console.warn('[supabase-store] No se pudo leer de la nube:', e && e.message ? e.message : e);
         return null;
       });
-  }
-
-  /**
-   * Si la pestaña está en modo Administrador pero la sesión de Supabase aún
-   * no se autenticó (por ejemplo, si el usuario ya había entrado antes),
-   * inicia sesión automáticamente antes de guardar para cumplir con RLS.
-   */
-  function asegurarSesionAdmin() {
-    const cli = obtenerCliente();
-    if (!cli || haySesion()) return Promise.resolve();
-    if (typeof window !== 'undefined' && window.__sandbox) return Promise.resolve();
-
-    let esAdminEnPestana = false;
-    try {
-      esAdminEnPestana = sessionStorage.getItem('finanzas_session_role_chosen') === 'admin';
-    } catch (e) {}
-
-    if (!esAdminEnPestana) return Promise.resolve();
-
-    return cli.auth
-      .signInWithPassword({ email: 'ahuamanc@unac.edu.pe', password: 'adripro123' })
-      .then(({ data }) => {
-        if (data && data.session) {
-          recordarSesion(data.session);
-          notificarSesion();
-        }
-      })
-      .catch(() => {});
   }
 
   /**
@@ -335,12 +332,13 @@
     if (!cli || !estado) return Promise.resolve();
 
     colaEscritura = colaEscritura
-      .then(() => asegurarSesionAdmin())
       .then(() => cli
         .from(TABLA)
         .upsert({ id: FILA_ID, data: estado }, { onConflict: 'id' })
-        .then(({ error }) => { if (error) throw error; }))
+        .then(({ error }) => { if (error) throw error; })
+        .then(() => fijarEstadoRed('en-linea')))
       .catch(e => {
+        fijarEstadoRed('sin-conexion');
         console.warn('[supabase-store] No se pudo guardar en la nube:', e && e.message ? e.message : e);
       });
 
@@ -550,6 +548,7 @@
 
   window.gastosRemoto = {
     estaConfigurado,
+    estadoRed,
     cargar,
     guardar,
     iniciarSesion,

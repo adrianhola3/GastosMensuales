@@ -18,6 +18,30 @@
  * Sobre seguridad: la "anon key" / "publishable key" está pensada para el
  * navegador y viaja en el bundle a propósito. Lo que protege los datos son las
  * políticas RLS de la tabla, NO esta clave. Nunca pongas acá la service_role.
+ *
+ * ---------------------------------------------------------------------------
+ * ESTADO ACTUAL (verificado): SIN BACKEND
+ * ---------------------------------------------------------------------------
+ * El proyecto configurado antes de esta limpieza,
+ * `bgcgmofroibrxthvdlil.supabase.co`, responde NXDOMAIN: no existe. No es un
+ * fallo de red ni un proyecto pausado, es un proyecto borrado.
+ *
+ * Mientras estuvo así, `modoLocal: false` hacía que la app intentara hablar con
+ * un host inexistente en cada guardado y cada 3 segundos, fallara, y lo tapara
+ * con un `console.warn`. La interfaz decía "En línea" igual.
+ *
+ * Por eso hoy: `modoLocal: true` y las dos cadenas vacías. La app funciona
+ * 100% en localStorage y el indicador dice "Solo local", que es la verdad.
+ *
+ * PARA VOLVER A LA NUBE:
+ *   1. Crear el proyecto en Supabase y copiar Project URL + Publishable key.
+ *   2. Correr `sql/01-seguridad.sql` contra la base nueva.
+ *   3. Completar `supabaseUrl` y `supabaseAnonKey` acá abajo.
+ *   4. Poner `modoLocal: false`.
+ *   5. Crear el usuario administrador en el panel y asignarle
+ *      `app_metadata = { "role": "admin" }`.
+ * Sin el paso 2 y el 5, el modo administrador no puede escribir: RLS lo rechaza.
+ * ---------------------------------------------------------------------------
  */
 
 window.GASTOS_CONFIG = {
@@ -26,14 +50,12 @@ window.GASTOS_CONFIG = {
      intenta ninguna conexión de red y todo se guarda en el navegador
      (localStorage).
      *
-     * Sirve para trabajar en el diseño sin que cada prueba termine escribiendo
-     * en la base de datos real.
-     *
-     * PONER EN `false` ANTES DE PUBLICAR. Con esta bandera en `true` el sitio
-     * publicado también se quedaría sin nube, en silencio y sin avisar.
+     * Está en `true` porque hoy no hay proyecto al que conectarse. Ponerlo en
+     * `false` sin completar las dos cadenas de abajo deja la app en el mismo
+     * lugar, pero gastando una consulta DNS fallida por guardado.
      */
-  modoLocal: false,
+  modoLocal: true,
 
-  supabaseUrl: 'https://bgcgmofroibrxthvdlil.supabase.co',
-  supabaseAnonKey: 'sb_publishable_1PIXKBVWdxOx5RnDLkEskQ_nS5TiqU7'
+  supabaseUrl: '',
+  supabaseAnonKey: ''
 };

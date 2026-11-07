@@ -564,6 +564,13 @@ class FinancialStore {
    * y marcar un ítem como pagado se revertía al recargar. El archivo de datos no tiene
    * autoridad para decidir qué contiene: los datos del usuario son intocables.
    *
+   * POR QUÉ SE QUITÓ LA RECUPERACIÓN DE PRECIOS BASE (también estaba aquí):
+   * todo ítem con `montoEstimado === 0` se reemplazaba por un precio de una tabla
+   * hardcodeada ('Celular' → 39.90, 'Gimnasio' → 103.54, ...) y el resultado se
+   * volvía a persistir. Como `sanear()` también corre sobre el estado que llega de
+   * la nube, un gasto que el usuario había dejado en 0 se convertía en 39.90 y se
+   * subía de vuelta. Un cero es un dato, no un hueco: si falta el monto, se ve 0.
+   *
    * Este método es idempotente: solo vuelve a persistir si de verdad faltaba algo,
    * así que en la práctica escribe una sola vez por sesión.
    *
@@ -614,36 +621,11 @@ class FinancialStore {
         m.extras
       ].filter(Array.isArray);
 
-      const preciosBaseRecuperacion = {
-        'Internet de casa': 89.90,
-        'Celular': 39.90,
-        'CIUNAC (Inglés)': 83.00,
-        'Pasajes': 150.00,
-        'Corte de cabello': 25.00,
-        'Productos de casa: Jabón, shampoo, papel...': 30.00,
-        'Gimnasio': 103.54,
-        'Consulta dermatólogo': 50.00,
-        'Productos dermatológicos: Jabón cerave...': 45.00,
-        'Matrícula 2026-B de la universidad': 83.00
-      };
-      const enNavegadorReal =
-        typeof window !== 'undefined' &&
-        !window.__sandbox &&
-        typeof window.gastosRemoto?.suscribirCambios === 'function';
-
       listasPresupuesto.forEach(lista => {
         lista.forEach(item => {
           if (!item || typeof item !== 'object') return;
           if (typeof item.concepto !== 'string') { item.concepto = ''; cambios = true; }
           migrarItemPresupuesto(item, () => { cambios = true; });
-          if (
-            enNavegadorReal &&
-            item.montoEstimado === 0 &&
-            preciosBaseRecuperacion[item.concepto] !== undefined
-          ) {
-            item.montoEstimado = preciosBaseRecuperacion[item.concepto];
-            cambios = true;
-          }
         });
       });
 

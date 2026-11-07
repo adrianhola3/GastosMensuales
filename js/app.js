@@ -11,10 +11,9 @@
  * fuente o simplemente agregar ?admin=true a la URL. Un secreto que viaja en el bundle
  * no es un secreto, así que ya no hay ni PIN ni parámetros que otorguen admin.
  *
- * Ahora el rol sale de la sesión REAL de Supabase: si el usuario se autenticó,
- * es administrador; si no, es lector. Sin backend configurado no hay sesión que
- * consultar, así que todos quedan en lector y se mantiene el aviso de
- * "funcionalidad en desarrollo" como antes.
+ * Ahora el rol sale de `app_metadata` de la sesión REAL de Supabase: esa
+ * metadata solo la edita un administrador del panel, no el propio usuario. Sin
+ * backend configurado no hay sesión que consultar y todos quedan en lector.
  *
  * POR QUÉ SIGUE SIENDO SINCRÓNICA: hay varios lugares que la llaman sin esperarla
  * (updateAuthModeUI, setRoleReadOnly, el arranque). Consultar la sesión de
@@ -25,10 +24,15 @@
 let sesionActual = { rol: 'lector', configurado: false };
 
 function obtenerSesion() {
+  /* `sessionStorage` solo puede RESTRINGIR el rol, nunca otorgarlo.
+     Antes, escribir 'admin' en esa clave devolvía rol admin sin pasar por
+     Supabase: una línea en devtools abría la interfaz de edición completa, y
+     `activarAdminLocal()` era el mismo bypass con un botón. El rol que habilita
+     escritura sale de `app_metadata` (ver `refrescarSesion()`); la elección de
+     esta pestaña únicamente puede degradar a 'lector'. */
   try {
-    const rolGuardado = sessionStorage.getItem('finanzas_session_role_chosen');
-    if (rolGuardado === 'admin') {
-      return { rol: 'admin', configurado: sesionActual.configurado };
+    if (sessionStorage.getItem('finanzas_session_role_chosen') === 'lector') {
+      return { rol: 'lector', configurado: sesionActual.configurado };
     }
   } catch (e) {}
   return sesionActual;
@@ -243,16 +247,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- INDICADOR DE CONEXIÓN (T6) ---
   // Mínimo y con las mismas variables del tema, para que no desentone.
+  //
+  // Antes esto se derivaba de `sesionActual.configurado`, o sea de "¿hay
+  // credenciales escritas en config.js?". Eso no es conexión: con el proyecto
+  // caído seguía diciendo "En línea" mientras cada guardado fallaba en
+  // silencio. Ahora lee `estadoRed()`, que se actualiza con el resultado REAL
+  // de cada lectura y escritura contra Supabase.
   function updateIndicadorConexion() {
     if (!indicadorConexion) return;
-    const enLinea = sesionActual.configurado;
-    indicadorConexion.className = enLinea ? 'conn-badge conn-online' : 'conn-badge conn-offline';
-    if (indicadorConexionTexto) {
-      indicadorConexionTexto.textContent = enLinea ? 'En línea' : 'Sin conexión';
-    }
-    indicadorConexion.title = enLinea
-      ? 'Los datos se guardan en Supabase y también en este navegador'
-      : 'Los datos se guardan solo en este navegador';
+
+    const remoto = window.gastosRemoto;
+    const estado = remoto && typeof remoto.estadoRed === 'function'
+      ? remoto.estadoRed()
+      : 'local';
+
+    const variantes = {
+      'en-linea': {
+        clase: 'conn-badge conn-online',
+        texto: 'En línea',
+        title: 'Los datos se guardan en Supabase y también en este navegador'
+      },
+      'sin-conexion': {
+        clase: 'conn-badge conn-offline',
+        texto: 'Sin conexión',
+        title: 'No se pudo llegar a la nube: los datos se guardan solo en este navegador'
+      },
+      'conectando': {
+        clase: 'conn-badge conn-offline',
+        texto: 'Conectando…',
+        title: 'Probando la conexión con la nube'
+      },
+      'local': {
+        clase: 'conn-badge conn-offline',
+        texto: 'Solo local',
+        title: 'La nube está desactivada: todo se guarda en este navegador'
+      }
+    };
+
+    const v = variantes[estado] || variantes.local;
+    indicadorConexion.className = v.clase;
+    if (indicadorConexionTexto) indicadorConexionTexto.textContent = v.texto;
+    indicadorConexion.title = v.title;
   }
 
   // Aplica una sesión nueva a toda la interfaz. Se llama al arranque, después
@@ -274,6 +309,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateAuthModeUI();
   updateIndicadorConexion();
+
+  /* `supabase-store.js` avisa cada vez que cambia el resultado REAL de una
+     llamada a la nube. Sin esto el badge solo se refrescaría al cambiar de
+     sesión y seguiría mostrando un estado viejo. */
+  window.addEventListener('gastos:conexion', updateIndicadorConexion);
 
   // mostrarAviso = true lleva directo al aviso de "pendiente de backend",
   // que es lo que se ve al intentar editar sin tener rol de administrador.
@@ -399,34 +439,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const remoto = window.gastosRemoto;
       const intentarRemoto = remoto && remoto.estaConfigurado();
 
-      const finalizarComoAdmin = () => {
-        sesionActual = { rol: 'admin', configurado: !!intentarRemoto };
-        sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
-        aplicarSesion();
-        showToast('Sesión iniciada. Modo Administrador activo.', '');
-      };
-
-      // Si las credenciales coinciden con las del administrador oficial
-      const esAdminOficial = (email.toLowerCase() === 'ahuamanc@unac.edu.pe' && password === 'adripro123');
-
-      if (esAdminOficial) {
-        finalizarComoAdmin();
-        if (intentarRemoto) {
-          remoto.iniciarSesion(email, password)
-            .then(res => {
-              if (res && res.ok && store && typeof store.save === 'function') {
-                store.save();
-              }
-            })
-            .catch(() => {});
-        }
-        if (btnAdminLoginSubmit) {
-          btnAdminLoginSubmit.disabled = false;
-          btnAdminLoginSubmit.textContent = 'Entrar';
-        }
-        return;
-      }
-
+      /* Acá había un atajo: si el correo y la contraseña coincidían con los del
+         administrador oficial, se entraba en modo admin SIN consultar a
+         Supabase. Ese par de credenciales viajaba en este archivo y en el bundle
+         publicado, así que cualquiera podía leerlo. Ya no existe: el único
+         camino a 'admin' es `iniciarSesion()` contra el servidor, y el rol lo
+         decide `app_metadata`. */
       if (intentarRemoto) {
         remoto.iniciarSesion(email, password)
           .then(resultado => {
@@ -467,24 +485,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const activarAdminLocal = () => {
-    sesionActual = { rol: 'admin', configurado: sesionActual.configurado };
-    sessionStorage.setItem(ELECCION_ROL_KEY, 'admin');
-    aplicarSesion();
-    if (modalAdminAuth) modalAdminAuth.classList.remove('active');
-    if (modalSessionRoleSelect) modalSessionRoleSelect.classList.remove('active');
-    showToast('Sesión activa. Modo Administrador.', '');
-  };
-
-  const btnAdminLoginQuickBypass = document.getElementById('btnAdminLoginQuickBypass');
-  if (btnAdminLoginQuickBypass) {
-    btnAdminLoginQuickBypass.addEventListener('click', activarAdminLocal);
-  }
-
-  const btnAdminLoginLocalBypass = document.getElementById('btnAdminLoginLocalBypass');
-  if (btnAdminLoginLocalBypass) {
-    btnAdminLoginLocalBypass.addEventListener('click', activarAdminLocal);
-  }
+  /* Acá vivía `activarAdminLocal()`, un botón que ponía `sesionActual` en
+     'admin' sin credencial ninguna. Se eliminó junto con sus dos listeners: un
+     atajo de interfaz no puede ser la puerta de un modo con permisos de
+     escritura. Si en algún momento hace falta un modo de prueba, va detrás de
+     `config.js`, no en el bundle publicado. */
 
   // Botón del pie del Sidebar: con backend conectado hace de cierre de sesión.
   if (btnToggleAuthMode) {

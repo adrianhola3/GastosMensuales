@@ -26,6 +26,26 @@ create table if not exists public.gastos (
 alter table public.gastos
   add column if not exists updated_at timestamptz not null default now();
 
+-- El `id` declarado arriba es bigint, pero la tabla original se creo con
+-- `integer`. La diferencia no rompe nada hoy (la app usa id = 1), y por eso el
+-- desfase paso inadvertido: el archivo decia una cosa y la base tenia otra.
+-- Se ensancha la columna real para que coincidan. integer -> bigint no pierde
+-- ningun valor, y el bloque solo actua si todavia es integer, asi que correrlo
+-- de nuevo no hace nada.
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name   = 'gastos'
+      and column_name  = 'id'
+      and data_type    = 'integer'
+  ) then
+    alter table public.gastos alter column id type bigint;
+  end if;
+end $$;
+
 -- RLS encendido. Las politicas concretas viven en 01-seguridad.sql: aca solo se
 -- activa el interruptor. Una tabla con RLS y sin politicas es inaccesible, y eso
 -- es preferible a una tabla abierta por olvido.

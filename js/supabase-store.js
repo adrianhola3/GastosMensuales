@@ -325,21 +325,29 @@
   /**
    * Guarda el estado completo en la nube (upsert sobre la fila id = 1).
    * Las escrituras se encadenan para que respeten el orden de llegada.
-   * @returns {Promise<void>} nunca rechaza: un fallo de red no debe romper la app.
+   *
+   * DEVUELVE SI EL DATO LLEGO. Antes resolvia `undefined` tanto si el upsert
+   * habia funcionado como si no, y el store no tenia forma de distinguir una
+   * escritura confirmada de una descartada. Sin esa distincion, la siguiente
+   * lectura de la nube pisaba en silencio lo que el usuario acababa de escribir.
+   * Nunca rechaza: un fallo de red no debe romper la app.
+   *
+   * @returns {Promise<boolean>} true si el servidor confirmo la escritura.
    */
   function guardar(estado) {
     const cli = obtenerCliente();
-    if (!cli || !estado) return Promise.resolve();
+    if (!cli || !estado) return Promise.resolve(false);
 
     colaEscritura = colaEscritura
       .then(() => cli
         .from(TABLA)
         .upsert({ id: FILA_ID, data: estado }, { onConflict: 'id' })
         .then(({ error }) => { if (error) throw error; })
-        .then(() => fijarEstadoRed('en-linea')))
+        .then(() => { fijarEstadoRed('en-linea'); return true; }))
       .catch(e => {
         fijarEstadoRed('sin-conexion');
         console.warn('[supabase-store] No se pudo guardar en la nube:', e && e.message ? e.message : e);
+        return false;
       });
 
     return colaEscritura;

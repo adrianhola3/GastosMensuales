@@ -4,6 +4,17 @@
 
 const STORAGE_KEY = 'control_gastos_mensuales_db_v1';
 
+// Copias automaticas rotativas. Cada guardado sano deja una version completa
+// bajo su propio sello de tiempo; solo sobreviven las ultimas MAX_BACKUPS.
+// El prefijo es lo que permite enumerarlas y purgar sin tocar nada mas.
+const AUTO_BACKUP_PREFIX = 'gastos_auto_backup_';
+const MAX_AUTO_BACKUPS = 5;
+
+// Marca de "hay cambios locales que todavia no llegaron a la nube". Se
+// persiste a proposito: si el navegador se cierra con una escritura fallida,
+// la proxima carga tiene que saber que lo local manda y reintentar la subida.
+const PENDING_SYNC_KEY = 'gastos_pendiente_sync';
+
 // Rango admisible para cualquier monto. Es holgado a propósito: sobra para
 // gastos reales y deja afuera los desbordes numéricos, que son los que
 // convierten los totales en Infinity o NaN.
@@ -254,6 +265,11 @@ class FinancialStore {
     this.ultimoGuardadoTs = 0;
     this.sincronizandoEnCurso = false;
     this.sincronizandoDesdeNube = false;
+    // ¿Quedó alguna edición local sin confirmar en la nube? Mientras sea true,
+    // el estado remoto NO puede pisar `this.data`: lo local manda.
+    this.hayCambiosSinSubir = false;
+    this._ultimoSnapshotJson = null;
+    this._ultimoSnapshotTs = 0;
     this.data = this.leerLocal() || getDefaultData();
     // Fotografía del estado en el momento del arranque. Sirve para que load()
     // distinga "no pasó nada" de "el usuario ya escribió algo mientras
@@ -325,6 +341,128 @@ class FinancialStore {
   }
 
   /**
+   * Deja una copia completa del estado sano bajo `gastos_auto_backup_<ts>` y
+   * purga las que excedan el historial rotativo.
+   *
+   * POR QUE EXISTE: la copia principal se reescribe en cada guardado. Un
+   * estado que se corrompe en memoria (o una edicion equivocada) se persiste
+   * encima de la unica copia buena y no queda nada a lo que volver. Estas
+   * copias son la red de seguridad: cinco versiones completas, la mas nueva
+   * siempre con el sello mas alto.
+   *
+   * No se escribe si el contenido es identico al ultimo snapshot: evita que
+   * cinco guardados sin cambios reales empujen fuera el historial util.
+   *
+   * @returns {boolean} true si se escribio un snapshot nuevo.
+   */
+  guardarSnapshotSeguro() {
+    if (typeof localStorage === 'undefined') return false;
+    let json;
+    try {
+      json = JSON.stringify(this.data);
+    } catch (e) {
+      console.warn('No se pudo serializar el estado para el respaldo automatico:', e);
+      return false;
+    }
+
+    if (json === this._ultimoSnapshotJson) return false;
+
+    // El sello es monotónico: dos guardados dentro del mismo milisegundo
+    // colisionarían en la misma clave y uno pisaría al otro. Con el máximo
+    // entre el reloj y el último sello + 1, cada copia tiene clave propia y
+    // el orden lexicográfico sigue siendo el cronológico.
+    const sello = Math.max(Date.now(), (this._ultimoSnapshotTs || 0) + 1);
+    this._ultimoSnapshotTs = sello;
+
+    try {
+      localStorage.setItem(AUTO_BACKUP_PREFIX + sello, json);
+      this._ultimoSnapshotJson = json;
+      this.purgarSnapshotsViejos();
+      return true;
+    } catch (e) {
+      // Cuota llena o almacenamiento bloqueado: se avisa y se sigue. Es
+      // preferible quedarse sin respaldo a romper el guardado principal.
+      console.warn('No se pudo escribir el respaldo automatico:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Deja solo las MAX_AUTO_BACKUPS copias mas recientes.
+   *
+   * El sello de tiempo tiene ancho fijo (13 digitos), asi que ordenar las
+   * claves como texto equivale a ordenarlas cronologicamente.
+   */
+  purgarSnapshotsViejos() {
+    const claves = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const clave = localStorage.key(i);
+        if (clave && clave.indexOf(AUTO_BACKUP_PREFIX) === 0) claves.push(clave);
+      }
+    } catch (e) {
+      return;
+    }
+
+    claves.sort();
+    while (claves.length > MAX_AUTO_BACKUPS) {
+      const vieja = claves.shift();
+      try {
+        localStorage.removeItem(vieja);
+      } catch (e) {}
+    }
+  }
+
+  /** Copias automaticas disponibles, de la mas nueva a la mas vieja. */
+  listarSnapshots() {
+    const claves = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const clave = localStorage.key(i);
+        if (clave && clave.indexOf(AUTO_BACKUP_PREFIX) === 0) claves.push(clave);
+      }
+    } catch (e) {
+      return [];
+    }
+    return claves.sort().reverse();
+  }
+
+  /**
+   * Marca persistente de "hay cambios locales sin confirmar en la nube".
+   *
+   * En el arnes (`window.__sandbox`) la marca vive solo en memoria a proposito:
+   * las suites corren muchas navegaciones sobre el mismo perfil y una marca
+   * persistida se filtraria de un caso al siguiente. El camino persistente se
+   * verifica en odd/tasks/anti-loss-suite.mjs, sin sandbox.
+   */
+  marcarPendienteSync() {
+    this.hayCambiosSinSubir = true;
+    if (typeof window !== 'undefined' && window.__sandbox) return;
+    try {
+      localStorage.setItem(PENDING_SYNC_KEY, String(Date.now()));
+    } catch (e) {}
+  }
+
+  /** Borra la marca persistente. Solo se llama con la subida confirmada. */
+  limpiarPendienteSync() {
+    this.hayCambiosSinSubir = false;
+    if (typeof window !== 'undefined' && window.__sandbox) return;
+    try {
+      localStorage.removeItem(PENDING_SYNC_KEY);
+    } catch (e) {}
+  }
+
+  /** ¿Quedó marcada una subida pendiente de una sesión anterior? */
+  hayPendienteSyncGuardado() {
+    if (typeof window !== 'undefined' && window.__sandbox) return false;
+    try {
+      return !!localStorage.getItem(PENDING_SYNC_KEY);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
    * Carga el estado. Ahora es asíncrono porque la fuente de verdad puede ser
    * Supabase, pero el resultado nunca rompe a quien lo llama: si la nube no está
    * configurada o no responde, sigue con la copia local.
@@ -339,12 +477,20 @@ class FinancialStore {
   async load() {
     let remoto = null;
     let hayFilaRemota = false;
+    // Distinguir "no hay fila" de "no pude leer" es decisivo: en el primer caso
+    // la copia local es la fuente y se migra; en el segundo no se sabe qué hay
+    // arriba y subirla a ciegas podría pisar datos más nuevos.
+    let lecturaNubeOk = true;
 
     if (window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
       try {
         remoto = await window.gastosRemoto.cargar();
         hayFilaRemota = !!remoto;
+        if (typeof window.gastosRemoto.estadoRed === 'function') {
+          lecturaNubeOk = window.gastosRemoto.estadoRed() !== 'sin-conexion';
+        }
       } catch (e) {
+        lecturaNubeOk = false;
         console.warn('No se pudo leer de Supabase, se usa la copia local:', e);
       }
     }
@@ -357,19 +503,30 @@ class FinancialStore {
     let estado;
     // Si mientras se esperaba a la nube el usuario ya escribió algo, la copia
     // remota quedó desactualizada: imponerla perdería justo lo que él acaba
-    // de escribir. En ese caso manda lo que está en memoria y se sube a la
-    // nube, que es la única forma de que la edición llegue a existir.
+    // de escribir. Lo mismo vale si una sesión anterior cerró con una subida
+    // fallida: esa marca persistida dice que lo local nunca llegó arriba.
     const huboEdicionesLocales =
       this.snapshotArranque !== JSON.stringify(this.data);
+    const pendienteDeOtraSesion = this.hayPendienteSyncGuardado();
+    const mandaLoLocal = huboEdicionesLocales || pendienteDeOtraSesion;
 
-    if (hayFilaRemota && huboEdicionesLocales) {
+    if (mandaLoLocal) this.hayCambiosSinSubir = true;
+
+    if (hayFilaRemota && mandaLoLocal) {
       console.warn('Hay cambios locales sin subir: se conservan y se envían a la nube.');
       estado = this.data;
       if (window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
         try {
-          await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(estado)));
+          const subio = await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(estado)));
+          if (subio !== false) {
+            this.limpiarPendienteSync();
+            this.guardarSnapshotSeguro();
+          } else {
+            this.marcarPendienteSync();
+          }
         } catch (e) {
           console.warn('No se pudo subir el estado local a Supabase:', e);
+          this.marcarPendienteSync();
         }
       }
     } else if (hayFilaRemota) {
@@ -403,13 +560,25 @@ class FinancialStore {
       estado = remoto;
     } else {
       // Sin fila en la nube: la copia local pasa a ser la fuente y se sube.
+      // Pero solo si la lectura se confirmó. Si la nube no respondió, no se
+      // sabe si hay una fila más nueva: subir a ciegas sería perderla.
       estado = this.leerLocal();
-      if (estado && window.gastosRemoto && window.gastosRemoto.estaConfigurado()) {
+      if (
+        lecturaNubeOk &&
+        estado &&
+        window.gastosRemoto &&
+        window.gastosRemoto.estaConfigurado()
+      ) {
         try {
-          await window.gastosRemoto.guardar(estado);
+          const subio = await window.gastosRemoto.guardar(estado);
+          if (subio !== false) this.limpiarPendienteSync();
+          else this.marcarPendienteSync();
         } catch (e) {
           console.warn('No se pudo subir la copia local a Supabase:', e);
+          this.marcarPendienteSync();
         }
+      } else if (!lecturaNubeOk) {
+        console.warn('La nube no respondió: la copia local queda intacta y no se sube a ciegas.');
       }
     }
 
@@ -441,6 +610,10 @@ class FinancialStore {
    */
   aplicarEstadoRemoto(remoto) {
     if (!remoto || !esEstadoValido(remoto)) return false;
+    // REGLA 1: mientras haya una edición local sin confirmar en la nube, el
+    // estado remoto es viejo por definición. Pisar `this.data` con él borraría
+    // justo lo que el usuario escribió. Lo local manda hasta que suba.
+    if (this.hayCambiosSinSubir) return false;
     if (this.guardandoEnCurso > 0) return false;
     if (Date.now() - (this.ultimoGuardadoTs || 0) < 1500) return false;
 
@@ -499,6 +672,13 @@ class FinancialStore {
       return false;
     }
 
+    // Con una edición local pendiente, la prioridad no es traer: es empujar.
+    // Traer primero y aplicar después sería exactamente la sobreescritura
+    // destructiva que esta regla prohíbe.
+    if (this.hayCambiosSinSubir) {
+      return this.reintentarSubidaPendiente();
+    }
+
     this.sincronizandoEnCurso = true;
     try {
       const remoto = await window.gastosRemoto.cargar();
@@ -508,6 +688,35 @@ class FinancialStore {
       return false;
     } finally {
       this.sincronizandoEnCurso = false;
+    }
+  }
+
+  /**
+   * Reintenta subir el estado local que quedó sin confirmar.
+   *
+   * Es la otra mitad de la Regla 1: bloquear la bajada sin dar salida dejaría
+   * al usuario con una edición local que nunca llega a la nube. Cada intento
+   * fallido mantiene la marca; el primero confirmado la borra y recién ahí
+   * vuelve a habilitarse la sincronización normal.
+   *
+   * @returns {Promise<boolean>} true si la nube confirmó la escritura.
+   */
+  async reintentarSubidaPendiente() {
+    if (!this.hayCambiosSinSubir) return false;
+    if (!this.remotoListo) return false;
+    if (!window.gastosRemoto || !window.gastosRemoto.estaConfigurado()) return false;
+
+    // Mismo freno que el resto del ciclo: no martillar la red cada 3 segundos.
+    this.ultimoGuardadoTs = Date.now();
+
+    try {
+      const subio = await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(this.data)));
+      if (subio === false) return false;
+      this.limpiarPendienteSync();
+      this.guardarSnapshotSeguro();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
@@ -667,8 +876,10 @@ class FinancialStore {
       this.data = dataToSave;
     }
 
+    let localOk = false;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.data));
+      localOk = true;
     } catch (e) {
       console.error('Error al guardar datos en LocalStorage:', e);
     }
@@ -681,6 +892,7 @@ class FinancialStore {
       document.body.classList.contains('read-only-mode') &&
       typeof window.gastosRemoto?.suscribirCambios === 'function';
 
+    let nubeOk = true;
     if (
       this.remotoListo &&
       !enModoLecturaReal &&
@@ -690,14 +902,37 @@ class FinancialStore {
       this.guardandoEnCurso++;
       this.ultimoGuardadoTs = Date.now();
       try {
-        await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(this.data)));
+        const resultado = await window.gastosRemoto.guardar(JSON.parse(JSON.stringify(this.data)));
+        // `undefined` es lo que devolvían las versiones viejas y los stubs del
+        // arnés: se trata como éxito para no marcar pendientes falsos.
+        nubeOk = resultado !== false;
       } catch (e) {
         console.warn('No se pudo sincronizar con Supabase:', e);
+        nubeOk = false;
       } finally {
         this.guardandoEnCurso = Math.max(0, this.guardandoEnCurso - 1);
         this.ultimoGuardadoTs = Date.now();
       }
     }
+
+    // REGLA 1 (mitad de escritura): si la nube no confirmó, el estado local es
+    // la única copia buena y queda marcado como pendiente. REGLA 3: cada
+    // guardado local sano deja además una copia rotativa completa.
+    //
+    // La marca NO se limpia antes de que `load()` haya resuelto: los guardados
+    // de arranque (leerLocal/sanear) no son escrituras confirmadas y borrarían
+    // el pendiente que dejó la sesión anterior justo antes de leerlo.
+    if (!nubeOk) {
+      this.marcarPendienteSync();
+    } else if (this.remotoListo) {
+      this.limpiarPendienteSync();
+    }
+    // Solo un guardado CONFIRMADO deja copia rotativa: si la nube fallo, la
+    // edicion local ya vive en la clave principal y rotar el historial con
+    // versiones no confirmadas empujaria fuera las ultimas copias sanas.
+    if (nubeOk && localOk) this.guardarSnapshotSeguro();
+
+    return nubeOk;
   }
 
   resetToDefault() {

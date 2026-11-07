@@ -37,5 +37,5 @@ jobs:
             echo "No hay cambios nuevos en la base de datos respecto al último backup."
           else
             git commit -m "chore(backup): automated daily cloud backup [skip ci]"
-            git push origin master
+            git push origin HEAD
           fi

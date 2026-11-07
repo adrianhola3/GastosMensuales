@@ -156,6 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /**
+   * Estado del "Modo Protección" (sin nube = sin edición). Vive antes de
+   * `exigirAdmin` porque ese gate lo consulta: el botón deshabilitado cubre la
+   * UI, pero el gate tiene que cubrir cualquier llamada que llegue igual.
+   */
+  const proteccion = { activo: false };
+
+  /**
    * Gate de escritura para el rol lector.
    *
    * Ocultar los botones (`.admin-action-btn`) es solo presentación: los
@@ -175,7 +182,17 @@ document.addEventListener('DOMContentLoaded', () => {
    * @param {string} accion qué intento de escritura se está haciendo, en minúsculas.
    * @returns {boolean} true si la escritura puede seguir.
    */
+  /**
+   * ¿Puede el usuario actual escribir?
+   *
+   * @param {string} accion qué intento de escritura se está haciendo, en minúsculas.
+   * @returns {boolean} true si la escritura puede seguir.
+   */
   function exigirAdmin(accion) {
+    if (proteccion.activo) {
+      showToast('Sin conexión con la nube: la edición está bloqueada para proteger tus datos.', '');
+      return false;
+    }
     const autorizado = obtenerSesion().rol === 'admin' &&
       sessionStorage.getItem(ELECCION_ROL_KEY) !== 'lector';
     if (autorizado) return true;
@@ -290,6 +307,89 @@ document.addEventListener('DOMContentLoaded', () => {
     indicadorConexion.title = v.title;
   }
 
+  // --- MODO PROTECCION: SIN NUBE = SIN EDICION (Regla 2) ---
+  // Un guardado que falla hoy se descarta en silencio y la proxima lectura pisa
+  // lo local. Mientras la nube no responda, la interfaz no deja escribir: es
+  // preferible decir "no ahora" a aceptar una edicion que no se puede sostener.
+  //
+  // `local` (nube desactivada a proposito) y `conectando` (todavia no hubo
+  // respuesta) NO bloquean: en el primer caso no hay nada que proteger y en el
+  // segundo bloqueariamos el arranque por una duda.
+  const bannerProteccion = document.getElementById('bannerProteccion');
+
+  const SELECTORES_ALTA = [
+    '#btnHeaderAddBudget',
+    '#btnHeaderAddIncome',
+    '#btnQuickActionExpense',
+    '#btnQuickActionIncome',
+    '#btnOpenNewMonthModal',
+    '#btnDeleteMonth',
+    '#btnOpenNotesModal',
+    '.btn-quick-add-service',
+    '.btn-quick-add-personal',
+    '.btn-quick-add-extra'
+  ];
+
+  function nubeSinResponder() {
+    if (typeof navigator !== 'undefined' && navigator.onLine === false) return true;
+    const remoto = window.gastosRemoto;
+    if (!remoto || typeof remoto.estadoRed !== 'function') return false;
+    return remoto.estadoRed() === 'sin-conexion';
+  }
+
+  function controlesDeAlta() {
+    const encontrados = [];
+    SELECTORES_ALTA.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => encontrados.push(el));
+    });
+    return encontrados;
+  }
+
+  function aplicarModoProteccion(activo) {
+    proteccion.activo = !!activo;
+    if (bannerProteccion) bannerProteccion.hidden = !proteccion.activo;
+    document.body.classList.toggle('modo-proteccion', proteccion.activo);
+
+    controlesDeAlta().forEach(el => {
+      if (proteccion.activo) {
+        // Solo se toca lo que estaba habilitado: si ya venía deshabilitado por
+        // otra razón, al salir del modo no se lo reactiva por error.
+        if (!el.disabled) el.setAttribute('data-deshabilitado-por-proteccion', '1');
+        el.disabled = true;
+        el.setAttribute('aria-disabled', 'true');
+      } else {
+        if (el.getAttribute('data-deshabilitado-por-proteccion') === '1') {
+          el.disabled = false;
+          el.removeAttribute('data-deshabilitado-por-proteccion');
+        }
+        el.removeAttribute('aria-disabled');
+      }
+    });
+  }
+
+  function evaluarModoProteccion() {
+    aplicarModoProteccion(nubeSinResponder());
+  }
+
+  evaluarModoProteccion();
+
+  window.addEventListener('online', () => {
+    evaluarModoProteccion();
+    // Volver a tener red no alcanza: hay que empujar lo que quedó pendiente.
+    if (store && typeof store.syncFromRemote === 'function') store.syncFromRemote();
+  });
+  window.addEventListener('offline', evaluarModoProteccion);
+
+  // --- DESCARGA DE LA COPIA JSON (Regla 3b) ---
+  const btnDescargarCopiaJSON = document.getElementById('btnDescargarCopiaJSON');
+  if (btnDescargarCopiaJSON) {
+    btnDescargarCopiaJSON.addEventListener('click', () => {
+      if (!store || typeof store.exportJSON !== 'function') return;
+      store.exportJSON();
+      showToast('Copia JSON descargada', '');
+    });
+  }
+
   // Aplica una sesión nueva a toda la interfaz. Se llama al arranque, después
   // de iniciar/cerrar sesión y cuando Supabase avisa que cambió la sesión.
   function aplicarSesion() {
@@ -312,8 +412,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* `supabase-store.js` avisa cada vez que cambia el resultado REAL de una
      llamada a la nube. Sin esto el badge solo se refrescaría al cambiar de
-     sesión y seguiría mostrando un estado viejo. */
-  window.addEventListener('gastos:conexion', updateIndicadorConexion);
+     sesión y seguiría mostrando un estado viejo. El mismo evento decide si el
+     Modo Protección entra o sale. */
+  window.addEventListener('gastos:conexion', () => {
+    updateIndicadorConexion();
+    evaluarModoProteccion();
+  });
 
   // mostrarAviso = true lleva directo al aviso de "pendiente de backend",
   // que es lo que se ve al intentar editar sin tener rol de administrador.

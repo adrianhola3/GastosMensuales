@@ -665,6 +665,66 @@
 .topbar-left { flex: 1 1 auto; }
 .topbar-right { flex: 0 0 auto; }
 
+/* ACCION DEL TOPBAR: descargar la copia JSON.
+   Es una acción secundaria y de rescate, no la tarea del día: se lee como
+   control, no como cifra. Mismo alto que el título y sin fondo hasta el hover,
+   para no competir con la navegación del rail. */
+.topbar-action {
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--ink-2, #475569);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-box);
+  padding: var(--space-1) var(--space-3);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.topbar-action:hover { border-color: var(--rule-2); color: var(--ink); }
+.topbar-action:focus-visible { outline: 2px solid var(--rule-2); outline-offset: 2px; }
+.topbar-action:disabled { opacity: 0.5; cursor: default; }
+
+/* MODO PROTECCION.
+   Banda arriba del contenido, pegada al topbar. Ámbar de "estado pendiente" y
+   no rojo de error: el sistema no falló, está cuidando los datos. */
+.banner-proteccion {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-5);
+  background: var(--pending-wash);
+  color: var(--pending);
+  border-bottom: 1px solid var(--rule);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.banner-proteccion[hidden] { display: none; }
+.banner-proteccion-icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--pending);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+}
+.banner-proteccion-texto { min-width: 0; }
+
+/* Los controles de alta quedan inertes mientras dure la protección. El
+   atributo `disabled` es el que corta de verdad; esto solo lo hace visible. */
+body.modo-proteccion .admin-action-btn:disabled,
+body.modo-proteccion .topbar-action:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* EL TÍTULO DE PÁGINA. Es la respuesta a "¿qué período estoy mirando?" y no
    puede pesar más que la respuesta que contiene. Sin `flex: 0 0 auto`, porque
    un nombre escrito a mano tiene que poder recortarse con puntos suspensivos

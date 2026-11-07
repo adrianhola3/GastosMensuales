@@ -366,10 +366,22 @@
           <h2 id="activeMonthHeaderBadge" class="topbar-page-title">Período Actual</h2>
         </div>
         <div class="topbar-right">
+          <button type="button" id="btnDescargarCopiaJSON" class="topbar-action"
+            title="Descargar una copia completa de tus datos en JSON">Descargar Copia JSON</button>
         </div>
       </header>
 
       <main class="main-content">
+
+        <!-- MODO PROTECCION (sin nube = sin edicion).
+             El banner y los botones deshabilitados los maneja app.js a partir
+             del estado REAL de la conexion, no de si hay credenciales escritas.
+             El texto es literal a proposito: dice que se bloquea para proteger
+             los datos, no que algo fallo. -->
+        <div id="bannerProteccion" class="banner-proteccion" role="alert" hidden>
+          <span class="banner-proteccion-icono" aria-hidden="true">!</span>
+          <span class="banner-proteccion-texto">&#9888;&#65039; Sin conexión con la nube. Edición bloqueada para proteger tus datos.</span>
+        </div>
 
         <!-- ==========================================================
              VISTA 1: DETALLE MENSUAL

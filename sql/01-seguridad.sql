@@ -37,10 +37,11 @@ drop policy if exists "gastos: leer autenticados"      on public.gastos;
 drop policy if exists "gastos: escribir autenticados"  on public.gastos;
 drop policy if exists "gastos: actualizar autenticados" on public.gastos;
 
--- Esta NO estaba en el esquema documentado y se encontró al verificar:.allow
--- SELECT a {anon, authenticated}. `anon` es el rol de quien NO tiene sesión,
--- o sea que cualquier persona con el enlace podia leer los gastos sin cuenta
--- ni contraseña. Se elimina acá porque la lectura de más abajo la cubre.
+-- Esta NO estaba en el esquema documentado y se encontro al verificar los
+-- permisos reales: la tabla tenia SELECT concedido a {anon, authenticated}.
+-- `anon` es el rol de quien NO tiene sesion, o sea que cualquier persona con el
+-- enlace podia leer los gastos sin cuenta ni contrasena. Se elimina aca porque
+-- la lectura de mas abajo la cubre.
 drop policy if exists "gastos: lectura publica" on public.gastos;
 
 -- ---------------------------------------------------------------------

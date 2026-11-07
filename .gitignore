@@ -2,6 +2,11 @@
 .github_oauth
 .supabase_db_password
 .env
+
+# Token de administracion de Supabase y estado del aprovisionamiento: contienen
+# secretos (token, contrasena de la base, contrasena del administrador).
+.supabase_token
+.provision-state.json
 node_modules/
 .codegraph/
 

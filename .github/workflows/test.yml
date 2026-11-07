@@ -1,0 +1,30 @@
+name: tests
+
+# Las suites ya existian pero solo corrian a mano. Un test que nadie ejecuta no
+# protege nada: el defecto de `escribirConfig()` (reemplazaba la prosa del
+# comentario en vez de la linea real) habria pasado igual con la suite escrita,
+# porque nunca se corria en un push.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # No hay dependencias: las suites usan solo modulos de Node y levantan su
+      # propio servidor mock. Por eso no hace falta `npm ci`.
+      - name: Suites
+        run: npm test

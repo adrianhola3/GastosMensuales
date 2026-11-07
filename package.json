@@ -1,0 +1,20 @@
+{
+  "name": "gastos-mensuales",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Control de gastos y presupuesto mensual. App estatica con Supabase como backend.",
+  "scripts": {
+    "test": "node odd/tasks/store-fix-suite.mjs && node tools/provision-supabase.test.mjs",
+    "test:store": "node odd/tasks/store-fix-suite.mjs",
+    "test:provisioner": "node tools/provision-supabase.test.mjs",
+    "test:ui": "node odd/tasks/crud-suite.mjs",
+    "test:adversarial": "node odd/tasks/adversarial-suite.mjs",
+    "serve": "node tools/servidor-estatico.mjs",
+    "dom:contract": "node dom-contract.js js/app.js odd/tasks/dom-contract-snapshot.txt",
+    "provision:status": "node tools/provision-supabase.mjs status",
+    "provision:verify": "node tools/provision-supabase.mjs verify"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

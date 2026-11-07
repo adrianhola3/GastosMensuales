@@ -1,6 +1,6 @@
 {
   "suite": "adversarial-suite",
-  "generatedAt": "2026-10-14T22:25:47.666Z",
+  "generatedAt": "2026-11-07T21:24:37.886Z",
   "storageKey": "control_gastos_mensuales_db_v1",
   "network": [
     {
@@ -114,7 +114,7 @@
       "tripwire": 0
     },
     {
-      "test": "export.no-ui-surface: exportCSV / exportJSON are unreachable",
+      "test": "export.ui-surface: exactly one control downloads the JSON backup",
       "supabaseRequests": 0,
       "tripwire": 0
     },
@@ -187,7 +187,7 @@
           "pass": true,
           "label": "the month view painted real content, it is not a blank screen",
           "detail": {
-            "chars": 916,
+            "chars": 939,
             "viewMesActiva": true,
             "filas": 0,
             "kpisVisibles": [
@@ -196,7 +196,7 @@
               "monthBalanceNeto",
               "activeMonthHeaderBadge"
             ],
-            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador SECCIONES Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos 0 "
+            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes Solo local Modo Administrador SECCIONES Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos "
           }
         },
         {
@@ -5903,8 +5903,8 @@
           "pass": true,
           "label": "coma-miles: a rejected amount changed nothing on disk",
           "detail": {
-            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_we4x47i69_1792016647648\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
-            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_we4x47i69_1792016647648\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "actual": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_zom218fkx_1794086587757\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
+            "expected": "{\"version\":1,\"activeMonthId\":\"prueba-alfa-2026\",\"currentView\":\"mes\",\"mesesOrden\":[\"prueba-alfa-2026\"],\"meses\":{\"prueba-alfa-2026\":{\"id\":\"prueba-alfa-2026\",\"nombre\":\"PRUEBA-ALFA 2026\",\"corto\":\"PRUEBA-ALFA\",\"servicios\":{\"fijos\":[{\"id\":\"id_zom218fkx_1794086587757\",\"concepto\":\"PRUEBA-MONTO separador-miles\",\"montoEstimado\":987654321.99,\"montoReal\":null,\"tipo\":\"Fijo\",\"rango\":\"\"}],\"variables\":[]},\"personales\":{\"fijos\":[],\"variables\":[]},\"extras\":[],\"notas\":\"PRUEBA-ALFA mes sin gastos ni movimientos\",\"movimientos\":[]}}}",
             "contexto": {
               "etiqueta": "coma-miles",
               "entrada": "1,000",
@@ -6099,7 +6099,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6132,7 +6132,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6166,7 +6166,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6200,7 +6200,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6234,7 +6234,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6268,7 +6268,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6302,7 +6302,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6336,7 +6336,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6367,7 +6367,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6400,7 +6400,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6431,7 +6431,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6464,7 +6464,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6498,7 +6498,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6529,7 +6529,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6562,7 +6562,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6596,7 +6596,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<script>alert(1)</script>\"?"
@@ -6651,7 +6651,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6684,7 +6684,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6718,7 +6718,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6752,7 +6752,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6786,7 +6786,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6820,7 +6820,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6854,7 +6854,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6888,7 +6888,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6919,7 +6919,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6952,7 +6952,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -6983,7 +6983,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7016,7 +7016,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7050,7 +7050,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7081,7 +7081,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7114,7 +7114,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7148,7 +7148,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"<img src=x onerror=alert(1)>\"?"
@@ -7203,7 +7203,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7236,7 +7236,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7270,7 +7270,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7304,7 +7304,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7338,7 +7338,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7372,7 +7372,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7406,7 +7406,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7440,7 +7440,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7471,7 +7471,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7504,7 +7504,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7535,7 +7535,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7568,7 +7568,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7602,7 +7602,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7636,7 +7636,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7667,7 +7667,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7700,7 +7700,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"a\"b'c`d\"?"
@@ -7755,7 +7755,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7788,7 +7788,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7822,7 +7822,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7856,7 +7856,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7890,7 +7890,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7924,7 +7924,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7958,7 +7958,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -7992,7 +7992,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8023,7 +8023,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8056,7 +8056,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8087,7 +8087,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8120,7 +8120,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8154,7 +8154,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8188,7 +8188,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8222,7 +8222,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8256,7 +8256,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8290,7 +8290,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"javascript:alert(1)\"><svg onload=alert(2)>\"?"
@@ -8345,7 +8345,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8378,7 +8378,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8412,7 +8412,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8446,7 +8446,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8480,7 +8480,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8514,7 +8514,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8548,7 +8548,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8582,7 +8582,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8613,7 +8613,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8646,7 +8646,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8677,7 +8677,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8710,7 +8710,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8744,7 +8744,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8778,7 +8778,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": [],
               "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8809,7 +8809,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": [],
             "mensajeConfirm": "¿Eliminar gasto \"PAGO 💰🎉 café ☕\"?"
@@ -8839,7 +8839,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 671
+              "totalElementosDOM": 675
             },
             "dialogos": [
               {
@@ -8877,7 +8877,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -8916,7 +8916,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -8955,7 +8955,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -8994,7 +8994,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9033,7 +9033,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9072,7 +9072,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9111,7 +9111,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9147,7 +9147,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 671
+              "totalElementosDOM": 675
             },
             "dialogos": [
               {
@@ -9185,7 +9185,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9221,7 +9221,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 671
+              "totalElementosDOM": 675
             },
             "dialogos": [
               {
@@ -9259,7 +9259,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9298,7 +9298,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9337,7 +9337,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 671
+                "totalElementosDOM": 675
               },
               "dialogos": [
                 {
@@ -9373,7 +9373,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 671
+              "totalElementosDOM": 675
             },
             "dialogos": [
               {
@@ -9408,7 +9408,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 687
+              "totalElementosDOM": 691
             },
             "dialogos": [
               {
@@ -9446,7 +9446,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9485,7 +9485,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9524,7 +9524,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9563,7 +9563,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9602,7 +9602,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9641,7 +9641,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9680,7 +9680,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9716,7 +9716,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 687
+              "totalElementosDOM": 691
             },
             "dialogos": [
               {
@@ -9754,7 +9754,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9790,7 +9790,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 687
+              "totalElementosDOM": 691
             },
             "dialogos": [
               {
@@ -9828,7 +9828,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9867,7 +9867,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9906,7 +9906,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 687
+                "totalElementosDOM": 691
               },
               "dialogos": [
                 {
@@ -9942,7 +9942,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 687
+              "totalElementosDOM": 691
             },
             "dialogos": [
               {
@@ -9977,7 +9977,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 703
+              "totalElementosDOM": 707
             },
             "dialogos": [
               {
@@ -10015,7 +10015,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10054,7 +10054,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10093,7 +10093,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10132,7 +10132,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10171,7 +10171,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10210,7 +10210,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10249,7 +10249,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10285,7 +10285,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 703
+              "totalElementosDOM": 707
             },
             "dialogos": [
               {
@@ -10323,7 +10323,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10359,7 +10359,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 703
+              "totalElementosDOM": 707
             },
             "dialogos": [
               {
@@ -10397,7 +10397,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10436,7 +10436,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10475,7 +10475,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 703
+                "totalElementosDOM": 707
               },
               "dialogos": [
                 {
@@ -10511,7 +10511,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 703
+              "totalElementosDOM": 707
             },
             "dialogos": [
               {
@@ -10546,7 +10546,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 719
+              "totalElementosDOM": 723
             },
             "dialogos": [
               {
@@ -10584,7 +10584,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10623,7 +10623,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10662,7 +10662,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10701,7 +10701,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10740,7 +10740,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10779,7 +10779,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10818,7 +10818,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10854,7 +10854,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 719
+              "totalElementosDOM": 723
             },
             "dialogos": [
               {
@@ -10892,7 +10892,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -10928,7 +10928,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 719
+              "totalElementosDOM": 723
             },
             "dialogos": [
               {
@@ -10966,7 +10966,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -11005,7 +11005,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -11044,7 +11044,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 719
+                "totalElementosDOM": 723
               },
               "dialogos": [
                 {
@@ -11080,7 +11080,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 719
+              "totalElementosDOM": 723
             },
             "dialogos": [
               {
@@ -11140,7 +11140,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": []
           }
@@ -11172,7 +11172,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11205,7 +11205,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11238,7 +11238,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11271,7 +11271,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11304,7 +11304,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11337,7 +11337,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11370,7 +11370,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11400,7 +11400,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": []
           }
@@ -11432,7 +11432,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11473,7 +11473,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11506,7 +11506,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11539,7 +11539,7 @@
                 "onerrorEnDocumento": 0,
                 "onloadEnDocumento": 0,
                 "hrefsJavascript": 0,
-                "totalElementosDOM": 655
+                "totalElementosDOM": 659
               },
               "dialogos": []
             }
@@ -11569,7 +11569,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": []
           }
@@ -11658,7 +11658,7 @@
               "onerrorEnDocumento": 0,
               "onloadEnDocumento": 0,
               "hrefsJavascript": 0,
-              "totalElementosDOM": 655
+              "totalElementosDOM": 659
             },
             "dialogos": []
           }
@@ -11685,7 +11685,7 @@
       "name": "import.no-ui-surface: importJSON is unreachable, proven by enumerating controls",
       "fixture": "mesVacio",
       "verdict": "INCONCLUSIVE",
-      "observation": "observed but untestable -> Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, null, deeply nested garbage, export->import round trip) is UNTESTABLE through the UI",
+      "observation": "observed but untestable -> Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, null, deeply nested garbage) is UNTESTABLE through the UI",
       "checks": [
         {
           "pass": true,
@@ -11694,7 +11694,7 @@
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 133,
+              "totalControles": 134,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11703,12 +11703,12 @@
         },
         {
           "pass": true,
-          "label": "PROVEN ABSENT: not one control in the whole document is labelled import/export/restore/backup",
+          "label": "PROVEN ABSENT: not one control in the whole document is labelled import/restore/open-file",
           "detail": {
             "actual": 0,
             "expected": 0,
             "contexto": {
-              "totalControles": 133,
+              "totalControles": 134,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11722,7 +11722,7 @@
             "actual": true,
             "expected": true,
             "contexto": {
-              "totalControles": 133,
+              "totalControles": 134,
               "entradasDeArchivo": 0,
               "candidatos": [],
               "hayFormularioDeSubida": false
@@ -11749,33 +11749,59 @@
       ],
       "gaps": [
         {
-          "label": "Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, null, deeply nested garbage, export->import round trip) is UNTESTABLE through the UI",
-          "why": "importJSON has no caller and no control. The only way to observe it would be to call window.financialStore.importJSON(...), which is precisely the store-level shortcut this suite refuses to pass off as UI evidence. This is reported as a product finding instead: README.md:20 advertises \"copia de seguridad en JSON\" and CSV export, and neither feature is reachable. T4 has to add the UI before these cases can be tested at all."
+          "label": "Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, null, deeply nested garbage) is UNTESTABLE through the UI",
+          "why": "importJSON has no caller and no control. This change made the export half of the README claim reachable; restore remains a store-level API without UI, and the finding stands for it."
         }
       ],
       "notes": [
-        "js/store.js:787 importJSON(jsonString) and js/store.js:774 exportJSON() and js/store.js:802 exportCSV() are implemented. js/app.js never calls any of them, and index.html has no button, no <input type=file> and no inline handler for them.",
+        "La EXPORTACION ya tiene superficie: #btnDescargarCopiaJSON (ver el grupo de export). La IMPORTACION sigue sin ninguna: ni <input type=file>, ni boton, ni handler.",
         "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
       "thrown": null
     },
     {
-      "group": "Exportacion CSV: sin superficie de UI (hallazgo)",
-      "name": "export.no-ui-surface: exportCSV / exportJSON are unreachable",
+      "group": "Exportacion: una sola superficie de UI, la copia JSON",
+      "name": "export.ui-surface: exactly one control downloads the JSON backup",
       "fixture": "mesVacio",
-      "verdict": "INCONCLUSIVE",
-      "observation": "observed but untestable -> The CSV-injection and escaping case is UNTESTABLE through the UI",
+      "verdict": "PASS",
+      "observation": "4 checks passed across UI + memory + disk + network",
       "checks": [
         {
           "pass": true,
-          "label": "PROVEN ABSENT: no control in the document can trigger a CSV or JSON export",
+          "label": "exactly one control can trigger an export, and it is the JSON backup button",
           "detail": {
-            "actual": 0,
-            "expected": 0,
+            "actual": 1,
+            "expected": 1,
             "contexto": {
-              "totalControles": 72,
-              "candidatos": []
+              "totalControles": 73,
+              "candidatos": [
+                {
+                  "tag": "button",
+                  "id": "btnDescargarCopiaJSON",
+                  "texto": "Descargar Copia JSON",
+                  "download": null
+                }
+              ]
+            }
+          }
+        },
+        {
+          "pass": true,
+          "label": "the export control is the topbar JSON download button",
+          "detail": {
+            "actual": "btnDescargarCopiaJSON",
+            "expected": "btnDescargarCopiaJSON",
+            "contexto": {
+              "totalControles": 73,
+              "candidatos": [
+                {
+                  "tag": "button",
+                  "id": "btnDescargarCopiaJSON",
+                  "texto": "Descargar Copia JSON",
+                  "download": null
+                }
+              ]
             }
           }
         },
@@ -11786,8 +11812,15 @@
             "actual": true,
             "expected": true,
             "contexto": {
-              "totalControles": 72,
-              "candidatos": []
+              "totalControles": 73,
+              "candidatos": [
+                {
+                  "tag": "button",
+                  "id": "btnDescargarCopiaJSON",
+                  "texto": "Descargar Copia JSON",
+                  "download": null
+                }
+              ]
             }
           }
         },
@@ -11801,14 +11834,9 @@
           }
         }
       ],
-      "gaps": [
-        {
-          "label": "The CSV-injection and escaping case is UNTESTABLE through the UI",
-          "why": "exportCSV has no caller and no control. Observed statically (documented above): the hostile-text vectors never reach it, so the residual risk is confined to the month nombre, which is quoted but not prefixed against =, +, - or @. That is a real, if narrow, finding - and it is exactly the kind of thing a test written against the unreachable method would have hidden behind a green tick."
-        }
-      ],
+      "gaps": [],
       "notes": [
-        "js/store.js:802 exportCSV builds a Blob and clicks a synthetic <a download>, but nothing in the UI ever calls it. Note also what it would emit: the header is \"MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE\" and each row contains r.nombre plus totals.toFixed(2). `concepto` is NOT part of exportCSV at all, so hostile expense text can never reach a CSV cell through this path. The only free-text injection surface would be the month `nombre`, which is wrapped in double quotes but not formula-guarded.",
+        "exportCSV sigue sin superficie: el unico control exporta el JSON completo, no el consolidado. El CSV conserva su hallazgo de escape (el nombre del mes va entre comillas pero sin guarda de formula) porque nadie lo puede disparar desde la UI.",
         "observation method -> console errors this test: none; page exceptions: none; counted setItem calls: 0; page requests during this test: 18"
       ],
       "network": "CLEAN (supabase=0, tripwire=0)",
@@ -11907,7 +11935,7 @@
           "pass": true,
           "label": "the view is still painted, not blank",
           "detail": {
-            "chars": 919,
+            "chars": 942,
             "viewMesActiva": true,
             "filas": 0,
             "kpisVisibles": [
@@ -11916,7 +11944,7 @@
               "monthBalanceNeto",
               "activeMonthHeaderBadge"
             ],
-            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes En línea Modo Administrador SECCIONES Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos 0 "
+            "texto": "Gestor Financiero Presupuesto & Gastos Vista Mensual Consolidado PERÍODO PRUEBA-ALFA 2026 Nuevo mes Eliminar mes Solo local Modo Administrador SECCIONES Servicios 0 S/ 0.00 Añadir Personales 0 S/ 0.00 Añadir Movimientos "
           }
         },
         {
@@ -12139,7 +12167,7 @@
                 "servicios": {
                   "fijos": [
                     {
-                      "id": "id_ctyu3bvab_1792016712218",
+                      "id": "id_r2enpg40b_1794086645572",
                       "concepto": "PRUEBA-MODAL Gasto",
                       "montoEstimado": 8,
                       "montoReal": null,
@@ -12157,7 +12185,7 @@
                 "notas": "PRUEBA-MODAL nota con carrera",
                 "movimientos": [
                   {
-                    "id": "id_igcxmz4rk_1792016711354",
+                    "id": "id_a40d3dn38_1794086644666",
                     "fecha": "2026-08-02",
                     "concepto": "PRUEBA-MODAL Mov",
                     "flujo": "Gasto",
@@ -12238,7 +12266,7 @@
           "label": "the target record exists after the UI create",
           "detail": {
             "objetivo": {
-              "id": "id_x9hawqtvc_1792016717658",
+              "id": "id_hxjecqqvu_1794086650963",
               "concepto": "PRUEBA-RERENDER Original",
               "montoEstimado": 44.44,
               "montoReal": null,
@@ -12261,11 +12289,11 @@
           "pass": true,
           "label": "the sheet still points at the original record",
           "detail": {
-            "actual": "id_x9hawqtvc_1792016717658",
-            "expected": "id_x9hawqtvc_1792016717658",
+            "actual": "id_hxjecqqvu_1794086650963",
+            "expected": "id_hxjecqqvu_1794086650963",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_x9hawqtvc_1792016717658",
+              "itemId": "id_hxjecqqvu_1794086650963",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12279,7 +12307,7 @@
             "expected": "prueba-alfa-2026",
             "contexto": {
               "monthId": "prueba-alfa-2026",
-              "itemId": "id_x9hawqtvc_1792016717658",
+              "itemId": "id_hxjecqqvu_1794086650963",
               "concepto": "PRUEBA-RERENDER Original",
               "monto": "44.44"
             }
@@ -12302,7 +12330,7 @@
           "pass": true,
           "label": "DISK: the original record id still exists",
           "detail": {
-            "objetivo": "id_x9hawqtvc_1792016717658"
+            "objetivo": "id_hxjecqqvu_1794086650963"
           }
         },
         {
@@ -12312,7 +12340,7 @@
             "actual": "PRUEBA-TRAS-RE-RENDER",
             "expected": "PRUEBA-TRAS-RE-RENDER",
             "contexto": {
-              "id": "id_x9hawqtvc_1792016717658",
+              "id": "id_hxjecqqvu_1794086650963",
               "concepto": "PRUEBA-TRAS-RE-RENDER",
               "montoEstimado": 31.31,
               "montoReal": null,
@@ -12382,7 +12410,7 @@
           "label": "the target record exists",
           "detail": {
             "objetivo": {
-              "id": "id_1s0oga735_1792016723277",
+              "id": "id_o15ayw4we_1794086656976",
               "concepto": "PRUEBA-STALE Original",
               "montoEstimado": 21.21,
               "montoReal": null,
@@ -12395,8 +12423,8 @@
           "pass": true,
           "label": "the sheet holds the original record id",
           "detail": {
-            "actual": "id_1s0oga735_1792016723277",
-            "expected": "id_1s0oga735_1792016723277"
+            "actual": "id_o15ayw4we_1794086656976",
+            "expected": "id_o15ayw4we_1794086656976"
           }
         },
         {

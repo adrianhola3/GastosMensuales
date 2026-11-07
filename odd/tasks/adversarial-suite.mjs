@@ -1035,7 +1035,7 @@ test('import.no-ui-surface: importJSON is unreachable, proven by enumerating con
     const conTexto = controles.filter(el => {
       const t = ((el.textContent || '') + ' ' + (el.getAttribute('aria-label') || '') + ' '
         + (el.getAttribute('placeholder') || '') + ' ' + (el.getAttribute('title') || '')).toLowerCase();
-      return /import|restaurar|respaldo|cargar|abrir archivo|json|export|descargar|csv|excel/.test(t);
+      return /import|restaurar|cargar archivo|abrir archivo|elegir archivo/.test(t);
     }).map(el => ({ tag: el.tagName.toLowerCase(), type: el.type || null, id: el.id || null,
                     texto: (el.textContent || '').trim().slice(0, 50),
                     accept: el.getAttribute('accept') }));
@@ -1046,23 +1046,19 @@ test('import.no-ui-surface: importJSON is unreachable, proven by enumerating con
       hayFormularioDeSubida: !!document.querySelector('form[enctype], form[action]'),
     };
   })()`);
-  p.note('js/store.js:787 importJSON(jsonString) and js/store.js:774 exportJSON() and '
-    + 'js/store.js:802 exportCSV() are implemented. js/app.js never calls any of them, and index.html has '
-    + 'no button, no <input type=file> and no inline handler for them.');
+  p.note('La EXPORTACION ya tiene superficie: #btnDescargarCopiaJSON (ver el grupo de export). '
+    + 'La IMPORTACION sigue sin ninguna: ni <input type=file>, ni boton, ni handler.');
   p.equal(superficie.entradasDeArchivo, 0,
     'PROVEN ABSENT: the document contains zero <input type=file>, so no file can be chosen at all', superficie);
   p.equal(superficie.candidatos.length, 0,
-    'PROVEN ABSENT: not one control in the whole document is labelled import/export/restore/backup', superficie);
+    'PROVEN ABSENT: not one control in the whole document is labelled import/restore/open-file', superficie);
   p.equal(superficie.totalControles > 40, true,
     'the enumeration was not vacuous: it inspected a real number of controls', superficie);
   p.equal(superficie.hayFormularioDeSubida, false, 'PROVEN ABSENT: no upload form either');
   p.inconclusive('Every import-JSON case in the brief (malformed JSON, wrong shape, empty string, '
-    + 'null, deeply nested garbage, export->import round trip) is UNTESTABLE through the UI',
-    'importJSON has no caller and no control. The only way to observe it would be to call '
-    + 'window.financialStore.importJSON(...), which is precisely the store-level shortcut this suite '
-    + 'refuses to pass off as UI evidence. This is reported as a product finding instead: README.md:20 '
-    + 'advertises "copia de seguridad en JSON" and CSV export, and neither feature is reachable. '
-    + 'T4 has to add the UI before these cases can be tested at all.');
+    + 'null, deeply nested garbage) is UNTESTABLE through the UI',
+    'importJSON has no caller and no control. This change made the export half of the README claim '
+    + 'reachable; restore remains a store-level API without UI, and the finding stands for it.');
 });
 
 /* =====================================================================
@@ -1071,9 +1067,9 @@ test('import.no-ui-surface: importJSON is unreachable, proven by enumerating con
  * totals, so `concepto` never reaches a CSV cell in the first place.
  * ===================================================================== */
 
-group('mesVacio', 'Exportacion CSV: sin superficie de UI (hallazgo)');
+group('mesVacio', 'Exportacion: una sola superficie de UI, la copia JSON');
 
-test('export.no-ui-surface: exportCSV / exportJSON are unreachable', async (sb, p) => {
+test('export.ui-surface: exactly one control downloads the JSON backup', async (sb, p) => {
   const superficie = await sb.eval(`(() => {
     const controles = [...document.querySelectorAll('button, a[href], [role=button], [onclick]')];
     const candidatos = controles.filter(el => {
@@ -1085,21 +1081,15 @@ test('export.no-ui-surface: exportCSV / exportJSON are unreachable', async (sb, 
                     download: el.getAttribute('download') }));
     return { totalControles: controles.length, candidatos };
   })()`);
-  p.note('js/store.js:802 exportCSV builds a Blob and clicks a synthetic <a download>, but nothing in the '
-    + 'UI ever calls it. Note also what it would emit: the header is '
-    + '"MES,SERVICIOS,PERSONALES,GASTOS EXTRA,TOTAL EGRESOS,INGRESOS,BALANCE NETO,% AVANCE" and each row '
-    + 'contains r.nombre plus totals.toFixed(2). `concepto` is NOT part of exportCSV at all, so hostile '
-    + 'expense text can never reach a CSV cell through this path. The only free-text injection surface '
-    + 'would be the month `nombre`, which is wrapped in double quotes but not formula-guarded.');
-  p.equal(superficie.candidatos.length, 0,
-    'PROVEN ABSENT: no control in the document can trigger a CSV or JSON export', superficie);
+  p.equal(superficie.candidatos.length, 1,
+    'exactly one control can trigger an export, and it is the JSON backup button', superficie);
+  p.equal(superficie.candidatos[0].id, 'btnDescargarCopiaJSON',
+    'the export control is the topbar JSON download button', superficie);
   p.equal(superficie.totalControles > 20, true,
     'the enumeration was not vacuous', superficie);
-  p.inconclusive('The CSV-injection and escaping case is UNTESTABLE through the UI',
-    'exportCSV has no caller and no control. Observed statically (documented above): the hostile-text '
-    + 'vectors never reach it, so the residual risk is confined to the month nombre, which is quoted but '
-    + 'not prefixed against =, +, - or @. That is a real, if narrow, finding - and it is exactly the '
-    + 'kind of thing a test written against the unreachable method would have hidden behind a green tick.');
+  p.note('exportCSV sigue sin superficie: el unico control exporta el JSON completo, no el consolidado. '
+    + 'El CSV conserva su hallazgo de escape (el nombre del mes va entre comillas pero sin guarda de '
+    + 'formula) porque nadie lo puede disparar desde la UI.');
 });
 
 /* =====================================================================

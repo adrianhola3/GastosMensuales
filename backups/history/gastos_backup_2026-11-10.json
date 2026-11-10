@@ -1,0 +1,572 @@
+{
+  "exported_at": "2026-11-10T13:19:02.148Z",
+  "source_updated_at": "2026-11-07T19:52:17.183594+00:00",
+  "version": 1,
+  "months_count": 6,
+  "data": {
+    "meses": {
+      "enero-2027": {
+        "id": "enero-2027",
+        "corto": "Enero",
+        "notas": "",
+        "extras": [],
+        "nombre": "Enero 2027",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_7yg4iy2qs_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": null,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_6i02zl19k_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": null,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_hdf519j19_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés)",
+              "montoReal": null,
+              "montoEstimado": 83
+            },
+            {
+              "id": "id_kfr27ygg3_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": null,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_f2l9ymfrr_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": null,
+              "montoEstimado": 25
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_1nctznl7g_1791668014240",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": null,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_ipywp8tf0_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": null,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_cgkr7g00c_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": null,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_4ffubeg9c_1791668014240",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": null,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      },
+      "agosto-2026": {
+        "id": "agosto-2026",
+        "corto": "Agosto",
+        "notas": "",
+        "extras": [
+          {
+            "id": "id_0z48pu0vj_1791668014239",
+            "tipo": "Extra",
+            "concepto": "Matrícula 2026-B de la universidad",
+            "montoReal": 83,
+            "montoEstimado": 83
+          }
+        ],
+        "nombre": "Agosto 2026",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_oym51wru9_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": null,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_rq1ic87gc_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": null,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_j34aat605_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés)",
+              "montoReal": null,
+              "montoEstimado": 83
+            },
+            {
+              "id": "id_ge6uwf992_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": null,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_i7hzahtqc_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": null,
+              "montoEstimado": 25
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_2cz632e1l_1791668014239",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": null,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "notasLista": [],
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_yh1l6acsp_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": null,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_pvb0tjvgx_1791668014239",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": null,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_8h2kzt7s6_1791668014239",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": null,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      },
+      "octubre-2026": {
+        "id": "octubre-2026",
+        "corto": "Octubre",
+        "notas": "El monto de CIUNAC pasó de 83 soles a 92 soles por subir a intermedio.\n\nSe añadió Google One",
+        "extras": [],
+        "nombre": "Octubre 2026",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_zuybu9hh7_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": 89.9,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_yany8a9j9_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": 39.9,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_t3pcogxvt_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés Intermedio 1)",
+              "montoReal": 92,
+              "montoEstimado": 92
+            },
+            {
+              "id": "id_9v1m1d1jl_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": 150,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_khbbv7krr_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": 25,
+              "montoEstimado": 25
+            },
+            {
+              "id": "id_t7ish84nh_1794080879068",
+              "tipo": "Fijo",
+              "rango": "",
+              "concepto": "Google One",
+              "montoReal": 18.99,
+              "montoEstimado": 18.99
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_zyv5o6otp_1791668014240",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": 30,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "notasLista": [
+          {
+            "id": "id_5xikpq24g_1792442050420",
+            "texto": "El monto de CIUNAC pasó de 83 soles a 92 soles por subir a intermedio.",
+            "editado": false,
+            "creadoEn": "2026-10-19T20:34:10.420Z",
+            "editadoEn": null
+          },
+          {
+            "id": "id_6p1f2ipew_1794081118437",
+            "texto": "Se añadió Google One",
+            "editado": false,
+            "creadoEn": "2026-11-07T19:51:58.437Z",
+            "editadoEn": null
+          }
+        ],
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_v270s2gil_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": 103.54,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_gextf2ain_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": 50,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_8svcpm0lt_1791668014240",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": 45,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      },
+      "diciembre-2026": {
+        "id": "diciembre-2026",
+        "corto": "Diciembre",
+        "notas": "",
+        "extras": [],
+        "nombre": "Diciembre 2026",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_pxnkc9e5s_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": null,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_yo0zk9ayx_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": null,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_8mvjwmlv0_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés)",
+              "montoReal": null,
+              "montoEstimado": 83
+            },
+            {
+              "id": "id_6tbkmrhk1_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": null,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_vq37zfyr7_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": null,
+              "montoEstimado": 25
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_vx7mejzxd_1791668014240",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": null,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_sihmel34s_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": null,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_orcjqqjki_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": null,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_m3co9unpn_1791668014240",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": null,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      },
+      "noviembre-2026": {
+        "id": "noviembre-2026",
+        "corto": "Noviembre",
+        "notas": "",
+        "extras": [],
+        "nombre": "Noviembre 2026",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_nx9pt2lwr_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": 89.9,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_2n7ni38jq_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": 39.9,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_7u4ahwt57_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés)",
+              "montoReal": 83,
+              "montoEstimado": 83
+            },
+            {
+              "id": "id_9ak21cyg1_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": 150,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_zq52wurni_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": 25,
+              "montoEstimado": 25
+            },
+            {
+              "id": "id_l1c5acqfv_1794080933332",
+              "tipo": "Fijo",
+              "rango": "",
+              "concepto": "Google One",
+              "montoReal": 18.99,
+              "montoEstimado": 18.99
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_pcgylpccz_1791668014240",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": 30,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_t6by8q5r7_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": null,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_5e9ff1n08_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": null,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_2zeykl6vx_1791668014240",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": null,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      },
+      "septiembre-2026": {
+        "id": "septiembre-2026",
+        "corto": "Septiembre",
+        "notas": "",
+        "extras": [],
+        "nombre": "Septiembre 2026",
+        "servicios": {
+          "fijos": [
+            {
+              "id": "id_ls5k4468n_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Internet de casa",
+              "montoReal": null,
+              "montoEstimado": 89.9
+            },
+            {
+              "id": "id_vkvagy3tu_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Celular",
+              "montoReal": null,
+              "montoEstimado": 39.9
+            },
+            {
+              "id": "id_jykr10a13_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "CIUNAC (Inglés)",
+              "montoReal": null,
+              "montoEstimado": 83
+            },
+            {
+              "id": "id_k4dv2tr0z_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Pasajes",
+              "montoReal": null,
+              "montoEstimado": 150
+            },
+            {
+              "id": "id_tc7zg48oa_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Corte de cabello",
+              "montoReal": null,
+              "montoEstimado": 25
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_duu4bqnmk_1791668014240",
+              "tipo": "Variable",
+              "rango": "20-40",
+              "concepto": "Productos de casa: Jabón, shampoo, papel...",
+              "montoReal": null,
+              "montoEstimado": 30
+            }
+          ]
+        },
+        "personales": {
+          "fijos": [
+            {
+              "id": "id_4m890ig4o_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Gimnasio",
+              "montoReal": null,
+              "montoEstimado": 103.54
+            },
+            {
+              "id": "id_xhpwozcd6_1791668014240",
+              "tipo": "Fijo",
+              "concepto": "Consulta dermatólogo",
+              "montoReal": null,
+              "montoEstimado": 50
+            }
+          ],
+          "variables": [
+            {
+              "id": "id_rez3jn89e_1791668014240",
+              "tipo": "Variable",
+              "rango": "10-80",
+              "concepto": "Productos dermatológicos: Jabón cerave...",
+              "montoReal": null,
+              "montoEstimado": 45
+            }
+          ]
+        },
+        "movimientos": []
+      }
+    },
+    "version": 1,
+    "mesesOrden": [
+      "agosto-2026",
+      "septiembre-2026",
+      "octubre-2026",
+      "noviembre-2026",
+      "diciembre-2026",
+      "enero-2027"
+    ],
+    "currentView": "mes",
+    "activeMonthId": "octubre-2026"
+  }
+}

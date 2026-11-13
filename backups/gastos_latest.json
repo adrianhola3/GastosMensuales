@@ -1,6 +1,6 @@
 {
-  "exported_at": "2026-11-12T13:35:38.655Z",
-  "source_updated_at": "2026-11-07T19:52:17.183594+00:00",
+  "exported_at": "2026-11-13T12:54:16.110Z",
+  "source_updated_at": "2026-11-12T18:00:31.577559+00:00",
   "version": 1,
   "months_count": 6,
   "data": {
@@ -182,7 +182,19 @@
             }
           ]
         },
-        "movimientos": []
+        "movimientos": [
+          {
+            "id": "id_4ff6yi4az_1794506399150",
+            "fecha": "2026-08-12",
+            "flujo": "Ingreso",
+            "monto": 83,
+            "estado": "Pagado",
+            "metodo": "Yape",
+            "concepto": "Yapeo para la matrícula",
+            "categoria": "Ingreso",
+            "retornable": "No"
+          }
+        ]
       },
       "octubre-2026": {
         "id": "octubre-2026",
@@ -469,7 +481,19 @@
             }
           ]
         },
-        "movimientos": []
+        "movimientos": [
+          {
+            "id": "id_3ifhg3h7i_1794506430335",
+            "fecha": "2026-11-12",
+            "flujo": "Ingreso",
+            "monto": 300,
+            "estado": "Pagado",
+            "metodo": "Yape",
+            "concepto": "Yapeo parcial del mes de octubre",
+            "categoria": "Ingreso",
+            "retornable": "No"
+          }
+        ]
       },
       "septiembre-2026": {
         "id": "septiembre-2026",
@@ -566,7 +590,7 @@
       "diciembre-2026",
       "enero-2027"
     ],
-    "currentView": "mes",
-    "activeMonthId": "octubre-2026"
+    "currentView": "panel",
+    "activeMonthId": "noviembre-2026"
   }
 }
